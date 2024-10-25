@@ -1,19 +1,12 @@
-﻿using System.Text.Json.Serialization;
+﻿namespace Telegram.BotAPI;
 
-namespace Telegram.BotAPI
+public class ResponseAPI<T>
 {
-    public class ResponseAPI<T>
-    {
-        [JsonPropertyName("ok")]
-        public bool Ok { get; set; }
+    public bool Ok { get; set; }
 
-        [JsonPropertyName("error_code")]
-        public int ErrorCode { get; set; }
+    public int ErrorCode { get; set; }
 
-        [JsonPropertyName("description")]
-        public string Description { get; set; } = string.Empty;
+    public string Description { get; set; }
 
-        [JsonPropertyName("result")]
-        public T Result { get; set; }
-    }
+    public T Result { get; set; }
 }

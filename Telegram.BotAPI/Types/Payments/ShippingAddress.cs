@@ -1,6 +1,5 @@
 namespace Telegram.BotAPI.Types.Payments;
 
-// https://core.telegram.org/bots/api#shippingaddress
 public sealed class ShippingAddress
 {
     public string CountryCode { get; set; }

@@ -1,6 +1,5 @@
 namespace Telegram.BotAPI.Types.InlineMode;
 
-// https://core.telegram.org/bots/api#inlinequery
 public sealed class InlineQuery
 {
     public string Id { get; set; }

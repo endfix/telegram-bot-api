@@ -6,12 +6,11 @@ namespace Telegram.BotAPI.Extensions;
 
 public static class JsonSerializerExtensions
 {
-    private static readonly JsonSerializerOptions _options = new JsonSerializerOptions()
+    private static readonly JsonSerializerOptions _options = new()
     {
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
         //PropertyNameCaseInsensitive = true,
         PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
-        //PropertyNamingPolicy = new SnakeCaseLowerNamingPolicy(),
         Converters = {
             new BackgroundFillConverter(),
             new BackgroundTypeConverter(),

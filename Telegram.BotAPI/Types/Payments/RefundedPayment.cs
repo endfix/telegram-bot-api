@@ -1,6 +1,5 @@
 namespace Telegram.BotAPI.Types.Payments;
 
-// https://core.telegram.org/bots/api#refundedpayment
 public sealed class RefundedPayment
 {
     public string Currency { get; set; }

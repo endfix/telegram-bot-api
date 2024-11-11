@@ -1,10 +1,10 @@
 using System.Collections.Generic;
+using Telegram.BotAPI.Types.Games;
 using Telegram.BotAPI.Types.Payments;
 using Telegram.BotAPI.Types.Stickers;
 
 namespace Telegram.BotAPI.Types;
 
-// https://core.telegram.org/bots/api#externalreplyinfo
 public sealed class ExternalReplyInfo
 {
     public MessageOrigin Origin { get; set; }

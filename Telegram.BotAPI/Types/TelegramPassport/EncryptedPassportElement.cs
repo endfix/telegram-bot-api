@@ -2,7 +2,6 @@ using System.Collections.Generic;
 
 namespace Telegram.BotAPI.Types.TelegramPassport;
 
-// https://core.telegram.org/bots/api#encryptedpassportelement
 public sealed class EncryptedPassportElement
 {
     public string Type { get; set; }

@@ -1,6 +1,5 @@
 ﻿namespace Telegram.BotAPI.Types.Payments;
 
-// https://core.telegram.org/bots/api#startransaction
 public sealed class StarTransaction
 {
     public string Id { get; set; }

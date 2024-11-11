@@ -2,7 +2,6 @@
 
 namespace Telegram.BotAPI.Types.InlineMode;
 
-// https://core.telegram.org/bots/api#inlinequeryresult
 public abstract class InlineQueryResult
 {
     public abstract string Type { get; }
@@ -53,7 +52,6 @@ public abstract class InlineQueryResult
     }
 }
 
-// https://core.telegram.org/bots/api#inlinequeryresultarticle
 public sealed class InlineQueryResultArticle : InlineQueryResult
 {
     public override string Type => Types.ARTICLE;
@@ -77,7 +75,6 @@ public sealed class InlineQueryResultArticle : InlineQueryResult
     public int ThumbnailHeight { get; set; }
 }
 
-// https://core.telegram.org/bots/api#inlinequeryresultphoto
 public sealed class InlineQueryResultPhoto : InlineQueryResult
 {
     public override string Type => Types.PHOTO;
@@ -107,7 +104,6 @@ public sealed class InlineQueryResultPhoto : InlineQueryResult
     public InputMessageContent InputMessageContent { get; set; }
 }
 
-// https://core.telegram.org/bots/api#inlinequeryresultgif
 public sealed class InlineQueryResultGif : InlineQueryResult
 {
     public override string Type => Types.GIF;
@@ -139,7 +135,6 @@ public sealed class InlineQueryResultGif : InlineQueryResult
     public InputMessageContent InputMessageContent { get; set; }
 }
 
-// https://core.telegram.org/bots/api#inlinequeryresultmpeg4gif
 public sealed class InlineQueryResultMpeg4Gif : InlineQueryResult
 {
     public override string Type => Types.MPEG4_GIF;
@@ -171,7 +166,6 @@ public sealed class InlineQueryResultMpeg4Gif : InlineQueryResult
     public InputMessageContent InputMessageContent { get; set; }
 }
 
-// https://core.telegram.org/bots/api#inlinequeryresultvideo
 public sealed class InlineQueryResultVideo : InlineQueryResult
 {
     public override string Type => Types.VIDEO;
@@ -205,7 +199,6 @@ public sealed class InlineQueryResultVideo : InlineQueryResult
     public InputMessageContent InputMessageContent { get; set; }
 }
 
-// https://core.telegram.org/bots/api#inlinequeryresultaudio
 public sealed class InlineQueryResultAudio : InlineQueryResult
 {
     public override string Type => Types.AUDIO;
@@ -229,7 +222,6 @@ public sealed class InlineQueryResultAudio : InlineQueryResult
     public InputMessageContent InputMessageContent { get; set; }
 }
 
-// https://core.telegram.org/bots/api#inlinequeryresultvoice
 public sealed class InlineQueryResultVoice : InlineQueryResult
 {
     public override string Type => Types.VOICE;
@@ -251,7 +243,6 @@ public sealed class InlineQueryResultVoice : InlineQueryResult
     public InputMessageContent InputMessageContent { get; set; }
 }
 
-// https://core.telegram.org/bots/api#inlinequeryresultdocument
 public sealed class InlineQueryResultDocument : InlineQueryResult
 {
     public override string Type => Types.DOCUMENT;
@@ -281,7 +272,6 @@ public sealed class InlineQueryResultDocument : InlineQueryResult
     public int ThumbnailHeight { get; set; }
 }
 
-// https://core.telegram.org/bots/api#inlinequeryresultlocation
 public sealed class InlineQueryResultLocation : InlineQueryResult
 {
     public override string Type => Types.LOCATION;
@@ -290,7 +280,7 @@ public sealed class InlineQueryResultLocation : InlineQueryResult
 
     public float Longitude { get; set; }
 
-    public string Title { get; set;}
+    public string Title { get; set; }
 
     public float HorizontalAccuracy { get; set; }
 
@@ -311,7 +301,6 @@ public sealed class InlineQueryResultLocation : InlineQueryResult
     public int ThumbnailHeight { get; set; }
 }
 
-// https://core.telegram.org/bots/api#inlinequeryresultvenue
 public sealed class InlineQueryResultVenue : InlineQueryResult
 {
     public override string Type => Types.VENUE;
@@ -320,7 +309,7 @@ public sealed class InlineQueryResultVenue : InlineQueryResult
 
     public float Longitude { get; set; }
 
-    public string Title { get; set;}
+    public string Title { get; set; }
 
     public string Address { get; set; }
 
@@ -334,7 +323,7 @@ public sealed class InlineQueryResultVenue : InlineQueryResult
 
     public InlineKeyboardMarkup ReplyMarkup { get; set; }
 
-    public InputMessageContent InputMessageContent { get; set;}
+    public InputMessageContent InputMessageContent { get; set; }
 
     public string ThumbnailUrl { get; set; }
 
@@ -343,7 +332,6 @@ public sealed class InlineQueryResultVenue : InlineQueryResult
     public int ThumbnailHeight { get; set; }
 }
 
-// https://core.telegram.org/bots/api#inlinequeryresultcontact
 public sealed class InlineQueryResultContact : InlineQueryResult
 {
     public override string Type => Types.CONTACT;
@@ -354,11 +342,11 @@ public sealed class InlineQueryResultContact : InlineQueryResult
 
     public string LastName { get; set; }
 
-    public string Vcard {  get; set; }
+    public string Vcard { get; set; }
 
     public InlineKeyboardMarkup ReplyMarkup { get; set; }
 
-    public InputMessageContent InputMessageContent { get; set;}
+    public InputMessageContent InputMessageContent { get; set; }
 
     public string ThumbnailUrl { get; set; }
 
@@ -367,7 +355,6 @@ public sealed class InlineQueryResultContact : InlineQueryResult
     public int ThumbnailHeight { get; set; }
 }
 
-// https://core.telegram.org/bots/api#inlinequeryresultgame
 public sealed class InlineQueryResultGame : InlineQueryResult
 {
     public override string Type => Types.GAME;
@@ -377,7 +364,6 @@ public sealed class InlineQueryResultGame : InlineQueryResult
     public InlineKeyboardMarkup ReplyMarkup { get; set; }
 }
 
-// https://core.telegram.org/bots/api#inlinequeryresultcachedphoto
 public sealed class InlineQueryResultCachedPhoto : InlineQueryResult
 {
     public override string Type => Types.CACHED_PHOTO;
@@ -398,10 +384,9 @@ public sealed class InlineQueryResultCachedPhoto : InlineQueryResult
 
     public InlineKeyboardMarkup ReplyMarkup { get; set; }
 
-    public InputMessageContent InputMessageContent { get; set;}
+    public InputMessageContent InputMessageContent { get; set; }
 }
 
-// https://core.telegram.org/bots/api#inlinequeryresultcachedgif
 public sealed class InlineQueryResultCachedGif : InlineQueryResult
 {
     public override string Type => Types.CACHED_GIF;
@@ -420,10 +405,9 @@ public sealed class InlineQueryResultCachedGif : InlineQueryResult
 
     public InlineKeyboardMarkup ReplyMarkup { get; set; }
 
-    public InputMessageContent InputMessageContent { get; set;}
+    public InputMessageContent InputMessageContent { get; set; }
 }
 
-// https://core.telegram.org/bots/api#inlinequeryresultcachedmpeg4gif
 public sealed class InlineQueryResultCachedMpeg4Gif : InlineQueryResult
 {
     public override string Type => Types.CACHED_MPEG4_GIF;
@@ -442,10 +426,9 @@ public sealed class InlineQueryResultCachedMpeg4Gif : InlineQueryResult
 
     public InlineKeyboardMarkup ReplyMarkup { get; set; }
 
-    public InputMessageContent InputMessageContent { get; set;}
+    public InputMessageContent InputMessageContent { get; set; }
 }
 
-// https://core.telegram.org/bots/api#inlinequeryresultcachedsticker
 public sealed class InlineQueryResultCachedSticker : InlineQueryResult
 {
     public override string Type => Types.CACHED_STICKER;
@@ -454,10 +437,9 @@ public sealed class InlineQueryResultCachedSticker : InlineQueryResult
 
     public InlineKeyboardMarkup ReplyMarkup { get; set; }
 
-    public InputMessageContent InputMessageContent { get; set;}
+    public InputMessageContent InputMessageContent { get; set; }
 }
 
-// https://core.telegram.org/bots/api#inlinequeryresultcacheddocument
 public sealed class InlineQueryResultCachedDocument : InlineQueryResult
 {
     public override string Type => Types.CACHED_DOCUMENT;
@@ -476,10 +458,9 @@ public sealed class InlineQueryResultCachedDocument : InlineQueryResult
 
     public InlineKeyboardMarkup ReplyMarkup { get; set; }
 
-    public InputMessageContent InputMessageContent { get; set;}
+    public InputMessageContent InputMessageContent { get; set; }
 }
 
-// https://core.telegram.org/bots/api#inlinequeryresultcachedvideo
 public sealed class InlineQueryResultCachedVideo : InlineQueryResult
 {
     public override string Type => Types.CACHED_VIDEO;
@@ -503,7 +484,6 @@ public sealed class InlineQueryResultCachedVideo : InlineQueryResult
     public InputMessageContent InputMessageContent { get; set; }
 }
 
-// https://core.telegram.org/bots/api#inlinequeryresultcachedvoice
 public sealed class InlineQueryResultCachedVoice : InlineQueryResult
 {
     public override string Type => Types.CACHED_VOICE;
@@ -523,7 +503,6 @@ public sealed class InlineQueryResultCachedVoice : InlineQueryResult
     public InputMessageContent InputMessageContent { get; set; }
 }
 
-// https://core.telegram.org/bots/api#inlinequeryresultcachedaudio
 public sealed class InlineQueryResultCachedAudio : InlineQueryResult
 {
     public override string Type => Types.CACHED_AUDIO;

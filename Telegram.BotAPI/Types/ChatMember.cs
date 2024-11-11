@@ -1,9 +1,8 @@
 namespace Telegram.BotAPI.Types;
 
-// https://core.telegram.org/bots/api#chatmember
 public abstract class ChatMember
 {
-    public virtual string Status { get; set; }
+    public abstract string Status { get; }
 
     public User User { get; set; }
 
@@ -23,7 +22,6 @@ public abstract class ChatMember
     }
 }
 
-// https://core.telegram.org/bots/api#chatmemberadministrator
 public sealed class ChatMemberAdministrator : ChatMember
 {
     public override string Status => Statuses.ADMINISTRATOR;
@@ -63,7 +61,6 @@ public sealed class ChatMemberAdministrator : ChatMember
     public string CustomTitle { get; set; }
 }
 
-// https://core.telegram.org/bots/api#chatmemberbanned
 public sealed class ChatMemberBanned : ChatMember
 {
     public override string Status => Statuses.KICKED;
@@ -71,13 +68,11 @@ public sealed class ChatMemberBanned : ChatMember
     public int UntilDate { get; set; }
 }
 
-// https://core.telegram.org/bots/api#chatmemberleft
 public sealed class ChatMemberLeft : ChatMember
 {
     public override string Status => Statuses.LEFT;
 }
 
-// https://core.telegram.org/bots/api#chatmembermember
 public sealed class ChatMemberMember : ChatMember
 {
     public override string Status => Statuses.MEMBER;
@@ -85,7 +80,6 @@ public sealed class ChatMemberMember : ChatMember
     public int UntilDate { get; set; }
 }
 
-// https://core.telegram.org/bots/api#chatmemberowner
 public sealed class ChatMemberOwner : ChatMember
 {
     public override string Status => Statuses.CREATOR;
@@ -95,7 +89,6 @@ public sealed class ChatMemberOwner : ChatMember
     public string CustomTitle { get; set; }
 }
 
-// https://core.telegram.org/bots/api#chatmemberrestricted
 public sealed class ChatMemberRestricted : ChatMember
 {
     public override string Status => Statuses.RESTRICTED;

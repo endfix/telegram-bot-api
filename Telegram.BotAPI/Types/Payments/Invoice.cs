@@ -1,6 +1,5 @@
 namespace Telegram.BotAPI.Types.Payments;
 
-// https://core.telegram.org/bots/api#invoice
 public sealed class Invoice
 {
     public string Title { get; set; }

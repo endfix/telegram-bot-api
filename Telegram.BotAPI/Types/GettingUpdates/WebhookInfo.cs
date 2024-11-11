@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 
-namespace Telegram.BotAPI.Types.Updates;
+namespace Telegram.BotAPI.Types.GettingUpdates;
 
-// https://core.telegram.org/bots/api#webhookinfo
 public class WebhookInfo
 {
     public string Url { get; set; }

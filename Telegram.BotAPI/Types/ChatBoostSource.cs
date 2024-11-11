@@ -1,9 +1,8 @@
 namespace Telegram.BotAPI.Types;
 
-// https://core.telegram.org/bots/api#chatboostsource
 public abstract class ChatBoostSource
 {
-    public virtual string Source { get; set; }
+    public abstract string Source { get; }
 
     public User User { get; set; }
 
@@ -17,13 +16,11 @@ public abstract class ChatBoostSource
     }
 }
 
-// https://core.telegram.org/bots/api#chatboostsourcegiftcode
 public sealed class ChatBoostSourceGiftCode : ChatBoostSource
 {
     public override string Source => Sources.GIFT_CODE;
 }
 
-// https://core.telegram.org/bots/api#chatboostsourcegiveaway
 public sealed class ChatBoostSourceGiveaway : ChatBoostSource
 {
     public override string Source => Sources.GIVEAWAY;
@@ -35,7 +32,6 @@ public sealed class ChatBoostSourceGiveaway : ChatBoostSource
     public bool IsUnclaimed { get; set; }
 }
 
-// https://core.telegram.org/bots/api#chatboostsourcepremium
 public sealed class ChatBoostSourcePremium : ChatBoostSource
 {
     public override string Source => Sources.PREMIUM;

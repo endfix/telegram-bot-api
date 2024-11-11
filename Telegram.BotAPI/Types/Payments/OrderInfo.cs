@@ -1,6 +1,5 @@
 namespace Telegram.BotAPI.Types.Payments;
 
-// https://core.telegram.org/bots/api#orderinfo
 public sealed class OrderInfo
 {
     public string Name { get; set; }

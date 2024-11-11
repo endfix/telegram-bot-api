@@ -1,6 +1,5 @@
 namespace Telegram.BotAPI.Types.Payments;
 
-// https://core.telegram.org/bots/api#shippingquery
 public sealed class ShippingQuery
 {
     public string Id { get; set; }

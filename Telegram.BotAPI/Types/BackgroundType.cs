@@ -1,9 +1,8 @@
 namespace Telegram.BotAPI.Types;
 
-// https://core.telegram.org/bots/api#backgroundtype
 public abstract class BackgroundType
 {
-    public virtual string Type { get; set; }
+    public abstract string Type { get; }
 
     public static class Types
     {
@@ -17,7 +16,6 @@ public abstract class BackgroundType
     }
 }
 
-// https://core.telegram.org/bots/api#backgroundtypechattheme
 public class BackgroundTypeChatTheme : BackgroundType
 {
     public override string Type => Types.CHAT_THEME;
@@ -25,7 +23,6 @@ public class BackgroundTypeChatTheme : BackgroundType
     public string ThemeName { get; set; }
 }
 
-// https://core.telegram.org/bots/api#backgroundtypefill
 public sealed class BackgroundTypeFill : BackgroundType
 {
     public override string Type => Types.FILL;
@@ -35,7 +32,6 @@ public sealed class BackgroundTypeFill : BackgroundType
     public int DarkThemeDimming { get; set; }
 }
 
-// https://core.telegram.org/bots/api#backgroundtypepattern
 public class BackgroundTypePattern : BackgroundType
 {
     public override string Type => Types.PATTERN;
@@ -51,7 +47,6 @@ public class BackgroundTypePattern : BackgroundType
     public bool IsMoving { get; set; }
 }
 
-// https://core.telegram.org/bots/api#backgroundtypewallpaper
 public class BackgroundTypeWallpaper : BackgroundType
 {
     public override string Type => Types.WALLPAPER;

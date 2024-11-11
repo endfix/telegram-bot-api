@@ -1,9 +1,8 @@
 namespace Telegram.BotAPI.Types;
 
-// https://core.telegram.org/bots/api#reactiontype
 public abstract class ReactionType
 {
-    public virtual string Type { get; set; }
+    public abstract string Type { get; }
 
     public static class Types
     {
@@ -15,7 +14,6 @@ public abstract class ReactionType
     }
 }
 
-// https://core.telegram.org/bots/api#reactiontypecustomemoji
 public sealed class ReactionTypeCustomEmoji : ReactionType
 {
     public override string Type => Types.CUSTOM_EMOJI;
@@ -23,7 +21,6 @@ public sealed class ReactionTypeCustomEmoji : ReactionType
     public string CustomEmojiId { get; set; }
 }
 
-// https://core.telegram.org/bots/api#reactiontypeemoji
 public sealed class ReactionTypeEmoji : ReactionType
 {
     public override string Type => Types.EMOJI;
@@ -31,7 +28,6 @@ public sealed class ReactionTypeEmoji : ReactionType
     public string Emoji { get; set; }
 }
 
-// https://core.telegram.org/bots/api#reactiontypepaid
 public sealed class ReactionTypePaid : ReactionType
 {
     public override string Type => Types.PAID;

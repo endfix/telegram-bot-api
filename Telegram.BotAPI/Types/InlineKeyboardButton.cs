@@ -1,3 +1,5 @@
+using Telegram.BotAPI.Types.Games;
+
 namespace Telegram.BotAPI.Types
 {
     // https://core.telegram.org/bots/api#inlinekeyboardbutton

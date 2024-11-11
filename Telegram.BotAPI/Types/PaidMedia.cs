@@ -2,7 +2,6 @@ using System.Collections.Generic;
 
 namespace Telegram.BotAPI.Types;
 
-// https://core.telegram.org/bots/api#paidmedia
 public abstract class PaidMedia
 {
     public abstract string Type { get; }
@@ -17,7 +16,6 @@ public abstract class PaidMedia
     }
 }
 
-// https://core.telegram.org/bots/api#paidmediaphoto
 public sealed class PaidMediaPhoto : PaidMedia
 {
     public override string Type => Types.PHOTO;
@@ -25,7 +23,6 @@ public sealed class PaidMediaPhoto : PaidMedia
     public List<PhotoSize> Photo { get; set; }
 }
 
-// https://core.telegram.org/bots/api#paidmediapreview
 public sealed class PaidMediaPreview : PaidMedia
 {
     public override string Type => Types.PREVIEW;
@@ -37,7 +34,6 @@ public sealed class PaidMediaPreview : PaidMedia
     public int Duration { get; set; }
 }
 
-// https://core.telegram.org/bots/api#paidmediavideo
 public sealed class PaidMediaVideo : PaidMedia
 {
     public override string Type => Types.VIDEO;

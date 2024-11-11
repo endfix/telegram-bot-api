@@ -1,2 +1,2 @@
 # Telegram Bot API (С#)
-[![version](https://img.shields.io/badge/version-0.0.1-red.svg)](https://semver.org)
+[![Bot API](https://img.shields.io/badge/version-7.10-red.svg)](https://core.telegram.org/bots/api#september-6-2024)

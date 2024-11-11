@@ -1,6 +1,5 @@
 namespace Telegram.BotAPI.Types.Payments;
 
-// https://core.telegram.org/bots/api#precheckoutquery
 public sealed class PreCheckoutQuery
 {
     public string Id { get; set; }

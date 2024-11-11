@@ -1,9 +1,8 @@
 namespace Telegram.BotAPI.Types;
 
-// https://core.telegram.org/bots/api#menubutton
 public abstract class MenuButton
 {
-    public virtual string Type { get; set; }
+    public abstract string Type { get; }
 
     public static class Types
     {
@@ -15,19 +14,16 @@ public abstract class MenuButton
     }
 }
 
-// https://core.telegram.org/bots/api#menubuttoncommands
 public sealed class MenuButtonCommands : MenuButton
 {
     public override string Type => Types.COMMANDS;
 }
 
-// https://core.telegram.org/bots/api#menubuttondefault
 public sealed class MenuButtonDefault : MenuButton
 {
     public override string Type => Types.DEFAULT;
 }
 
-// https://core.telegram.org/bots/api#menubuttonwebapp
 public sealed class MenuButtonWebApp : MenuButton
 {
     public override string Type => Types.WEB_APP;

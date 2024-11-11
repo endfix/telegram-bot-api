@@ -1,9 +1,8 @@
 namespace Telegram.BotAPI.Types;
 
-// https://core.telegram.org/bots/api#botcommandscope
 public abstract class BotCommandScope
 {
-    public virtual string Type { get; set; }
+    public abstract string Type { get; }
 
     public static class Types
     {
@@ -23,25 +22,21 @@ public abstract class BotCommandScope
     }
 }
 
-// https://core.telegram.org/bots/api#botcommandscopeallchatadministrators
 public sealed class BotCommandScopeAllChatAdministrators : BotCommandScope
 {
     public override string Type => Types.ALL_CHAT_ADMINISTRATORS;
 }
 
-// https://core.telegram.org/bots/api#botcommandscopeallgroupchats
 public sealed class BotCommandScopeAllGroupChats : BotCommandScope
 {
     public override string Type => Types.ALL_GROUP_CHATS;
 }
 
-// https://core.telegram.org/bots/api#botcommandscopeallprivatechats
 public sealed class BotCommandScopeAllPrivateChats : BotCommandScope
 {
     public override string Type => Types.ALL_PRIVATE_CHATS;
 }
 
-// https://core.telegram.org/bots/api#botcommandscopechat
 public sealed class BotCommandScopeChat : BotCommandScope
 {
     public override string Type => Types.CHAT;
@@ -49,7 +44,6 @@ public sealed class BotCommandScopeChat : BotCommandScope
     public string ChatId { get; set; }
 }
 
-// https://core.telegram.org/bots/api#botcommandscopechatadministrators
 public sealed class BotCommandScopeChatAdministrators : BotCommandScope
 {
     public override string Type => Types.CHAT_ADMINISTRATORS;
@@ -57,7 +51,6 @@ public sealed class BotCommandScopeChatAdministrators : BotCommandScope
     public string ChatId { get; set; }
 }
 
-// https://core.telegram.org/bots/api#botcommandscopechatmember
 public class BotCommandScopeChatMember : BotCommandScope
 {
     public override string Type => Types.CHAT_MEMBER;
@@ -67,7 +60,6 @@ public class BotCommandScopeChatMember : BotCommandScope
     public long UserId { get; set; }
 }
 
-// https://core.telegram.org/bots/api#botcommandscopedefault
 public sealed class BotCommandScopeDefault : BotCommandScope
 {
     public override string Type => Types.DEFAULT;

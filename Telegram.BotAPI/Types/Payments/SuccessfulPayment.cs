@@ -1,6 +1,5 @@
 namespace Telegram.BotAPI.Types.Payments;
 
-// https://core.telegram.org/bots/api#successfulpayment
 public sealed class SuccessfulPayment
 {
     public string Currency { get; set; }

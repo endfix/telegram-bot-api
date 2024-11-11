@@ -1,6 +1,5 @@
-﻿namespace Telegram.BotAPI.Types.Input;
+﻿namespace Telegram.BotAPI.Types.AvailableTypes;
 
-// https://core.telegram.org/bots/api#inputpaidmedia
 public abstract class InputPaidMedia
 {
     public abstract string Type { get; }
@@ -15,13 +14,11 @@ public abstract class InputPaidMedia
     }
 }
 
-// https://core.telegram.org/bots/api#inputpaidmediaphoto
 public sealed class InputPaidMediaPhoto : InputPaidMedia
 {
     public override string Type => Types.PHOTO;
 }
 
-// https://core.telegram.org/bots/api#inputpaidmediavideo
 public sealed class InputPaidMediaVideo : InputPaidMedia
 {
     public override string Type => Types.VIDEO;

@@ -2,7 +2,6 @@
 
 namespace Telegram.BotAPI.Types.TelegramPassport;
 
-// https://core.telegram.org/bots/api#passportelementerror
 public abstract class PassportElementError
 {
     public abstract string Source { get; }
@@ -58,7 +57,6 @@ public abstract class PassportElementError
     }
 }
 
-// https://core.telegram.org/bots/api#passportelementerrordatafield
 public sealed class PassportElementErrorDataField : PassportElementError
 {
     public override string Source => Sources.DATA;
@@ -68,23 +66,6 @@ public sealed class PassportElementErrorDataField : PassportElementError
     public string DataHash { get; set; }
 }
 
-// https://core.telegram.org/bots/api#passportelementerrorfile
-public sealed class PassportElementErrorFile : PassportElementError
-{
-    public override string Source => Sources.FILE;
-
-    public string FileHash { get; set; }
-}
-
-// https://core.telegram.org/bots/api#passportelementerrorfiles
-public sealed class PassportElementErrorFiles : PassportElementError
-{
-    public override string Source => Sources.FILES;
-
-    public List<string> FileHashes { get; set; }
-}
-
-// https://core.telegram.org/bots/api#passportelementerrorfrontside
 public sealed class PassportElementErrorFrontSide : PassportElementError
 {
     public override string Source => Sources.FRONT_SIDE;
@@ -92,7 +73,6 @@ public sealed class PassportElementErrorFrontSide : PassportElementError
     public string FileHash { get; set; }
 }
 
-// https://core.telegram.org/bots/api#passportelementerrorreverseside
 public sealed class PassportElementErrorReverseSide : PassportElementError
 {
     public override string Source => Sources.REVERSE_SIDE;
@@ -100,7 +80,6 @@ public sealed class PassportElementErrorReverseSide : PassportElementError
     public string FileHash { get; set; }
 }
 
-// https://core.telegram.org/bots/api#passportelementerrorselfie
 public sealed class PassportElementErrorSelfie : PassportElementError
 {
     public override string Source => Sources.SELFIE;
@@ -108,7 +87,20 @@ public sealed class PassportElementErrorSelfie : PassportElementError
     public string FileHash { get; set; }
 }
 
-// https://core.telegram.org/bots/api#passportelementerrortranslationfile
+public sealed class PassportElementErrorFile : PassportElementError
+{
+    public override string Source => Sources.FILE;
+
+    public string FileHash { get; set; }
+}
+
+public sealed class PassportElementErrorFiles : PassportElementError
+{
+    public override string Source => Sources.FILES;
+
+    public List<string> FileHashes { get; set; }
+}
+
 public sealed class PassportElementErrorTranslationFile : PassportElementError
 {
     public override string Source => Sources.TRANSLATION_FILE;
@@ -116,7 +108,6 @@ public sealed class PassportElementErrorTranslationFile : PassportElementError
     public string FileHash { get; set; }
 }
 
-// https://core.telegram.org/bots/api#passportelementerrortranslationfiles
 public sealed class PassportElementErrorTranslationFiles : PassportElementError
 {
     public override string Source => Sources.TRANSLATION_FILES;
@@ -124,7 +115,6 @@ public sealed class PassportElementErrorTranslationFiles : PassportElementError
     public List<string> FileHashes { get; set; }
 }
 
-// https://core.telegram.org/bots/api#passportelementerrorunspecified
 public sealed class PassportElementErrorUnspecified : PassportElementError
 {
     public override string Source => Sources.UNSPECIFIED;

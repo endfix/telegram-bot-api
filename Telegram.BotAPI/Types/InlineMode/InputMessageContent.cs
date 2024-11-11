@@ -3,13 +3,11 @@ using Telegram.BotAPI.Types.Payments;
 
 namespace Telegram.BotAPI.Types.InlineMode;
 
-// https://core.telegram.org/bots/api#inputmessagecontent
 public abstract class InputMessageContent
 {
     //
 }
 
-// https://core.telegram.org/bots/api#inputtextmessagecontent
 public sealed class InputTextMessageContent : InputMessageContent
 {
     public string MessageText { get; set; }
@@ -21,7 +19,6 @@ public sealed class InputTextMessageContent : InputMessageContent
     public LinkPreviewOptions LinkPreviewOptions { get; set; }
 }
 
-// https://core.telegram.org/bots/api#inputlocationmessagecontent
 public sealed class InputLocationMessageContent : InputMessageContent
 {
     public float Latitude { get; set; }
@@ -37,7 +34,6 @@ public sealed class InputLocationMessageContent : InputMessageContent
     public int ProximityAlertRadius { get; set; }
 }
 
-// https://core.telegram.org/bots/api#inputvenuemessagecontent
 public sealed class InputVenueMessageContent : InputMessageContent
 {
     public float Latitude { get; set; }
@@ -57,7 +53,6 @@ public sealed class InputVenueMessageContent : InputMessageContent
     public string GooglePlaceType { get; set; }
 }
 
-// https://core.telegram.org/bots/api#inputcontactmessagecontent
 public sealed class InputContactMessageContent : InputMessageContent
 {
     public string PhoneNumber { get; set; }
@@ -69,7 +64,6 @@ public sealed class InputContactMessageContent : InputMessageContent
     public string Vcard { get; set; }
 }
 
-// https://core.telegram.org/bots/api#inputinvoicemessagecontent
 public sealed class InputInvoiceMessageContent : InputMessageContent
 {
     public string Title { get; set; }

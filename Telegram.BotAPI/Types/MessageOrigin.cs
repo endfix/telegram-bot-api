@@ -1,9 +1,8 @@
 namespace Telegram.BotAPI.Types;
 
-// https://core.telegram.org/bots/api#messageorigin
 public abstract class MessageOrigin
 {
-    public virtual string Type { get; set; }
+    public abstract string Type { get; }
 
     public static class Types
     {
@@ -17,7 +16,6 @@ public abstract class MessageOrigin
     }
 }
 
-// https://core.telegram.org/bots/api#messageoriginchannel
 public sealed class MessageOriginChannel : MessageOrigin
 {
     public override string Type => Types.CHANNEL;
@@ -31,7 +29,6 @@ public sealed class MessageOriginChannel : MessageOrigin
     public string AuthorSignature { get; set; }
 }
 
-// https://core.telegram.org/bots/api#messageoriginchat
 public sealed class MessageOriginChat : MessageOrigin
 {
     public override string Type => Types.CHAT;
@@ -43,7 +40,6 @@ public sealed class MessageOriginChat : MessageOrigin
     public string AuthorSignature { get; set; }
 }
 
-// https://core.telegram.org/bots/api#messageoriginhiddenuser
 public sealed class MessageOriginHiddenUser : MessageOrigin
 {
     public override string Type => Types.HIDDEN_USER;
@@ -53,7 +49,6 @@ public sealed class MessageOriginHiddenUser : MessageOrigin
     public string SenderUserName { get; set; }
 }
 
-// https://core.telegram.org/bots/api#messageoriginuser
 public sealed class MessageOriginUser : MessageOrigin
 {
     public override string Type => Types.USER;

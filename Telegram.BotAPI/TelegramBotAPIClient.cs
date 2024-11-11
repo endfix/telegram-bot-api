@@ -1,25 +1,34 @@
-﻿using System.Text.RegularExpressions;
-using System.Net.Http;
-using System;
-using System.Threading.Tasks;
-using System.IO;
-using Telegram.BotAPI.Extensions;
-using System.Text.Json;
+﻿using System.IO;
 using System.Linq;
-using Telegram.BotAPI.MethodArgs;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System;
+using System.Text;
+using Telegram.BotAPI.Extensions;
+using Telegram.BotAPI.Core;
+using Telegram.BotAPI.Core.UploadFiles;
 
 namespace Telegram.BotAPI;
 
-public partial class TelegramBotAPIClient(HttpClient httpClient)
+public class TelegramBotAPIClient(string token, HttpClient httpClient = null)
 {
-    public string Token { get; set; }
+    public string Token { get; set; } = token;
 
-    public HttpClient HttpClient { get; set; } = httpClient ?? new HttpClient();
+    private readonly HttpClient _httpClient = httpClient ?? new HttpClient();
 
-    public bool IsDebug { get; set; }
+    public delegate void LogEventHandler(LogTypes type, string message);
 
-    public async Task<ResponseAPI<T>> RequestAsync<T>(string method, RequestArgs args = null)
+    public event LogEventHandler OnLog;
+
+    private void LogCallback(LogTypes type, string message)
     {
+        OnLog(type, message);
+    }
+
+    public async Task<ResponseAPI<T>> RequestAsync<T>(string methodName, object args = null)
+    {
+        var requestId = Guid.NewGuid().ToString();
+
         try
         {
             if (string.IsNullOrEmpty(Token))
@@ -27,77 +36,82 @@ public partial class TelegramBotAPIClient(HttpClient httpClient)
                 throw new ArgumentNullException(nameof(Token));
             }
 
-            // TODO: debug method? request args? response?
-
-            var url = $"https://api.telegram.org/bot{Token}/{method}";
+            var url = $"https://api.telegram.org/bot{Token}/{methodName}";
 
             HttpResponseMessage response;
 
-            if (args != null)
+            var properties = args?.GetType().GetProperties();
+            if (properties is not null && properties.Any())
             {
-                if (args.GetInputFiles().Any())
+                HttpContent content = null;
+                if (properties.Any(property => property.PropertyType.BaseType == typeof(InputFile)))
                 {
-                    var content = new MultipartFormDataContent();
-                    foreach (var inputFile in args.GetInputFiles())
+                    content = new MultipartFormDataContent();
+                    foreach (var property in properties.Where(property => property.PropertyType.BaseType != typeof(InputFile)))
                     {
-                        content.Add(new StreamContent(new MemoryStream(inputFile.Bytes)), inputFile.Name, inputFile.FileName);
+                        ((MultipartFormDataContent) content).Add(new StringContent(property.GetValue(args).ToString(), Encoding.UTF8), property.Name.ToSnake());
                     }
-
-                    var properties = args?.ToDictionary();
-                    if (properties != null)
+                    
+                    foreach (var property in properties.Where(property => property.PropertyType.BaseType == typeof(InputFile)))
                     {
-                        foreach (var property in properties)
-                        {
-                            if (property.Value == null) continue;
+                        var inputFile = (InputFile) property.GetValue(args);
 
-                            var element = (JsonElement)property.Value;
-
-                            switch (element.ValueKind)
-                            {
-                                case JsonValueKind.String:
-                                case JsonValueKind.Number:
-                                case JsonValueKind.Array:
-                                case JsonValueKind.False:
-                                case JsonValueKind.True:
-                                    {
-                                        content.Add(new StringContent(property.Value.ToString()), property.Key);
-                                        break;
-                                    }
-
-                                /*case JsonValueKind.Object: { break; }*/
-
-                                default: throw new ArgumentOutOfRangeException(element.ValueKind.ToString(), property.Value, property.Key);
-                            }
-                        }
+                        ((MultipartFormDataContent)content).Add(new StreamContent(new MemoryStream(inputFile.Bytes)), inputFile.Name, inputFile.FileName);
                     }
-
-                    response = await HttpClient.PostAsync(url, content);
                 }
                 else
                 {
-                    response = await HttpClient.PostAsJsonAsync(url, args);
+                    content = new StringContent(args.Serialize(), Encoding.UTF8, "application/json");
                 }
+
+                LogCallback(LogTypes.INFO, $"ID: [{requestId}] Method: [{methodName}] Type: POST");
+                LogCallback(LogTypes.DEBUG, $"ID: [{requestId}] Rarameters RAW: \n{args.Serialize()}");
+
+                response = await _httpClient.PostAsync(url, content);
             }
             else
             {
-                response = await HttpClient.GetAsync(url);
+                LogCallback(LogTypes.INFO, $"ID: [{requestId}] Method: [{methodName}] Type: GET");
+
+                response = await _httpClient.GetAsync(url);
             }
 
-            var responseApi = await response.Content.ReadAsJsonAsync<ResponseAPI<T>>(); // ReadAsJsonAsync
-            if (responseApi != null && !responseApi.Ok && responseApi.ErrorCode == 429)
+            var responseApiRaw = await response.Content.ReadAsStringAsync();
+
+            LogCallback(LogTypes.DEBUG, $"ID: [{requestId}] Response RAW: \n{((responseApiRaw).Deserialize<ResponseAPI<T>>()).Serialize()}");
+
+            var responseApi = responseApiRaw.Deserialize<ResponseAPI<T>>();
+
+            LogCallback(LogTypes.INFO, $"ID: {requestId} Result: {(responseApi.Ok ? "OK" : responseApi.Description)}");
+
+            if (responseApi is not null && !responseApi.Ok && responseApi.ErrorCode == 429)
             {
-                var match = Regex.Match(responseApi.Description ?? "", @"retry after (\d+)");
-                var delay = match.Success ? int.Parse(match.Groups[1].Value) + 60 : 60;
+                LogCallback(LogTypes.ERROR, $"ID: {requestId} ERROR {responseApi.ErrorCode}: {responseApi.Description}");
+
+                //var match = Regex.Match(responseApi.Description ?? "", @"retry after (\d+)");
+                //var delay = match.Success ? int.Parse(match.Groups[1].Value) + 60 : 60;
+                var delay = responseApi.Parameters?.RetryAfter ?? 60;
 
                 await Task.Delay(delay * 1000);
 
-                return await RequestAsync<T>(method, args);
+                LogCallback(LogTypes.WARN, $"Sleep: {delay}");
+
+                return await RequestAsync<T>(methodName, args);
             }
 
             return responseApi;
         }
         catch (Exception e)
         {
+            LogCallback(LogTypes.FATAL, $"ID: {requestId} Method: [{methodName}] Description: {e.Message}");
+
+            /*
+             * TODO: check the next messages? try again request?
+             * "Network is unreachable (api.telegram.org:443)"
+             * "Name or service not known (api.telegram.org:443)"
+             * "An error occurred while sending the request."
+             */
+
             return new ResponseAPI<T>
             {
                 Ok = false,
@@ -117,7 +131,7 @@ public partial class TelegramBotAPIClient(HttpClient httpClient)
                 throw new ArgumentNullException(nameof(Token));
             }
 
-            var response = await HttpClient.GetAsync($"https://api.telegram.org/file/bot{Token}/{filePath}");
+            var response = await _httpClient.GetAsync($"https://api.telegram.org/file/bot{Token}/{filePath}");
             var bytes = await response.Content.ReadAsByteArrayAsync();
 
             return new ResponseAPI<byte[]>

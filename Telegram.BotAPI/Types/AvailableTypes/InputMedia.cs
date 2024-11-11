@@ -1,17 +1,16 @@
 using System.Collections.Generic;
 
-namespace Telegram.BotAPI.Types.Input;
+namespace Telegram.BotAPI.Types.AvailableTypes;
 
-// https://core.telegram.org/bots/api#inputmedia
 public abstract class InputMedia
 {
     public abstract string Type { get; }
 
     public virtual string Media { get; set; }
 
-    public virtual string Caption { get; set; } = string.Empty;
+    public virtual string Caption { get; set; }
 
-    public virtual string ParseMode { get; set; } = "html";
+    public virtual string ParseMode { get; set; }
 
     public virtual List<MessageEntity> CaptionEntities { get; set; }
 
@@ -29,7 +28,6 @@ public abstract class InputMedia
     }
 }
 
-// https://core.telegram.org/bots/api#inputmediaanimation
 public sealed class InputMediaAnimation : InputMedia
 {
     public override string Type => Types.ANIMATION;
@@ -47,7 +45,15 @@ public sealed class InputMediaAnimation : InputMedia
     public bool HasSpoiler { get; set; }
 }
 
-// https://core.telegram.org/bots/api#inputmediaaudio
+public sealed class InputMediaDocument : InputMedia
+{
+    public override string Type => Types.DOCUMENT;
+
+    public string Thumbnail { get; set; } = string.Empty;
+
+    public bool DisableContentTypeDetection { get; set; }
+}
+
 public sealed class InputMediaAudio : InputMedia
 {
     public override string Type => Types.AUDIO;
@@ -61,17 +67,6 @@ public sealed class InputMediaAudio : InputMedia
     public string Title { get; set; }
 }
 
-// https://core.telegram.org/bots/api#inputmediadocument
-public sealed class InputMediaDocument : InputMedia
-{
-    public override string Type => Types.DOCUMENT;
-
-    public string Thumbnail { get; set; } = string.Empty;
-
-    public bool DisableContentTypeDetection { get; set; }
-}
-
-// https://core.telegram.org/bots/api#inputmediaphoto
 public sealed class InputMediaPhoto : InputMedia
 {
     public override string Type => Types.PHOTO;
@@ -81,7 +76,6 @@ public sealed class InputMediaPhoto : InputMedia
     public bool HasSpoiler { get; set; }
 }
 
-// https://core.telegram.org/bots/api#inputmediavideo
 public sealed class InputMediaVideo : InputMedia
 {
     public override string Type => Types.VIDEO;

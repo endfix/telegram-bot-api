@@ -25,7 +25,7 @@ public class TelegramBotAPIClient(string token, HttpClient httpClient = null)
         OnLog(type, message);
     }
 
-    public async Task<ResponseAPI<T>> RequestAsync<T>(string methodName, object args = null)
+    public async Task<ResponseAPI<T>> RequestAsync<T>(string methodName, object requestParameters = null)
     {
         var requestId = Guid.NewGuid().ToString();
 
@@ -40,7 +40,7 @@ public class TelegramBotAPIClient(string token, HttpClient httpClient = null)
 
             HttpResponseMessage response;
 
-            var properties = args?.GetType().GetProperties();
+            var properties = requestParameters?.GetType().GetProperties();
             if (properties is not null && properties.Any())
             {
                 HttpContent content = null;
@@ -49,23 +49,23 @@ public class TelegramBotAPIClient(string token, HttpClient httpClient = null)
                     content = new MultipartFormDataContent();
                     foreach (var property in properties.Where(property => property.PropertyType.BaseType != typeof(InputFile)))
                     {
-                        ((MultipartFormDataContent) content).Add(new StringContent(property.GetValue(args).ToString(), Encoding.UTF8), property.Name.ToSnake());
+                        ((MultipartFormDataContent) content).Add(new StringContent(property.GetValue(requestParameters).ToString(), Encoding.UTF8), property.Name.ToSnake());
                     }
                     
                     foreach (var property in properties.Where(property => property.PropertyType.BaseType == typeof(InputFile)))
                     {
-                        var inputFile = (InputFile) property.GetValue(args);
+                        var inputFile = (InputFile) property.GetValue(requestParameters);
 
                         ((MultipartFormDataContent)content).Add(new StreamContent(new MemoryStream(inputFile.Bytes)), inputFile.Name, inputFile.FileName);
                     }
                 }
                 else
                 {
-                    content = new StringContent(args.Serialize(), Encoding.UTF8, "application/json");
+                    content = new StringContent(requestParameters.Serialize(), Encoding.UTF8, "application/json");
                 }
 
                 LogCallback(LogTypes.INFO, $"ID: [{requestId}] Method: [{methodName}] Type: POST");
-                LogCallback(LogTypes.DEBUG, $"ID: [{requestId}] Rarameters RAW: \n{args.Serialize()}");
+                LogCallback(LogTypes.DEBUG, $"ID: [{requestId}] Parameters RAW: \n{requestParameters.Serialize()}");
 
                 response = await _httpClient.PostAsync(url, content);
             }
@@ -96,7 +96,7 @@ public class TelegramBotAPIClient(string token, HttpClient httpClient = null)
 
                 LogCallback(LogTypes.WARN, $"Sleep: {delay}");
 
-                return await RequestAsync<T>(methodName, args);
+                return await RequestAsync<T>(methodName, requestParameters);
             }
 
             return responseApi;

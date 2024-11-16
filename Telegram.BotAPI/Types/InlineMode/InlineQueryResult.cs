@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Telegram.BotAPI.Types.AvailableTypes;
 
 namespace Telegram.BotAPI.Types.InlineMode;
 

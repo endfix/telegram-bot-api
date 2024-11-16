@@ -1,4 +1,6 @@
-﻿namespace Telegram.BotAPI.Types.Games;
+﻿using Telegram.BotAPI.Types.AvailableTypes;
+
+namespace Telegram.BotAPI.Types.Games;
 
 public sealed class GameHighScore
 {

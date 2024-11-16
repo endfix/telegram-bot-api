@@ -1,6 +1,7 @@
+using Telegram.BotAPI.Types.AvailableTypes;
+
 namespace Telegram.BotAPI.Types.Stickers;
 
-// https://core.telegram.org/bots/api#sticker
 public sealed class Sticker
 {
     public string FileId { get; set; }
@@ -23,7 +24,7 @@ public sealed class Sticker
 
     public string SetName { get; set; }
 
-    public FileStruct PremiumAnimation { get; set; }
+    public File PremiumAnimation { get; set; }
 
     public MaskPosition MaskPosition { get; set; }
 

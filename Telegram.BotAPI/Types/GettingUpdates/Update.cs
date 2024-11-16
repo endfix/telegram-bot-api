@@ -1,5 +1,6 @@
 using System;
 using Telegram.BotAPI.Extensions;
+using Telegram.BotAPI.Types.AvailableTypes;
 using Telegram.BotAPI.Types.InlineMode;
 using Telegram.BotAPI.Types.Payments;
 

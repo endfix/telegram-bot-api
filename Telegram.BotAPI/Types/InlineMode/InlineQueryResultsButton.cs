@@ -1,6 +1,7 @@
-﻿namespace Telegram.BotAPI.Types.InlineMode;
+﻿using Telegram.BotAPI.Types.AvailableTypes;
 
-// https://core.telegram.org/bots/api#inlinequeryresultsbutton
+namespace Telegram.BotAPI.Types.InlineMode;
+
 public sealed class InlineQueryResultsButton
 {
     public string Text { get; set; }

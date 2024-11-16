@@ -1,3 +1,5 @@
+using Telegram.BotAPI.Types.AvailableTypes;
+
 namespace Telegram.BotAPI.Types.InlineMode;
 
 public sealed class InlineQuery

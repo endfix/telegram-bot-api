@@ -2,7 +2,7 @@
 using System.Text.Json.Serialization;
 using System;
 using Telegram.BotAPI.Extensions;
-using Telegram.BotAPI.Types;
+using Telegram.BotAPI.Types.AvailableTypes;
 
 namespace Telegram.BotAPI.Serialization.Converters;
 

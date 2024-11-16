@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Telegram.BotAPI.Types.AvailableTypes;
 using Telegram.BotAPI.Types.Payments;
 
 namespace Telegram.BotAPI.Types.InlineMode;

@@ -20,6 +20,8 @@ public sealed class InlineKeyboardButton
 
     public SwitchInlineQueryChosenChat SwitchInlineQueryChosenChat { get; set; }
 
+    public CopyTextButton CopyText { get; set; }
+
     public CallbackGame CallbackGame { get; set; }
 
     public bool Pay { get; set; }

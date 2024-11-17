@@ -50,6 +50,11 @@ public sealed class TransactionPartnerUser : TransactionPartner
     public string InvoicePayload { get; set; }
 
     /// <summary>
+    /// Optional. The duration of the paid subscription
+    /// </summary>
+    public int SubscriptionPeriod { get; set; }
+
+    /// <summary>
     /// Optional. Information about the paid media bought by the user
     /// </summary>
     public List<PaidMedia> PaidMedia { get; set; }
@@ -58,6 +63,11 @@ public sealed class TransactionPartnerUser : TransactionPartner
     /// Optional. Bot-specified paid media payload
     /// </summary>
     public string PaidMediaPayload { get; set; }
+
+    /// <summary>
+    /// Optional. The gift sent to the user by the bot
+    /// </summary>
+    public string Gift { get; set; }
 }
 
 /// <summary>

@@ -22,7 +22,7 @@ public static class JsonSerializerExtensions
             new MessageOriginConverter(),
             new PaidMediaConverter(),
             new ReactionTypeConverter(),
-
+            new PassportElementErrorConverter()
         },
         WriteIndented = true,
         //PreferredObjectCreationHandling = System.Text.Json.Serialization.JsonObjectCreationHandling.Populate

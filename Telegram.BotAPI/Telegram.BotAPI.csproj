@@ -21,9 +21,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Include="BotAPIClient.*.cs">
+		<None Include="BotAPIClient.*.cs">
 			<DependentUpon>BotAPIClient.cs</DependentUpon>
-		</Compile>
+		</None>
 	</ItemGroup>
 	
 </Project>

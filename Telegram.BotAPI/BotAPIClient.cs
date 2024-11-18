@@ -6,11 +6,11 @@ using System;
 using System.Text;
 using Telegram.BotAPI.Extensions;
 using Telegram.BotAPI.Core;
-using Telegram.BotAPI.Core.UploadFiles;
+using Telegram.BotAPI.Types.AvailableTypes;
 
 namespace Telegram.BotAPI;
 
-public class TelegramBotAPIClient(string token, HttpClient httpClient = null)
+public partial class BotAPIClient(string token, HttpClient httpClient = null)
 {
     public string Token { get; set; } = token;
 
@@ -25,6 +25,7 @@ public class TelegramBotAPIClient(string token, HttpClient httpClient = null)
         OnLog(type, message);
     }
 
+    // TODO: error mode: silent | throw exception?
     public async Task<ResponseAPI<T>> RequestAsync<T>(string methodName, object requestParameters = null)
     {
         var requestId = Guid.NewGuid().ToString();
@@ -36,27 +37,33 @@ public class TelegramBotAPIClient(string token, HttpClient httpClient = null)
                 throw new ArgumentNullException(nameof(Token));
             }
 
+            if (string.IsNullOrEmpty(methodName))
+            {
+                throw new ArgumentNullException(nameof(methodName));
+            }
+
             var url = $"https://api.telegram.org/bot{Token}/{methodName}";
 
             HttpResponseMessage response;
 
-            var properties = requestParameters?.GetType().GetProperties();
-            if (properties is not null && properties.Any())
+            var propertiesInfo = requestParameters?.GetType().GetProperties().Where(property => property.GetValue(requestParameters) is not null);
+
+            if (propertiesInfo is not null && propertiesInfo.Any())
             {
                 HttpContent content = null;
-                if (properties.Any(property => property.PropertyType.BaseType == typeof(InputFile)))
+                if (propertiesInfo.Any(propety => propety.PropertyType == typeof(InputFile) || propety.PropertyType.BaseType == typeof(InputFile)))
                 {
                     content = new MultipartFormDataContent();
-                    foreach (var property in properties.Where(property => property.PropertyType.BaseType != typeof(InputFile)))
+                    foreach (var property in propertiesInfo)
                     {
-                        ((MultipartFormDataContent) content).Add(new StringContent(property.GetValue(requestParameters).ToString(), Encoding.UTF8), property.Name.ToSnake());
-                    }
-                    
-                    foreach (var property in properties.Where(property => property.PropertyType.BaseType == typeof(InputFile)))
-                    {
-                        var inputFile = (InputFile) property.GetValue(requestParameters);
-
-                        ((MultipartFormDataContent)content).Add(new StreamContent(new MemoryStream(inputFile.Bytes)), inputFile.Name, inputFile.FileName);
+                        if (property.GetValue(requestParameters) is InputFile inputFile)
+                        {
+                            ((MultipartFormDataContent)content).Add(new StreamContent(new MemoryStream(inputFile.Bytes)), inputFile.Name, inputFile.FileName);
+                        }
+                        else
+                        {
+                            ((MultipartFormDataContent)content).Add(new StringContent(property.GetValue(requestParameters).ToString(), Encoding.UTF8), property.Name.ToSnake());
+                        }
                     }
                 }
                 else
@@ -86,15 +93,13 @@ public class TelegramBotAPIClient(string token, HttpClient httpClient = null)
 
             if (responseApi is not null && !responseApi.Ok && responseApi.ErrorCode == 429)
             {
-                LogCallback(LogTypes.ERROR, $"ID: {requestId} ERROR {responseApi.ErrorCode}: {responseApi.Description}");
+                LogCallback(LogTypes.WARN, $"ID: {requestId} {responseApi.ErrorCode}: {responseApi.Description}");
 
                 //var match = Regex.Match(responseApi.Description ?? "", @"retry after (\d+)");
                 //var delay = match.Success ? int.Parse(match.Groups[1].Value) + 60 : 60;
                 var delay = responseApi.Parameters?.RetryAfter ?? 60;
 
                 await Task.Delay(delay * 1000);
-
-                LogCallback(LogTypes.WARN, $"Sleep: {delay}");
 
                 return await RequestAsync<T>(methodName, requestParameters);
             }

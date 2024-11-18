@@ -20,4 +20,10 @@
 	  <PackageReference Include="System.Text.Json" Version="8.0.5" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<Compile Include="BotAPIClient.*.cs">
+			<DependentUpon>BotAPIClient.cs</DependentUpon>
+		</Compile>
+	</ItemGroup>
+	
 </Project>

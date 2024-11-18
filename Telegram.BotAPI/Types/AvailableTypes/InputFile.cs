@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Telegram.BotAPI.Core.UploadFiles;
+namespace Telegram.BotAPI.Types.AvailableTypes;
 
 public abstract class InputFile(string path)
 {
@@ -8,7 +8,7 @@ public abstract class InputFile(string path)
 
     public string FileName { get; private set; } = Path.GetFileName(path);
 
-    public byte[] Bytes { get; private set; } = File.ReadAllBytes(path);
+    public byte[] Bytes { get; private set; } = System.IO.File.ReadAllBytes(path);
 
     public static class Types
     {

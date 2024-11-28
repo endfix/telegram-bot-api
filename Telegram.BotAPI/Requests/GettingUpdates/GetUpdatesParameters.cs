@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Telegram.BotAPI.RequestParameters.GettingUpdates;
+namespace Telegram.BotAPI.Requests.GettingUpdates;
 
-public sealed class GetUpdatesParameters
+public sealed class GetUpdatesParameters : RequestParameters
 {
     /// <summary>
     /// Identifier of the first update to be returned. Must be greater by one than the highest among the identifiers of previously received updates. 
-    /// By default, updates starting with the earliest unconfirmed update are returned. An update is considered confirmed as soon as getUpdates is called with an <em>offset</em> higher than its <em>update_id</em>. The negative offset can be specified to retrieve updates starting from <em>-offset</em> update from the end of the updates queue. All previous updates will be forgotten.
+    /// By default, updates starting with the earliest unconfirmed update are returned.
+    /// An update is considered confirmed as soon as getUpdates is called with an <em>offset</em> higher than its <em>update_id</em>.
+    /// The negative offset can be specified to retrieve updates starting from <em>-offset</em> update from the end of the updates queue. All previous updates will be forgotten.
     /// </summary>
-    public int Offset { get; set; }
+    public long Offset { get; set; }
 
     /// <summary>
     /// Limits the number of updates to be retrieved. Values between 1-100 are accepted. Defaults to 100.
@@ -29,6 +30,4 @@ public sealed class GetUpdatesParameters
     /// <br/><br/>Please note that this parameter doesn't affect updates created before the call to the getUpdates, so unwanted updates may be received for a short period of time.
     /// </summary>
     public List<string> AllowedUpdates { get; set; }
-
-
 }

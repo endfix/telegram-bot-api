@@ -203,7 +203,7 @@ public sealed class Update
 
         public const string EDITED_CHANNEL_POST = "edited_channel_post";
 
-        public const string BUSINESS_CONNECTiON = "business_connection";
+        public const string BUSINESS_CONNECTION = "business_connection";
 
         public const string BUSINESS_MESSAGE = "business_message";
 
@@ -252,7 +252,7 @@ public sealed class Update
 
         if (IsEditedChannelPost()) { return Types.EDITED_CHANNEL_POST; }
 
-        if (IsBusinessConnection()) { return Types.BUSINESS_CONNECTiON; }
+        if (IsBusinessConnection()) { return Types.BUSINESS_CONNECTION; }
 
         if (IsBusinessMessage()) { return Types.BUSINESS_MESSAGE; }
 

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Telegram.BotAPI.Types.AvailableTypes;
 
-namespace Telegram.BotAPI.RequestParameters.GettingUpdates;
+namespace Telegram.BotAPI.Requests.GettingUpdates;
 
-public class SetWebhookParameters
+public class SetWebhookParameters : RequestParameters
 {
     /// <summary>
     /// HTTPS URL to send updates to.Use an empty string to remove webhook integration
@@ -14,7 +14,7 @@ public class SetWebhookParameters
     /// Upload your public key certificate so that the root certificate in use can be checked. 
     /// See our <see href="https://core.telegram.org/bots/self-signed">self-signed guide</see> for details.
     /// </summary>
-    public InputFile Certificate {  get; set; }
+    public InputFile Certificate { get; set; }
 
     /// <summary>
     /// The fixed IP address which will be used to send webhook requests instead of the IP address resolved through DNS

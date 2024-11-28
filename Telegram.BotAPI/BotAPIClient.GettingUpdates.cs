@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Telegram.BotAPI.Core;
-using Telegram.BotAPI.RequestParameters.GettingUpdates;
+using Telegram.BotAPI.Requests.GettingUpdates;
 using Telegram.BotAPI.Types.GettingUpdates;
 
 namespace Telegram.BotAPI;
@@ -29,12 +29,7 @@ public partial class BotAPIClient
     /// <param name="parameters"></param>
     /// <returns>Returns True on success.</returns>
     public async Task<ResponseAPI<bool>> SetWebhookAsync(SetWebhookParameters parameters)
-    {
-        if (string.IsNullOrEmpty(parameters.Url))
-        {
-            throw new ArgumentNullException(nameof(parameters.Url));
-        }
-        
+    {        
         return await RequestAsync<bool>("setWebhook", parameters);
     }
 

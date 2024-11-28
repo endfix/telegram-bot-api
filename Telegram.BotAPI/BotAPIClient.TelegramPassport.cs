@@ -1,8 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Telegram.BotAPI.Core;
-using Telegram.BotAPI.RequestParameters.TelegramPassport;
+using Telegram.BotAPI.Requests.TelegramPassport;
 
 namespace Telegram.BotAPI;
 
@@ -19,16 +17,6 @@ public partial class BotAPIClient
     /// <returns>Returns True on success.</returns>
     public async Task<ResponseAPI<bool>> SetPassportDataErrors(SetPassportDataErrorsParameters parameters)
     {
-        if (parameters.UserId == 0)
-        {
-            throw new ArgumentNullException(nameof(parameters.UserId));
-        }
-
-        if (parameters.Errors is null || !parameters.Errors.Any())
-        {
-            throw new ArgumentNullException(nameof(parameters.Errors));
-        }
-
         return await RequestAsync<bool>("setPassportDataErrors", parameters);
     }
 }

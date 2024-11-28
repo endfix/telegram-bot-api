@@ -7,6 +7,7 @@ using System.Text;
 using Telegram.BotAPI.Extensions;
 using Telegram.BotAPI.Core;
 using Telegram.BotAPI.Types.AvailableTypes;
+using Telegram.BotAPI.Requests;
 
 namespace Telegram.BotAPI;
 
@@ -26,7 +27,7 @@ public partial class BotAPIClient(string token, HttpClient httpClient = null)
     }
 
     // TODO: error mode: silent | throw exception?
-    public async Task<ResponseAPI<T>> RequestAsync<T>(string methodName, object requestParameters = null)
+    public async Task<ResponseAPI<T>> RequestAsync<T>(string methodName, RequestParameters requestParameters = null)
     {
         var requestId = Guid.NewGuid().ToString();
 
@@ -47,28 +48,39 @@ public partial class BotAPIClient(string token, HttpClient httpClient = null)
             HttpResponseMessage response;
 
             var propertiesInfo = requestParameters?.GetType().GetProperties().Where(property => property.GetValue(requestParameters) is not null);
-
             if (propertiesInfo is not null && propertiesInfo.Any())
             {
-                HttpContent content = null;
-                if (propertiesInfo.Any(propety => propety.PropertyType == typeof(InputFile) || propety.PropertyType.BaseType == typeof(InputFile)))
+                var content = new MultipartFormDataContent();
+                foreach (var property in propertiesInfo)
                 {
-                    content = new MultipartFormDataContent();
-                    foreach (var property in propertiesInfo)
+                    var propertyValue = property.GetValue(requestParameters);
+                    if (propertyValue is InputFile inputFile)
                     {
-                        if (property.GetValue(requestParameters) is InputFile inputFile)
+                        content.Add(new StreamContent(new MemoryStream(inputFile.Bytes)), inputFile.Name, inputFile.FileName);
+                    }
+                    else
+                    {
+                        switch (propertyValue)
                         {
-                            ((MultipartFormDataContent)content).Add(new StreamContent(new MemoryStream(inputFile.Bytes)), inputFile.Name, inputFile.FileName);
-                        }
-                        else
-                        {
-                            ((MultipartFormDataContent)content).Add(new StringContent(property.GetValue(requestParameters).ToString(), Encoding.UTF8), property.Name.ToSnake());
+                            case string:
+                            case bool:
+                            case int:
+                                {
+                                    content.Add(new StringContent(propertyValue.ToString(), Encoding.UTF8), property.Name.ToSnake());
+                                    break;
+                                }
+                            case object:
+                                {
+                                    content.Add(new StringContent(propertyValue.Serialize(), Encoding.UTF8), property.Name.ToSnake());
+                                    break;
+                                }
+                            default:
+                                {
+                                    Console.WriteLine(propertyValue.GetType().Name);
+                                    break;
+                                }
                         }
                     }
-                }
-                else
-                {
-                    content = new StringContent(requestParameters.Serialize(), Encoding.UTF8, "application/json");
                 }
 
                 LogCallback(LogTypes.INFO, $"ID: [{requestId}] Method: [{methodName}] Type: POST");

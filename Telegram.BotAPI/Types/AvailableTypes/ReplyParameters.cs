@@ -6,13 +6,13 @@ public sealed class ReplyParameters
 {
     public long MessageId { get; set; }
 
-    public string ChatId { get; set; } = string.Empty;
+    public string ChatId { get; set; }
 
     public bool AllowSendingWithoutReply { get; set; }
 
-    public string Quote { get; set; } = string.Empty;
+    public string Quote { get; set; } 
 
-    public string QuoteParseMode { get; set; } = "HTML";
+    public string QuoteParseMode { get; set; }
 
     public List<MessageEntity> QuoteEntities { get; set; }
 

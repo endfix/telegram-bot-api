@@ -12,6 +12,7 @@ public static class JsonSerializerExtensions
         //PropertyNameCaseInsensitive = true,
         PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
         Converters = {
+            //new JsonStringEnumConverter(namingPolicy: JsonNamingPolicy.SnakeCaseLower),
             new BackgroundFillConverter(),
             new BackgroundTypeConverter(),
             new BotCommandScopeConverter(),
@@ -24,7 +25,7 @@ public static class JsonSerializerExtensions
             new ReactionTypeConverter(),
             new PassportElementErrorConverter()
         },
-        WriteIndented = true,
+        //WriteIndented = true,
         //PreferredObjectCreationHandling = System.Text.Json.Serialization.JsonObjectCreationHandling.Populate
         //UnmappedMemberHandling = System.Text.Json.Serialization.JsonUnmappedMemberHandling.Disallow
     };

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Telegram.BotAPI.Types.TelegramPassport;
 
-namespace Telegram.BotAPI.RequestParameters.TelegramPassport;
+namespace Telegram.BotAPI.Requests.TelegramPassport;
 
-public sealed class SetPassportDataErrorsParameters
+public sealed class SetPassportDataErrorsParameters : RequestParameters
 {
     /// <summary>
     /// User identifier

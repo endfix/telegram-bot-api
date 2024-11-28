@@ -13,7 +13,7 @@ public class ReactionTypeConverter : JsonConverter<ReactionType>
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var jsonElement = jsonDocument.RootElement;
-
+            
             return jsonElement.GetProperty("type").GetString() switch
             {
                 ReactionType.Types.EMOJI => jsonElement.GetRawText().Deserialize<ReactionTypeEmoji>(),

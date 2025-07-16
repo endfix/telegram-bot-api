@@ -1,4 +1,4 @@
-namespace Telegram.BotAPI.Types.AvailableTypes;
+namespace Telegram.BotAPI.Types;
 
 public sealed class Video
 {
@@ -13,6 +13,10 @@ public sealed class Video
     public int Duration { get; set; }
 
     public PhotoSize Thumbnail { get; set; }
+
+    public PhotoSize[] Cover { get; set; }
+
+    public int StartTimestamp { get; set; }
 
     public string FileName { get; set; }
 

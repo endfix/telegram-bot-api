@@ -1,6 +1,4 @@
-using Telegram.BotAPI.Types.Games;
-
-namespace Telegram.BotAPI.Types.AvailableTypes;
+namespace Telegram.BotAPI.Types;
 
 public sealed class InlineKeyboardButton
 {

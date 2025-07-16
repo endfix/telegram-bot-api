@@ -7,6 +7,7 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>		
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<IsPackable>true</IsPackable>
+		<ImplicitUsings>disable</ImplicitUsings>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -17,13 +18,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="System.Text.Json" Version="8.0.5" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<None Include="BotAPIClient.*.cs">
-			<DependentUpon>BotAPIClient.cs</DependentUpon>
-		</None>
+	  <PackageReference Include="System.Text.Json" Version="9.0.0" />
 	</ItemGroup>
 	
 </Project>

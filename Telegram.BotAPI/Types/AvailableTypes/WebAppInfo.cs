@@ -1,6 +1,6 @@
-namespace Telegram.BotAPI.Types.AvailableTypes;
+namespace Telegram.BotAPI.Types;
 
 public sealed class WebAppInfo
 {
-    public string Url { get; set; } = string.Empty;
+    public string Url { get; set; }
 }

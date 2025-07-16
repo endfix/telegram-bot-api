@@ -1,35 +1,28 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System;
 using System.Text;
+using System.Net.Http;
 using Telegram.BotAPI.Extensions;
+using System.Threading.Tasks;
+using Telegram.BotAPI.Types;
 using Telegram.BotAPI.Core;
-using Telegram.BotAPI.Types.AvailableTypes;
-using Telegram.BotAPI.Requests;
 
 namespace Telegram.BotAPI;
 
-public partial class BotAPIClient(string token, HttpClient httpClient = null)
+public class BotApiClient(string token, HttpClient httpClient = null)
 {
     public string Token { get; set; } = token;
 
     private readonly HttpClient _httpClient = httpClient ?? new HttpClient();
 
-    public delegate void LogEventHandler(LogTypes type, string message);
+    public event EventHandler<DebugEventArgs> OnDebug;
 
-    public event LogEventHandler OnLog;
-
-    private void LogCallback(LogTypes type, string message)
+    // TODO: error mode: silent (event) | throw exception?
+    public async Task<ApiResponse<T>> RequestAsync<T>(ApiRequest request, ApiContext<T> context = null)
     {
-        OnLog(type, message);
-    }
-
-    // TODO: error mode: silent | throw exception?
-    public async Task<ResponseAPI<T>> RequestAsync<T>(string methodName, RequestParameters requestParameters = null)
-    {
-        var requestId = Guid.NewGuid().ToString();
+        context ??= new ApiContext<T>();
+        context.Request ??= request;
 
         try
         {
@@ -38,108 +31,105 @@ public partial class BotAPIClient(string token, HttpClient httpClient = null)
                 throw new ArgumentNullException(nameof(Token));
             }
 
-            if (string.IsNullOrEmpty(methodName))
+            if (string.IsNullOrEmpty(request.MethodName))
             {
-                throw new ArgumentNullException(nameof(methodName));
+                throw new ArgumentNullException(nameof(request.MethodName));
             }
 
-            var url = $"https://api.telegram.org/bot{Token}/{methodName}";
+            var url = $"https://api.telegram.org/bot{Token}/{request.MethodName}";
 
             HttpResponseMessage response;
 
-            var propertiesInfo = requestParameters?.GetType().GetProperties().Where(property => property.GetValue(requestParameters) is not null);
-            if (propertiesInfo is not null && propertiesInfo.Any())
+            var properties = request.Parameters?.GetType().GetProperties().Where(property => property.GetValue(request.Parameters) is not null);
+            if (properties is not null && properties.Any())
             {
-                var content = new MultipartFormDataContent();
-                foreach (var property in propertiesInfo)
+                var httpContent = new MultipartFormDataContent();
+                foreach (var property in properties)
                 {
-                    var propertyValue = property.GetValue(requestParameters);
+                    var propertyValue = property.GetValue(request.Parameters);
                     if (propertyValue is InputFile inputFile)
                     {
-                        content.Add(new StreamContent(new MemoryStream(inputFile.Bytes)), inputFile.Name, inputFile.FileName);
+                        httpContent.Add(new StreamContent(new MemoryStream(inputFile.Bytes)), inputFile.Name.Serialize(), inputFile.FileName);
                     }
                     else
                     {
-                        switch (propertyValue)
+                        var propertyType = Type.GetTypeCode(propertyValue.GetType());
+                        switch (propertyType)
                         {
-                            case string:
-                            case bool:
-                            case int:
+                            case TypeCode.String:
+                            case TypeCode.Boolean:
+                            case TypeCode.Int16 or TypeCode.Int32 or TypeCode.Int64:
+                            case TypeCode.Object:
                                 {
-                                    content.Add(new StringContent(propertyValue.ToString(), Encoding.UTF8), property.Name.ToSnake());
-                                    break;
-                                }
-                            case object:
-                                {
-                                    content.Add(new StringContent(propertyValue.Serialize(), Encoding.UTF8), property.Name.ToSnake());
+                                    var content = new StringContent(propertyType is TypeCode.Object ? propertyValue.Serialize() : propertyValue.ToString(), Encoding.UTF8);
+                                    httpContent.Add(content, property.Name.ToSnake());
                                     break;
                                 }
                             default:
                                 {
-                                    Console.WriteLine(propertyValue.GetType().Name);
+                                    Console.WriteLine($"Unsupported type: {propertyType}");
                                     break;
                                 }
                         }
                     }
                 }
 
-                LogCallback(LogTypes.INFO, $"ID: [{requestId}] Method: [{methodName}] Type: POST");
-                LogCallback(LogTypes.DEBUG, $"ID: [{requestId}] Parameters RAW: \n{requestParameters.Serialize()}");
+                response = await _httpClient.PostAsync(url, httpContent);
 
-                response = await _httpClient.PostAsync(url, content);
+                OnDebug?.Invoke(context, new DebugEventArgs("Request POST"));
             }
             else
             {
-                LogCallback(LogTypes.INFO, $"ID: [{requestId}] Method: [{methodName}] Type: GET");
-
                 response = await _httpClient.GetAsync(url);
+
+                OnDebug?.Invoke(context, new DebugEventArgs("Request GET"));
             }
 
-            var responseApiRaw = await response.Content.ReadAsStringAsync();
+            var responseRaw = await response.Content.ReadAsStringAsync();
+            var responseApi = responseRaw.Deserialize<ApiResponse<T>>();
 
-            LogCallback(LogTypes.DEBUG, $"ID: [{requestId}] Response RAW: \n{((responseApiRaw).Deserialize<ResponseAPI<T>>()).Serialize()}");
+            responseApi.Raw = responseRaw;
+            context.Response = responseApi;
 
-            var responseApi = responseApiRaw.Deserialize<ResponseAPI<T>>();
-
-            LogCallback(LogTypes.INFO, $"ID: {requestId} Result: {(responseApi.Ok ? "OK" : responseApi.Description)}");
+            OnDebug?.Invoke(context, new DebugEventArgs("Response"));
 
             if (responseApi is not null && !responseApi.Ok && responseApi.ErrorCode == 429)
             {
-                LogCallback(LogTypes.WARN, $"ID: {requestId} {responseApi.ErrorCode}: {responseApi.Description}");
+                await Task.Delay((responseApi.Parameters?.RetryAfter ?? 60) * 1000);
 
-                //var match = Regex.Match(responseApi.Description ?? "", @"retry after (\d+)");
-                //var delay = match.Success ? int.Parse(match.Groups[1].Value) + 60 : 60;
-                var delay = responseApi.Parameters?.RetryAfter ?? 60;
-
-                await Task.Delay(delay * 1000);
-
-                return await RequestAsync<T>(methodName, requestParameters);
+                return await RequestAsync<T>(request, context);
             }
 
             return responseApi;
         }
         catch (Exception e)
         {
-            LogCallback(LogTypes.FATAL, $"ID: {requestId} Method: [{methodName}] Description: {e.Message}");
-
             /*
-             * TODO: check the next messages? try again request?
+             * TODO: check the next messages:
              * "Network is unreachable (api.telegram.org:443)"
              * "Name or service not known (api.telegram.org:443)"
              * "An error occurred while sending the request."
+             * 
+             * then try again request?
              */
 
-            return new ResponseAPI<T>
+            var response = new ApiResponse<T>
             {
                 Ok = false,
                 ErrorCode = 500,
                 Description = e.Message,
                 Result = default
             };
+
+            context.Response = response;
+
+            OnDebug?.Invoke(context, new DebugEventArgs("Exception"));
+
+            return response;
         }
     }
 
-    public async Task<ResponseAPI<byte[]>> GetFileBytesAsync(string filePath)
+    public async Task<ApiResponse<byte[]>> GetFileBytesAsync(string filePath)
     {
         try
         {
@@ -151,7 +141,7 @@ public partial class BotAPIClient(string token, HttpClient httpClient = null)
             var response = await _httpClient.GetAsync($"https://api.telegram.org/file/bot{Token}/{filePath}");
             var bytes = await response.Content.ReadAsByteArrayAsync();
 
-            return new ResponseAPI<byte[]>
+            return new ApiResponse<byte[]>
             {
                 Ok = true,
                 Result = bytes
@@ -159,7 +149,7 @@ public partial class BotAPIClient(string token, HttpClient httpClient = null)
         }
         catch (Exception e)
         {
-            return new ResponseAPI<byte[]>
+            return new ApiResponse<byte[]>
             {
                 Ok = false,
                 ErrorCode = 500,

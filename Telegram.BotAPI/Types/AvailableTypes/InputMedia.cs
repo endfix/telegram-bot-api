@@ -1,10 +1,10 @@
-using System.Collections.Generic;
+using Telegram.BotAPI.Enums;
 
-namespace Telegram.BotAPI.Types.AvailableTypes;
+namespace Telegram.BotAPI.Types;
 
 public abstract class InputMedia
 {
-    public abstract string Type { get; }
+    public abstract InputMediaTypes Type { get; }
 
     public virtual string Media { get; set; }
 
@@ -12,25 +12,12 @@ public abstract class InputMedia
 
     public virtual string ParseMode { get; set; }
 
-    public virtual List<MessageEntity> CaptionEntities { get; set; }
-
-    public static class Types
-    {
-        public const string ANIMATION = "animation";
-
-        public const string DOCUMENT = "document";
-
-        public const string AUDIO = "audio";
-
-        public const string PHOTO = "photo";
-
-        public const string VIDEO = "video";
-    }
+    public virtual MessageEntity[] CaptionEntities { get; set; }
 }
 
 public sealed class InputMediaAnimation : InputMedia
 {
-    public override string Type => Types.ANIMATION;
+    public override InputMediaTypes Type => InputMediaTypes.Animation;
 
     public string Thumbnail { get; set; } = string.Empty;
 
@@ -47,7 +34,7 @@ public sealed class InputMediaAnimation : InputMedia
 
 public sealed class InputMediaDocument : InputMedia
 {
-    public override string Type => Types.DOCUMENT;
+    public override InputMediaTypes Type => InputMediaTypes.Document;
 
     public string Thumbnail { get; set; } = string.Empty;
 
@@ -56,7 +43,7 @@ public sealed class InputMediaDocument : InputMedia
 
 public sealed class InputMediaAudio : InputMedia
 {
-    public override string Type => Types.AUDIO;
+    public override InputMediaTypes Type => InputMediaTypes.Audio;
 
     public string Thumbnail { get; set; } = string.Empty;
 
@@ -69,7 +56,7 @@ public sealed class InputMediaAudio : InputMedia
 
 public sealed class InputMediaPhoto : InputMedia
 {
-    public override string Type => Types.PHOTO;
+    public override InputMediaTypes Type => InputMediaTypes.Photo;
 
     public bool ShowCaptionAboveMedia { get; set; }
 
@@ -78,9 +65,13 @@ public sealed class InputMediaPhoto : InputMedia
 
 public sealed class InputMediaVideo : InputMedia
 {
-    public override string Type => Types.VIDEO;
+    public override InputMediaTypes Type => InputMediaTypes.Video;
 
-    public string Thumbnail { get; set; } = string.Empty;
+    public string Thumbnail { get; set; }
+
+    public string Cover { get; set; }
+
+    public int StartTimestamp { get; set; }
 
     public bool ShowCaptionAboveMedia { get; set; }
 
@@ -90,7 +81,7 @@ public sealed class InputMediaVideo : InputMedia
 
     public int Duration { get; set; }
 
-    public bool SupportsStreaming { get; set; } = true;
+    public bool SupportsStreaming { get; set; }
 
     public bool HasSpoiler { get; set; }
 }

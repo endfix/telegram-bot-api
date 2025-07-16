@@ -1,12 +1,10 @@
-using System.Collections.Generic;
-
-namespace Telegram.BotAPI.Types.AvailableTypes;
+namespace Telegram.BotAPI.Types;
 
 public sealed class TextQuote
 {
     public string Text { get; set; }
 
-    public List<MessageEntity> Entities { get; set; }
+    public MessageEntity[] Entities { get; set; }
 
     public int Position { get; set; }
 

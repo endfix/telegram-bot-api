@@ -1,12 +1,10 @@
-using System.Collections.Generic;
-
-namespace Telegram.BotAPI.Types.AvailableTypes;
+namespace Telegram.BotAPI.Types;
 
 public sealed class ReplyParameters
 {
     public long MessageId { get; set; }
 
-    public string ChatId { get; set; }
+    public object ChatId { get; set; }
 
     public bool AllowSendingWithoutReply { get; set; }
 
@@ -14,7 +12,7 @@ public sealed class ReplyParameters
 
     public string QuoteParseMode { get; set; }
 
-    public List<MessageEntity> QuoteEntities { get; set; }
+    public MessageEntity[] QuoteEntities { get; set; }
 
     public int QuotePosition { get; set; }
 }

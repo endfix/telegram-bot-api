@@ -1,6 +1,4 @@
-using System.Collections.Generic;
-
-namespace Telegram.BotAPI.Types.AvailableTypes;
+namespace Telegram.BotAPI.Types;
 
 public sealed class ChatShared
 {
@@ -12,5 +10,5 @@ public sealed class ChatShared
 
     public string Username { get; set; }
 
-    public List<PhotoSize> Photo { get; set; }
+    public PhotoSize[] Photo { get; set; }
 }

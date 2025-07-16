@@ -1,6 +1,4 @@
-using Telegram.BotAPI.Types.Stickers;
-
-namespace Telegram.BotAPI.Types.AvailableTypes;
+namespace Telegram.BotAPI.Types;
 
 public sealed class BusinessIntro
 {

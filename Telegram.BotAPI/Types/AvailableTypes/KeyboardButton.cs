@@ -1,4 +1,4 @@
-namespace Telegram.BotAPI.Types.AvailableTypes;
+namespace Telegram.BotAPI.Types;
 
 public sealed class KeyboardButton
 {
@@ -8,7 +8,7 @@ public sealed class KeyboardButton
 
     public bool RequestLocation { get; set; }
 
-    public KeyboardButtonPollType RequestPoll { get; set; } = new KeyboardButtonPollType();
+    public KeyboardButtonPollType RequestPoll { get; set; }
 
     public WebAppInfo WebApp { get; set; }
 }

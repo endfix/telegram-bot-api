@@ -1,6 +1,4 @@
-using System.Collections.Generic;
-
-namespace Telegram.BotAPI.Types.AvailableTypes;
+namespace Telegram.BotAPI.Types;
 
 public sealed class BusinessMessagesDeleted
 {
@@ -8,5 +6,5 @@ public sealed class BusinessMessagesDeleted
 
     public Chat Chat { get; set; }
 
-    public List<int> MessageIds { get; set; }
+    public int[] MessageIds { get; set; }
 }

@@ -1,6 +1,4 @@
-using System.Collections.Generic;
-
-namespace Telegram.BotAPI.Types.AvailableTypes;
+namespace Telegram.BotAPI.Types;
 
 public sealed class PollAnswer
 {
@@ -10,5 +8,5 @@ public sealed class PollAnswer
 
     public User User { get; set; }
 
-    public List<int> OptionIds { get; set; }
+    public int[] OptionIds { get; set; }
 }

@@ -1,29 +1,22 @@
-namespace Telegram.BotAPI.Types.AvailableTypes;
+using Telegram.BotAPI.Enums;
+
+namespace Telegram.BotAPI.Types;
 
 public abstract class ChatBoostSource
 {
-    public abstract string Source { get; }
+    public abstract ChatBoostSources Source { get; }
 
     public User User { get; set; }
-
-    public static class Sources
-    {
-        public const string PREMIUM = "premium";
-
-        public const string GIFT_CODE = "gift_code";
-
-        public const string GIVEAWAY = "giveaway";
-    }
 }
 
 public sealed class ChatBoostSourceGiftCode : ChatBoostSource
 {
-    public override string Source => Sources.GIFT_CODE;
+    public override ChatBoostSources Source => ChatBoostSources.GiftCode;
 }
 
 public sealed class ChatBoostSourceGiveaway : ChatBoostSource
 {
-    public override string Source => Sources.GIVEAWAY;
+    public override ChatBoostSources Source => ChatBoostSources.Giveaway;
 
     public int GiveawayMessageId { get; set; }
 
@@ -34,5 +27,5 @@ public sealed class ChatBoostSourceGiveaway : ChatBoostSource
 
 public sealed class ChatBoostSourcePremium : ChatBoostSource
 {
-    public override string Source => Sources.PREMIUM;
+    public override ChatBoostSources Source => ChatBoostSources.Premium;
 }

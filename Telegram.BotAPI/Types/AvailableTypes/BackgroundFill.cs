@@ -1,31 +1,22 @@
-using System.Collections.Generic;
+using Telegram.BotAPI.Enums;
 
-namespace Telegram.BotAPI.Types.AvailableTypes;
+namespace Telegram.BotAPI.Types;
 
 public abstract class BackgroundFill
 {
-    public abstract string Type { get; }
-
-    public static class Types
-    {
-        public const string SOLID = "solid";
-
-        public const string GRADIENT = "gradient";
-
-        public const string FREEFORM_GRADIENT = "freeform_gradient";
-    }
+    public abstract BackgroundFillTypes Type { get; }
 }
 
 public sealed class BackgroundFillFreeformGradient : BackgroundFill
 {
-    public override string Type => Types.FREEFORM_GRADIENT;
+    public override BackgroundFillTypes Type => BackgroundFillTypes.FreeformGradient;
 
-    public List<int> Colors { get; set; }
+    public int[] Colors { get; set; }
 }
 
 public sealed class BackgroundFillGradient : BackgroundFill
 {
-    public override string Type => Types.GRADIENT;
+    public override BackgroundFillTypes Type => BackgroundFillTypes.Gradient;
 
     public string TopColor { get; set; }
 
@@ -36,7 +27,7 @@ public sealed class BackgroundFillGradient : BackgroundFill
 
 public sealed class BackgroundFillSolid : BackgroundFill
 {
-    public override string Type => Types.SOLID;
+    public override BackgroundFillTypes Type => BackgroundFillTypes.Solid;
 
     public int Color { get; set; }
 }

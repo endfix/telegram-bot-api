@@ -1,8 +1,9 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 using System.Text.Json.Serialization;
-using System;
 using Telegram.BotAPI.Extensions;
-using Telegram.BotAPI.Types.AvailableTypes;
+using Telegram.BotAPI.Types;
+using Telegram.BotAPI.Enums;
 
 namespace Telegram.BotAPI.Serialization.Converters;
 
@@ -13,13 +14,12 @@ public class MessageOriginConverter : JsonConverter<MessageOrigin>
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var jsonElement = jsonDocument.RootElement;
-
-            return jsonElement.GetProperty("type").GetString() switch
+            return Enum.Parse(typeof(MessageOriginTypes), jsonElement.GetProperty("type").GetString()?.ToUpperInvariant()) switch
             {
-                MessageOrigin.Types.USER => jsonElement.GetRawText().Deserialize<MessageOriginUser>(),
-                MessageOrigin.Types.HIDDEN_USER => jsonElement.GetRawText().Deserialize<MessageOriginHiddenUser>(),
-                MessageOrigin.Types.CHAT => jsonElement.GetRawText().Deserialize<MessageOriginChat>(),
-                MessageOrigin.Types.CHANNEL => jsonElement.GetRawText().Deserialize<MessageOriginChannel>(),
+                MessageOriginTypes.User => jsonElement.GetRawText().Deserialize<MessageOriginUser>(),
+                MessageOriginTypes.HiddenUser => jsonElement.GetRawText().Deserialize<MessageOriginHiddenUser>(),
+                MessageOriginTypes.Chat => jsonElement.GetRawText().Deserialize<MessageOriginChat>(),
+                MessageOriginTypes.Channel => jsonElement.GetRawText().Deserialize<MessageOriginChannel>(),
                 _ => throw new ArgumentOutOfRangeException(jsonElement.GetRawText()),
             };
         }
@@ -27,6 +27,6 @@ public class MessageOriginConverter : JsonConverter<MessageOrigin>
 
     public override void Write(Utf8JsonWriter writer, MessageOrigin value, JsonSerializerOptions options)
     {
-        writer.WriteRawValue(value.Serialize());
+        writer.WriteRawValue(options.WriteIndented ? value.SerializeWithIndented() : value.Serialize());
     }
 }

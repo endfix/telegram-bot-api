@@ -1,36 +1,14 @@
-namespace Telegram.BotAPI.Types.Payments;
+namespace Telegram.BotAPI.Types;
 
-/// <summary>
-/// This object contains basic information about an invoice.
-/// </summary>
 public sealed class Invoice
 {
-    /// <summary>
-    /// Product name
-    /// </summary>
     public string Title { get; set; }
 
-    /// <summary>
-    /// Product description
-    /// </summary>
     public string Description { get; set; }
 
-    /// <summary>
-    /// Unique bot deep-linking parameter that can be used to generate this invoice
-    /// </summary>
     public string StartParameter { get; set; }
 
-    /// <summary>
-    /// Three-letter ISO 4217 <see href="https://core.telegram.org/bots/payments#supported-currencies">currency</see> code, 
-    /// or “XTR” for payments in <see href="https://t.me/BotNews/90">Telegram Stars</see>
-    /// </summary>
     public string Currency { get; set; }
 
-    /// <summary>
-    /// Total price in the smallest units of the currency (integer, not float/double). 
-    /// For example, for a price of US$ 1.45 pass amount = 145. 
-    /// See the exp parameter in <see href="https://core.telegram.org/bots/payments/currencies.json">currencies.json</see>,
-    /// it shows the number of digits past the decimal point for each currency (2 for the majority of currencies).
-    /// </summary>
     public int TotalAmount { get; set; }
 }

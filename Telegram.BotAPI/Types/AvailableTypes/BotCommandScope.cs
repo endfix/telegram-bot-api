@@ -1,66 +1,51 @@
-namespace Telegram.BotAPI.Types.AvailableTypes;
+using Telegram.BotAPI.Enums;
+
+namespace Telegram.BotAPI.Types;
 
 public abstract class BotCommandScope
 {
-    public abstract string Type { get; }
-
-    public static class Types
-    {
-        public const string DEFAULT = "default";
-
-        public const string ALL_PRIVATE_CHATS = "all_private_chats";
-
-        public const string ALL_GROUP_CHATS = "all_group_chats";
-
-        public const string ALL_CHAT_ADMINISTRATORS = "all_chat_administrators";
-
-        public const string CHAT = "chat";
-
-        public const string CHAT_ADMINISTRATORS = "chat_administrators";
-
-        public const string CHAT_MEMBER = "chat_member";
-    }
+    public abstract BotCommandScopeTypes Type { get; }
 }
 
 public sealed class BotCommandScopeAllChatAdministrators : BotCommandScope
 {
-    public override string Type => Types.ALL_CHAT_ADMINISTRATORS;
+    public override BotCommandScopeTypes Type => BotCommandScopeTypes.AllChatAdministrators;
 }
 
 public sealed class BotCommandScopeAllGroupChats : BotCommandScope
 {
-    public override string Type => Types.ALL_GROUP_CHATS;
+    public override BotCommandScopeTypes Type => BotCommandScopeTypes.AllGroupChats;
 }
 
 public sealed class BotCommandScopeAllPrivateChats : BotCommandScope
 {
-    public override string Type => Types.ALL_PRIVATE_CHATS;
+    public override BotCommandScopeTypes Type => BotCommandScopeTypes.AllPrivateChats;
 }
 
 public sealed class BotCommandScopeChat : BotCommandScope
 {
-    public override string Type => Types.CHAT;
+    public override BotCommandScopeTypes Type => BotCommandScopeTypes.Chat;
 
-    public string ChatId { get; set; }
+    public object ChatId { get; set; }
 }
 
 public sealed class BotCommandScopeChatAdministrators : BotCommandScope
 {
-    public override string Type => Types.CHAT_ADMINISTRATORS;
+    public override BotCommandScopeTypes Type => BotCommandScopeTypes.ChatAdministrators;
 
-    public string ChatId { get; set; }
+    public object ChatId { get; set; }
 }
 
 public class BotCommandScopeChatMember : BotCommandScope
 {
-    public override string Type => Types.CHAT_MEMBER;
+    public override BotCommandScopeTypes Type => BotCommandScopeTypes.ChatMember;
 
-    public string ChatId { get; set; }
+    public object ChatId { get; set; }
 
     public long UserId { get; set; }
 }
 
 public sealed class BotCommandScopeDefault : BotCommandScope
 {
-    public override string Type => Types.DEFAULT;
+    public override BotCommandScopeTypes Type => BotCommandScopeTypes.Default;
 }

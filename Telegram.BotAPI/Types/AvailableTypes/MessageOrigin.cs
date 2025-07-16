@@ -1,24 +1,15 @@
-namespace Telegram.BotAPI.Types.AvailableTypes;
+using Telegram.BotAPI.Enums;
+
+namespace Telegram.BotAPI.Types;
 
 public abstract class MessageOrigin
 {
-    public abstract string Type { get; }
-
-    public static class Types
-    {
-        public const string USER = "user";
-
-        public const string HIDDEN_USER = "hidden_user";
-
-        public const string CHAT = "chat";
-
-        public const string CHANNEL = "channel";
-    }
+    public abstract MessageOriginTypes Type { get; }
 }
 
 public sealed class MessageOriginChannel : MessageOrigin
 {
-    public override string Type => Types.CHANNEL;
+    public override MessageOriginTypes Type => MessageOriginTypes.Channel;
 
     public int Date { get; set; }
 
@@ -31,7 +22,7 @@ public sealed class MessageOriginChannel : MessageOrigin
 
 public sealed class MessageOriginChat : MessageOrigin
 {
-    public override string Type => Types.CHAT;
+    public override MessageOriginTypes Type => MessageOriginTypes.Chat;
 
     public int Date { get; set; }
 
@@ -42,7 +33,7 @@ public sealed class MessageOriginChat : MessageOrigin
 
 public sealed class MessageOriginHiddenUser : MessageOrigin
 {
-    public override string Type => Types.HIDDEN_USER;
+    public override MessageOriginTypes Type => MessageOriginTypes.HiddenUser;
 
     public int Date { get; set; }
 
@@ -51,7 +42,7 @@ public sealed class MessageOriginHiddenUser : MessageOrigin
 
 public sealed class MessageOriginUser : MessageOrigin
 {
-    public override string Type => Types.USER;
+    public override MessageOriginTypes Type => MessageOriginTypes.User;
 
     public int Date { get; set; }
 

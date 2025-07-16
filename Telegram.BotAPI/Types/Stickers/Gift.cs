@@ -1,4 +1,4 @@
-﻿namespace Telegram.BotAPI.Types.Stickers;
+﻿namespace Telegram.BotAPI.Types;
 
 /// <summary>
 /// This object represents a gift that can be sent by the bot.
@@ -19,6 +19,11 @@ public sealed class Gift
     /// The number of Telegram Stars that must be paid to send the sticker
     /// </summary>
     public int StarCount { get; set; }
+
+    /// <summary>
+    /// Optional. The number of Telegram Stars that must be paid to upgrade the gift to a unique one
+    /// </summary>
+    public int UpgradeStarCount { get; set; }
 
     /// <summary>
     /// Optional. The total number of the gifts of this type that can be sent; for limited gifts only

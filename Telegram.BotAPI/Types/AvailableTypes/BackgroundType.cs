@@ -1,31 +1,22 @@
-namespace Telegram.BotAPI.Types.AvailableTypes;
+using Telegram.BotAPI.Enums;
+
+namespace Telegram.BotAPI.Types;
 
 public abstract class BackgroundType
 {
-    public abstract string Type { get; }
-
-    public static class Types
-    {
-        public const string FILL = "fill";
-
-        public const string WALLPAPER = "wallpaper";
-
-        public const string PATTERN = "pattern";
-
-        public const string CHAT_THEME = "chat_theme";
-    }
+    public abstract BackgroundTypes Type { get; }
 }
 
 public class BackgroundTypeChatTheme : BackgroundType
 {
-    public override string Type => Types.CHAT_THEME;
+    public override BackgroundTypes Type => BackgroundTypes.ChatTheme;
 
     public string ThemeName { get; set; }
 }
 
 public sealed class BackgroundTypeFill : BackgroundType
 {
-    public override string Type => Types.FILL;
+    public override BackgroundTypes Type => BackgroundTypes.Fill;
 
     public BackgroundFill Fill { get; set; }
 
@@ -34,7 +25,7 @@ public sealed class BackgroundTypeFill : BackgroundType
 
 public class BackgroundTypePattern : BackgroundType
 {
-    public override string Type => Types.PATTERN;
+    public override BackgroundTypes Type => BackgroundTypes.Pattern;
 
     public Document Document { get; set; }
 
@@ -49,7 +40,7 @@ public class BackgroundTypePattern : BackgroundType
 
 public class BackgroundTypeWallpaper : BackgroundType
 {
-    public override string Type => Types.WALLPAPER;
+    public override BackgroundTypes Type => BackgroundTypes.Wallpaper;
 
     public Document Document { get; set; }
 

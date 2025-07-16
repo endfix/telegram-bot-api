@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Telegram.BotAPI.Enums;
 using Telegram.BotAPI.Extensions;
-using Telegram.BotAPI.Types.AvailableTypes;
+using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Serialization.Converters;
 
@@ -13,12 +14,11 @@ public class BackgroundFillConverter : JsonConverter<BackgroundFill>
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var jsonElement = jsonDocument.RootElement;
-
-            return jsonElement.GetProperty("type").GetString() switch
+            return Enum.Parse(typeof(BackgroundFillTypes), jsonElement.GetProperty("type").GetString()?.ToUpperInvariant()) switch
             {
-                BackgroundFill.Types.SOLID => jsonElement.GetRawText().Deserialize<BackgroundFillSolid>(),
-                BackgroundFill.Types.GRADIENT => jsonElement.GetRawText().Deserialize<BackgroundFillGradient>(),
-                BackgroundFill.Types.FREEFORM_GRADIENT => jsonElement.GetRawText().Deserialize<BackgroundFillFreeformGradient>(),
+                BackgroundFillTypes.Solid => jsonElement.GetRawText().Deserialize<BackgroundFillSolid>(),
+                BackgroundFillTypes.Gradient => jsonElement.GetRawText().Deserialize<BackgroundFillGradient>(),
+                BackgroundFillTypes.FreeformGradient => jsonElement.GetRawText().Deserialize<BackgroundFillFreeformGradient>(),
                 _ => throw new ArgumentOutOfRangeException(jsonElement.GetRawText()),
             };
         }
@@ -26,6 +26,6 @@ public class BackgroundFillConverter : JsonConverter<BackgroundFill>
 
     public override void Write(Utf8JsonWriter writer, BackgroundFill value, JsonSerializerOptions options)
     {
-        writer.WriteRawValue(value.Serialize());
+        writer.WriteRawValue(options.WriteIndented ? value.SerializeWithIndented() : value.Serialize());
     }
 }

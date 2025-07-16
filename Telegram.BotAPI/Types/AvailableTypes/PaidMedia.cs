@@ -1,31 +1,22 @@
-using System.Collections.Generic;
+using Telegram.BotAPI.Enums;
 
-namespace Telegram.BotAPI.Types.AvailableTypes;
+namespace Telegram.BotAPI.Types;
 
 public abstract class PaidMedia
 {
-    public abstract string Type { get; }
-
-    public static class Types
-    {
-        public const string PREVIEW = "preview";
-
-        public const string PHOTO = "photo";
-
-        public const string VIDEO = "video";
-    }
+    public abstract PaidMediaTypes Type { get; }
 }
 
 public sealed class PaidMediaPhoto : PaidMedia
 {
-    public override string Type => Types.PHOTO;
+    public override PaidMediaTypes Type => PaidMediaTypes.Photo;
 
-    public List<PhotoSize> Photo { get; set; }
+    public PhotoSize[] Photo { get; set; }
 }
 
 public sealed class PaidMediaPreview : PaidMedia
 {
-    public override string Type => Types.PREVIEW;
+    public override PaidMediaTypes Type => PaidMediaTypes.Preview;
 
     public int Width { get; set; }
 
@@ -36,7 +27,7 @@ public sealed class PaidMediaPreview : PaidMedia
 
 public sealed class PaidMediaVideo : PaidMedia
 {
-    public override string Type => Types.VIDEO;
+    public override PaidMediaTypes Type => PaidMediaTypes.Video;
 
     public Video Video { get; set; }
 }

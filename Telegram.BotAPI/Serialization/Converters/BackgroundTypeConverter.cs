@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Telegram.BotAPI.Enums;
 using Telegram.BotAPI.Extensions;
-using Telegram.BotAPI.Types.AvailableTypes;
+using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Serialization.Converters;
 
@@ -13,13 +14,12 @@ public class BackgroundTypeConverter : JsonConverter<BackgroundType>
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var jsonElement = jsonDocument.RootElement;
-
-            return jsonElement.GetProperty("type").GetString() switch
+            return Enum.Parse(typeof(BackgroundTypes), jsonElement.GetProperty("type").GetString()?.ToUpperInvariant()) switch
             {
-                BackgroundType.Types.FILL => jsonElement.GetRawText().Deserialize<BackgroundTypeFill>(),
-                BackgroundType.Types.WALLPAPER => jsonElement.GetRawText().Deserialize<BackgroundTypeWallpaper>(),
-                BackgroundType.Types.PATTERN => jsonElement.GetRawText().Deserialize<BackgroundTypePattern>(),
-                BackgroundType.Types.CHAT_THEME => jsonElement.GetRawText().Deserialize<BackgroundTypeChatTheme>(),
+                BackgroundTypes.Fill => jsonElement.GetRawText().Deserialize<BackgroundTypeFill>(),
+                BackgroundTypes.Wallpaper => jsonElement.GetRawText().Deserialize<BackgroundTypeWallpaper>(),
+                BackgroundTypes.Pattern => jsonElement.GetRawText().Deserialize<BackgroundTypePattern>(),
+                BackgroundTypes.ChatTheme => jsonElement.GetRawText().Deserialize<BackgroundTypeChatTheme>(),
                 _ => throw new ArgumentOutOfRangeException(jsonElement.GetRawText()),
             };
         }
@@ -27,6 +27,6 @@ public class BackgroundTypeConverter : JsonConverter<BackgroundType>
 
     public override void Write(Utf8JsonWriter writer, BackgroundType value, JsonSerializerOptions options)
     {
-        writer.WriteRawValue(value.Serialize());
+        writer.WriteRawValue(options.WriteIndented ? value.SerializeWithIndented() : value.Serialize());
     }
 }

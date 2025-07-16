@@ -1,29 +1,28 @@
-﻿namespace Telegram.BotAPI.Types.AvailableTypes;
+﻿using Telegram.BotAPI.Enums;
+
+namespace Telegram.BotAPI.Types;
 
 public abstract class InputPaidMedia
 {
-    public abstract string Type { get; }
+    public abstract InputPaidMediaTypes Type { get; }
 
     public virtual string Media { get; set; }
-
-    public static class Types
-    {
-        public const string PHOTO = "photo";
-
-        public const string VIDEO = "video";
-    }
 }
 
 public sealed class InputPaidMediaPhoto : InputPaidMedia
 {
-    public override string Type => Types.PHOTO;
+    public override InputPaidMediaTypes Type => InputPaidMediaTypes.Photo;
 }
 
 public sealed class InputPaidMediaVideo : InputPaidMedia
 {
-    public override string Type => Types.VIDEO;
+    public override InputPaidMediaTypes Type => InputPaidMediaTypes.Video;
 
-    // thumbnail
+    public object Thumbnail { get; set; }
+
+    public string Cover { get; set; }
+
+    public int StartTimestamp { get; set; }
 
     public int Width { get; set; }
 

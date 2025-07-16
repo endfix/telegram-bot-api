@@ -1,10 +1,8 @@
-using System.Collections.Generic;
-
-namespace Telegram.BotAPI.Types.AvailableTypes;
+namespace Telegram.BotAPI.Types;
 
 public sealed class GiveawayCreated
 {
-    public List<Chat> Chats { get; set; }
+    public Chat[] Chats { get; set; }
 
     public int WinnersSelectionDate { get; set; }
 
@@ -16,5 +14,5 @@ public sealed class GiveawayCreated
 
     public string PrizeDescription { get; set; }
 
-    public List<string> CountryCodes { get; set; }
+    public string[] CountryCodes { get; set; }
 }

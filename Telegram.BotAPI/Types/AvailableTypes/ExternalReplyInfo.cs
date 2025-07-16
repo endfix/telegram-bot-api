@@ -1,9 +1,4 @@
-using System.Collections.Generic;
-using Telegram.BotAPI.Types.Games;
-using Telegram.BotAPI.Types.Payments;
-using Telegram.BotAPI.Types.Stickers;
-
-namespace Telegram.BotAPI.Types.AvailableTypes;
+namespace Telegram.BotAPI.Types;
 
 public sealed class ExternalReplyInfo
 {
@@ -23,7 +18,7 @@ public sealed class ExternalReplyInfo
 
     public PaidMediaInfo PaidMedia { get; set; }
 
-    public List<PhotoSize> Photo { get; set; }
+    public PhotoSize[] Photo { get; set; }
 
     public Sticker Sticker { get; set; }
 

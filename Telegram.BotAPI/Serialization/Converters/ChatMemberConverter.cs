@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Telegram.BotAPI.Enums;
 using Telegram.BotAPI.Extensions;
-using Telegram.BotAPI.Types.AvailableTypes;
+using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Serialization.Converters;
 
@@ -13,15 +14,14 @@ public class ChatMemberConverter : JsonConverter<ChatMember>
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var jsonElement = jsonDocument.RootElement;
-
-            return jsonElement.GetProperty("status").GetString() switch
+            return Enum.Parse(typeof(ChatMemberStatus), jsonElement.GetProperty("status").GetString()?.ToUpperInvariant()) switch
             {
-                ChatMember.Statuses.CREATOR => jsonElement.GetRawText().Deserialize<ChatMemberOwner>(),
-                ChatMember.Statuses.ADMINISTRATOR => jsonElement.GetRawText().Deserialize<ChatMemberAdministrator>(),
-                ChatMember.Statuses.MEMBER => jsonElement.GetRawText().Deserialize<ChatMemberMember>(),
-                ChatMember.Statuses.RESTRICTED => jsonElement.GetRawText().Deserialize<ChatMemberRestricted>(),
-                ChatMember.Statuses.LEFT => jsonElement.GetRawText().Deserialize<ChatMemberLeft>(),
-                ChatMember.Statuses.KICKED => jsonElement.GetRawText().Deserialize<ChatMemberBanned>(),
+                ChatMemberStatus.Creator => jsonElement.GetRawText().Deserialize<ChatMemberOwner>(),
+                ChatMemberStatus.Administrator => jsonElement.GetRawText().Deserialize<ChatMemberAdministrator>(),
+                ChatMemberStatus.Member => jsonElement.GetRawText().Deserialize<ChatMemberMember>(),
+                ChatMemberStatus.Restricted => jsonElement.GetRawText().Deserialize<ChatMemberRestricted>(),
+                ChatMemberStatus.Left => jsonElement.GetRawText().Deserialize<ChatMemberLeft>(),
+                ChatMemberStatus.Kicked => jsonElement.GetRawText().Deserialize<ChatMemberBanned>(),
                 _ => throw new ArgumentOutOfRangeException(jsonElement.GetRawText()),
             };
         }
@@ -29,6 +29,6 @@ public class ChatMemberConverter : JsonConverter<ChatMember>
 
     public override void Write(Utf8JsonWriter writer, ChatMember value, JsonSerializerOptions options)
     {
-        writer.WriteRawValue(value.Serialize());
+        writer.WriteRawValue(options.WriteIndented ? value.SerializeWithIndented() : value.Serialize());
     }
 }

@@ -1,14 +1,8 @@
-using System.Collections.Generic;
-using Telegram.BotAPI.Types.Games;
-using Telegram.BotAPI.Types.Payments;
-using Telegram.BotAPI.Types.Stickers;
-using Telegram.BotAPI.Types.TelegramPassport;
+namespace Telegram.BotAPI.Types;
 
-namespace Telegram.BotAPI.Types.AvailableTypes;
-
-public sealed class Message
+public sealed class Message : MaybeInaccessibleMessage
 {
-    public long MessageId { get; set; }
+    public int MessageId { get; set; }
 
     public long MessageThreadId { get; set; }
 
@@ -54,7 +48,7 @@ public sealed class Message
 
     public string Text { get; set; }
 
-    public List<MessageEntity> Entities { get; set; }
+    public MessageEntity[] Entities { get; set; }
 
     public LinkPreviewOptions LinkPreviewOptions { get; set; }
 
@@ -68,7 +62,7 @@ public sealed class Message
 
     public PaidMediaInfo PaidMedia { get; set; }
 
-    public List<PhotoSize> Photo { get; set; }
+    public PhotoSize[] Photo { get; set; }
 
     public Sticker Sticker { get; set; }
 
@@ -82,7 +76,7 @@ public sealed class Message
 
     public string Caption { get; set; }
 
-    public List<MessageEntity> CaptionEntities { get; set; }
+    public MessageEntity[] CaptionEntities { get; set; }
 
     public bool ShowCaptionAboveMedia { get; set; }
 
@@ -100,13 +94,13 @@ public sealed class Message
 
     public Location Location { get; set; }
 
-    public List<User> NewChatMembers { get; set; }
+    public User[] NewChatMembers { get; set; }
 
     public User LeftChatMember { get; set; }
 
     public string NewChatTitle { get; set; }
 
-    public List<PhotoSize> NewChatPhoto { get; set; }
+    public PhotoSize[] NewChatPhoto { get; set; }
 
     public bool DeleteChatPhoto { get; set; }
 
@@ -133,6 +127,10 @@ public sealed class Message
     public UsersShared UsersShared { get; set; }
 
     public ChatShared ChatShared { get; set; }
+
+    public GiftInfo Gift { get; set; }
+
+    public UniqueGiftInfo UniqueGift { get; set; }
 
     public string ConnectedWebsite { get; set; }
 
@@ -165,6 +163,8 @@ public sealed class Message
     public GiveawayWinners GiveawayWinners { get; set; }
 
     public GiveawayCompleted GiveawayCompleted { get; set; }
+
+    public PaidMessagePriceChanged PaidMessagePriceChanged { get; set; }
 
     public VideoChatScheduled VideoChatScheduled { get; set; }
 

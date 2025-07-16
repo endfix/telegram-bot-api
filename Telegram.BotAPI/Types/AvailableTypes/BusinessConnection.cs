@@ -1,4 +1,4 @@
-namespace Telegram.BotAPI.Types.AvailableTypes;
+namespace Telegram.BotAPI.Types;
 
 public sealed class BusinessConnection
 {
@@ -10,7 +10,7 @@ public sealed class BusinessConnection
 
     public int Date { get; set; }
 
-    public bool CanReply { get; set; }
+    public BusinessBotRights Rights { get; set; }
 
     public bool IsEnabled { get; set; }
 }

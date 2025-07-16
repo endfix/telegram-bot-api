@@ -1,0 +1,24 @@
+﻿using Telegram.BotAPI.Types;
+
+namespace Telegram.BotAPI.Parameters;
+
+public sealed class SendDiceParameters : ApiRequestParameters
+{
+    public string BusinessConnectionId { get; set; }
+
+    public object ChatId { get; set; }
+
+    public int MessageThreadId { get; set; }
+
+    public string Emoji { get; set; }
+
+    public bool DisableNotification { get; set; }
+
+    public bool ProtectContent { get; set; }
+
+    public string MessageEffectId { get; set; }
+
+    public ReplyParameters ReplyParameters { get; set; }
+
+    public ReplyMarkup ReplyMarkup { get; set; }
+}

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Telegram.BotAPI.Enums;
 using Telegram.BotAPI.Extensions;
-using Telegram.BotAPI.Types.AvailableTypes;
+using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Serialization.Converters;
 
@@ -13,12 +14,11 @@ public class ReactionTypeConverter : JsonConverter<ReactionType>
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var jsonElement = jsonDocument.RootElement;
-            
-            return jsonElement.GetProperty("type").GetString() switch
+            return Enum.Parse(typeof(ReactionTypes), jsonElement.GetProperty("type").GetString()?.ToUpperInvariant()) switch
             {
-                ReactionType.Types.EMOJI => jsonElement.GetRawText().Deserialize<ReactionTypeEmoji>(),
-                ReactionType.Types.CUSTOM_EMOJI => jsonElement.GetRawText().Deserialize<ReactionTypeCustomEmoji>(),
-                ReactionType.Types.PAID => jsonElement.GetRawText().Deserialize<ReactionTypePaid>(),
+                ReactionTypes.Emoji => jsonElement.GetRawText().Deserialize<ReactionTypeEmoji>(),
+                ReactionTypes.CustomEmoji => jsonElement.GetRawText().Deserialize<ReactionTypeCustomEmoji>(),
+                ReactionTypes.Paid => jsonElement.GetRawText().Deserialize<ReactionTypePaid>(),
                 _ => throw new ArgumentOutOfRangeException(jsonElement.GetRawText()),
             };
         }
@@ -26,6 +26,6 @@ public class ReactionTypeConverter : JsonConverter<ReactionType>
 
     public override void Write(Utf8JsonWriter writer, ReactionType value, JsonSerializerOptions options)
     {
-        writer.WriteRawValue(value.Serialize());
+        writer.WriteRawValue(options.WriteIndented ? value.SerializeWithIndented() : value.Serialize());
     }
 }

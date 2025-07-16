@@ -2,7 +2,8 @@
 using System;
 using System.Text.Json.Serialization;
 using Telegram.BotAPI.Extensions;
-using Telegram.BotAPI.Types.AvailableTypes;
+using Telegram.BotAPI.Types;
+using Telegram.BotAPI.Enums;
 
 namespace Telegram.BotAPI.Serialization.Converters;
 
@@ -13,12 +14,11 @@ public sealed class PaidMediaConverter : JsonConverter<PaidMedia>
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var jsonElement = jsonDocument.RootElement;
-
-            return jsonElement.GetProperty("type").GetString() switch
+            return Enum.Parse(typeof(PaidMediaTypes), jsonElement.GetProperty("type").GetString()?.ToUpperInvariant()) switch
             {
-                PaidMedia.Types.PHOTO => jsonElement.GetRawText().Deserialize<PaidMediaPhoto>(),
-                PaidMedia.Types.VIDEO => jsonElement.GetRawText().Deserialize<PaidMediaVideo>(),
-                PaidMedia.Types.PREVIEW => jsonElement.GetRawText().Deserialize<PaidMediaPreview>(),
+                PaidMediaTypes.Photo => jsonElement.GetRawText().Deserialize<PaidMediaPhoto>(),
+                PaidMediaTypes.Video => jsonElement.GetRawText().Deserialize<PaidMediaVideo>(),
+                PaidMediaTypes.Preview => jsonElement.GetRawText().Deserialize<PaidMediaPreview>(),
                 _ => throw new ArgumentOutOfRangeException(jsonElement.GetRawText()),
             };
         }
@@ -26,6 +26,6 @@ public sealed class PaidMediaConverter : JsonConverter<PaidMedia>
 
     public override void Write(Utf8JsonWriter writer, PaidMedia value, JsonSerializerOptions options)
     {
-        writer.WriteRawValue(value.Serialize());
+        writer.WriteRawValue(options.WriteIndented ? value.SerializeWithIndented() : value.Serialize());
     }
 }

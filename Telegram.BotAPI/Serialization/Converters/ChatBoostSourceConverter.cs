@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Telegram.BotAPI.Enums;
 using Telegram.BotAPI.Extensions;
-using Telegram.BotAPI.Types.AvailableTypes;
+using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Serialization.Converters;
 
@@ -12,13 +13,12 @@ public class ChatBoostSourceConverter : JsonConverter<ChatBoostSource>
     {
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
-            var jsonElement = jsonDocument.RootElement;
-
-            return jsonElement.GetProperty("source").GetString() switch
+            var jsonElement = jsonDocument.RootElement;          
+            return Enum.Parse(typeof(ChatBoostSources), jsonElement.GetProperty("source").GetString()?.ToUpperInvariant()) switch
             {
-                ChatBoostSource.Sources.PREMIUM => jsonElement.GetRawText().Deserialize<ChatBoostSourcePremium>(),
-                ChatBoostSource.Sources.GIFT_CODE => jsonElement.GetRawText().Deserialize<ChatBoostSourceGiftCode>(),
-                ChatBoostSource.Sources.GIVEAWAY => jsonElement.GetRawText().Deserialize<ChatBoostSourceGiveaway>(),
+                ChatBoostSources.Premium => jsonElement.GetRawText().Deserialize<ChatBoostSourcePremium>(),
+                ChatBoostSources.GiftCode => jsonElement.GetRawText().Deserialize<ChatBoostSourceGiftCode>(),
+                ChatBoostSources.Giveaway => jsonElement.GetRawText().Deserialize<ChatBoostSourceGiveaway>(),
                 _ => throw new ArgumentOutOfRangeException(jsonElement.GetRawText()),
             };
         }
@@ -26,6 +26,6 @@ public class ChatBoostSourceConverter : JsonConverter<ChatBoostSource>
 
     public override void Write(Utf8JsonWriter writer, ChatBoostSource value, JsonSerializerOptions options)
     {
-        writer.WriteRawValue(value.Serialize());
+        writer.WriteRawValue(options.WriteIndented ? value.SerializeWithIndented() : value.Serialize());
     }
 }

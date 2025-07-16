@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-
-namespace Telegram.BotAPI.Types.AvailableTypes;
+﻿namespace Telegram.BotAPI.Types;
 
 public sealed class UserChatBoosts
 {
-    public List<ChatBoost> Boosts { get; set; }
+    public ChatBoost[] Boosts { get; set; }
 }

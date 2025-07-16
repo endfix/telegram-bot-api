@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Telegram.BotAPI.Types.AvailableTypes;
+﻿namespace Telegram.BotAPI.Types;
 
 public sealed class InputPollOption
 {
@@ -8,5 +6,5 @@ public sealed class InputPollOption
 
     public string TextParseMode { get; set; }
 
-    public List<MessageEntity> TextEntities { get; set; }
+    public MessageEntity[] TextEntities { get; set; }
 }

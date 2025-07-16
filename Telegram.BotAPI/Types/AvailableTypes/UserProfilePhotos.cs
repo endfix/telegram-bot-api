@@ -1,10 +1,8 @@
-using System.Collections.Generic;
-
-namespace Telegram.BotAPI.Types.AvailableTypes;
+namespace Telegram.BotAPI.Types;
 
 public sealed class UserProfilePhotos
 {
     public int TotalCount { get; set; }
 
-    public List<List<PhotoSize>> Photos { get; set; }
+    public PhotoSize[][] Photos { get; set; }
 }

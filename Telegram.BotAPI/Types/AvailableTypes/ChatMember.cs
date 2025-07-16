@@ -1,30 +1,17 @@
-namespace Telegram.BotAPI.Types.AvailableTypes;
+using Telegram.BotAPI.Enums;
+
+namespace Telegram.BotAPI.Types;
 
 public abstract class ChatMember
 {
-    public abstract string Status { get; }
+    public abstract ChatMemberStatus Status { get; }
 
     public User User { get; set; }
-
-    public static class Statuses
-    {
-        public const string CREATOR = "creator";
-
-        public const string ADMINISTRATOR = "administrator";
-
-        public const string MEMBER = "member";
-
-        public const string RESTRICTED = "restricted";
-
-        public const string LEFT = "left";
-
-        public const string KICKED = "kicked";
-    }
 }
 
 public sealed class ChatMemberAdministrator : ChatMember
 {
-    public override string Status => Statuses.ADMINISTRATOR;
+    public override ChatMemberStatus Status => ChatMemberStatus.Administrator;
 
     public bool CanBeEdited { get; set; }
 
@@ -63,26 +50,26 @@ public sealed class ChatMemberAdministrator : ChatMember
 
 public sealed class ChatMemberBanned : ChatMember
 {
-    public override string Status => Statuses.KICKED;
+    public override ChatMemberStatus Status => ChatMemberStatus.Kicked;
 
     public int UntilDate { get; set; }
 }
 
 public sealed class ChatMemberLeft : ChatMember
 {
-    public override string Status => Statuses.LEFT;
+    public override ChatMemberStatus Status => ChatMemberStatus.Left;
 }
 
 public sealed class ChatMemberMember : ChatMember
 {
-    public override string Status => Statuses.MEMBER;
+    public override ChatMemberStatus Status => ChatMemberStatus.Member;
 
     public int UntilDate { get; set; }
 }
 
 public sealed class ChatMemberOwner : ChatMember
 {
-    public override string Status => Statuses.CREATOR;
+    public override ChatMemberStatus Status => ChatMemberStatus.Creator;
 
     public bool IsAnonymous { get; set; }
 
@@ -91,7 +78,7 @@ public sealed class ChatMemberOwner : ChatMember
 
 public sealed class ChatMemberRestricted : ChatMember
 {
-    public override string Status => Statuses.RESTRICTED;
+    public override ChatMemberStatus Status => ChatMemberStatus.Restricted;
 
     public bool IsMember { get; set; }
 

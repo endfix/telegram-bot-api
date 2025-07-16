@@ -1,34 +1,27 @@
-namespace Telegram.BotAPI.Types.AvailableTypes;
+using Telegram.BotAPI.Enums;
+
+namespace Telegram.BotAPI.Types;
 
 public abstract class MenuButton
 {
-    public abstract string Type { get; }
-
-    public static class Types
-    {
-        public const string COMMANDS = "commands";
-
-        public const string WEB_APP = "web_app";
-
-        public const string DEFAULT = "default";
-    }
+    public abstract MenuButtonTypes Type { get; }
 }
 
 public sealed class MenuButtonCommands : MenuButton
 {
-    public override string Type => Types.COMMANDS;
+    public override MenuButtonTypes Type => MenuButtonTypes.Commands;
 }
 
 public sealed class MenuButtonDefault : MenuButton
 {
-    public override string Type => Types.DEFAULT;
+    public override MenuButtonTypes Type => MenuButtonTypes.Default;
 }
 
 public sealed class MenuButtonWebApp : MenuButton
 {
-    public override string Type => Types.WEB_APP;
+    public override MenuButtonTypes Type => MenuButtonTypes.WebApp;
 
     public string Text { get; set; }
 
-    public WebAppInfo WebApp { get; set; } = new WebAppInfo();
+    public WebAppInfo WebApp { get; set; }
 }

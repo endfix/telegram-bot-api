@@ -1,12 +1,12 @@
-using System.Collections.Generic;
+using Telegram.BotAPI.Enums;
 
-namespace Telegram.BotAPI.Types.AvailableTypes;
+namespace Telegram.BotAPI.Types;
 
 public sealed class ChatFullInfo
 {
     public long Id { get; set; }
 
-    public string Type { get; set; }
+    public ChatFullInfoTypes Type { get; set; }
 
     public string Title { get; set; }
 
@@ -24,19 +24,19 @@ public sealed class ChatFullInfo
 
     public ChatPhoto Photo { get; set; }
 
-    public List<string> ActiveUsernames { get; set; }
+    public string[] ActiveUsernames { get; set; }
 
     public Birthdate Birthdate { get; set; }
 
     public BusinessIntro BusinessIntro { get; set; }
 
-    public BusinessIntro BusinessLocation { get; set; }
+    public BusinessLocation BusinessLocation { get; set; }
 
     public BusinessOpeningHours BusinessOpeningHours { get; set; }
 
     public Chat PersonalChat { get; set; }
 
-    public List<ReactionType> AvailableReactions { get; set; }
+    public ReactionType[] AvailableReactions { get; set; }
 
     public string BackgroundCustomEmojiId { get; set; }
 
@@ -65,6 +65,8 @@ public sealed class ChatFullInfo
     public Message PinnedMessage { get; set; }
 
     public ChatPermissions Permissions { get; set; }
+
+    public AcceptedGiftTypes AcceptedGiftTypes { get; set; }
 
     public bool CanSendPaidMedia { get; set; }
 

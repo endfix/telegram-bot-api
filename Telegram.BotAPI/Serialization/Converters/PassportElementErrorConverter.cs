@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Telegram.BotAPI.Enums;
 using Telegram.BotAPI.Extensions;
-using Telegram.BotAPI.Types.TelegramPassport;
+using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Serialization.Converters;
 
@@ -13,18 +14,17 @@ public sealed class PassportElementErrorConverter : JsonConverter<PassportElemen
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var jsonElement = jsonDocument.RootElement;
-
-            return jsonElement.GetProperty("source").GetString() switch
+            return Enum.Parse(typeof(PassportElementErrorSources), jsonElement.GetProperty("source").GetString()?.ToUpperInvariant()) switch
             {
-                PassportElementError.Sources.DATA => jsonElement.GetRawText().Deserialize<PassportElementErrorDataField>(),
-                PassportElementError.Sources.FRONT_SIDE => jsonElement.GetRawText().Deserialize<PassportElementErrorFrontSide>(),
-                PassportElementError.Sources.REVERSE_SIDE => jsonElement.GetRawText().Deserialize<PassportElementErrorReverseSide>(),
-                PassportElementError.Sources.SELFIE => jsonElement.GetRawText().Deserialize<PassportElementErrorSelfie>(),
-                PassportElementError.Sources.FILE => jsonElement.GetRawText().Deserialize<PassportElementErrorFile>(),
-                PassportElementError.Sources.FILES => jsonElement.GetRawText().Deserialize<PassportElementErrorFiles>(),
-                PassportElementError.Sources.TRANSLATION_FILE => jsonElement.GetRawText().Deserialize<PassportElementErrorTranslationFile>(),
-                PassportElementError.Sources.TRANSLATION_FILES => jsonElement.GetRawText().Deserialize<PassportElementErrorTranslationFiles>(),
-                PassportElementError.Sources.UNSPECIFIED => jsonElement.GetRawText().Deserialize<PassportElementErrorUnspecified>(),
+                PassportElementErrorSources.Data => jsonElement.GetRawText().Deserialize<PassportElementErrorDataField>(),
+                PassportElementErrorSources.FrontSide => jsonElement.GetRawText().Deserialize<PassportElementErrorFrontSide>(),
+                PassportElementErrorSources.ReverseSide => jsonElement.GetRawText().Deserialize<PassportElementErrorReverseSide>(),
+                PassportElementErrorSources.Selfie => jsonElement.GetRawText().Deserialize<PassportElementErrorSelfie>(),
+                PassportElementErrorSources.File => jsonElement.GetRawText().Deserialize<PassportElementErrorFile>(),
+                PassportElementErrorSources.Files => jsonElement.GetRawText().Deserialize<PassportElementErrorFiles>(),
+                PassportElementErrorSources.TranslationFile => jsonElement.GetRawText().Deserialize<PassportElementErrorTranslationFile>(),
+                PassportElementErrorSources.TranslationFiles => jsonElement.GetRawText().Deserialize<PassportElementErrorTranslationFiles>(),
+                PassportElementErrorSources.Unspecified => jsonElement.GetRawText().Deserialize<PassportElementErrorUnspecified>(),
                 _ => throw new ArgumentOutOfRangeException(jsonElement.GetRawText()),
             };
         }
@@ -32,6 +32,6 @@ public sealed class PassportElementErrorConverter : JsonConverter<PassportElemen
 
     public override void Write(Utf8JsonWriter writer, PassportElementError value, JsonSerializerOptions options)
     {
-        writer.WriteRawValue(value.Serialize());
+        writer.WriteRawValue(options.WriteIndented ? value.SerializeWithIndented() : value.Serialize());
     }
 }

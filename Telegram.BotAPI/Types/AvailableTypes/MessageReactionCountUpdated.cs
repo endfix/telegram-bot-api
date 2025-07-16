@@ -1,6 +1,4 @@
-using System.Collections.Generic;
-
-namespace Telegram.BotAPI.Types.AvailableTypes;
+namespace Telegram.BotAPI.Types;
 
 public sealed class MessageReactionCountUpdated
 {
@@ -10,5 +8,5 @@ public sealed class MessageReactionCountUpdated
 
     public int Date { get; set; }
 
-    public List<ReactionCount> Reactions { get; set; }
+    public ReactionCount[] Reactions { get; set; }
 }

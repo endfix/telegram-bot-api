@@ -46,6 +46,8 @@ public sealed class Message : MaybeInaccessibleMessage
 
     public string AuthorSignature { get; set; }
 
+    public int PaidStarCount { get; set; }
+
     public string Text { get; set; }
 
     public MessageEntity[] Entities { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace Telegram.BotAPI;
 
-public static  class ApiRequestMethods
+public static class ApiRequestMethods
 {
     //
 }

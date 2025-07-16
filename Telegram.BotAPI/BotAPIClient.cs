@@ -10,7 +10,7 @@ using Telegram.BotAPI.Core;
 
 namespace Telegram.BotAPI;
 
-public class BotApiClient(string token, HttpClient httpClient = null)
+public partial class BotApiClient(string token, HttpClient httpClient = null)
 {
     public string Token { get; set; } = token;
 

@@ -11,6 +11,8 @@ public sealed class TransactionPartnerUser : TransactionPartner
 {
     public override TransactionPartnerTypes Type => TransactionPartnerTypes.User;
 
+    public TransactionTypes TransactionType { get; set; }
+
     public User User { get; set; }
 
     public AffiliateInfo Affiliate { get; set; }

@@ -32,6 +32,8 @@ public sealed class ExternalReplyInfo
 
     public bool HasMediaSpoiler { get; set; }
 
+    public Checklist Checklist { get; set; }
+
     public Contact Contact { get; set; }
 
     public Dice Dice { get; set; }

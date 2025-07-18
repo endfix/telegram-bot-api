@@ -31,6 +31,11 @@ public partial class BotApiClient
         return await RequestAsync<Message>(new ApiRequest("stopMessageLiveLocation", parameters));
     }
 
+    public async Task<ApiResponse<Message>> EditMessageChecklistAsync(EditMessageChecklistParameters parameters)
+    {
+        return await RequestAsync<Message>(new ApiRequest("editMessageChecklist", parameters));
+    }
+
     public async Task<ApiResponse<Message>> EditMessageReplyMarkupAsync(EditMessageReplyMarkupParameters parameters)
     {
         return await RequestAsync<Message>(new ApiRequest("editMessageReplyMarkup", parameters));

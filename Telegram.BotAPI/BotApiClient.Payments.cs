@@ -26,6 +26,11 @@ public partial class BotApiClient
         return await RequestAsync<bool>(new ApiRequest("answerPreCheckoutQuery", parameters));
     }
 
+    public async Task<ApiResponse<StarAmount>> GetMyStarBalanceAsync(GetMyStarBalanceParameters parameters)
+    {
+        return await RequestAsync<StarAmount>(new ApiRequest("getMyStarBalance", parameters));
+    }
+
     public async Task<ApiResponse<StarTransactions>> GetStarTransactionsAsync(GetStarTransactionsyParameters parameters)
     {
         return await RequestAsync<StarTransactions>(new ApiRequest("getStarTransactions", parameters));

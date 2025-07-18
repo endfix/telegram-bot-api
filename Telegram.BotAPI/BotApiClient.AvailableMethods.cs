@@ -111,6 +111,11 @@ public partial class BotApiClient
         return await RequestAsync<Message>(new ApiRequest("sendPoll", parameters));
     }
 
+    public async Task<ApiResponse<Message>> SendChecklistAsync(SendChecklistParameters parameters)
+    {
+        return await RequestAsync<Message>(new ApiRequest("sendChecklist", parameters));
+    }
+
     public async Task<ApiResponse<Message>> SendDiceAsync(SendDiceParameters parameters)
     {
         return await RequestAsync<Message>(new ApiRequest("sendDice", parameters));

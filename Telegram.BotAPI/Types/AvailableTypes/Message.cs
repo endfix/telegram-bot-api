@@ -84,6 +84,8 @@ public sealed class Message : MaybeInaccessibleMessage
 
     public bool HasMediaSpoiler { get; set; }
 
+    public Checklist Checklist { get; set; }
+
     public Contact Contact { get; set; }
 
     public Dice Dice { get; set; }
@@ -145,6 +147,12 @@ public sealed class Message : MaybeInaccessibleMessage
     public ChatBoostAdded BoostAdded { get; set; }
 
     public ChatBackground ChatBackgroundSet { get; set; }
+
+    public ChecklistTasksDone ChecklistTasksDone { get; set; }
+
+    public ChecklistTasksAdded ChecklistTasksAdded { get; set; }
+
+    public DirectMessagePriceChanged DirectMessagePriceChanged { get; set; }
 
     public ForumTopicCreated ForumTopicCreated { get; set; }
 

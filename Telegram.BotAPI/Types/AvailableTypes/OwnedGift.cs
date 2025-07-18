@@ -1,5 +1,4 @@
-﻿using System;
-using Telegram.BotAPI.Enums;
+﻿using Telegram.BotAPI.Enums;
 
 namespace Telegram.BotAPI.Types;
 

@@ -10,6 +10,8 @@ public sealed class SendVideoParameters : ApiRequestParameters
 
     public int MessageThreadId { get; set; }
 
+    public int DirectMessagesTopicId { get; set; }
+
     public object Video { get; set; }
 
     public int Duration { get; set; }
@@ -38,7 +40,11 @@ public sealed class SendVideoParameters : ApiRequestParameters
 
     public bool ProtectContent { get; set; }
 
+    public bool AllowPaidBroadcast { get; set; }
+
     public string MessageEffectId { get; set; }
+
+    public SuggestedPostParameters SuggestedPostParameters { get; set; }
 
     public ReplyParameters ReplyParameters { get; set; }
 

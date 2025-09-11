@@ -6,11 +6,13 @@ public sealed class UniqueGift
 
     public string Name { get; set; }
 
-    public int Number {  get; set; }
+    public int Number { get; set; }
 
     public UniqueGiftModel Model { get; set; }
 
     public UniqueGiftSymbol Symbol { get; set; }
 
     public UniqueGiftBackdrop Backdrop { get; set; }
+
+    public Chat PublisherChat { get; set; }
 }

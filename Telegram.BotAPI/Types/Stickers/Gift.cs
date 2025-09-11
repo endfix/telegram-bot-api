@@ -34,4 +34,6 @@ public sealed class Gift
     /// Optional. The number of remaining gifts of this type that can be sent; for limited gifts only
     /// </summary>
     public int RemainingCount { get; set; }
+
+    public Chat PublisherChat { get; set; }
 }

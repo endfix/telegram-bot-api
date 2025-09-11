@@ -8,6 +8,8 @@ public sealed class SendInvoiceParameters : ApiRequestParameters
 
     public int MessageThreadId { get; set; }
 
+    public int DirectMessagesTopicId { get; set; }
+
     public string Title { get; set; }
 
     public string Description { get; set; }
@@ -54,7 +56,11 @@ public sealed class SendInvoiceParameters : ApiRequestParameters
 
     public bool ProtectContent { get; set; }
 
+    public bool AllowPaidBroadcast { get; set; }
+
     public string MessageEffectId { get; set; }
+
+    public SuggestedPostParameters SuggestedPostParameters { get; set; }
 
     public ReplyParameters ReplyParameters { get; set; }
 

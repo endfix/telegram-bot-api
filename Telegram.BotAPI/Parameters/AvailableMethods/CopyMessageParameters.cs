@@ -8,6 +8,8 @@ public sealed class CopyMessageParameters : ApiRequestParameters
 
     public int MessageThreadId { get; set; }
 
+    public int DirectMessagesTopicId { get; set; }
+
     public object FromChatId { get; set; }
 
     public int MessageId { get; set; }
@@ -25,6 +27,10 @@ public sealed class CopyMessageParameters : ApiRequestParameters
     public bool DisableNotification { get; set; }
 
     public bool ProtectContent { get; set; }
+
+    public bool AllowPaidBroadcast { get; set; }
+
+    public SuggestedPostParameters SuggestedPostParameters { get; set; }
 
     public ReplyParameters ReplyParameters { get; set; }
 

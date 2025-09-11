@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace Telegram.BotAPI;
+﻿namespace Telegram.BotAPI;
 
 public sealed class ApiResponse<T>
 {
@@ -13,7 +11,4 @@ public sealed class ApiResponse<T>
     public ApiResponseParameters Parameters { get; set; }
 
     public T Result { get; set; }
-
-    [JsonIgnore]
-    public string Raw { get; set; }
 }

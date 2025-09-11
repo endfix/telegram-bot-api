@@ -45,6 +45,16 @@ public partial class BotApiClient
     {
         return await RequestAsync<Poll>(new ApiRequest("stopPoll", parameters));
     }
+    
+    public async Task<ApiResponse<bool>> ApproveSuggestedPostAsync(ApproveSuggestedPostParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("approveSuggestedPost", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> DeclineSuggestedPostAsync(DeclineSuggestedPostParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("declineSuggestedPost", parameters));
+    }
 
     public async Task<ApiResponse<bool>> DeleteMessageAsync(DeleteMessageParameters parameters)
     {

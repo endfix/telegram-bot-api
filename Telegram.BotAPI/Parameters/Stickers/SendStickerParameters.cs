@@ -10,6 +10,8 @@ public sealed class SendStickerParameters : ApiRequestParameters
 
     public int MessageThreadId { get; set; }
 
+    public int DirectMessagesTopicId { get; set; }
+
     public object Sticker { get; set; }
 
     public string Emoji { get; set; }
@@ -21,6 +23,8 @@ public sealed class SendStickerParameters : ApiRequestParameters
     public bool AllowPaidBroadcast { get; set; }
 
     public string MessageEffectId { get; set; }
+
+    public SuggestedPostParameters SuggestedPostParameters { get; set; }
 
     public ReplyParameters ReplyParameters { get; set; }
 

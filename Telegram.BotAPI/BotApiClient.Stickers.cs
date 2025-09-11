@@ -21,9 +21,9 @@ public partial class BotApiClient
         return await RequestAsync<Sticker[]>(new ApiRequest("getCustomEmojiStickers", parameters));
     }
 
-    public async Task<ApiResponse<File>> UploadStickerFileAsync(UploadStickerFileParameters parameters)
+    public async Task<ApiResponse<FileStruct>> UploadStickerFileAsync(UploadStickerFileParameters parameters)
     {
-        return await RequestAsync<File>(new ApiRequest("uploadStickerFile", parameters));
+        return await RequestAsync<FileStruct>(new ApiRequest("uploadStickerFile", parameters));
     }
 
     public async Task<ApiResponse<bool>> CreateNewStickerSetAsync(CreateNewStickerSetParameters parameters)

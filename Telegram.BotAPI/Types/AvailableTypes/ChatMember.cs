@@ -45,6 +45,8 @@ public sealed class ChatMemberAdministrator : ChatMember
 
     public bool CanManageTopics { get; set; }
 
+    public bool CanManageDirectMessages { get; set; }
+
     public string CustomTitle { get; set; }
 }
 

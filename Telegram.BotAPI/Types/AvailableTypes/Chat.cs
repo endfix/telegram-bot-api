@@ -17,4 +17,6 @@ public sealed class Chat
     public string LastName { get; set; }
 
     public bool IsForum { get; set; }
+
+    public bool IsDirectMessages { get; set; }
 }

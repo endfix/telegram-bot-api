@@ -42,6 +42,8 @@ public sealed class SendPollParameters : ApiRequestParameters
 
     public bool ProtectContent { get; set; }
 
+    public bool AllowPaidBroadcast { get; set; }
+
     public string MessageEffectId { get; set; }
 
     public ReplyParameters ReplyParameters { get; set; }

@@ -2,11 +2,16 @@
 
 namespace Telegram.BotAPI;
 
-public sealed class ApiRequest(string methodName, ApiRequestParameters parameters)
+public sealed class ApiRequest
 {
-    public string Id { get; } = Guid.NewGuid().ToString();
+    
+    public string MethodName { get; private set; }
 
-    public string MethodName { get; } = methodName;
+    public ApiRequestParameters Parameters { get; private set; }
 
-    public ApiRequestParameters Parameters { get; } = parameters;
+    public ApiRequest(string methodName, ApiRequestParameters parameters)
+    {
+        MethodName = methodName;
+        Parameters = parameters;
+    }
 }

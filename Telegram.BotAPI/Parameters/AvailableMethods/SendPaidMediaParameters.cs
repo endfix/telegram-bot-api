@@ -8,6 +8,10 @@ public sealed class SendPaidMediaParameters : ApiRequestParameters
 
     public object ChatId { get; set; }
 
+    public int MessageThreadId { get; set; }
+
+    public int DirectMessagesTopicId { get; set; }
+
     public int StarCount { get; set; }
 
     public InputPaidMedia[] Media { get; set; }
@@ -25,6 +29,10 @@ public sealed class SendPaidMediaParameters : ApiRequestParameters
     public bool DisableNotification { get; set; }
 
     public bool ProtectContent { get; set; }
+
+    public bool AllowPaidBroadcast { get; set; }
+
+    public SuggestedPostParameters SuggestedPostParameters { get; set; }
 
     public ReplyParameters ReplyParameters { get; set; }
 

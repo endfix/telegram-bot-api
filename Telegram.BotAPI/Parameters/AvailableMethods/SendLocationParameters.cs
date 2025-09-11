@@ -10,6 +10,8 @@ public sealed class SendLocationParameters : ApiRequestParameters
 
     public int MessageThreadId { get; set; }
 
+    public int DirectMessagesTopicId { get; set; }
+
     public float Latitude { get; set; }
 
     public float Longitude { get; set; }
@@ -26,7 +28,11 @@ public sealed class SendLocationParameters : ApiRequestParameters
 
     public bool ProtectContent { get; set; }
 
+    public bool AllowPaidBroadcast { get; set; }
+
     public string MessageEffectId { get; set; }
+
+    public SuggestedPostParameters SuggestedPostParameters { get; set; }
 
     public ReplyParameters ReplyParameters { get; set; }
 

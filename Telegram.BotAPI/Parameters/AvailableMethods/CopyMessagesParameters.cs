@@ -6,6 +6,8 @@ public sealed class CopyMessagesParameters : ApiRequestParameters
 
     public int MessageThreadId { get; set; }
 
+    public int DirectMessagesTopicId { get; set; }
+
     public object FromChatId { get; set; }
 
     public int[] MessageIds { get; set; }

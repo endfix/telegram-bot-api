@@ -10,6 +10,8 @@ public sealed class SendAudioParameters : ApiRequestParameters
 
     public int MessageThreadId { get; set; }
 
+    public int DirectMessagesTopicId { get; set; }
+
     public object Audio { get; set; }
 
     public string Caption { get; set; }
@@ -30,7 +32,11 @@ public sealed class SendAudioParameters : ApiRequestParameters
 
     public bool ProtectContent { get; set; }
 
+    public bool AllowPaidBroadcast { get; set; }
+
     public string MessageEffectId { get; set; }
+
+    public SuggestedPostParameters SuggestedPostParameters { get; set; }
 
     public ReplyParameters ReplyParameters { get; set; }
 

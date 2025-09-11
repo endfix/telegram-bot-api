@@ -35,4 +35,6 @@ public sealed class PromoteChatMemberParameters : ApiRequestParameters
     public bool CanPinMessages { get; set; }
 
     public bool CanManageTopics { get; set; }
+
+    public bool CanManageDirectMessages { get; set; }
 }

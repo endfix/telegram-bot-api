@@ -141,9 +141,9 @@ public partial class BotApiClient
         return await RequestAsync<bool>(new ApiRequest("setUserEmojiStatus", parameters));
     }
 
-    public async Task<ApiResponse<File>> GetFileAsync(GetFileParameters parameters)
+    public async Task<ApiResponse<FileStruct>> GetFileAsync(GetFileParameters parameters)
     {
-        return await RequestAsync<File>(new ApiRequest("getFile", parameters));
+        return await RequestAsync<FileStruct>(new ApiRequest("getFile", parameters));
     }
 
     public async Task<ApiResponse<bool>> BanChatMemberAsync(BanChatMemberParameters parameters)

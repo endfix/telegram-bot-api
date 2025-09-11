@@ -10,6 +10,8 @@ public sealed class SendMessageParameters : ApiRequestParameters
 
     public int MessageThreadId { get; set; }
 
+    public int DirectMessagesTopicId { get; set; }
+
     public string Text { get; set; }
 
     public string ParseMode { get; set; }
@@ -25,6 +27,8 @@ public sealed class SendMessageParameters : ApiRequestParameters
     public bool AllowPaidBroadcast { get; set; }
 
     public string MessageEffectId { get; set; }
+
+    public SuggestedPostParameters SuggestedPostParameters { get; set; }
 
     public ReplyParameters ReplyParameters { get; set; }
 

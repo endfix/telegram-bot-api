@@ -79,6 +79,6 @@ public sealed class Update
         { ChatJoinRequest: not null } => UpdateTypes.ChatJoinRequest,
         { ChatBoost: not null } => UpdateTypes.ChatBoost,
         { RemovedChatBoost: not null } => UpdateTypes.RemovedChatBoost,
-        _ => UpdateTypes.Unknown
+        _ => default
     };
 }

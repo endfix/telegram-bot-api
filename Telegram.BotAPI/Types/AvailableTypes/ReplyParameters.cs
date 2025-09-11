@@ -15,4 +15,6 @@ public sealed class ReplyParameters
     public MessageEntity[] QuoteEntities { get; set; }
 
     public int QuotePosition { get; set; }
+
+    public int ChecklistTaskId { get; set; }
 }

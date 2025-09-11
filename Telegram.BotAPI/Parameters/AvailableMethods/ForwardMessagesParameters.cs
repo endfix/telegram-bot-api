@@ -6,6 +6,8 @@ public sealed class ForwardMessagesParameters : ApiRequestParameters
 
     public int MessageThreadId { set; get; }
 
+    public int DirectMessagesTopicId { get; set; }
+
     public object FromChatId { get; set; }
 
     public int[] MessageIds { get; set; }

@@ -17,6 +17,8 @@ public sealed class ChatFullInfo
     public string LastName { get; set; }
 
     public bool IsForum { get; set; }
+    
+    public bool IsDirectMessages { get; set; }
 
     public int AccentColorId { get; set; }
 
@@ -35,6 +37,8 @@ public sealed class ChatFullInfo
     public BusinessOpeningHours BusinessOpeningHours { get; set; }
 
     public Chat PersonalChat { get; set; }
+
+    public Chat ParentChat { get; set; }
 
     public ReactionType[] AvailableReactions { get; set; }
 

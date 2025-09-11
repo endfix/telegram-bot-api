@@ -31,4 +31,6 @@ public sealed class ChatAdministratorRights
     public bool CanPinMessages { get; set; }
 
     public bool CanManageTopics { get; set; }
+
+    public bool CanManageDirectMessages { get; set; }
 }

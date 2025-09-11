@@ -1,6 +1,6 @@
 namespace Telegram.BotAPI.Types;
 
-public sealed class File
+public sealed class FileStruct
 {
     public string FileId { get; set; }
 

@@ -6,29 +6,33 @@ using System.Net.Http;
 using Telegram.BotAPI.Extensions;
 using System.Threading.Tasks;
 using Telegram.BotAPI.Types;
-using Telegram.BotAPI.Core;
+using Telegram.BotAPI.Log;
+using System.Diagnostics;
 
 namespace Telegram.BotAPI;
 
-public partial class BotApiClient(string token, HttpClient httpClient = null)
+public partial class BotApiClient
 {
-    public string Token { get; set; } = token;
+    private readonly string _token;
 
-    private readonly HttpClient _httpClient = httpClient ?? new HttpClient();
+    private static HttpClient _httpClient;
 
-    public event EventHandler<DebugEventArgs> OnDebug;
+    public event EventHandler<LogEventArgs> OnLogEvent;
 
-    // TODO: error mode: silent (event) | throw exception?
-    public async Task<ApiResponse<T>> RequestAsync<T>(ApiRequest request, ApiContext<T> context = null)
+    public BotApiClient(string token, HttpClient httpClient = null)
     {
-        context ??= new ApiContext<T>();
-        context.Request ??= request;
+        _token = token;
+        _httpClient = httpClient ?? new HttpClient();
+        _httpClient.BaseAddress = new Uri("https://api.telegram.org");
+    }
 
+    public async Task<ApiResponse<T>> RequestAsync<T>(ApiRequest request)
+    {
         try
         {
-            if (string.IsNullOrEmpty(Token))
+            if (string.IsNullOrEmpty(_token))
             {
-                throw new ArgumentNullException(nameof(Token));
+                throw new ArgumentNullException(nameof(_token));
             }
 
             if (string.IsNullOrEmpty(request.MethodName))
@@ -36,9 +40,10 @@ public partial class BotApiClient(string token, HttpClient httpClient = null)
                 throw new ArgumentNullException(nameof(request.MethodName));
             }
 
-            var url = $"https://api.telegram.org/bot{Token}/{request.MethodName}";
-
             HttpResponseMessage response;
+
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
 
             var properties = request.Parameters?.GetType().GetProperties().Where(property => property.GetValue(request.Parameters) is not null);
             if (properties is not null && properties.Any())
@@ -67,37 +72,43 @@ public partial class BotApiClient(string token, HttpClient httpClient = null)
                                 }
                             default:
                                 {
-                                    Console.WriteLine($"Unsupported type: {propertyType}");
-                                    break;
+                                    throw new NotSupportedException($"Unsupported type: {propertyType}");
                                 }
                         }
                     }
                 }
-
-                response = await _httpClient.PostAsync(url, httpContent);
-
-                OnDebug?.Invoke(context, new DebugEventArgs("Request POST"));
+                response = await _httpClient.PostAsync($"/bot{_token}/{request.MethodName}", httpContent);
             }
             else
             {
-                response = await _httpClient.GetAsync(url);
-
-                OnDebug?.Invoke(context, new DebugEventArgs("Request GET"));
+                response = await _httpClient.GetAsync($"/bot{_token}/{request.MethodName}");
             }
+
+            stopwatch.Stop();
 
             var responseRaw = await response.Content.ReadAsStringAsync();
             var responseApi = responseRaw.Deserialize<ApiResponse<T>>();
 
-            responseApi.Raw = responseRaw;
-            context.Response = responseApi;
+            //responseApi.Id = request.Id;
+            //responseApi.Raw = responseRaw;
+            //responseApi.Elapsed = stopwatch.Elapsed;
 
-            OnDebug?.Invoke(context, new DebugEventArgs("Response"));
+            OnLogEvent?.Invoke(this, new LogEventArgs{ 
+                Level = LogEventLevel.Info, 
+                Request = request, Response = responseApi 
+            });
 
-            if (responseApi is not null && !responseApi.Ok && responseApi.ErrorCode == 429)
+            if (responseApi.ErrorCode == 429)
             {
-                await Task.Delay((responseApi.Parameters?.RetryAfter ?? 60) * 1000);
+                OnLogEvent?.Invoke(this, new LogEventArgs
+                {
+                    Level = LogEventLevel.Warn,
+                    Request = request,
+                    Response = responseApi
+                });
+                await Task.Delay((responseApi.Parameters?.RetryAfter ?? 0) * 60 * 1000);
 
-                return await RequestAsync<T>(request, context);
+                return await RequestAsync<T>(request);
             }
 
             return responseApi;
@@ -121,9 +132,11 @@ public partial class BotApiClient(string token, HttpClient httpClient = null)
                 Result = default
             };
 
-            context.Response = response;
-
-            OnDebug?.Invoke(context, new DebugEventArgs("Exception"));
+            OnLogEvent?.Invoke(this, new LogEventArgs { 
+                Level = LogEventLevel.Error,
+                Request = request,
+                Response = response
+            });
 
             return response;
         }
@@ -133,12 +146,12 @@ public partial class BotApiClient(string token, HttpClient httpClient = null)
     {
         try
         {
-            if (string.IsNullOrEmpty(Token))
+            if (string.IsNullOrEmpty(_token))
             {
-                throw new ArgumentNullException(nameof(Token));
+                throw new ArgumentNullException(nameof(_token));
             }
 
-            var response = await _httpClient.GetAsync($"https://api.telegram.org/file/bot{Token}/{filePath}");
+            var response = await _httpClient.GetAsync($"/file/bot{_token}/{filePath}");
             var bytes = await response.Content.ReadAsByteArrayAsync();
 
             return new ApiResponse<byte[]>

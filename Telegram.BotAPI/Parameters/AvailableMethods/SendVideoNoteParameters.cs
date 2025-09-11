@@ -10,6 +10,8 @@ public sealed class SendVideoNoteParameters : ApiRequestParameters
 
     public int MessageThreadId { get; set; }
 
+    public int DirectMessagesTopicId { get; set; }
+
     public object VideoNote { get; set; }
 
     public int Duration { get; set; }
@@ -25,6 +27,8 @@ public sealed class SendVideoNoteParameters : ApiRequestParameters
     public bool AllowPaidBroadcast { get; set; }
 
     public string MessageEffectId { get; set; }
+
+    public SuggestedPostParameters SuggestedPostParameters { get; set; }
 
     public ReplyParameters ReplyParameters { get; set; }
 

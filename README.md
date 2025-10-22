@@ -1,5 +1,6 @@
 # Telegram Bot API (С#)
 [![Bot%20API](https://img.shields.io/badge/Bot%20API-9.2-red.svg)](https://core.telegram.org/bots/api#august-15-2025)
+[![.NET%20Standart](https://img.shields.io/badge/.NET%20Standart-2.0-blue.svg)](https://core.telegram.org/bots/api#august-15-2025)
 
 
 ## Download file
@@ -21,7 +22,7 @@ var fileBytes = (await api.GetFileBytesAsync(filePath: file.Result.FilePath)).Re
 File.WriteAllBytes("downloaded file", fileBytes);
 ```
 
-```
+```cs
 _ = Task.Run(async () =>
 {
     var lastUpdateId = 0L;

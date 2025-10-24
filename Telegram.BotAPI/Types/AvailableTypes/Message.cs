@@ -6,6 +6,8 @@ public sealed class Message : MaybeInaccessibleMessage
 
     public long MessageThreadId { get; set; }
 
+    public DirectMessagesTopic DirectMessagesTopic { get; set; }
+
     public User From { get; set; }
 
     public Chat SenderChat { get; set; }
@@ -34,6 +36,8 @@ public sealed class Message : MaybeInaccessibleMessage
 
     public Story ReplyToStory { get; set; }
 
+    public int ReplyToChecklistTaskId { get; set; }
+
     public User ViaBot { get; set; }
 
     public int EditDate { get; set; }
@@ -41,6 +45,8 @@ public sealed class Message : MaybeInaccessibleMessage
     public bool HasProtectedContent { get; set; }
 
     public bool IsFromOffline { get; set; }
+
+    public bool IsPaidPost { get; set; }
 
     public string MediaGroupId { get; set; }
 
@@ -53,6 +59,8 @@ public sealed class Message : MaybeInaccessibleMessage
     public MessageEntity[] Entities { get; set; }
 
     public LinkPreviewOptions LinkPreviewOptions { get; set; }
+
+    public SuggestedPostInfo SuggestedPostInfo { get; set; }
 
     public string EffectId { get; set; }
 
@@ -175,6 +183,16 @@ public sealed class Message : MaybeInaccessibleMessage
     public GiveawayCompleted GiveawayCompleted { get; set; }
 
     public PaidMessagePriceChanged PaidMessagePriceChanged { get; set; }
+
+    public SuggestedPostApproved SuggestedPostApproved { get; set; }
+
+    public SuggestedPostApprovalFailed SuggestedPostApprovalFailed { get; set; }
+
+    public SuggestedPostDeclined SuggestedPostDeclined { get; set; }
+
+    public SuggestedPostPaid SuggestedPostPaid { get; set; }
+
+    public SuggestedPostRefunded SuggestedPostRefunded { get; set; }
 
     public VideoChatScheduled VideoChatScheduled { get; set; }
 

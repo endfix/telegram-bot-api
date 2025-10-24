@@ -7,7 +7,7 @@ namespace Telegram.BotAPI.Extensions;
 
 public static class JsonSerializerExtensions
 {
-    private static readonly JsonSerializerOptions _options = new()
+    public static JsonSerializerOptions OPTIONS => new()
     {
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
@@ -34,16 +34,16 @@ public static class JsonSerializerExtensions
 
     public static T Deserialize<T>(this string json)
     {
-        return JsonSerializer.Deserialize<T>(json, _options);
+        return JsonSerializer.Deserialize<T>(json, OPTIONS);
     }
 
     public static string Serialize(this object obj)
     {
-        return JsonSerializer.Serialize(obj, _options);
+        return JsonSerializer.Serialize(obj, OPTIONS);
     }
 
     public static string SerializeWithIndented(this object obj)
     {
-        return JsonSerializer.Serialize(obj, new JsonSerializerOptions(_options) { WriteIndented = true, IndentCharacter = ' ', IndentSize = 2 });
+        return JsonSerializer.Serialize(obj, new JsonSerializerOptions(OPTIONS) { WriteIndented = true, IndentCharacter = ' ', IndentSize = 2 });
     }
 }

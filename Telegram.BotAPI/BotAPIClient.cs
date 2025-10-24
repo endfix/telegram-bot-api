@@ -1,13 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Net.Http;
-using Telegram.BotAPI.Extensions;
+using System.Net.Sockets;
+using System.Text;
 using System.Threading.Tasks;
-using Telegram.BotAPI.Types;
+using Telegram.BotAPI.Extensions;
 using Telegram.BotAPI.Log;
-using System.Diagnostics;
+using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI;
 
@@ -40,90 +40,49 @@ public partial class BotApiClient
                 throw new ArgumentNullException(nameof(request.MethodName));
             }
 
-            HttpResponseMessage response;
-
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            var properties = request.Parameters?.GetType().GetProperties().Where(property => property.GetValue(request.Parameters) is not null);
-            if (properties is not null && properties.Any())
+            OnLogEvent?.Invoke(this, new LogEventArgs
             {
-                var httpContent = new MultipartFormDataContent();
-                foreach (var property in properties)
-                {
-                    var propertyValue = property.GetValue(request.Parameters);
-                    if (propertyValue is InputFile inputFile)
-                    {
-                        httpContent.Add(new StreamContent(new MemoryStream(inputFile.Bytes)), inputFile.Name.Serialize(), inputFile.FileName);
-                    }
-                    else
-                    {
-                        var propertyType = Type.GetTypeCode(propertyValue.GetType());
-                        switch (propertyType)
-                        {
-                            case TypeCode.String:
-                            case TypeCode.Boolean:
-                            case TypeCode.Int16 or TypeCode.Int32 or TypeCode.Int64:
-                            case TypeCode.Object:
-                                {
-                                    var content = new StringContent(propertyType is TypeCode.Object ? propertyValue.Serialize() : propertyValue.ToString(), Encoding.UTF8);
-                                    httpContent.Add(content, property.Name.ToSnake());
-                                    break;
-                                }
-                            default:
-                                {
-                                    throw new NotSupportedException($"Unsupported type: {propertyType}");
-                                }
-                        }
-                    }
-                }
-                response = await _httpClient.PostAsync($"/bot{_token}/{request.MethodName}", httpContent);
-            }
-            else
-            {
-                response = await _httpClient.GetAsync($"/bot{_token}/{request.MethodName}");
-            }
-
-            stopwatch.Stop();
-
-            var responseRaw = await response.Content.ReadAsStringAsync();
-            var responseApi = responseRaw.Deserialize<ApiResponse<T>>();
-
-            //responseApi.Id = request.Id;
-            //responseApi.Raw = responseRaw;
-            //responseApi.Elapsed = stopwatch.Elapsed;
-
-            OnLogEvent?.Invoke(this, new LogEventArgs{ 
-                Level = LogEventLevel.Info, 
-                Request = request, Response = responseApi 
+                Level = LogEventLevel.Verbose,
+                Message = $"-> {request.MethodName}"
             });
 
-            if (responseApi.ErrorCode == 429)
+            var responseMessage = await getResponse(request);
+            var apiResponse = (await responseMessage.Content.ReadAsStringAsync()).Deserialize<ApiResponse<T>>();
+
+            if (apiResponse.ErrorCode == 429)
             {
                 OnLogEvent?.Invoke(this, new LogEventArgs
                 {
                     Level = LogEventLevel.Warn,
-                    Request = request,
-                    Response = responseApi
+                    Message = $"<- {request.MethodName} ({apiResponse.Description ?? "Too Many Requests"})"
                 });
-                await Task.Delay((responseApi.Parameters?.RetryAfter ?? 0) * 60 * 1000);
+
+                await Task.Delay((apiResponse.Parameters?.RetryAfter ?? 0) * 60 * 1000);
 
                 return await RequestAsync<T>(request);
             }
 
-            return responseApi;
+            OnLogEvent?.Invoke(this, new LogEventArgs
+            {
+                Level = LogEventLevel.Verbose,
+                Message = $"<- {request.MethodName} ({(apiResponse.Ok ? "OK" : apiResponse.Description)})"
+            });
+
+            return apiResponse;
         }
         catch (Exception e)
         {
-            /*
-             * TODO: check the next messages:
-             * "Network is unreachable (api.telegram.org:443)"
-             * "Name or service not known (api.telegram.org:443)"
-             * "An error occurred while sending the request."
-             * 
-             * then try again request?
-             */
+            if (e is HttpRequestException requestException && requestException.InnerException is SocketException) {
+                OnLogEvent?.Invoke(this, new LogEventArgs
+                {
+                    Level = LogEventLevel.Error,
+                    Message = $"<- {request.MethodName} ({e.Message})"
+                });
 
+                await Task.Delay(60 * 1000);
+                return await RequestAsync<T>(request);
+            }
+            
             var response = new ApiResponse<T>
             {
                 Ok = false,
@@ -132,10 +91,10 @@ public partial class BotApiClient
                 Result = default
             };
 
-            OnLogEvent?.Invoke(this, new LogEventArgs { 
+            OnLogEvent?.Invoke(this, new LogEventArgs
+            {
                 Level = LogEventLevel.Error,
-                Request = request,
-                Response = response
+                Message = $"<- {request.MethodName} ({e.Message})"
             });
 
             return response;
@@ -170,5 +129,35 @@ public partial class BotApiClient
                 Result = default
             };
         }
+    }
+
+    private async Task<HttpResponseMessage> getResponse(ApiRequest request)
+    {
+        var requestUri = $"/bot{_token}/{request.MethodName}";
+
+        var properties = request.Parameters?.GetType().GetProperties().Where(property => property.GetValue(request.Parameters) != null);
+        if (properties != null && properties.Any())
+        {
+            var httpContent = new MultipartFormDataContent();
+            foreach (var property in properties)
+            {
+                var propertyValue = property.GetValue(request.Parameters);
+                if (propertyValue is InputFile inputFile)
+                {
+                    httpContent.Add(new StreamContent(new MemoryStream(inputFile.Bytes)), inputFile.Name.Serialize(), inputFile.FileName);
+                }
+                else
+                {
+                    var propertyType = Type.GetTypeCode(propertyValue.GetType());
+                    var content = new StringContent(propertyType is TypeCode.Object ? propertyValue.Serialize() : propertyValue.ToString(), Encoding.UTF8);
+
+                    httpContent.Add(content, property.Name.ToSnake());
+                }
+            }
+
+            return await _httpClient.PostAsync(requestUri, httpContent);
+        }
+
+        return await _httpClient.GetAsync(requestUri);
     }
 }

@@ -6,6 +6,29 @@ namespace Telegram.BotAPI;
 
 public partial class BotApiClient
 {
+    #region Getting updates
+    public async Task<ApiResponse<Update[]>> GetUpdatesAsync(GetUpdatesParameters parameters = null)
+    {
+        return await RequestAsync<Update[]>(new ApiRequest("getUpdates", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> SetWebhookAsync(SetWebhookParameters parameters = null)
+    {
+        return await RequestAsync<bool>(new ApiRequest("setWebhook", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> DeleteWebhookAsync(DeleteWebhookParameters parameters = null)
+    {
+        return await RequestAsync<bool>(new ApiRequest("deleteWebhook", parameters));
+    }
+
+    public async Task<ApiResponse<WebhookInfo>> GetWebhookInfoAsync(GetWebhookInfoParameters parameters = null)
+    {
+        return await RequestAsync<WebhookInfo>(new ApiRequest("getWebhookInfo", parameters));
+    }
+    #endregion
+
+    #region Available methods
     public async Task<ApiResponse<User>> GetMeAsync(GetMeParameters parameters = null)
     {
         return await RequestAsync<User>(new ApiRequest("getMe", parameters));
@@ -440,4 +463,352 @@ public partial class BotApiClient
     {
         return await RequestAsync<ChatAdministratorRights>(new ApiRequest("getMyDefaultAdministratorRights", parameters));
     }
+    #endregion
+
+    #region Updating messages
+    public async Task<ApiResponse<Message>> EditMessageTextAsync(EditMessageTextParameters parameters)
+    {
+        return await RequestAsync<Message>(new ApiRequest("editMessageText", parameters));
+    }
+
+    public async Task<ApiResponse<Message>> EditMessageCaptionAsync(EditMessageCaptionParameters parameters)
+    {
+        return await RequestAsync<Message>(new ApiRequest("editMessageCaption", parameters));
+    }
+
+    public async Task<ApiResponse<Message>> EditMessageMediaAsync(EditMessageMediaParameters parameters)
+    {
+        return await RequestAsync<Message>(new ApiRequest("editMessageMedia", parameters));
+    }
+
+    public async Task<ApiResponse<Message>> EditMessageLiveLocationAsync(EditMessageLiveLocationParameters parameters)
+    {
+        return await RequestAsync<Message>(new ApiRequest("editMessageLiveLocation", parameters));
+    }
+
+    public async Task<ApiResponse<Message>> StopMessageLiveLocationAsync(StopMessageLiveLocationParameters parameters)
+    {
+        return await RequestAsync<Message>(new ApiRequest("stopMessageLiveLocation", parameters));
+    }
+
+    public async Task<ApiResponse<Message>> EditMessageChecklistAsync(EditMessageChecklistParameters parameters)
+    {
+        return await RequestAsync<Message>(new ApiRequest("editMessageChecklist", parameters));
+    }
+
+    public async Task<ApiResponse<Message>> EditMessageReplyMarkupAsync(EditMessageReplyMarkupParameters parameters)
+    {
+        return await RequestAsync<Message>(new ApiRequest("editMessageReplyMarkup", parameters));
+    }
+
+    public async Task<ApiResponse<Poll>> StopPollAsync(StopPollParameters parameters)
+    {
+        return await RequestAsync<Poll>(new ApiRequest("stopPoll", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> ApproveSuggestedPostAsync(ApproveSuggestedPostParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("approveSuggestedPost", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> DeclineSuggestedPostAsync(DeclineSuggestedPostParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("declineSuggestedPost", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> DeleteMessageAsync(DeleteMessageParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("deleteMessage", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> DeleteMessagesAsync(DeleteMessagesParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("deleteMessages", parameters));
+    }
+
+    public async Task<ApiResponse<GiftsStruct>> GetAvailableGiftsAsync(GetAvailableGiftsParameters parameters)
+    {
+        return await RequestAsync<GiftsStruct>(new ApiRequest("getAvailableGifts", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> SendGiftAsync(SendGiftParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("sendGift", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> GiftPremiumSubscriptionAsync(GiftPremiumSubscriptionParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("giftPremiumSubscription", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> VerifyUserAsync(VerifyUserParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("verifyUser", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> VerifyChatAsync(VerifyChatParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("verifyChat", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> RemoveUserVerificationAsync(RemoveUserVerificationParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("removeUserVerification", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> RemoveChatVerificationAsync(RemoveChatVerificationParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("removeChatVerification", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> ReadBusinessMessageAsync(ReadBusinessMessageParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("readBusinessMessage", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> DeleteBusinessMessagesAsync(DeleteBusinessMessagesParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("deleteBusinessMessages", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> SetBusinessAccountNameAsync(SetBusinessAccountNameParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("setBusinessAccountName", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> SetBusinessAccountUsernameAsync(SetBusinessAccountUsernameParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("setBusinessAccountUsername", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> SetBusinessAccountBioAsync(SetBusinessAccountBioParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("setBusinessAccountBio", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> SetBusinessAccountProfilePhotoAsync(SetBusinessAccountProfilePhotoParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("setBusinessAccountProfilePhoto", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> RemoveBusinessAccountProfilePhotoAsync(RemoveBusinessAccountProfilePhotoParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("removeBusinessAccountProfilePhoto", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> SetBusinessAccountGiftSettingsAsync(SetBusinessAccountGiftSettingsParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("setBusinessAccountGiftSettings", parameters));
+    }
+
+    public async Task<ApiResponse<StarAmount>> GetBusinessAccountStarBalanceAsync(GetBusinessAccountStarBalanceParameters parameters)
+    {
+        return await RequestAsync<StarAmount>(new ApiRequest("getBusinessAccountStarBalance", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> TransferBusinessAccountStarsAsync(TransferBusinessAccountStarsParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("transferBusinessAccountStars", parameters));
+    }
+
+    public async Task<ApiResponse<OwnedGifts>> GetBusinessAccountGiftsAsync(GetBusinessAccountGiftsParameters parameters)
+    {
+        return await RequestAsync<OwnedGifts>(new ApiRequest("getBusinessAccountGifts", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> ConvertGiftToStarsAsync(ConvertGiftToStarsParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("convertGiftToStars", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> UpgradeGiftAsync(UpgradeGiftParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("upgradeGift", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> TransferGiftAsync(TransferGiftParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("transferGift", parameters));
+    }
+
+    public async Task<ApiResponse<Story>> PostStoryAsync(PostStoryParameters parameters)
+    {
+        return await RequestAsync<Story>(new ApiRequest("postStory", parameters));
+    }
+
+    public async Task<ApiResponse<Story>> EditStoryAsync(EditStoryParameters parameters)
+    {
+        return await RequestAsync<Story>(new ApiRequest("editStory", parameters));
+    }
+
+    public async Task<ApiResponse<Story>> DeleteStoryAsync(DeleteStoryParameters parameters)
+    {
+        return await RequestAsync<Story>(new ApiRequest("deleteStory", parameters));
+    }
+    #endregion
+
+    #region Stickers
+    public async Task<ApiResponse<Message>> SendStickerAsync(SendStickerParameters parameters)
+    {
+        return await RequestAsync<Message>(new ApiRequest("sendSticker", parameters));
+    }
+
+    public async Task<ApiResponse<StickerSet>> GetStickerSetAsync(GetStickerSetParameters parameters)
+    {
+        return await RequestAsync<StickerSet>(new ApiRequest("getStickerSet", parameters));
+    }
+
+    public async Task<ApiResponse<Sticker[]>> GetCustomEmojiStickersAsync(GetCustomEmojiStickersParameters parameters)
+    {
+        return await RequestAsync<Sticker[]>(new ApiRequest("getCustomEmojiStickers", parameters));
+    }
+
+    public async Task<ApiResponse<FileStruct>> UploadStickerFileAsync(UploadStickerFileParameters parameters)
+    {
+        return await RequestAsync<FileStruct>(new ApiRequest("uploadStickerFile", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> CreateNewStickerSetAsync(CreateNewStickerSetParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("createNewStickerSet", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> AddStickerToSetAsync(AddStickerToSetParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("addStickerToSet", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> SetStickerPositionInSetAsync(SetStickerPositionInSetParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("setStickerPositionInSet", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> DeleteStickerFromSetAsync(DeleteStickerFromSetParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("deleteStickerFromSet", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> ReplaceStickerInSetAsync(ReplaceStickerInSetParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("replaceStickerInSet", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> SetStickerEmojiListAsync(SetStickerEmojiListParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("setStickerEmojiList", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> SetStickerKeywordsAsync(SetStickerKeywordsParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("setStickerKeywords", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> SetStickerMaskPositionAsync(SetStickerMaskPositionParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("setStickerMaskPosition", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> SetStickerSetTitleAsync(SetStickerSetTitleParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("setStickerSetTitle", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> SetStickerSetThumbnailAsync(SetStickerSetThumbnailParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("setStickerSetThumbnail", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> SetCustomEmojiStickerSetThumbnailAsync(SetCustomEmojiStickerSetThumbnailParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("setCustomEmojiStickerSetThumbnail", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> DeleteStickerSetAsync(DeleteStickerSetParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("deleteStickerSet", parameters));
+    }
+    #endregion
+
+    #region Inline mode
+    public async Task<ApiResponse<bool>> AnswerInlineQueryAsync(AnswerInlineQueryParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("answerInlineQuery", parameters));
+    }
+
+    public async Task<ApiResponse<SentWebAppMessage>> AnswerWebAppQueryAsync(AnswerWebAppQueryParameters parameters)
+    {
+        return await RequestAsync<SentWebAppMessage>(new ApiRequest("answerWebAppQuery", parameters));
+    }
+
+    public async Task<ApiResponse<PreparedInlineMessage>> SavePreparedInlineMessageAsync(SavePreparedInlineMessageParameters parameters)
+    {
+        return await RequestAsync<PreparedInlineMessage>(new ApiRequest("savePreparedInlineMessage", parameters));
+    }
+    #endregion
+
+    #region Payments
+    public async Task<ApiResponse<Message>> SendInvoiceAsync(SendInvoiceParameters parameters)
+    {
+        return await RequestAsync<Message>(new ApiRequest("sendInvoice", parameters));
+    }
+
+    public async Task<ApiResponse<string>> CreateInvoiceLinkAsync(CreateInvoiceLinkParameters parameters)
+    {
+        return await RequestAsync<string>(new ApiRequest("createInvoiceLink", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> AnswerShippingQueryAsync(AnswerShippingQueryParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("answerShippingQuery", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> AnswerPreCheckoutQueryAsync(AnswerPreCheckoutQueryParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("answerPreCheckoutQuery", parameters));
+    }
+
+    public async Task<ApiResponse<StarAmount>> GetMyStarBalanceAsync(GetMyStarBalanceParameters parameters)
+    {
+        return await RequestAsync<StarAmount>(new ApiRequest("getMyStarBalance", parameters));
+    }
+
+    public async Task<ApiResponse<StarTransactions>> GetStarTransactionsAsync(GetStarTransactionsyParameters parameters)
+    {
+        return await RequestAsync<StarTransactions>(new ApiRequest("getStarTransactions", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> RefundStarPaymentAsync(RefundStarPaymentParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("refundStarPayment", parameters));
+    }
+
+    public async Task<ApiResponse<bool>> EditUserStarSubscriptionAsync(EditUserStarSubscriptionParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("editUserStarSubscription", parameters));
+    }
+    #endregion
+
+    #region Telegram Passport
+    public async Task<ApiResponse<bool>> SetPassportDataErrorsAsync(SetPassportDataErrorsParameters parameters)
+    {
+        return await RequestAsync<bool>(new ApiRequest("setPassportDataErrors", parameters));
+    }
+    #endregion
+
+    #region Games
+    public async Task<ApiResponse<Message>> SendGameAsync(SendGameParameters parameters)
+    {
+        return await RequestAsync<Message>(new ApiRequest("sendGame", parameters));
+    }
+
+    public async Task<ApiResponse<Message>> SetGameScoreAsync(SetGameScoreParameters parameters)
+    {
+        return await RequestAsync<Message>(new ApiRequest("setGameScore", parameters));
+    }
+
+    public async Task<ApiResponse<GameHighScore[]>> GetGameHighScoresAsync(GetGameHighScoresParameters parameters)
+    {
+        return await RequestAsync<GameHighScore[]>(new ApiRequest("getGameHighScores", parameters));
+    }
+    #endregion
 }

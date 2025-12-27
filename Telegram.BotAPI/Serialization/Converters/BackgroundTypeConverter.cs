@@ -27,6 +27,6 @@ public class BackgroundTypeConverter : JsonConverter<BackgroundType>
 
     public override void Write(Utf8JsonWriter writer, BackgroundType value, JsonSerializerOptions options)
     {
-        writer.WriteRawValue(options.WriteIndented ? value.SerializeWithIndented() : value.Serialize());
+        writer.WriteRawValue(value.Serialize(options.WriteIndented));
     }
 }

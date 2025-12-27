@@ -2,6 +2,7 @@
 
 public enum UpdateTypes
 {
+    Unknown,
     Message,
     EditedMessage,
     ChannelPost,

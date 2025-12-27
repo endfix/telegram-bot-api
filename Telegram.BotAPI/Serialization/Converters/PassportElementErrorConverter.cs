@@ -32,6 +32,6 @@ public sealed class PassportElementErrorConverter : JsonConverter<PassportElemen
 
     public override void Write(Utf8JsonWriter writer, PassportElementError value, JsonSerializerOptions options)
     {
-        writer.WriteRawValue(options.WriteIndented ? value.SerializeWithIndented() : value.Serialize());
+        writer.WriteRawValue(value.Serialize(options.WriteIndented));
     }
 }

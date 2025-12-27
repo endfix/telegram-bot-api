@@ -26,6 +26,6 @@ public class MenuButtonConverter : JsonConverter<MenuButton>
 
     public override void Write(Utf8JsonWriter writer, MenuButton value, JsonSerializerOptions options)
     {
-        writer.WriteRawValue(options.WriteIndented ? value.SerializeWithIndented() : value.Serialize());
+        writer.WriteRawValue(value.Serialize(options.WriteIndented));
     }
 }

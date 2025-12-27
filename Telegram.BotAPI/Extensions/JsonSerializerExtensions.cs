@@ -7,11 +7,10 @@ namespace Telegram.BotAPI.Extensions;
 
 public static class JsonSerializerExtensions
 {
-    public static JsonSerializerOptions OPTIONS => new()
+    private static readonly JsonSerializerOptions _option = new()
     {
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-        //PropertyNameCaseInsensitive = true,
         PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
         Converters = {
             new JsonStringEnumConverter(namingPolicy: JsonNamingPolicy.SnakeCaseLower),
@@ -27,23 +26,19 @@ public static class JsonSerializerExtensions
             new ReactionTypeConverter(),
             new MenuButtonConverter(),
             new MaybeInaccessibleMessageConverter()
-        },
-        //PreferredObjectCreationHandling = JsonObjectCreationHandling.Populate,
-        //UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow
+        }
     };
 
-    public static T Deserialize<T>(this string json)
+    private static readonly JsonSerializerOptions _indentedOption = new JsonSerializerOptions(_option)
     {
-        return JsonSerializer.Deserialize<T>(json, OPTIONS);
-    }
+        WriteIndented = true,
+        IndentCharacter = ' ',
+        IndentSize = 4
+    };
 
-    public static string Serialize(this object obj)
-    {
-        return JsonSerializer.Serialize(obj, OPTIONS);
-    }
+    public static T Deserialize<T>(this string json) 
+        => string.IsNullOrEmpty(json) ? default : JsonSerializer.Deserialize<T>(json, _option);
 
-    public static string SerializeWithIndented(this object obj)
-    {
-        return JsonSerializer.Serialize(obj, new JsonSerializerOptions(OPTIONS) { WriteIndented = true, IndentCharacter = ' ', IndentSize = 2 });
-    }
+    public static string Serialize(this object obj, bool writeIndented = false) 
+        => obj is null ? string.Empty : JsonSerializer.Serialize(obj, writeIndented ? _indentedOption : _option);
 }

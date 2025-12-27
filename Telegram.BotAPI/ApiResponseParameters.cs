@@ -1,8 +1,8 @@
 ﻿namespace Telegram.BotAPI;
 
-public class ApiResponseParameters
+public sealed class ApiResponseParameters
 {
-    public int RetryAfter { get; set; }
-
     public long MigrateToChatId { get; set; }
+
+    public int RetryAfter { get; set; }
 }

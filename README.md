@@ -20,25 +20,33 @@ _ = Task.Run(async () =>
     var lastUpdateId = 0L;
     while (true)
     {
-        var updates = (await api.GetUpdatesAsync(new GetUpdatesParameters
+        var getUpdates = await api.GetUpdatesAsync(new GetUpdatesParameters
         {
             Offset = lastUpdateId
-        })).Result;
-        
-        foreach (var update in updates)
+        }));
+
+        if (getUpdates.Result != null)
         {
-            if (update.Type == UpdateTypes.Message && update.Message.Document != null)
+            foreach (var update in getUpdates.Result)
             {
-                var file = (await api.GetFileAsync(new GetFileParameters
+                if (update.Type == UpdateTypes.Message && update.Message.Document != null)
                 {
-                    FileId = update.Message.Document.FileId
-                })).Result;
+                    var file = (await api.GetFileAsync(new GetFileParameters
+                    {
+                        FileId = update.Message.Document.FileId
+                    })).Result;
                 
-                var fileBytes = (await api.GetFileBytesAsync(filePath: file.FilePath)).Result;
-                File.WriteAllBytes($"D:\\{update.Message.Document.FileName}", fileBytes);
-            }     
-            lastUpdateId = update.UpdateId + 1;
-        }      
+                    var fileBytes = (await api.GetFileBytesAsync(filePath: file.FilePath)).Result;
+                    File.WriteAllBytes($"D:\\{update.Message.Document.FileName}", fileBytes);
+                }     
+                lastUpdateId = update.UpdateId + 1;
+            }  
+        } 
+        else 
+        {
+            throw new Exception(getUpdates.Description);
+        }
+
         await Task.Delay(1000);
     }
 });

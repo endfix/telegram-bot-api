@@ -30,6 +30,6 @@ public class BotCommandScopeConverter : JsonConverter<BotCommandScope>
 
     public override void Write(Utf8JsonWriter writer, BotCommandScope value, JsonSerializerOptions options)
     {
-        writer.WriteRawValue(options.WriteIndented ? value.SerializeWithIndented() : value.Serialize());
+        writer.WriteRawValue(value.Serialize(options.WriteIndented));
     }
 }

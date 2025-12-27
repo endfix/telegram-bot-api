@@ -29,6 +29,6 @@ public class ChatMemberConverter : JsonConverter<ChatMember>
 
     public override void Write(Utf8JsonWriter writer, ChatMember value, JsonSerializerOptions options)
     {
-        writer.WriteRawValue(options.WriteIndented ? value.SerializeWithIndented() : value.Serialize());
+        writer.WriteRawValue(value.Serialize(options.WriteIndented));
     }
 }

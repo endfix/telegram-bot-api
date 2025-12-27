@@ -27,6 +27,6 @@ public class MaybeInaccessibleMessageConverter : JsonConverter<MaybeInaccessible
 
     public override void Write(Utf8JsonWriter writer, MaybeInaccessibleMessage value, JsonSerializerOptions options)
     {
-        writer.WriteRawValue(options.WriteIndented ? value.SerializeWithIndented() : value.Serialize());
+        writer.WriteRawValue(value.Serialize(options.WriteIndented));
     }
 }

@@ -27,6 +27,6 @@ public class MessageOriginConverter : JsonConverter<MessageOrigin>
 
     public override void Write(Utf8JsonWriter writer, MessageOrigin value, JsonSerializerOptions options)
     {
-        writer.WriteRawValue(options.WriteIndented ? value.SerializeWithIndented() : value.Serialize());
+        writer.WriteRawValue(value.Serialize(options.WriteIndented));
     }
 }

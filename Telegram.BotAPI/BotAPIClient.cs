@@ -1,86 +1,134 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using System;
 using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Telegram.BotAPI.Extensions;
-using Telegram.BotAPI.Log;
+using Telegram.BotAPI.Parameters;
 using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI;
 
-public partial class BotApiClient
+public sealed partial class BotApiClient
 {
+    public delegate void UpdateHandler(BotApiClient client, Update update);
+
+    public event UpdateHandler? OnUpdate;
+
     private readonly string _token;
 
-    private static HttpClient _httpClient;
+    private readonly HttpClient _httpClient;
 
-    public event EventHandler<LogEventArgs> OnLogEvent;
+    private readonly ILogger<BotApiClient> _logger;
 
-    public BotApiClient(string token, HttpClient httpClient = null)
+    public BotApiClient(string token, HttpClient? httpClient = null, ILogger<BotApiClient> ? logger = null)
     {
-        _token = token;
+        _token = token ?? throw new ArgumentNullException(nameof(token));
+
         _httpClient = httpClient ?? new HttpClient();
         _httpClient.BaseAddress = new Uri("https://api.telegram.org");
+
+        _logger = logger ?? NullLogger<BotApiClient>.Instance;
     }
 
-    public async Task<ApiResponse<T>> RequestAsync<T>(ApiRequest request)
+    public async Task StartPollingAsync(GetUpdatesParameters? parameters = null, CancellationToken cancellationToken = default)
+    {
+        var lastUpdateId = 0L;
+        var pollingParameters = parameters ?? new GetUpdatesParameters();
+
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            try
+            {
+                pollingParameters.Offset = lastUpdateId;
+                if (pollingParameters.Timeout == 0) pollingParameters.Timeout = 20;
+
+                var response = await GetUpdatesAsync(pollingParameters, cancellationToken).ConfigureAwait(false);
+
+                if (response.Ok && response.Result is not null)
+                {
+                    foreach (var update in response.Result)
+                    {
+                        _ = Task.Run(() =>
+                        {
+                            try
+                            {
+                                OnUpdate?.Invoke(this, update);
+                            }
+                            catch (Exception e)
+                            {
+                                _logger.LogError("OnUpdate Id: {UpdateId} Message: {Message}", update.UpdateId, e.Message);
+                            }
+                        });
+
+                        lastUpdateId = update.UpdateId + 1;
+                    }
+                }
+                else if (!response.Ok)
+                {
+                    _logger.LogWarning("Long Polling: {Description}", response.Description);
+                    await Task.Delay(5000, cancellationToken).ConfigureAwait(false);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                break;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Critical error loop of Long Polling");
+                await Task.Delay(5000, cancellationToken).ConfigureAwait(false);
+            }
+        }
+    }
+
+    public async Task<ApiResponse<T>> RequestAsync<T>(ApiRequest request, CancellationToken cancellation = default, int retryCount = 0)
     {
         try
         {
-            if (string.IsNullOrEmpty(_token))
+            if (request is null)
             {
-                throw new ArgumentNullException(nameof(_token));
+                throw new ArgumentNullException(nameof(request));
             }
 
             if (string.IsNullOrEmpty(request.MethodName))
             {
-                throw new ArgumentNullException(nameof(request.MethodName));
+                throw new ArgumentNullException("methodName");
             }
 
-            OnLogEvent?.Invoke(this, new LogEventArgs
-            {
-                Level = LogEventLevel.Verbose,
-                Message = $"-> {request.MethodName}"
-            });
-
-            var responseMessage = await getResponse(request);
-            var apiResponse = (await responseMessage.Content.ReadAsStringAsync()).Deserialize<ApiResponse<T>>();
+            using var responseMessage = await GetResponse(request, cancellation);
+            var apiResponse = (await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false)).Deserialize<ApiResponse<T>>();
 
             if (apiResponse.ErrorCode == 429)
             {
-                OnLogEvent?.Invoke(this, new LogEventArgs
+                if (retryCount < 5)
                 {
-                    Level = LogEventLevel.Warn,
-                    Message = $"<- {request.MethodName} ({apiResponse.Description ?? "Too Many Requests"})"
-                });
+                    var secondsDelay = (apiResponse.Parameters?.RetryAfter ?? 0) + 1;
+                    await Task.Delay(secondsDelay * 1000, cancellation);
 
-                await Task.Delay((apiResponse.Parameters?.RetryAfter ?? 0) * 60 * 1000);
-
-                return await RequestAsync<T>(request);
+                    return await RequestAsync<T>(request, cancellation, ++retryCount);
+                }
             }
-
-            OnLogEvent?.Invoke(this, new LogEventArgs
-            {
-                Level = LogEventLevel.Verbose,
-                Message = $"<- {request.MethodName} ({(apiResponse.Ok ? "OK" : apiResponse.Description)})"
-            });
 
             return apiResponse;
         }
+        catch (OperationCanceledException) when (cancellation.IsCancellationRequested)
+        {
+            throw;
+        }
         catch (Exception e)
         {
-            if (e is HttpRequestException requestException && requestException.InnerException is SocketException) {
-                OnLogEvent?.Invoke(this, new LogEventArgs
+            if (e is HttpRequestException requestException && requestException.InnerException is SocketException)
+            {
+                if (retryCount < 5)
                 {
-                    Level = LogEventLevel.Error,
-                    Message = $"<- {request.MethodName} ({e.Message})"
-                });
+                    await Task.Delay(60 * 1000, cancellation);
 
-                await Task.Delay(60 * 1000);
-                return await RequestAsync<T>(request);
+                    return await RequestAsync<T>(request, cancellation, ++retryCount);
+                }
             }
             
             var response = new ApiResponse<T>
@@ -91,17 +139,11 @@ public partial class BotApiClient
                 Result = default
             };
 
-            OnLogEvent?.Invoke(this, new LogEventArgs
-            {
-                Level = LogEventLevel.Error,
-                Message = $"<- {request.MethodName} ({e.Message})"
-            });
-
             return response;
         }
     }
 
-    public async Task<ApiResponse<byte[]>> GetFileBytesAsync(string filePath)
+    public async Task<ApiResponse<byte[]>> GetFileBytesAsync(string filePath, CancellationToken cancellation = default)
     {
         try
         {
@@ -110,8 +152,8 @@ public partial class BotApiClient
                 throw new ArgumentNullException(nameof(_token));
             }
 
-            var response = await _httpClient.GetAsync($"/file/bot{_token}/{filePath}");
-            var bytes = await response.Content.ReadAsByteArrayAsync();
+            using var response = await _httpClient.GetAsync($"/file/bot{_token}/{filePath}", cancellation);
+            var bytes = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
 
             return new ApiResponse<byte[]>
             {
@@ -131,33 +173,57 @@ public partial class BotApiClient
         }
     }
 
-    private async Task<HttpResponseMessage> getResponse(ApiRequest request)
+    private async Task<HttpResponseMessage> GetResponse(ApiRequest request, CancellationToken cancellation)
     {
         var requestUri = $"/bot{_token}/{request.MethodName}";
+        var parameters = request.Parameters;
+        
 
-        var properties = request.Parameters?.GetType().GetProperties().Where(property => property.GetValue(request.Parameters) != null);
-        if (properties != null && properties.Any())
+        if (parameters is null)
         {
-            var httpContent = new MultipartFormDataContent();
+            return await _httpClient.GetAsync(requestUri, cancellation).ConfigureAwait(false);
+        }
+
+        var properties = parameters.GetType().GetProperties();
+        var hasParameters = false;
+        var httpContent = new MultipartFormDataContent();
+
+        try
+        {
             foreach (var property in properties)
             {
-                var propertyValue = property.GetValue(request.Parameters);
-                if (propertyValue is InputFile inputFile)
+                var value = property.GetValue(parameters);
+                if (value is null)
                 {
-                    httpContent.Add(new StreamContent(new MemoryStream(inputFile.Bytes)), inputFile.Name.Serialize(), inputFile.FileName);
+                    continue;
+                }
+
+                hasParameters = true;
+
+                if (value is InputFile inputFile)
+                {
+                    httpContent.Add(new StreamContent(inputFile.GetStream()), inputFile.Name.Serialize(), inputFile.FileName);
                 }
                 else
                 {
-                    var propertyType = Type.GetTypeCode(propertyValue.GetType());
-                    var content = new StringContent(propertyType is TypeCode.Object ? propertyValue.Serialize() : propertyValue.ToString(), Encoding.UTF8);
+                    var content = new StringContent(value is object ? value.Serialize() : value.ToString(), Encoding.UTF8);
 
                     httpContent.Add(content, property.Name.ToSnake());
                 }
             }
 
-            return await _httpClient.PostAsync(requestUri, httpContent);
-        }
+            if (!hasParameters)
+            {
+                httpContent.Dispose();
+                return await _httpClient.GetAsync(requestUri, cancellation).ConfigureAwait(false);
+            }
 
-        return await _httpClient.GetAsync(requestUri);
+            return await _httpClient.PostAsync(requestUri, httpContent, cancellation);
+        }
+        catch
+        {
+            httpContent.Dispose();
+            throw;
+        }
     }
 }

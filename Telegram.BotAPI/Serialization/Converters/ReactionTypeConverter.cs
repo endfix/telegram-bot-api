@@ -26,6 +26,6 @@ public class ReactionTypeConverter : JsonConverter<ReactionType>
 
     public override void Write(Utf8JsonWriter writer, ReactionType value, JsonSerializerOptions options)
     {
-        writer.WriteRawValue(options.WriteIndented ? value.SerializeWithIndented() : value.Serialize());
+        writer.WriteRawValue(value.Serialize(options.WriteIndented));
     }
 }

@@ -26,6 +26,6 @@ public class ChatBoostSourceConverter : JsonConverter<ChatBoostSource>
 
     public override void Write(Utf8JsonWriter writer, ChatBoostSource value, JsonSerializerOptions options)
     {
-        writer.WriteRawValue(options.WriteIndented ? value.SerializeWithIndented() : value.Serialize());
+        writer.WriteRawValue(value.Serialize(options.WriteIndented));
     }
 }

@@ -6,9 +6,9 @@ public sealed class ApiResponse<T>
 
     public int ErrorCode { get; set; }
 
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
-    public ApiResponseParameters Parameters { get; set; }
+    public ApiResponseParameters? Parameters { get; set; }
 
-    public T Result { get; set; }
+    public T? Result { get; set; }
 }

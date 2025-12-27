@@ -15,41 +15,19 @@ var api = new BotApiClient(
 
 ## Long polling mode
 ```cs
-_ = Task.Run(async () =>
+api.OnUpdate += (client, update) =>
 {
-    var lastUpdateId = 0L;
-    while (true)
+    switch (update.Type)
     {
-        var getUpdates = await api.GetUpdatesAsync(new GetUpdatesParameters
-        {
-            Offset = lastUpdateId
-        }));
-
-        if (getUpdates.Result != null)
-        {
-            foreach (var update in getUpdates.Result)
+        default:
             {
-                if (update.Type == UpdateTypes.Message && update.Message.Document != null)
-                {
-                    var file = (await api.GetFileAsync(new GetFileParameters
-                    {
-                        FileId = update.Message.Document.FileId
-                    })).Result;
-                
-                    var fileBytes = (await api.GetFileBytesAsync(filePath: file.FilePath)).Result;
-                    File.WriteAllBytes($"D:\\{update.Message.Document.FileName}", fileBytes);
-                }     
-                lastUpdateId = update.UpdateId + 1;
-            }  
-        } 
-        else 
-        {
-            throw new Exception(getUpdates.Description);
-        }
-
-        await Task.Delay(1000);
+                Console.WriteLine($"Received a message of the type: {update.Type}");
+                break;
+            }
     }
-});
+};
+
+_ = api.StartPollingAsync();
 ```
 
 

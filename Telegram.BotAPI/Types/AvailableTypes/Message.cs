@@ -144,6 +144,8 @@ public sealed class Message : MaybeInaccessibleMessage
 
     public UniqueGiftInfo UniqueGift { get; set; }
 
+    public GiftInfo GiftUpgradeSent { get; set; }
+
     public string ConnectedWebsite { get; set; }
 
     public WriteAccessAllowed WriteAccessAllowed { get; set; }

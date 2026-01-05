@@ -1,12 +1,16 @@
-﻿namespace Telegram.BotAPI.Types;
+﻿using Telegram.BotAPI.Enums;
+
+namespace Telegram.BotAPI.Types;
 
 public sealed class UniqueGiftInfo
 {
     public UniqueGift Gift { get; set; }
 
-    public string Origin { get; set; }
+    public UniqueGiftInfoOrigins Origin { get; set; }
 
-    public int LastResaleStarCount { get; set; }
+    public string LastResaleCurrency { get; set; }
+
+    public int LastResaleAmount { get; set; }
 
     public string OwnedGiftId { get; set; }
 

@@ -7,4 +7,6 @@ public sealed class ForumTopicCreated
     public int IconColor { get; set; }
 
     public string IconCustomEmojiId { get; set; }
+
+    public bool IsNameImplicit { get; set; }
 }

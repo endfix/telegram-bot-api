@@ -25,6 +25,10 @@ public sealed class Gift
     /// </summary>
     public int UpgradeStarCount { get; set; }
 
+    public bool IsPremium { get; set; }
+
+    public bool HasColors { get; set; }
+
     /// <summary>
     /// Optional. The total number of the gifts of this type that can be sent; for limited gifts only
     /// </summary>
@@ -34,6 +38,14 @@ public sealed class Gift
     /// Optional. The number of remaining gifts of this type that can be sent; for limited gifts only
     /// </summary>
     public int RemainingCount { get; set; }
+
+    public int PersonalTotalCount { get; set; }
+
+    public int PersonalRemainingCount { get; set; }
+
+    public GiftBackground Background { get; set; }
+
+    public int UniqueGiftVariantCount { get; set; }
 
     public Chat PublisherChat { get; set; }
 }

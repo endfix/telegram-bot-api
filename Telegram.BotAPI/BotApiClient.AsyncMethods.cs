@@ -145,6 +145,11 @@ public partial class BotApiClient
         return await RequestAsync<Message>(new ApiRequest("sendDice", parameters), cancellationToken);
     }
 
+    public async Task<ApiResponse<bool>> SendMessageDraftAsync(SendMessageDraftParameters parameters, CancellationToken cancellationToken = default)
+    {
+        return await RequestAsync<bool>(new ApiRequest("sendMessageDraft", parameters), cancellationToken);
+    }
+
     public async Task<ApiResponse<bool>> SendChatActionAsync(SendChatActionParameters parameters, CancellationToken cancellationToken = default)
     {
         return await RequestAsync<bool>(new ApiRequest("sendChatAction", parameters), cancellationToken);
@@ -615,6 +620,16 @@ public partial class BotApiClient
     public async Task<ApiResponse<OwnedGifts>> GetBusinessAccountGiftsAsync(GetBusinessAccountGiftsParameters parameters, CancellationToken cancellationToken = default)
     {
         return await RequestAsync<OwnedGifts>(new ApiRequest("getBusinessAccountGifts", parameters), cancellationToken);
+    }
+
+    public async Task<ApiResponse<OwnedGifts>> GetUserGiftsASync(GetUserGiftsParameters parameters, CancellationToken cancellationToken = default)
+    {
+        return await RequestAsync<OwnedGifts>(new ApiRequest("getUserGifts", parameters), cancellationToken);
+    }
+
+    public async Task<ApiResponse<OwnedGifts>> GetChatGiftsAsync(GetChatGiftsParameters parameters, CancellationToken cancellationToken = default)
+    {
+        return await RequestAsync<OwnedGifts>(new ApiRequest("getChatGifts", parameters), cancellationToken);
     }
 
     public async Task<ApiResponse<bool>> ConvertGiftToStarsAsync(ConvertGiftToStarsParameters parameters, CancellationToken cancellationToken = default)

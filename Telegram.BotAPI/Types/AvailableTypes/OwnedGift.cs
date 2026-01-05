@@ -34,6 +34,10 @@ public sealed class OwnedGiftRegular : OwnedGift
     public int ConvertStarCount { get; set; }
 
     public int PrepaidUpgradeStarCount { get; set; }
+
+    public bool IsUpgradeSeparate { get; set; }
+
+    public int UniqueGiftNumber { get; set; }
 }
 
 public sealed class OwnedGiftUnique : OwnedGift

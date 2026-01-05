@@ -10,6 +10,8 @@ public sealed class GiftInfo
 
     public int PrepaidUpgradeStarCount { get; set; }
 
+    public bool IsUpgradeSeparate { get; set; }
+
     public bool CanBeUpgraded { get; set; }
 
     public string Text { get; set; }
@@ -17,4 +19,6 @@ public sealed class GiftInfo
     public MessageEntity[] Entities { get; set; }
 
     public bool IsPrivate { get; set; }
+
+    public int UniqueGiftNumber { get; set; }
 }

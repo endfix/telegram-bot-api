@@ -1,8 +1,8 @@
 ﻿namespace Telegram.BotAPI.Parameters;
 
-public class GetBusinessAccountGiftsParameters : ApiRequestParameters
+public sealed class GetChatGiftsParameters : ApiRequestParameters
 {
-    public string BusinessConnectionId { get; set; }
+    public object ChatId { get; set; }
 
     public bool ExcludeUnsaved { get; set; }
 
@@ -14,9 +14,9 @@ public class GetBusinessAccountGiftsParameters : ApiRequestParameters
 
     public bool ExcludeLimitedNonUpgradable { get; set; }
 
-    public bool ExcludeUnique { get; set; }
-
     public bool ExcludeFromBlockchain { get; set; }
+
+    public bool ExcludeUnique { get; set; }
 
     public bool SortByPrice { get; set; }
 

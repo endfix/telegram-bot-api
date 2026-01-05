@@ -27,4 +27,6 @@ public sealed class User
     public bool CanConnectToBusiness { get; set; }
 
     public bool HasMainWebApp { get; set; }
+
+    public bool HasTopicsEnabled { get; set; }
 }

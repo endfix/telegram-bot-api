@@ -1,9 +1,19 @@
+using System.Text.Json.Serialization;
 using Telegram.BotAPI.Enums;
 
 namespace Telegram.BotAPI.Types;
 
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
+[JsonDerivedType(typeof(BotCommandScopeAllChatAdministrators), "all_chat_administrators")]
+[JsonDerivedType(typeof(BotCommandScopeAllGroupChats), "all_group_chats")]
+[JsonDerivedType(typeof(BotCommandScopeAllPrivateChats), "all_private_chats")]
+[JsonDerivedType(typeof(BotCommandScopeChat), "chat")]
+[JsonDerivedType(typeof(BotCommandScopeChatAdministrators), "chat_administrators")]
+[JsonDerivedType(typeof(BotCommandScopeChatMember), "chat_member")]
+[JsonDerivedType(typeof(BotCommandScopeDefault), "default")]
 public abstract class BotCommandScope
 {
+    [JsonIgnore]
     public abstract BotCommandScopeTypes Type { get; }
 }
 
@@ -26,23 +36,23 @@ public sealed class BotCommandScopeChat : BotCommandScope
 {
     public override BotCommandScopeTypes Type => BotCommandScopeTypes.Chat;
 
-    public object ChatId { get; set; }
+    public required object ChatId { get; init; }
 }
 
 public sealed class BotCommandScopeChatAdministrators : BotCommandScope
 {
     public override BotCommandScopeTypes Type => BotCommandScopeTypes.ChatAdministrators;
 
-    public object ChatId { get; set; }
+    public required object ChatId { get; init; }
 }
 
-public class BotCommandScopeChatMember : BotCommandScope
+public sealed class BotCommandScopeChatMember : BotCommandScope
 {
     public override BotCommandScopeTypes Type => BotCommandScopeTypes.ChatMember;
 
-    public object ChatId { get; set; }
+    public required object ChatId { get; init; }
 
-    public long UserId { get; set; }
+    public required long UserId { get; init; }
 }
 
 public sealed class BotCommandScopeDefault : BotCommandScope

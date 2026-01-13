@@ -1,9 +1,16 @@
+using System.Text.Json.Serialization;
 using Telegram.BotAPI.Enums;
 
 namespace Telegram.BotAPI.Types;
 
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
+[JsonDerivedType(typeof(MessageOriginChannel), "channel")]
+[JsonDerivedType(typeof(MessageOriginChat), "chat")]
+[JsonDerivedType(typeof(MessageOriginHiddenUser), "hidden_user")]
+[JsonDerivedType(typeof(MessageOriginUser), "user")]
 public abstract class MessageOrigin
 {
+    [JsonIgnore]
     public abstract MessageOriginTypes Type { get; }
 }
 
@@ -11,40 +18,40 @@ public sealed class MessageOriginChannel : MessageOrigin
 {
     public override MessageOriginTypes Type => MessageOriginTypes.Channel;
 
-    public int Date { get; set; }
+    public required int Date { get; init; }
 
-    public Chat Chat { get; set; }
+    public required Chat Chat { get; init; }
 
-    public long MessageId { get; set; }
+    public required long MessageId { get; init; }
 
-    public string AuthorSignature { get; set; }
+    public string? AuthorSignature { get; init; }
 }
 
 public sealed class MessageOriginChat : MessageOrigin
 {
     public override MessageOriginTypes Type => MessageOriginTypes.Chat;
 
-    public int Date { get; set; }
+    public required int Date { get; init; }
 
-    public Chat SenderChat { get; set; }
+    public required Chat SenderChat { get; init; }
 
-    public string AuthorSignature { get; set; }
+    public string? AuthorSignature { get; init; }
 }
 
 public sealed class MessageOriginHiddenUser : MessageOrigin
 {
     public override MessageOriginTypes Type => MessageOriginTypes.HiddenUser;
 
-    public int Date { get; set; }
+    public required int Date { get; init; }
 
-    public string SenderUserName { get; set; }
+    public required string SenderUserName { get; init; }
 }
 
 public sealed class MessageOriginUser : MessageOrigin
 {
     public override MessageOriginTypes Type => MessageOriginTypes.User;
 
-    public int Date { get; set; }
+    public required int Date { get; init; }
 
-    public User SenderUser { get; set; }
+    public required User SenderUser { get; init; }
 }

@@ -14,17 +14,6 @@ public static class JsonSerializerExtensions
         PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
         Converters = {
             new JsonStringEnumConverter(namingPolicy: JsonNamingPolicy.SnakeCaseLower),
-            new BackgroundFillConverter(),
-            new BackgroundTypeConverter(),
-            new BotCommandScopeConverter(),
-            new ChatBoostSourceConverter(),
-            new PassportElementErrorConverter(),
-            new ChatMemberConverter(),
-            new InputMediaConverter(),
-            new MessageOriginConverter(),
-            new PaidMediaConverter(),
-            new ReactionTypeConverter(),
-            new MenuButtonConverter(),
             new MaybeInaccessibleMessageConverter()
         }
     };
@@ -36,7 +25,7 @@ public static class JsonSerializerExtensions
         IndentSize = 4
     };
 
-    public static T Deserialize<T>(this string json) 
+    public static T? Deserialize<T>(this string json) 
         => string.IsNullOrEmpty(json) ? default : JsonSerializer.Deserialize<T>(json, _option);
 
     public static string Serialize(this object obj, bool writeIndented = false) 

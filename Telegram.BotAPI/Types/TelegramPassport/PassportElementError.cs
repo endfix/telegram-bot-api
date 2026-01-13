@@ -1,93 +1,90 @@
-﻿using Telegram.BotAPI.Enums;
+﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using Telegram.BotAPI.Enums;
 
 namespace Telegram.BotAPI.Types;
 
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "source")]
+[JsonDerivedType(typeof(PassportElementErrorDataField), "data")]
+[JsonDerivedType(typeof(PassportElementErrorFrontSide), "front_side")]
+[JsonDerivedType(typeof(PassportElementErrorReverseSide), "reverse_side")]
+[JsonDerivedType(typeof(PassportElementErrorSelfie), "selfie")]
+[JsonDerivedType(typeof(PassportElementErrorFile), "file")]
+[JsonDerivedType(typeof(PassportElementErrorFiles), "files")]
+[JsonDerivedType(typeof(PassportElementErrorTranslationFile), "translation_file")]
+[JsonDerivedType(typeof(PassportElementErrorTranslationFiles), "translation_files")]
+[JsonDerivedType(typeof(PassportElementErrorUnspecified), "unspecified")]
 public abstract class PassportElementError
 {
+    [JsonIgnore]
     public abstract PassportElementErrorSources Source { get; }
 
-    public virtual string Type { get; set; }
+    public required virtual PassportElementErrorTypes Type { get; init; }
 
-    public virtual string Message { get; set; }
+    public required virtual string Message { get; init; }
 }
 
 public sealed class PassportElementErrorDataField : PassportElementError
 {
     public override PassportElementErrorSources Source => PassportElementErrorSources.Data;
 
-    public override string Type { get; set; }
+    public required string FieldName { get; init; }
 
-    public string FieldName { get; set; }
-
-    public string DataHash { get; set; }
+    public required string DataHash { get; init; }
 }
 
 public sealed class PassportElementErrorFrontSide : PassportElementError
 {
     public override PassportElementErrorSources Source => PassportElementErrorSources.FrontSide;
 
-    public string FileHash { get; set; }
+    public required string FileHash { get; init; }
 }
 
 public sealed class PassportElementErrorReverseSide : PassportElementError
 {
     public override PassportElementErrorSources Source => PassportElementErrorSources.ReverseSide;
 
-    public override string Type { get; set; }
-
-    public string FileHash { get; set; }
+    public required string FileHash { get; init; }
 }
 
 public sealed class PassportElementErrorSelfie : PassportElementError
 {
     public override PassportElementErrorSources Source => PassportElementErrorSources.Selfie;
 
-    public override string Type { get; set; }
-
-    public string FileHash { get; set; }
+    public required string FileHash { get; init; }
 }
 
 public sealed class PassportElementErrorFile : PassportElementError
 {
     public override PassportElementErrorSources Source => PassportElementErrorSources.File;
 
-    public override string Type { get; set; }
-
-    public string FileHash { get; set; }
+    public required string FileHash { get; init; }
 }
 
 public sealed class PassportElementErrorFiles : PassportElementError
 {
     public override PassportElementErrorSources Source => PassportElementErrorSources.Files;
 
-    public override string Type { get; set; }
-
-    public string[] FileHashes { get; set; }
+    public required IReadOnlyList<string> FileHashes { get; init; }
 }
 
 public sealed class PassportElementErrorTranslationFile : PassportElementError
 {
     public override PassportElementErrorSources Source => PassportElementErrorSources.TranslationFile;
 
-    public override string Type { get; set; }
-
-    public string FileHash { get; set; }
+    public required string FileHash { get; init; }
 }
 
 public sealed class PassportElementErrorTranslationFiles : PassportElementError
 {
     public override PassportElementErrorSources Source => PassportElementErrorSources.TranslationFiles;
 
-    public override string Type { get; set; }
-
-    public string[] FileHashes { get; set; }
+    public required IReadOnlyList<string> FileHashes { get; init; }
 }
 
 public sealed class PassportElementErrorUnspecified : PassportElementError
 {
     public override PassportElementErrorSources Source => PassportElementErrorSources.Unspecified;
 
-    public override string Type { get; set; }
-
-    public string ElementHash { get; set; }
+    public required string ElementHash { get; init; }
 }

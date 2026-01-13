@@ -1,52 +1,59 @@
+using System.Text.Json.Serialization;
 using Telegram.BotAPI.Enums;
 
 namespace Telegram.BotAPI.Types;
 
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
+[JsonDerivedType(typeof(BackgroundTypeChatTheme), "chat_theme")]
+[JsonDerivedType(typeof(BackgroundTypeFill), "fill")]
+[JsonDerivedType(typeof(BackgroundTypePattern), "pattern")]
+[JsonDerivedType(typeof(BackgroundTypeWallpaper), "wallpaper")]
 public abstract class BackgroundType
 {
+    [JsonIgnore]
     public abstract BackgroundTypes Type { get; }
 }
 
-public class BackgroundTypeChatTheme : BackgroundType
+public sealed class BackgroundTypeChatTheme : BackgroundType
 {
     public override BackgroundTypes Type => BackgroundTypes.ChatTheme;
 
-    public string ThemeName { get; set; }
+    public required string ThemeName { get; init; }
 }
 
 public sealed class BackgroundTypeFill : BackgroundType
 {
     public override BackgroundTypes Type => BackgroundTypes.Fill;
 
-    public BackgroundFill Fill { get; set; }
+    public required BackgroundFill Fill { get; init; }
 
-    public int DarkThemeDimming { get; set; }
+    public required int DarkThemeDimming { get; init; }
 }
 
-public class BackgroundTypePattern : BackgroundType
+public sealed class BackgroundTypePattern : BackgroundType
 {
     public override BackgroundTypes Type => BackgroundTypes.Pattern;
 
-    public Document Document { get; set; }
+    public required Document Document { get; init; }
 
-    public BackgroundFill Fill { get; set; }
+    public required BackgroundFill Fill { get; init; }
 
-    public int Intensity { get; set; }
+    public required int Intensity { get; init; }
 
-    public bool IsInverted { get; set; }
+    public required bool IsInverted { get; init; }
 
-    public bool IsMoving { get; set; }
+    public required bool IsMoving { get; init; }
 }
 
-public class BackgroundTypeWallpaper : BackgroundType
+public sealed class BackgroundTypeWallpaper : BackgroundType
 {
     public override BackgroundTypes Type => BackgroundTypes.Wallpaper;
 
-    public Document Document { get; set; }
+    public required Document Document { get; init; }
 
-    public int DarkThemeDimming { get; set; }
+    public required int DarkThemeDimming { get; init; }
 
-    public bool IsBlurred { get; set; }
+    public required bool IsBlurred { get; init; }
 
-    public bool IsMoving { get; set; }
+    public required bool IsMoving { get; init; }
 }

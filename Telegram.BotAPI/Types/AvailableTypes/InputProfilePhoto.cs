@@ -11,14 +11,14 @@ public sealed class InputProfilePhotoStatic : InputProfilePhoto
 {
     public override InputProfilePhotoTypes Type => InputProfilePhotoTypes.Static;
 
-    public string Photo { get; set; }
+    public required string Photo { get; set; }
 }
 
 public sealed class InputProfilePhotoAnimated : InputProfilePhoto
 {
     public override InputProfilePhotoTypes Type => InputProfilePhotoTypes.Animated;
 
-    public string Animation { get; set; }
+    public required string Animation { get; set; }
 
     public float MainFrameTimestamp { get; set; }
 }

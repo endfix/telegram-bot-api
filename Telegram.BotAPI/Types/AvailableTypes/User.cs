@@ -29,4 +29,6 @@ public sealed class User
     public bool HasMainWebApp { get; set; }
 
     public bool HasTopicsEnabled { get; set; }
+
+    public bool AllowsUsersToCreateTopics { get; set; }
 }

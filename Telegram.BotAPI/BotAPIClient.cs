@@ -102,7 +102,7 @@ public sealed partial class BotApiClient
             using var responseMessage = await GetResponse(request, cancellation);
             var apiResponse = (await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false)).Deserialize<ApiResponse<T>>();
 
-            if (apiResponse.ErrorCode == 429)
+            if (apiResponse!.ErrorCode == 429)
             {
                 if (retryCount < 5)
                 {
@@ -193,7 +193,7 @@ public sealed partial class BotApiClient
             foreach (var property in properties)
             {
                 var value = property.GetValue(parameters);
-                if (value is null)
+                if (value == null)
                 {
                     continue;
                 }
@@ -202,11 +202,11 @@ public sealed partial class BotApiClient
 
                 if (value is InputFile inputFile)
                 {
-                    httpContent.Add(new StreamContent(inputFile.GetStream()), inputFile.Name.Serialize(), inputFile.FileName);
+                    httpContent.Add(new StreamContent(inputFile.GetStream()), inputFile.Type.Serialize(), inputFile.FileName);
                 }
                 else
                 {
-                    var content = new StringContent(value is object ? value.Serialize() : value.ToString(), Encoding.UTF8);
+                    var content = new StringContent(value is object ? value.Serialize() : value!.ToString(), Encoding.UTF8);
 
                     httpContent.Add(content, property.Name.ToSnake());
                 }

@@ -165,6 +165,11 @@ public partial class BotApiClient
         return await RequestAsync<UserProfilePhotos>(new ApiRequest("getUserProfilePhotos", parameters), cancellationToken);
     }
 
+    public async Task<ApiResponse<UserProfileAudios>> GetUserProfileAudiosAsync(GetUserProfileAudiosParameters parameters, CancellationToken cancellationToken = default)
+    {
+        return await RequestAsync<UserProfileAudios>(new ApiRequest("getUserProfileAudios", parameters), cancellationToken);
+    }
+
     public async Task<ApiResponse<bool>> SetUserEmojiStatusAsync(SetUserEmojiStatusParameters parameters, CancellationToken cancellationToken = default)
     {
         return await RequestAsync<bool>(new ApiRequest("setUserEmojiStatus", parameters), cancellationToken);
@@ -448,6 +453,16 @@ public partial class BotApiClient
     public async Task<ApiResponse<BotShortDescription>> GetMyShortDescriptionAsync(GetMyShortDescriptionParameters parameters, CancellationToken cancellationToken = default)
     {
         return await RequestAsync<BotShortDescription>(new ApiRequest("getMyShortDescription", parameters), cancellationToken);
+    }
+
+    public async Task<ApiResponse<bool>> SetMyProfilePhotoAsync(SetMyProfilePhotoParameters parameters, CancellationToken cancellationToken = default)
+    {
+        return await RequestAsync<bool>(new ApiRequest("setMyProfilePhoto", parameters), cancellationToken);
+    }
+
+    public async Task<ApiResponse<BotShortDescription>> RemoveMyProfilePhotoAsync(RemoveMyProfilePhotoParameters? parameters = null, CancellationToken cancellationToken = default)
+    {
+        return await RequestAsync<BotShortDescription>(new ApiRequest("removeMyProfilePhoto", parameters), cancellationToken);
     }
 
     public async Task<ApiResponse<bool>> SetChatMenuButtonAsync(SetChatMenuButtonParameters parameters, CancellationToken cancellationToken = default)

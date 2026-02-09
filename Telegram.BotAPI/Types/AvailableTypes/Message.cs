@@ -108,7 +108,11 @@ public sealed class Message : MaybeInaccessibleMessage
 
     public User[] NewChatMembers { get; set; }
 
-    public User LeftChatMember { get; set; }
+    public User? LeftChatMember { get; set; }
+
+    public ChatOwnerLeft? ChatOwnerLeft { get; set; }
+
+    public ChatOwnerChanged? ChatOwnerChanged { get; set; }
 
     public string NewChatTitle { get; set; }
 

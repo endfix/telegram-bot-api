@@ -2,25 +2,27 @@
 
 public sealed class UniqueGift
 {
-    public string GiftId { get; set; }
+    public required string GiftId { get; set; }
 
-    public string BaseName { get; set; }
+    public required string BaseName { get; set; }
 
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
-    public int Number { get; set; }
+    public required int Number { get; set; }
 
-    public UniqueGiftModel Model { get; set; }
+    public required UniqueGiftModel Model { get; set; }
 
-    public UniqueGiftSymbol Symbol { get; set; }
+    public required UniqueGiftSymbol Symbol { get; set; }
 
-    public UniqueGiftBackdrop Backdrop { get; set; }
+    public required UniqueGiftBackdrop Backdrop { get; set; }
 
-    public bool IsPremium { get; set; }
+    public bool? IsPremium { get; set; } = null;
 
-    public bool IsFromBlockchain { get; set; }
+    public bool? IsBurned { get; set; } = null;
 
-    public UniqueGiftColors Colors { get; set; }
+    public bool? IsFromBlockchain { get; set; } = null;
 
-    public Chat PublisherChat { get; set; }
+    public UniqueGiftColors? Colors { get; set; }
+
+    public Chat? PublisherChat { get; set; }
 }

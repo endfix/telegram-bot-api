@@ -1,12 +1,14 @@
+using System.Collections.Generic;
+
 namespace Telegram.BotAPI.Types;
 
 public sealed class PollAnswer
 {
-    public string PollId { get; set; }
+    public required string PollId { get; init; }
 
-    public Chat VoterChat { get; set; }
+    public Chat? VoterChat { get; init; }
 
-    public User User { get; set; }
+    public User? User { get; init; }
 
-    public int[] OptionIds { get; set; }
+    public required IReadOnlyList<int> OptionIds { get; init; }
 }

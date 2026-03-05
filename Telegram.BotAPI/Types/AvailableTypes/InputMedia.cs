@@ -1,18 +1,10 @@
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 using Telegram.BotAPI.Enums;
 
 namespace Telegram.BotAPI.Types;
 
-[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
-[JsonDerivedType(typeof(InputMediaAnimation), "animation")]
-[JsonDerivedType(typeof(InputMediaDocument), "document")]
-[JsonDerivedType(typeof(InputMediaAudio), "audio")]
-[JsonDerivedType(typeof(InputMediaPhoto), "photo")]
-[JsonDerivedType(typeof(InputMediaVideo), "video")]
 public abstract class InputMedia
 {
-    [JsonIgnore]
     public abstract InputMediaTypes Type { get; }
 
     public required virtual string Media { get; init; }
@@ -56,7 +48,7 @@ public sealed class InputMediaAudio : InputMedia
 
     public string? Thumbnail { get; init; }
 
-    public int Duration { get; init; }
+    public int? Duration { get; init; }
 
     public string? Performer { get; init; }
 

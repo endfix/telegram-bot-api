@@ -7,99 +7,99 @@ public abstract class InputMessageContent
 
 public sealed class InputTextMessageContent : InputMessageContent
 {
-    public string MessageText { get; set; }
+    public required string MessageText { get; init; }
 
-    public string ParseMode { get; set; }
+    public string? ParseMode { get; init; }
 
-    public MessageEntity[] Entities { get; set; }
+    public MessageEntity[]? Entities { get; init; }
 
-    public LinkPreviewOptions LinkPreviewOptions { get; set; }
+    public LinkPreviewOptions? LinkPreviewOptions { get; init; }
 }
 
 public sealed class InputLocationMessageContent : InputMessageContent
 {
-    public float Latitude { get; set; }
+    public required double Latitude { get; init; }
 
-    public float Longitude { get; set; }
+    public required double Longitude { get; init; }
 
-    public float HorizontalAccuracy { get; set; }
+    public float? HorizontalAccuracy { get; init; }
 
-    public int LivePeriod { get; set; }
+    public int? LivePeriod { get; init; }
 
-    public int Heading { get; set; }
+    public int? Heading { get; init; }
 
-    public int ProximityAlertRadius { get; set; }
+    public int? ProximityAlertRadius { get; init; }
 }
 
 public sealed class InputVenueMessageContent : InputMessageContent
 {
-    public float Latitude { get; set; }
+    public required double Latitude { get; init; }
 
-    public float Longitude { get; set; }
+    public required double Longitude { get; init; }
 
-    public string Title { get; set; }
+    public required string Title { get; init; }
 
-    public string Address { get; set; }
+    public required string Address { get; init; }
 
-    public string FoursquareId { get; set; }
+    public string? FoursquareId { get; init; }
 
-    public string FoursquareType { get; set; }
+    public string? FoursquareType { get; init; }
 
-    public string GooglePlaceId { get; set; }
+    public string? GooglePlaceId { get; init; }
 
-    public string GooglePlaceType { get; set; }
+    public string? GooglePlaceType { get; init; }
 }
 
 public sealed class InputContactMessageContent : InputMessageContent
 {
-    public string PhoneNumber { get; set; }
+    public required string PhoneNumber { get; init; }
 
-    public string FirstName { get; set; }
+    public required string FirstName { get; init; }
 
-    public string LastName { get; set; }
+    public string? LastName { get; init; }
 
-    public string VCard { get; set; }
+    public string? VCard { get; init; }
 }
 
 public sealed class InputInvoiceMessageContent : InputMessageContent
 {
-    public string Title { get; set; }
+    public required string Title { get; init; }
 
-    public string Description { get; set; }
+    public required string Description { get; init; }
 
-    public string Payload { get; set; }
+    public required string Payload { get; init; }
 
-    public string ProviderToken { get; set; }
+    public string? ProviderToken { get; init; }
 
-    public string Currency { get; set; }
+    public required string Currency { get; init; }
 
-    public LabeledPrice[] Prices { get; set; }
+    public required LabeledPrice[] Prices { get; init; }
 
-    public int MaxTipAmount { get; set; }
+    public int? MaxTipAmount { get; init; }
 
-    public int[] SuggestedTipAmounts { get; set; }
+    public int[]? SuggestedTipAmounts { get; init; }
 
-    public string ProviderData { get; set; }
+    public string? ProviderData { get; init; }
 
-    public string PhotoUrl { get; set; }
+    public string? PhotoUrl { get; init; }
 
-    public int PhotoSize { get; set; }
+    public int? PhotoSize { get; init; }
 
-    public int PhotoWidth { get; set; }
+    public int? PhotoWidth { get; init; }
 
-    public int PhotoHeight { get; set; }
+    public int? PhotoHeight { get; init; }
 
-    public bool NeedName { get; set; }
+    public bool? NeedName { get; init; }
 
-    public bool NeedPhoneNumber { get; set; }
+    public bool? NeedPhoneNumber { get; init; }
 
-    public bool NeedEmail { get; set; }
+    public bool? NeedEmail { get; init; }
 
-    public bool NeedShippingAddress { get; set; }
+    public bool? NeedShippingAddress { get; init; }
 
-    public bool SendPhoneNumberToProvider { get; set; }
+    public bool? SendPhoneNumberToProvider { get; init; }
 
-    public bool SendEmailToProvider { get; set; }
+    public bool? SendEmailToProvider { get; init; }
 
-    public bool IsFlexible { get; set; }
+    public bool? IsFlexible { get; init; }
 }

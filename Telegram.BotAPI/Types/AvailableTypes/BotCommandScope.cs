@@ -1,19 +1,9 @@
-using System.Text.Json.Serialization;
 using Telegram.BotAPI.Enums;
 
 namespace Telegram.BotAPI.Types;
 
-[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
-[JsonDerivedType(typeof(BotCommandScopeAllChatAdministrators), "all_chat_administrators")]
-[JsonDerivedType(typeof(BotCommandScopeAllGroupChats), "all_group_chats")]
-[JsonDerivedType(typeof(BotCommandScopeAllPrivateChats), "all_private_chats")]
-[JsonDerivedType(typeof(BotCommandScopeChat), "chat")]
-[JsonDerivedType(typeof(BotCommandScopeChatAdministrators), "chat_administrators")]
-[JsonDerivedType(typeof(BotCommandScopeChatMember), "chat_member")]
-[JsonDerivedType(typeof(BotCommandScopeDefault), "default")]
 public abstract class BotCommandScope
 {
-    [JsonIgnore]
     public abstract BotCommandScopeTypes Type { get; }
 }
 

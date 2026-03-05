@@ -2,15 +2,15 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class Location
 {
-    public float Longitude { get; set; }
+    public double Longitude { get; init; }
 
-    public float Latitude { get; set; }
+    public double Latitude { get; init; }
 
-    public float HorizontalAccuracy { get; set; }
+    public float? HorizontalAccuracy { get; init; }
 
-    public int LivePeriod { get; set; }
+    public int? LivePeriod { get; init; }
 
-    public int Heading { get; set; }
+    public int? Heading { get; init; }
 
-    public int ProximityAlertRadius { get; set; }
+    public int? ProximityAlertRadius { get; init; }
 }

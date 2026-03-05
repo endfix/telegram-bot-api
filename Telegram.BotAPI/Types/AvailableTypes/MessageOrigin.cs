@@ -1,16 +1,9 @@
-using System.Text.Json.Serialization;
 using Telegram.BotAPI.Enums;
 
 namespace Telegram.BotAPI.Types;
 
-[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
-[JsonDerivedType(typeof(MessageOriginChannel), "channel")]
-[JsonDerivedType(typeof(MessageOriginChat), "chat")]
-[JsonDerivedType(typeof(MessageOriginHiddenUser), "hidden_user")]
-[JsonDerivedType(typeof(MessageOriginUser), "user")]
 public abstract class MessageOrigin
 {
-    [JsonIgnore]
     public abstract MessageOriginTypes Type { get; }
 }
 

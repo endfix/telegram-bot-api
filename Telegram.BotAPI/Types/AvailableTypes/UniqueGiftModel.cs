@@ -4,11 +4,11 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class UniqueGiftModel
 {
-    public required string Name { get; set; }
+    public required string Name { get; init; }
 
-    public required Sticker Sticker { get; set; }
+    public required Sticker Sticker { get; init; }
 
-    public required int RarityPerMille { get; set; }
+    public required int RarityPerMille { get; init; }
 
-    public UniqueGiftModelRarities? Rarity { get; set; } = null;
+    public UniqueGiftModelRarities? Rarity { get; init; }
 }

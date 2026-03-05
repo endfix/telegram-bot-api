@@ -2,11 +2,11 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class ShippingQuery
 {
-    public string Id { get; set; }
+    public required string Id { get; init; }
 
-    public User From { get; set; }
+    public required User From { get; init; }
 
-    public string InvoicePayload { get; set; }
+    public required string InvoicePayload { get; init; }
 
-    public ShippingAddress ShippingAddress { get; set; }
+    public required ShippingAddress ShippingAddress { get; init; }
 }

@@ -1,60 +1,53 @@
-using System.Text.Json.Serialization;
 using Telegram.BotAPI.Enums;
 
 namespace Telegram.BotAPI.Types;
 
-[JsonPolymorphic(TypeDiscriminatorPropertyName = "status")]
-[JsonDerivedType(typeof(ChatMemberAdministrator), "administrator")]
-[JsonDerivedType(typeof(ChatMemberBanned), "kicked")]
-[JsonDerivedType(typeof(ChatMemberLeft), "left")]
-[JsonDerivedType(typeof(ChatMemberMember), "member")]
-[JsonDerivedType(typeof(ChatMemberOwner), "creator")]
-[JsonDerivedType(typeof(ChatMemberRestricted), "restricted")]
 public abstract class ChatMember
 {
-    [JsonIgnore]
     public abstract ChatMemberStatus Status { get; }
 
-    public required User User { get; init; }
+    public required virtual User User { get; init; }
 }
 
 public sealed class ChatMemberAdministrator : ChatMember
 {
     public override ChatMemberStatus Status => ChatMemberStatus.Administrator;
 
-    public bool CanBeEdited { get; init; }
+    public required bool CanBeEdited { get; init; }
 
-    public bool IsAnonymous { get; init; }
+    public required bool IsAnonymous { get; init; }
 
-    public bool CanManageChat { get; init; }
+    public required bool CanManageChat { get; init; }
 
-    public bool CanDeleteMessages { get; init; }
+    public required bool CanDeleteMessages { get; init; }
 
-    public bool CanManageVideoChats { get; init; }
+    public required bool CanManageVideoChats { get; init; }
 
-    public bool CanRestrictMembers { get; init; }
+    public required bool CanRestrictMembers { get; init; }
 
-    public bool CanPromoteMembers { get; init; }
+    public required bool CanPromoteMembers { get; init; }
 
-    public bool CanChangeInfo { get; init; }
+    public required bool CanChangeInfo { get; init; }
 
-    public bool CanInviteUsers { get; init; }
+    public required bool CanInviteUsers { get; init; }
 
-    public bool CanPostStories { get; init; }
+    public required bool CanPostStories { get; init; }
 
-    public bool CanEditStories { get; init; }
+    public required bool CanEditStories { get; init; }
 
-    public bool CanDeleteStories { get; init; }
+    public required bool CanDeleteStories { get; init; }
 
-    public bool CanPostMessages { get; init; }
+    public bool? CanPostMessages { get; init; }
 
-    public bool CanEditMessages { get; init; }
+    public bool? CanEditMessages { get; init; }
 
-    public bool CanPinMessages { get; init; }
+    public bool? CanPinMessages { get; init; }
 
-    public bool CanManageTopics { get; init; }
+    public bool? CanManageTopics { get; init; }
 
-    public bool CanManageDirectMessages { get; init; }
+    public bool? CanManageDirectMessages { get; init; }
+
+    public bool? CanManageTags { get; init; }
 
     public string? CustomTitle { get; init; }
 }
@@ -75,6 +68,8 @@ public sealed class ChatMemberMember : ChatMember
 {
     public override ChatMemberStatus Status => ChatMemberStatus.Member;
 
+    public string? Tag { get; init; }
+
     public int? UntilDate { get; init; }
 }
 
@@ -82,7 +77,7 @@ public sealed class ChatMemberOwner : ChatMember
 {
     public override ChatMemberStatus Status => ChatMemberStatus.Creator;
 
-    public bool IsAnonymous { get; init; }
+    public required bool IsAnonymous { get; init; }
 
     public string? CustomTitle { get; init; }
 }
@@ -91,35 +86,39 @@ public sealed class ChatMemberRestricted : ChatMember
 {
     public override ChatMemberStatus Status => ChatMemberStatus.Restricted;
 
-    public bool IsMember { get; init; }
+    public string? Tag { get; init; }
 
-    public bool CanSendMessages { get; init; }
+    public required bool IsMember { get; init; }
 
-    public bool CanSendAudios { get; init; }
+    public required bool CanSendMessages { get; init; }
 
-    public bool CanSendDocuments { get; init; }
+    public required bool CanSendAudios { get; init; }
 
-    public bool CanSendPhotos { get; init; }
+    public required bool CanSendDocuments { get; init; }
 
-    public bool CanSendVideos { get; init; }
+    public required bool CanSendPhotos { get; init; }
 
-    public bool CanSendVideoNotes { get; init; }
+    public required bool CanSendVideos { get; init; }
 
-    public bool CanSendVoiceNotes { get; init; }
+    public required bool CanSendVideoNotes { get; init; }
 
-    public bool CanSendPolls { get; init; }
+    public required bool CanSendVoiceNotes { get; init; }
 
-    public bool CanSendOtherMessages { get; init; }
+    public required bool CanSendPolls { get; init; }
 
-    public bool CanAddWebPagePreviews { get; init; }
+    public required bool CanSendOtherMessages { get; init; }
 
-    public bool CanChangeInfo { get; init; }
+    public required bool CanAddWebPagePreviews { get; init; }
 
-    public bool CanInviteUsers { get; init; }
+    public required bool CanEditTag { get; init; }
 
-    public bool CanPinMessages { get; init; }
+    public required bool CanChangeInfo { get; init; }
 
-    public bool CanManageTopics { get; init; }
+    public required bool CanInviteUsers { get; init; }
 
-    public int UntilDate { get; init; }
+    public required bool CanPinMessages { get; init; }
+
+    public required bool CanManageTopics { get; init; }
+
+    public required int UntilDate { get; init; }
 }

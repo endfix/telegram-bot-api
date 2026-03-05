@@ -4,31 +4,31 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class Poll
 {
-    public string Id { get; set; }
+    public required string Id { get; init; }
 
-    public string Question { get; set; }
+    public required string Question { get; init; }
 
-    public MessageEntity[] QuestionEntities { get; set; }
+    public MessageEntity[]? QuestionEntities { get; init; }
 
-    public PollOption[] Options { get; set; }
+    public required PollOption[] Options { get; init; }
 
-    public int TotalVoterCount { get; set; }
+    public required int TotalVoterCount { get; init; }
 
-    public bool IsClosed { get; set; }
+    public required bool IsClosed { get; init; }
 
-    public bool IsAnonymous { get; set; }
+    public required bool IsAnonymous { get; init; }
 
-    public PollTypes Type { get; set; }
+    public required PollTypes Type { get; init; }
 
-    public bool AllowsMultipleAnswers { get; set; }
+    public required bool AllowsMultipleAnswers { get; init; }
 
-    public int CorrectOptionId { get; set; }
+    public int? CorrectOptionId { get; init; }
 
-    public string Explanation { get; set; }
+    public string? Explanation { get; init; }
 
-    public MessageEntity[] ExplanationEntities { get; set; }
+    public MessageEntity[]? ExplanationEntities { get; init; }
 
-    public int OpenPeriod { get; set; }
+    public int? OpenPeriod { get; init; }
 
-    public int CloseDate { get; set; }
+    public int? CloseDate { get; init; }
 }

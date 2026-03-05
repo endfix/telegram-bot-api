@@ -6,471 +6,471 @@ public abstract class InlineQueryResult
 {
     public abstract InlineQueryResultTypes Type { get; }
 
-    public virtual string Id { get; set; }
+    public required virtual string Id { get; init; }
 }
 
 public sealed class InlineQueryResultArticle : InlineQueryResult
 {
     public override InlineQueryResultTypes Type => InlineQueryResultTypes.Article;
 
-    public string Title { get; set; }
+    public required string Title { get; init; }
 
-    public InputMessageContent InputMessageContent { get; set; }
+    public required InputMessageContent InputMessageContent { get; init; }
 
-    public InlineKeyboardMarkup ReplyMarkup { get; set; }
+    public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 
-    public string Url { get; set; }
+    public string? Url { get; init; }
 
-    public string Description { get; set; }
+    public string? Description { get; init; }
 
-    public string ThumbnailUrl { get; set; }
+    public string? ThumbnailUrl { get; init; }
 
-    public int ThumbnailWidth { get; set; }
+    public int? ThumbnailWidth { get; init; }
 
-    public int ThumbnailHeight { get; set; }
+    public int? ThumbnailHeight { get; init; }
 }
 
 public sealed class InlineQueryResultPhoto : InlineQueryResult
 {
     public override InlineQueryResultTypes Type => InlineQueryResultTypes.Photo;
 
-    public string PhotoUrl { get; set; }
+    public required string PhotoUrl { get; init; }
 
-    public string ThumbnailUrl { get; set; }
+    public required string ThumbnailUrl { get; init; }
 
-    public int PhotoWidth { get; set; }
+    public int? PhotoWidth { get; init; }
 
-    public int PhotoHeight { get; set; }
+    public int? PhotoHeight { get; init; }
 
-    public string Title { get; set; }
+    public string? Title { get; init; }
 
-    public string Description { get; set; }
+    public string? Description { get; init; }
 
-    public string Caption { get; set; }
+    public string? Caption { get; init; }
 
-    public string ParseMode { get; set; }
+    public string? ParseMode { get; init; }
 
-    public MessageEntity[] CaptionEntities { get; set; }
+    public MessageEntity[]? CaptionEntities { get; init; }
 
-    public bool ShowCaptionAboveMedia { get; set; }
+    public bool? ShowCaptionAboveMedia { get; init; }
 
-    public InlineKeyboardMarkup ReplyMarkup { get; set; }
+    public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 
-    public InputMessageContent InputMessageContent { get; set; }
+    public InputMessageContent? InputMessageContent { get; init; }
 }
 
 public sealed class InlineQueryResultGif : InlineQueryResult
 {
     public override InlineQueryResultTypes Type => InlineQueryResultTypes.Gif;
 
-    public string GifUrl { get; set; }
+    public required string GifUrl { get; init; }
 
-    public int GifWidth { get; set; }
+    public int? GifWidth { get; init; }
 
-    public int GifHeight { get; set; }
+    public int? GifHeight { get; init; }
 
-    public int GifDuration { get; set; }
+    public int? GifDuration { get; init; }
 
-    public string ThumbnailUrl { get; set; }
+    public required string ThumbnailUrl { get; init; }
 
-    public string ThumbnailMimeType { get; set; }
+    public string? ThumbnailMimeType { get; init; }
 
-    public string Title { get; set; }
+    public string? Title { get; init; }
 
-    public string Caption { get; set; }
+    public string? Caption { get; init; }
 
-    public string ParseMode { get; set; }
+    public string? ParseMode { get; init; }
 
-    public MessageEntity[] CaptionEntities { get; set; }
+    public MessageEntity[]? CaptionEntities { get; init; }
 
-    public bool ShowCaptionAboveMedia { get; set; }
+    public bool? ShowCaptionAboveMedia { get; init; }
 
-    public InlineKeyboardMarkup ReplyMarkup { get; set; }
+    public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 
-    public InputMessageContent InputMessageContent { get; set; }
+    public InputMessageContent? InputMessageContent { get; init; }
 }
 
 public sealed class InlineQueryResultMpeg4Gif : InlineQueryResult
 {
     public override InlineQueryResultTypes Type => InlineQueryResultTypes.Mpeg4Gif;
 
-    public string Mpeg4Url { get; set; }
+    public required string Mpeg4Url { get; init; }
 
-    public int Mpeg4Width { get; set; }
+    public int? Mpeg4Width { get; init; }
 
-    public int Mpeg4Height { get; set; }
+    public int? Mpeg4Height { get; init; }
 
-    public int Mpeg4Duration { get; set; }
+    public int? Mpeg4Duration { get; init; }
 
-    public string ThumbnailUrl { get; set; }
+    public required string ThumbnailUrl { get; init; }
 
-    public string ThumbnailMimeType { get; set; }
+    public string? ThumbnailMimeType { get; init; }
 
-    public string Title { get; set; }
+    public string? Title { get; init; }
 
-    public string Caption { get; set; }
+    public string? Caption { get; init; }
 
-    public string ParseMode { get; set; }
+    public string? ParseMode { get; init; }
 
-    public MessageEntity[] CaptionEntities { get; set; }
+    public MessageEntity[]? CaptionEntities { get; init; }
 
-    public bool ShowCaptionAboveMedia { get; set; }
+    public bool? ShowCaptionAboveMedia { get; init; }
 
-    public InlineKeyboardMarkup ReplyMarkup { get; set; }
+    public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 
-    public InputMessageContent InputMessageContent { get; set; }
+    public InputMessageContent? InputMessageContent { get; init; }
 }
 
 public sealed class InlineQueryResultVideo : InlineQueryResult
 {
     public override InlineQueryResultTypes Type => InlineQueryResultTypes.Video;
 
-    public string VideoUrl { get; set; }
+    public required string VideoUrl { get; init; }
 
-    public string MimeType { get; set; }
+    public required string MimeType { get; init; }
 
-    public string ThumbnailUrl { get; set; }
+    public required string ThumbnailUrl { get; init; }
 
-    public string Title { get; set; }
+    public required string Title { get; init; }
 
-    public string Caption { get; set; }
+    public string? Caption { get; init; }
 
-    public string ParseMode { get; set; }
+    public string? ParseMode { get; init; }
 
-    public MessageEntity[] CaptionEntities { get; set; }
+    public MessageEntity[]? CaptionEntities { get; init; }
 
-    public bool ShowCaptionAboveMedia { get; set; }
+    public bool? ShowCaptionAboveMedia { get; init; }
 
-    public int VideoWidth { get; set; }
+    public int? VideoWidth { get; init; }
 
-    public int VideoHeight { get; set; }
+    public int? VideoHeight { get; init; }
 
-    public int VideoDuration { get; set; }
+    public int? VideoDuration { get; init; }
 
-    public string Description { get; set; }
+    public string? Description { get; init; }
 
-    public InlineKeyboardMarkup ReplyMarkup { get; set; }
+    public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 
-    public InputMessageContent InputMessageContent { get; set; }
+    public InputMessageContent? InputMessageContent { get; init; }
 }
 
 public sealed class InlineQueryResultAudio : InlineQueryResult
 {
     public override InlineQueryResultTypes Type => InlineQueryResultTypes.Audio;
 
-    public string AudioUrl { get; set; }
+    public required string AudioUrl { get; init; }
 
-    public string Title { get; set; }
+    public required string Title { get; init; }
 
-    public string Caption { get; set; }
+    public string? Caption { get; init; }
 
-    public string ParseMode { get; set; }
+    public string? ParseMode { get; init; }
 
-    public MessageEntity[] CaptionEntities { get; set; }
+    public MessageEntity[]? CaptionEntities { get; init; }
 
-    public string Performer { get; set; }
+    public string? Performer { get; init; }
 
-    public int AudioDuration { get; set; }
+    public int? AudioDuration { get; init; }
 
-    public InlineKeyboardMarkup ReplyMarkup { get; set; }
+    public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 
-    public InputMessageContent InputMessageContent { get; set; }
+    public InputMessageContent? InputMessageContent { get; init; }
 }
 
 public sealed class InlineQueryResultVoice : InlineQueryResult
 {
     public override InlineQueryResultTypes Type => InlineQueryResultTypes.Voice;
 
-    public string VoiceUrl { get; set; }
+    public required string VoiceUrl { get; init; }
 
-    public string Title { get; set; }
+    public required string Title { get; init; }
 
-    public string Caption { get; set; }
+    public string? Caption { get; init; }
 
-    public string ParseMode { get; set; }
+    public string? ParseMode { get; init; }
 
-    public MessageEntity[] CaptionEntities { get; set; }
+    public MessageEntity[]? CaptionEntities { get; init; }
 
-    public int VoiceDuration { get; set; }
+    public int? VoiceDuration { get; init; }
 
-    public InlineKeyboardMarkup ReplyMarkup { get; set; }
+    public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 
-    public InputMessageContent InputMessageContent { get; set; }
+    public InputMessageContent? InputMessageContent { get; init; }
 }
 
 public sealed class InlineQueryResultDocument : InlineQueryResult
 {
     public override InlineQueryResultTypes Type => InlineQueryResultTypes.Document;
 
-    public string Title { get; set; }
+    public required string Title { get; init; }
 
-    public string Caption { get; set; }
+    public string? Caption { get; init; }
 
-    public string ParseMode { get; set; }
+    public string? ParseMode { get; init; }
 
-    public MessageEntity[] CaptionEntities { get; set; }
+    public MessageEntity[]? CaptionEntities { get; init; }
 
-    public string DocumentUrl { get; set; }
+    public required string DocumentUrl { get; init; }
 
-    public string MimeType { get; set; }
+    public required string MimeType { get; init; }
 
-    public string Description { get; set; }
+    public string? Description { get; init; }
 
-    public InlineKeyboardMarkup ReplyMarkup { get; set; }
+    public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 
-    public InputMessageContent InputMessageContent { get; set; }
+    public InputMessageContent? InputMessageContent { get; init; }
 
-    public string ThumbnailUrl { get; set; }
+    public string? ThumbnailUrl { get; init; }
 
-    public int ThumbnailWidth { get; set; }
+    public int? ThumbnailWidth { get; init; }
 
-    public int ThumbnailHeight { get; set; }
+    public int? ThumbnailHeight { get; init; }
 }
 
 public sealed class InlineQueryResultLocation : InlineQueryResult
 {
     public override InlineQueryResultTypes Type => InlineQueryResultTypes.Location;
 
-    public float Latitude { get; set; }
+    public required double Latitude { get; init; }
 
-    public float Longitude { get; set; }
+    public required double Longitude { get; init; }
 
-    public string Title { get; set; }
+    public required string Title { get; init; }
 
-    public float HorizontalAccuracy { get; set; }
+    public float? HorizontalAccuracy { get; init; }
 
-    public int LivePeriod { get; set; }
+    public int? LivePeriod { get; init; }
 
-    public int Heading { get; set; }
+    public int? Heading { get; init; }
 
-    public int ProximityAlertRadius { get; set; }
+    public int? ProximityAlertRadius { get; init; }
 
-    public InlineKeyboardMarkup ReplyMarkup { get; set; }
+    public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 
-    public InputMessageContent InputMessageContent { get; set; }
+    public InputMessageContent? InputMessageContent { get; init; }
 
-    public string ThumbnailUrl { get; set; }
+    public string? ThumbnailUrl { get; init; }
 
-    public int ThumbnailWidth { get; set; }
+    public int? ThumbnailWidth { get; init; }
 
-    public int ThumbnailHeight { get; set; }
+    public int? ThumbnailHeight { get; init; }
 }
 
 public sealed class InlineQueryResultVenue : InlineQueryResult
 {
     public override InlineQueryResultTypes Type => InlineQueryResultTypes.Venue;
 
-    public float Latitude { get; set; }
+    public required double Latitude { get; init; }
 
-    public float Longitude { get; set; }
+    public required double Longitude { get; init; }
 
-    public string Title { get; set; }
+    public required string Title { get; init; }
 
-    public string Address { get; set; }
+    public required string Address { get; init; }
 
-    public string FoursquareId { get; set; }
+    public string? FoursquareId { get; init; }
 
-    public string FoursquareType { get; set; }
+    public string? FoursquareType { get; init; }
 
-    public string GooglePlaceId { get; set; }
+    public string? GooglePlaceId { get; init; }
 
-    public string GooglePlaceType { get; set; }
+    public string? GooglePlaceType { get; init; }
 
-    public InlineKeyboardMarkup ReplyMarkup { get; set; }
+    public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 
-    public InputMessageContent InputMessageContent { get; set; }
+    public InputMessageContent? InputMessageContent { get; init; }
 
-    public string ThumbnailUrl { get; set; }
+    public string? ThumbnailUrl { get; init; }
 
-    public int ThumbnailWidth { get; set; }
+    public int? ThumbnailWidth { get; init; }
 
-    public int ThumbnailHeight { get; set; }
+    public int? ThumbnailHeight { get; init; }
 }
 
 public sealed class InlineQueryResultContact : InlineQueryResult
 {
     public override InlineQueryResultTypes Type => InlineQueryResultTypes.Contact;
 
-    public string PhoneNumber { get; set; }
+    public required string PhoneNumber { get; init; }
 
-    public string FirstName { get; set; }
+    public required string FirstName { get; init; }
 
-    public string LastName { get; set; }
+    public string? LastName { get; init; }
 
-    public string VCard { get; set; }
+    public string? VCard { get; init; }
 
-    public InlineKeyboardMarkup ReplyMarkup { get; set; }
+    public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 
-    public InputMessageContent InputMessageContent { get; set; }
+    public InputMessageContent? InputMessageContent { get; init; }
 
-    public string ThumbnailUrl { get; set; }
+    public string? ThumbnailUrl { get; init; }
 
-    public int ThumbnailWidth { get; set; }
+    public int? ThumbnailWidth { get; init; }
 
-    public int ThumbnailHeight { get; set; }
+    public int? ThumbnailHeight { get; init; }
 }
 
 public sealed class InlineQueryResultGame : InlineQueryResult
 {
     public override InlineQueryResultTypes Type => InlineQueryResultTypes.Game;
 
-    public string GameShortName { get; set; }
+    public required string GameShortName { get; init; }
 
-    public InlineKeyboardMarkup ReplyMarkup { get; set; }
+    public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 }
 
 public sealed class InlineQueryResultCachedPhoto : InlineQueryResult
 {
     public override InlineQueryResultTypes Type => InlineQueryResultTypes.CachedPhoto;
 
-    public string PhotoFileId { get; set; }
+    public required string PhotoFileId { get; init; }
 
-    public string Title { get; set; }
+    public string? Title { get; init; }
 
-    public string Description { get; set; }
+    public string? Description { get; init; }
 
-    public string Caption { get; set; }
+    public string? Caption { get; init; }
 
-    public string ParseMode { get; set; }
+    public string? ParseMode { get; init; }
 
-    public MessageEntity[] CaptionEntities { get; set; }
+    public MessageEntity[]? CaptionEntities { get; init; }
 
-    public bool ShowCaptionAboveMedia { get; set; }
+    public bool? ShowCaptionAboveMedia { get; init; }
 
-    public InlineKeyboardMarkup ReplyMarkup { get; set; }
+    public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 
-    public InputMessageContent InputMessageContent { get; set; }
+    public InputMessageContent? InputMessageContent { get; init; }
 }
 
 public sealed class InlineQueryResultCachedGif : InlineQueryResult
 {
     public override InlineQueryResultTypes Type => InlineQueryResultTypes.CachedGif;
 
-    public string GifFileId { get; set; }
+    public required string GifFileId { get; init; }
 
-    public string Title { get; set; }
+    public string? Title { get; init; }
 
-    public string Caption { get; set; }
+    public string? Caption { get; init; }
 
-    public string ParseMode { get; set; }
+    public string? ParseMode { get; init; }
 
-    public MessageEntity[] CaptionEntities { get; set; }
+    public MessageEntity[]? CaptionEntities { get; init; }
 
-    public bool ShowCaptionAboveMedia { get; set; }
+    public bool? ShowCaptionAboveMedia { get; init; }
 
-    public InlineKeyboardMarkup ReplyMarkup { get; set; }
+    public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 
-    public InputMessageContent InputMessageContent { get; set; }
+    public InputMessageContent? InputMessageContent { get; init; }
 }
 
 public sealed class InlineQueryResultCachedMpeg4Gif : InlineQueryResult
 {
     public override InlineQueryResultTypes Type => InlineQueryResultTypes.CachedMpeg4Gif;
 
-    public string Mpeg4FileId { get; set; }
+    public required string Mpeg4FileId { get; init; }
 
-    public string Title { get; set; }
+    public string? Title { get; init; }
 
-    public string Caption { get; set; }
+    public string? Caption { get; init; }
 
-    public string ParseMode { get; set; }
+    public string? ParseMode { get; init; }
 
-    public MessageEntity[] CaptionEntities { get; set; }
+    public MessageEntity[]? CaptionEntities { get; init; }
 
-    public bool ShowCaptionAboveMedia { get; set; }
+    public bool? ShowCaptionAboveMedia { get; init; }
 
-    public InlineKeyboardMarkup ReplyMarkup { get; set; }
+    public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 
-    public InputMessageContent InputMessageContent { get; set; }
+    public InputMessageContent? InputMessageContent { get; init; }
 }
 
 public sealed class InlineQueryResultCachedSticker : InlineQueryResult
 {
     public override InlineQueryResultTypes Type => InlineQueryResultTypes.CachedSticker;
 
-    public string StickerFileId { get; set; }
+    public required string StickerFileId { get; init; }
 
-    public InlineKeyboardMarkup ReplyMarkup { get; set; }
+    public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 
-    public InputMessageContent InputMessageContent { get; set; }
+    public InputMessageContent? InputMessageContent { get; init; }
 }
 
 public sealed class InlineQueryResultCachedDocument : InlineQueryResult
 {
     public override InlineQueryResultTypes Type => InlineQueryResultTypes.CachedDocument;
 
-    public string Title { get; set; }
+    public required string Title { get; init; }
 
-    public string DocumentFileId { get; set; }
+    public required string DocumentFileId { get; init; }
 
-    public string Description { get; set; }
+    public string? Description { get; init; }
 
-    public string Caption { get; set; }
+    public string? Caption { get; init; }
 
-    public string ParseMode { get; set; }
+    public string? ParseMode { get; init; }
 
-    public MessageEntity[] CaptionEntities { get; set; }
+    public MessageEntity[]? CaptionEntities { get; init; }
 
-    public InlineKeyboardMarkup ReplyMarkup { get; set; }
+    public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 
-    public InputMessageContent InputMessageContent { get; set; }
+    public InputMessageContent? InputMessageContent { get; init; }
 }
 
 public sealed class InlineQueryResultCachedVideo : InlineQueryResult
 {
     public override InlineQueryResultTypes Type => InlineQueryResultTypes.CachedVideo;
 
-    public string VideoFileId { get; set; }
+    public required string VideoFileId { get; init; }
 
-    public string Title { get; set; }
+    public required string Title { get; init; }
 
-    public string Description { get; set; }
+    public string? Description { get; init; }
 
-    public string Caption { get; set; }
+    public string? Caption { get; init; }
 
-    public string ParseMode { get; set; }
+    public string? ParseMode { get; init; }
 
-    public MessageEntity[] CaptionEntities { get; set; }
+    public MessageEntity[]? CaptionEntities { get; init; }
 
-    public bool ShowCaptionAboveMedia { get; set; }
+    public bool? ShowCaptionAboveMedia { get; init; }
 
-    public InlineKeyboardMarkup ReplyMarkup { get; set; }
+    public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 
-    public InputMessageContent InputMessageContent { get; set; }
+    public InputMessageContent? InputMessageContent { get; init; }
 }
 
 public sealed class InlineQueryResultCachedVoice : InlineQueryResult
 {
     public override InlineQueryResultTypes Type => InlineQueryResultTypes.CachedVoice;
 
-    public string VoiceFileId { get; set; }
+    public required string VoiceFileId { get; init; }
 
-    public string Title { get; set; }
+    public required string Title { get; init; }
 
-    public string Caption { get; set; }
+    public string? Caption { get; init; }
 
-    public string ParseMode { get; set; }
+    public string? ParseMode { get; init; }
 
-    public MessageEntity[] CaptionEntities { get; set; }
+    public MessageEntity[]? CaptionEntities { get; init; }
 
-    public InlineKeyboardMarkup ReplyMarkup { get; set; }
+    public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 
-    public InputMessageContent InputMessageContent { get; set; }
+    public InputMessageContent? InputMessageContent { get; init; }
 }
 
 public sealed class InlineQueryResultCachedAudio : InlineQueryResult
 {
     public override InlineQueryResultTypes Type => InlineQueryResultTypes.CachedAudio;
 
-    public string AudioFileId { get; set; }
+    public required string AudioFileId { get; init; }
 
-    public string Caption { get; set; }
+    public string? Caption { get; init; }
 
-    public string ParseMode { get; set; }
+    public string? ParseMode { get; init; }
 
-    public MessageEntity[] CaptionEntities { get; set; }
+    public MessageEntity[]? CaptionEntities { get; init; }
 
-    public InlineKeyboardMarkup ReplyMarkup { get; set; }
+    public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 
-    public InputMessageContent InputMessageContent { get; set; }
+    public InputMessageContent? InputMessageContent { get; init; }
 }

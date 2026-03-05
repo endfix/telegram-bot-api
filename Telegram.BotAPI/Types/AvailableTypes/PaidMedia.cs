@@ -1,16 +1,10 @@
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 using Telegram.BotAPI.Enums;
 
 namespace Telegram.BotAPI.Types;
 
-[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
-[JsonDerivedType(typeof(PaidMediaPhoto), "photo")]
-[JsonDerivedType(typeof(PaidMediaPreview), "preview")]
-[JsonDerivedType(typeof(PaidMediaVideo), "video")]
 public abstract class PaidMedia
 {
-    [JsonIgnore]
     public abstract PaidMediaTypes Type { get; }
 }
 

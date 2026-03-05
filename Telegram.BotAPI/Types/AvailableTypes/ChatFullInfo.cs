@@ -4,105 +4,105 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class ChatFullInfo
 {
-    public required long Id { get; set; }
+    public required long Id { get; init; }
 
-    public required ChatFullInfoTypes Type { get; set; }
+    public required ChatFullInfoTypes Type { get; init; }
 
-    public string? Title { get; set; }
+    public string? Title { get; init; }
 
-    public string? Username { get; set; }
+    public string? Username { get; init; }
 
-    public string? FirstName { get; set; }
+    public string? FirstName { get; init; }
 
-    public string? LastName { get; set; }
+    public string? LastName { get; init; }
 
-    public bool? IsForum { get; set; } = null;
+    public bool? IsForum { get; init; }
 
-    public bool? IsDirectMessages { get; set; } = null;
+    public bool? IsDirectMessages { get; init; }
 
-    public required int AccentColorId { get; set; }
+    public required int AccentColorId { get; init; }
 
-    public required int MaxReactionCount { get; set; }
+    public required int MaxReactionCount { get; init; }
 
-    public ChatPhoto? Photo { get; set; }
+    public ChatPhoto? Photo { get; init; }
 
-    public string[]? ActiveUsernames { get; set; }
+    public string[]? ActiveUsernames { get; init; }
 
-    public Birthdate? Birthdate { get; set; }
+    public Birthdate? Birthdate { get; init; }
 
-    public BusinessIntro? BusinessIntro { get; set; }
+    public BusinessIntro? BusinessIntro { get; init; }
 
-    public BusinessLocation? BusinessLocation { get; set; }
+    public BusinessLocation? BusinessLocation { get; init; }
 
-    public BusinessOpeningHours? BusinessOpeningHours { get; set; }
+    public BusinessOpeningHours? BusinessOpeningHours { get; init; }
 
-    public Chat? PersonalChat { get; set; }
+    public Chat? PersonalChat { get; init; }
 
-    public Chat? ParentChat { get; set; }
+    public Chat? ParentChat { get; init; }
 
-    public ReactionType[]? AvailableReactions { get; set; }
+    public ReactionType[]? AvailableReactions { get; init; }
 
-    public string? BackgroundCustomEmojiId { get; set; }
+    public string? BackgroundCustomEmojiId { get; init; }
 
-    public int? ProfileAccentColorId { get; set; } = null;
+    public int? ProfileAccentColorId { get; init; }
 
-    public string? ProfileBackgroundCustomEmojiId { get; set; }
+    public string? ProfileBackgroundCustomEmojiId { get; init; }
 
-    public string? EmojiStatusCustomEmojiId { get; set; }
+    public string? EmojiStatusCustomEmojiId { get; init; }
 
-    public int? EmojiStatusExpirationDate { get; set; } = null;
+    public int? EmojiStatusExpirationDate { get; init; }
 
-    public string? Bio { get; set; }
+    public string? Bio { get; init; }
 
-    public bool? HasPrivateForwards { get; set; } = null;
+    public bool? HasPrivateForwards { get; init; }
 
-    public bool? HasRestrictedVoiceAndVideoMessages { get; set; } = null;
+    public bool? HasRestrictedVoiceAndVideoMessages { get; init; }
 
-    public bool? JoinToSendMessages { get; set; } = null;
+    public bool? JoinToSendMessages { get; init; }
 
-    public bool? JoinByRequest { get; set; } = null;
+    public bool? JoinByRequest { get; init; }
 
-    public string? Description { get; set; }
+    public string? Description { get; init; }
 
-    public string? InviteLink { get; set; }
+    public string? InviteLink { get; init; }
 
-    public Message? PinnedMessage { get; set; }
+    public Message? PinnedMessage { get; init; }
 
-    public ChatPermissions? Permissions { get; set; }
+    public ChatPermissions? Permissions { get; init; }
 
-    public AcceptedGiftTypes? AcceptedGiftTypes { get; set; }
+    public AcceptedGiftTypes? AcceptedGiftTypes { get; init; }
 
-    public bool? CanSendPaidMedia { get; set; } = null;
+    public bool? CanSendPaidMedia { get; init; }
 
-    public int? SlowModeDelay { get; set; } = null;
+    public int? SlowModeDelay { get; init; }
 
-    public int? UnrestrictBoostCount { get; set; } = null;
+    public int? UnrestrictBoostCount { get; init; }
 
-    public int? MessageAutoDeleteTime { get; set; } = null;
+    public int? MessageAutoDeleteTime { get; init; }
 
-    public bool? HasAggressiveAntiSpamEnabled { get; set; } = null;
+    public bool? HasAggressiveAntiSpamEnabled { get; init; }
 
-    public bool? HasHiddenMembers { get; set; } = null;
+    public bool? HasHiddenMembers { get; init; }
 
-    public bool? HasProtectedContent { get; set; } = null;
+    public bool? HasProtectedContent { get; init; }
 
-    public bool? HasVisibleHistory { get; set; } = null;
+    public bool? HasVisibleHistory { get; init; }
 
-    public string? StickerSetName { get; set; } = null;
+    public string? StickerSetName { get; init; }
 
-    public bool? CanSetStickerSet { get; set; } = null;
+    public bool? CanSetStickerSet { get; init; }
 
-    public bool? CustomEmojiStickerSetName { get; set; } = null;
+    public bool? CustomEmojiStickerSetName { get; init; }
 
-    public int? LinkedChatId { get; set; } = null;
+    public int? LinkedChatId { get; init; }
 
-    public ChatLocation? Location { get; set; }
+    public ChatLocation? Location { get; init; }
 
-    public UserRating? Rating { get; set; }
+    public UserRating? Rating { get; init; }
 
-    public Audio? FirstProfileAudio { get; set; }
+    public Audio? FirstProfileAudio { get; init; }
 
-    public UniqueGiftColors? UniqueGiftColors { get; set; }
+    public UniqueGiftColors? UniqueGiftColors { get; init; }
 
-    public int? PaidMessageStarCount { get; set; } = null;
+    public int? PaidMessageStarCount { get; init; }
 }

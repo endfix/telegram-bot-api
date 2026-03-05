@@ -2,17 +2,17 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class CallbackQuery
 {
-    public string Id { get; set; }
+    public required string Id { get; init; }
 
-    public User From { get; set; }
+    public required User From { get; init; }
 
-    public MaybeInaccessibleMessage Message { get; set; }
+    public MaybeInaccessibleMessage? Message { get; init; }
 
-    public string InlineMessageId { get; set; }
+    public string? InlineMessageId { get; init; }
 
-    public string ChatInstance { get; set; }
+    public required string ChatInstance { get; init; }
 
-    public string Data { get; set; }
+    public string? Data { get; init; }
 
-    public string GameShortName { get; set; }
+    public string? GameShortName { get; init; }
 }

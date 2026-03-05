@@ -2,7 +2,7 @@
 
 public sealed class PaidMediaPurchased
 {
-    public User From { get; set; }
+    public required User From { get; init; }
 
-    public string PaidMediaPayload { get; set; }
+    public required string PaidMediaPayload { get; init; }
 }

@@ -1,15 +1,9 @@
-using System.Text.Json.Serialization;
 using Telegram.BotAPI.Enums;
 
 namespace Telegram.BotAPI.Types;
 
-[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
-[JsonDerivedType(typeof(ReactionTypeCustomEmoji), "custom_emoji")]
-[JsonDerivedType(typeof(ReactionTypeEmoji), "emoji")]
-[JsonDerivedType(typeof(ReactionTypePaid), "paid")]
 public abstract class ReactionType
 {
-    [JsonIgnore]
     public abstract ReactionTypes Type { get; }
 }
 

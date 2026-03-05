@@ -1,15 +1,9 @@
-using System.Text.Json.Serialization;
 using Telegram.BotAPI.Enums;
 
 namespace Telegram.BotAPI.Types;
 
-[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
-[JsonDerivedType(typeof(MenuButtonCommands), "commands")]
-[JsonDerivedType(typeof(MenuButtonDefault), "default")]
-[JsonDerivedType(typeof(MenuButtonWebApp), "web_app")]
 public abstract class MenuButton
 {
-    [JsonIgnore]
     public abstract MenuButtonTypes Type { get; }
 }
 

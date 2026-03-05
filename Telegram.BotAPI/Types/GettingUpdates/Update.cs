@@ -5,53 +5,53 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class Update
 {
-    public long UpdateId { get; set; }
+    public required long UpdateId { get; init; }
 
-    public Message? Message { get; set; }
+    public Message? Message { get; init; }
 
-    public Message? EditedMessage { get; set; }
+    public Message? EditedMessage { get; init; }
 
-    public Message? ChannelPost { get; set; }
+    public Message? ChannelPost { get; init; }
 
-    public Message? EditedChannelPost { get; set; }
+    public Message? EditedChannelPost { get; init; }
 
-    public BusinessConnection? BusinessConnection { get; set; }
+    public BusinessConnection? BusinessConnection { get; init; }
 
-    public Message? BusinessMessage { get; set; }
+    public Message? BusinessMessage { get; init; }
 
-    public Message? EditedBusinessMessage { get; set; }
+    public Message? EditedBusinessMessage { get; init; }
 
-    public BusinessMessagesDeleted? DeletedBusinessMessages { get; set; }
+    public BusinessMessagesDeleted? DeletedBusinessMessages { get; init; }
 
-    public MessageReactionUpdated? MessageReaction { get; set; }
+    public MessageReactionUpdated? MessageReaction { get; init; }
 
-    public MessageReactionCountUpdated? MessageReactionCount { get; set; }
+    public MessageReactionCountUpdated? MessageReactionCount { get; init; }
 
-    public InlineQuery? InlineQuery { get; set; }
+    public InlineQuery? InlineQuery { get; init; }
 
-    public ChosenInlineResult? ChosenInlineResult { get; set; }
+    public ChosenInlineResult? ChosenInlineResult { get; init; }
 
-    public CallbackQuery? CallbackQuery { get; set; }
+    public CallbackQuery? CallbackQuery { get; init; }
 
-    public ShippingQuery? ShippingQuery { get; set; }
+    public ShippingQuery? ShippingQuery { get; init; }
 
-    public PreCheckoutQuery? PreCheckoutQuery { get; set; }
+    public PreCheckoutQuery? PreCheckoutQuery { get; init; }
 
-    public PaidMediaPurchased? PurchasedPaidMedia { get; set; }
+    public PaidMediaPurchased? PurchasedPaidMedia { get; init; }
 
-    public Poll? Poll { get; set; }
+    public Poll? Poll { get; init; }
 
-    public PollAnswer? PollAnswer { get; set; }
+    public PollAnswer? PollAnswer { get; init; }
 
-    public ChatMemberUpdated? MyChatMember { get; set; }
+    public ChatMemberUpdated? MyChatMember { get; init; }
 
-    public ChatMemberUpdated? ChatMember { get; set; }
+    public ChatMemberUpdated? ChatMember { get; init; }
 
-    public ChatJoinRequest? ChatJoinRequest { get; set; }
+    public ChatJoinRequest? ChatJoinRequest { get; init; }
 
-    public ChatBoostUpdated? ChatBoost { get; set; }
+    public ChatBoostUpdated? ChatBoost { get; init; }
 
-    public ChatBoostRemoved? RemovedChatBoost { get; set; }
+    public ChatBoostRemoved? RemovedChatBoost { get; init; }
 
     [JsonIgnore]
     public UpdateTypes Type => this switch

@@ -2,11 +2,11 @@
 
 public sealed class UserRating
 {
-    public required int Level { get; set; }
+    public required int Level { get; init; }
 
-    public required int Rating { get; set; }
+    public required int Rating { get; init; }
 
-    public required int CurrentLevelRating { get; set; }
+    public required int CurrentLevelRating { get; init; }
 
-    public int? NextLevelRating { get; set; } = null;
+    public int? NextLevelRating { get; init; }
 }

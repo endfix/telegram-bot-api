@@ -2,213 +2,209 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class Message : MaybeInaccessibleMessage
 {
-    public int MessageId { get; set; }
+    public long? MessageThreadId { get; init; }
 
-    public long MessageThreadId { get; set; }
+    public DirectMessagesTopic? DirectMessagesTopic { get; init; }
 
-    public DirectMessagesTopic DirectMessagesTopic { get; set; }
+    public User? From { get; init; }
 
-    public User From { get; set; }
+    public Chat? SenderChat { get; init; }
 
-    public Chat SenderChat { get; set; }
+    public int? SenderBoostCount { get; init; }
 
-    public int SenderBoostCount { get; set; }
+    public User? SenderBusinessBot { get; init; }
 
-    public User SenderBusinessBot { get; set; }
+    public string? SenderTag { get; init; }
 
-    public int Date { get; set; }
+    public string? BusinessConnectionId { get; init; }
 
-    public string BusinessConnectionId { get; set; }
+    public MessageOrigin? ForwardOrigin { get; init; }
 
-    public Chat Chat { get; set; }
+    public bool? IsTopicMessage { get; init; }
 
-    public MessageOrigin ForwardOrigin { get; set; }
+    public bool? IsAutomaticForward { get; init; }
 
-    public bool IsTopicMessage { get; set; }
+    public Message? ReplyToMessage { get; init; }
 
-    public bool IsAutomaticForward { get; set; }
+    public ExternalReplyInfo? ExternalReply { get; init; }
 
-    public Message ReplyToMessage { get; set; }
+    public TextQuote? Quote { get; init; }
 
-    public ExternalReplyInfo ExternalReply { get; set; }
+    public Story? ReplyToStory { get; init; }
 
-    public TextQuote Quote { get; set; }
+    public int? ReplyToChecklistTaskId { get; init; }
 
-    public Story ReplyToStory { get; set; }
+    public User? ViaBot { get; init; }
 
-    public int ReplyToChecklistTaskId { get; set; }
+    public int? EditDate { get; init; }
 
-    public User ViaBot { get; set; }
+    public bool? HasProtectedContent { get; init; }
 
-    public int EditDate { get; set; }
+    public bool? IsFromOffline { get; init; }
 
-    public bool HasProtectedContent { get; set; }
+    public bool? IsPaidPost { get; init; }
 
-    public bool IsFromOffline { get; set; }
+    public string? MediaGroupId { get; init; }
 
-    public bool IsPaidPost { get; set; }
+    public string? AuthorSignature { get; init; }
 
-    public string MediaGroupId { get; set; }
+    public int? PaidStarCount { get; init; }
 
-    public string AuthorSignature { get; set; }
+    public string? Text { get; init; }
 
-    public int PaidStarCount { get; set; }
+    public MessageEntity[]? Entities { get; init; }
 
-    public string Text { get; set; }
+    public LinkPreviewOptions? LinkPreviewOptions { get; init; }
 
-    public MessageEntity[] Entities { get; set; }
+    public SuggestedPostInfo? SuggestedPostInfo { get; init; }
 
-    public LinkPreviewOptions LinkPreviewOptions { get; set; }
+    public string? EffectId { get; init; }
 
-    public SuggestedPostInfo SuggestedPostInfo { get; set; }
+    public Animation? Animation { get; init; }
 
-    public string EffectId { get; set; }
+    public Audio? Audio { get; init; }
 
-    public Animation Animation { get; set; }
+    public Document? Document { get; init; }
 
-    public Audio Audio { get; set; }
+    public PaidMediaInfo? PaidMedia { get; init; }
 
-    public Document Document { get; set; }
+    public PhotoSize[]? Photo { get; init; }
 
-    public PaidMediaInfo PaidMedia { get; set; }
+    public Sticker? Sticker { get; init; }
 
-    public PhotoSize[] Photo { get; set; }
+    public Story? Story { get; init; }
 
-    public Sticker Sticker { get; set; }
+    public Video? Video { get; init; }
 
-    public Story Story { get; set; }
+    public VideoNote? VideoNote { get; init; }
 
-    public Video Video { get; set; }
+    public Voice? Voice { get; init; }
 
-    public VideoNote VideoNote { get; set; }
+    public string? Caption { get; init; }
 
-    public Voice Voice { get; set; }
+    public MessageEntity[]? CaptionEntities { get; init; }
 
-    public string Caption { get; set; }
+    public bool? ShowCaptionAboveMedia { get; init; }
 
-    public MessageEntity[] CaptionEntities { get; set; }
+    public bool? HasMediaSpoiler { get; init; }
 
-    public bool ShowCaptionAboveMedia { get; set; }
+    public Checklist? Checklist { get; init; }
 
-    public bool HasMediaSpoiler { get; set; }
+    public Contact? Contact { get; init; }
 
-    public Checklist Checklist { get; set; }
+    public Dice? Dice { get; init; }
 
-    public Contact Contact { get; set; }
+    public Game? Game { get; init; }
 
-    public Dice Dice { get; set; }
+    public Poll? Poll { get; init; }
 
-    public Game Game { get; set; }
+    public Venue? Venue { get; init; }
 
-    public Poll Poll { get; set; }
+    public Location? Location { get; init; }
 
-    public Venue Venue { get; set; }
+    public User[]? NewChatMembers { get; init; }
 
-    public Location Location { get; set; }
+    public User? LeftChatMember { get; init; }
 
-    public User[] NewChatMembers { get; set; }
+    public ChatOwnerLeft? ChatOwnerLeft { get; init; }
 
-    public User? LeftChatMember { get; set; }
+    public ChatOwnerChanged? ChatOwnerChanged { get; init; }
 
-    public ChatOwnerLeft? ChatOwnerLeft { get; set; }
+    public string? NewChatTitle { get; init; }
 
-    public ChatOwnerChanged? ChatOwnerChanged { get; set; }
+    public PhotoSize[]? NewChatPhoto { get; init; }
 
-    public string NewChatTitle { get; set; }
+    public bool? DeleteChatPhoto { get; init; }
 
-    public PhotoSize[] NewChatPhoto { get; set; }
+    public bool? GroupChatCreated { get; init; }
 
-    public bool DeleteChatPhoto { get; set; }
+    public bool? SupergroupChatCreated { get; init; }
 
-    public bool GroupChatCreated { get; set; }
+    public bool? ChannelChatCreated { get; init; }
 
-    public bool SupergroupChatCreated { get; set; }
+    public MessageAutoDeleteTimerChanged? MessageAutoDeleteTimerChanged { get; init; }
 
-    public bool ChannelChatCreated { get; set; }
+    public long? MigrateToChatId { get; init; }
 
-    public MessageAutoDeleteTimerChanged MessageAutoDeleteTimerChanged { get; set; }
+    public long? MigrateFromChatId { get; init; }
 
-    public long MigrateToChatId { get; set; }
+    public MaybeInaccessibleMessage? PinnedMessage { get; init; }
 
-    public long MigrateFromChatId { get; set; }
+    public Invoice? Invoice { get; init; }
 
-    public MaybeInaccessibleMessage PinnedMessage { get; set; }
+    public SuccessfulPayment? SuccessfulPayment { get; init; }
 
-    public Invoice Invoice { get; set; }
+    public RefundedPayment? RefundedPayment { get; init; }
 
-    public SuccessfulPayment SuccessfulPayment { get; set; }
+    public UsersShared? UsersShared { get; init; }
 
-    public RefundedPayment RefundedPayment { get; set; }
+    public ChatShared? ChatShared { get; init; }
 
-    public UsersShared UsersShared { get; set; }
+    public GiftInfo? Gift { get; init; }
 
-    public ChatShared ChatShared { get; set; }
+    public UniqueGiftInfo? UniqueGift { get; init; }
 
-    public GiftInfo Gift { get; set; }
+    public GiftInfo? GiftUpgradeSent { get; init; }
 
-    public UniqueGiftInfo UniqueGift { get; set; }
+    public string? ConnectedWebsite { get; init; }
 
-    public GiftInfo GiftUpgradeSent { get; set; }
+    public WriteAccessAllowed? WriteAccessAllowed { get; init; }
 
-    public string ConnectedWebsite { get; set; }
+    public PassportData? PassportData { get; init; }
 
-    public WriteAccessAllowed WriteAccessAllowed { get; set; }
+    public ProximityAlertTriggered? ProximityAlertTriggered { get; init; }
 
-    public PassportData PassportData { get; set; }
+    public ChatBoostAdded? BoostAdded { get; init; }
 
-    public ProximityAlertTriggered ProximityAlertTriggered { get; set; }
+    public ChatBackground? ChatBackgroundSet { get; init; }
 
-    public ChatBoostAdded BoostAdded { get; set; }
+    public ChecklistTasksDone? ChecklistTasksDone { get; init; }
 
-    public ChatBackground ChatBackgroundSet { get; set; }
+    public ChecklistTasksAdded? ChecklistTasksAdded { get; init; }
 
-    public ChecklistTasksDone ChecklistTasksDone { get; set; }
+    public DirectMessagePriceChanged? DirectMessagePriceChanged { get; init; }
 
-    public ChecklistTasksAdded ChecklistTasksAdded { get; set; }
+    public ForumTopicCreated? ForumTopicCreated { get; init; }
 
-    public DirectMessagePriceChanged DirectMessagePriceChanged { get; set; }
+    public ForumTopicEdited? ForumTopicEdited { get; init; }
 
-    public ForumTopicCreated ForumTopicCreated { get; set; }
+    public ForumTopicClosed? ForumTopicClosed { get; init; }
 
-    public ForumTopicEdited ForumTopicEdited { get; set; }
+    public ForumTopicReopened? ForumTopicReopened { get; init; }
 
-    public ForumTopicClosed ForumTopicClosed { get; set; }
+    public GeneralForumTopicHidden? GeneralForumTopicHidden { get; init; }
 
-    public ForumTopicReopened ForumTopicReopened { get; set; }
+    public GeneralForumTopicUnhidden? GeneralForumTopicUnhidden { get; init; }
 
-    public GeneralForumTopicHidden GeneralForumTopicHidden { get; set; }
+    public GiveawayCreated? GiveawayCreated { get; init; }
 
-    public GeneralForumTopicUnhidden GeneralForumTopicUnhidden { get; set; }
+    public Giveaway? Giveaway { get; init; }
 
-    public GiveawayCreated GiveawayCreated { get; set; }
+    public GiveawayWinners? GiveawayWinners { get; init; }
 
-    public Giveaway Giveaway { get; set; }
+    public GiveawayCompleted? GiveawayCompleted { get; init; }
 
-    public GiveawayWinners GiveawayWinners { get; set; }
+    public PaidMessagePriceChanged? PaidMessagePriceChanged { get; init; }
 
-    public GiveawayCompleted GiveawayCompleted { get; set; }
+    public SuggestedPostApproved? SuggestedPostApproved { get; init; }
 
-    public PaidMessagePriceChanged PaidMessagePriceChanged { get; set; }
+    public SuggestedPostApprovalFailed? SuggestedPostApprovalFailed { get; init; }
 
-    public SuggestedPostApproved SuggestedPostApproved { get; set; }
+    public SuggestedPostDeclined? SuggestedPostDeclined { get; init; }
 
-    public SuggestedPostApprovalFailed SuggestedPostApprovalFailed { get; set; }
+    public SuggestedPostPaid? SuggestedPostPaid { get; init; }
 
-    public SuggestedPostDeclined SuggestedPostDeclined { get; set; }
+    public SuggestedPostRefunded? SuggestedPostRefunded { get; init; }
 
-    public SuggestedPostPaid SuggestedPostPaid { get; set; }
+    public VideoChatScheduled? VideoChatScheduled { get; init; }
 
-    public SuggestedPostRefunded SuggestedPostRefunded { get; set; }
+    public VideoChatStarted? VideoChatStarted { get; init; }
 
-    public VideoChatScheduled VideoChatScheduled { get; set; }
+    public VideoChatEnded? VideoChatEnded { get; init; }
 
-    public VideoChatStarted VideoChatStarted { get; set; }
+    public VideoChatParticipantsInvited? VideoChatParticipantsInvited { get; init; }
 
-    public VideoChatEnded VideoChatEnded { get; set; }
+    public WebAppData? WebAppData { get; init; }
 
-    public VideoChatParticipantsInvited VideoChatParticipantsInvited { get; set; }
-
-    public WebAppData WebAppData { get; set; }
-
-    public InlineKeyboardMarkup ReplyMarkup { get; set; }
+    public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 }

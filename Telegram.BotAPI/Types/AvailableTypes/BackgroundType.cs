@@ -3,14 +3,8 @@ using Telegram.BotAPI.Enums;
 
 namespace Telegram.BotAPI.Types;
 
-[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
-[JsonDerivedType(typeof(BackgroundTypeChatTheme), "chat_theme")]
-[JsonDerivedType(typeof(BackgroundTypeFill), "fill")]
-[JsonDerivedType(typeof(BackgroundTypePattern), "pattern")]
-[JsonDerivedType(typeof(BackgroundTypeWallpaper), "wallpaper")]
 public abstract class BackgroundType
 {
-    [JsonIgnore]
     public abstract BackgroundTypes Type { get; }
 }
 

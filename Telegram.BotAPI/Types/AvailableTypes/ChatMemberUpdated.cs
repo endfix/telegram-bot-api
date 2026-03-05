@@ -2,19 +2,19 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class ChatMemberUpdated
 {
-    public Chat Chat { get; set; }
+    public required Chat Chat { get; init; }
 
-    public User From { get; set; }
+    public required User From { get; init; }
 
-    public int Date { get; set; }
+    public required int Date { get; init; }
 
-    public ChatMember OldChatMember { get; set; }
+    public required ChatMember OldChatMember { get; init; }
 
-    public ChatMember NewChatMember { get; set; }
+    public required ChatMember NewChatMember { get; init; }
 
-    public ChatInviteLink InviteLink { get; set; }
+    public ChatInviteLink? InviteLink { get; init; }
 
-    public bool ViaJoinRequest { get; set; }
+    public bool? ViaJoinRequest { get; init; }
 
-    public bool ViaChatFolderInviteLink { get; set; }
+    public bool? ViaChatFolderInviteLink { get; init; }
 }

@@ -2,9 +2,9 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class BusinessMessagesDeleted
 {
-    public string BusinessConnectionId { get; set; }
+    public required string BusinessConnectionId { get; init; }
 
-    public Chat Chat { get; set; }
+    public required Chat Chat { get; init; }
 
-    public int[] MessageIds { get; set; }
+    public required int[] MessageIds { get; init; }
 }

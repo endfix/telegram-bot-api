@@ -2,24 +2,25 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class ChatInviteLink
 {
-    public string InviteLink { get; set; }
+    public required string InviteLink { get; init; }
 
-    public User Creator { get; set; }
+    public required User Creator { get; init; }
 
-    public bool CreatesJoinRequest { get; set; }
+    public required bool CreatesJoinRequest { get; init; }
 
-    public bool IsPrimary { get; set; }
-    public bool IsRevoked { get; set; }
+    public required bool IsPrimary { get; init; }
 
-    public string Name { get; set; }
+    public required bool IsRevoked { get; init; }
 
-    public int ExpireDate { get; set; }
+    public string? Name { get; init; }
 
-    public int MemberLimit { get; set; }
+    public int? ExpireDate { get; init; }
 
-    public int PendingJoinRequestCount { get; set; }
+    public int? MemberLimit { get; init; }
 
-    public int SubscriptionPeriod { get; set; }
+    public int? PendingJoinRequestCount { get; init; }
 
-    public int SubscriptionPrice { get; set; }
+    public int? SubscriptionPeriod { get; init; }
+
+    public int? SubscriptionPrice { get; init; }
 }

@@ -2,15 +2,15 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class BusinessConnection
 {
-    public string Id { get; set; }
+    public required string Id { get; init; }
 
-    public User User { get; set; }
+    public required User User { get; init; }
 
-    public int UserChatId { get; set; }
+    public required int UserChatId { get; init; }
 
-    public int Date { get; set; }
+    public required int Date { get; init; }
 
-    public BusinessBotRights Rights { get; set; }
+    public BusinessBotRights? Rights { get; init; }
 
-    public bool IsEnabled { get; set; }
+    public required bool IsEnabled { get; init; }
 }

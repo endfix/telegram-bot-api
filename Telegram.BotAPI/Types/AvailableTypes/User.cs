@@ -2,33 +2,33 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class User
 {
-    public long Id { get; set; }
+    public required long Id { get; init; }
 
-    public bool IsBot { get; set; }
+    public required bool IsBot { get; init; }
 
-    public string FirstName { get; set; }
+    public required string FirstName { get; init; }
 
-    public string LastName { get; set; }
+    public string? LastName { get; init; }
 
-    public string Username { get; set; }
+    public string? Username { get; init; }
 
-    public string LanguageCode { get; set; }
+    public string? LanguageCode { get; init; }
 
-    public bool IsPremium { get; set; }
+    public bool? IsPremium { get; init; }
 
-    public bool AddedToAttachmentMenu { get; set; }
+    public bool? AddedToAttachmentMenu { get; init; }
 
-    public bool CanJoinGroups { get; set; }
+    public bool? CanJoinGroups { get; init; }
 
-    public bool CanReadAllGroupMessages { get; set; }
+    public bool? CanReadAllGroupMessages { get; init; }
 
-    public bool SupportsInlineQueries { get; set; }
+    public bool? SupportsInlineQueries { get; init; }
 
-    public bool CanConnectToBusiness { get; set; }
+    public bool? CanConnectToBusiness { get; init; }
 
-    public bool HasMainWebApp { get; set; }
+    public bool? HasMainWebApp { get; init; }
 
-    public bool HasTopicsEnabled { get; set; }
+    public bool? HasTopicsEnabled { get; init; }
 
-    public bool AllowsUsersToCreateTopics { get; set; }
+    public bool? AllowsUsersToCreateTopics { get; init; }
 }

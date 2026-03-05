@@ -2,31 +2,33 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class ChatPermissions
 {
-    public bool CanSendMessages { get; set; }
+    public bool? CanSendMessages { get; init; }
 
-    public bool CanSendAudios { get; set; }
+    public bool? CanSendAudios { get; init; }
 
-    public bool CanSendDocuments { get; set; }
+    public bool? CanSendDocuments { get; init; }
 
-    public bool CanSendPhotos { get; set; }
+    public bool? CanSendPhotos { get; init; }
 
-    public bool CanSendVideos { get; set; }
+    public bool? CanSendVideos { get; init; }
 
-    public bool CanSendVideoNotes { get; set; }
+    public bool? CanSendVideoNotes { get; init; }
 
-    public bool CanSendVoiceNotes { get; set; }
+    public bool? CanSendVoiceNotes { get; init; }
 
-    public bool CanSendPolls { get; set; }
+    public bool? CanSendPolls { get; init; }
 
-    public bool CanSendOtherMessages { get; set; }
+    public bool? CanSendOtherMessages { get; init; }
 
-    public bool CanAddWebPagePreviews { get; set; }
+    public bool? CanAddWebPagePreviews { get; init; }
 
-    public bool CanChangeInfo { get; set; }
+    public bool? CanEditTag { get; init; }
 
-    public bool CanInviteUsers { get; set; }
+    public bool? CanChangeInfo { get; init; }
 
-    public bool CanPinMessages { get; set; }
+    public bool? CanInviteUsers { get; init; }
 
-    public bool CanManageTopics { get; set; }
+    public bool? CanPinMessages { get; init; }
+
+    public bool? CanManageTopics { get; init; }
 }

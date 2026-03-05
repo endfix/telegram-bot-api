@@ -4,19 +4,19 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class Chat
 {
-    public long Id { get; set; }
+    public required long Id { get; init; }
 
-    public ChatTypes Type { get; set; }
+    public required ChatTypes Type { get; init; }
 
-    public string Title { get; set; }
+    public string? Title { get; init; }
 
-    public string Username { get; set; }
+    public string? Username { get; init; }
 
-    public string FirstName { get; set; }
+    public string? FirstName { get; init; }
 
-    public string LastName { get; set; }
+    public string? LastName { get; init; }
 
-    public bool IsForum { get; set; }
+    public bool? IsForum { get; init; }
 
-    public bool IsDirectMessages { get; set; }
+    public bool? IsDirectMessages { get; init; }
 }

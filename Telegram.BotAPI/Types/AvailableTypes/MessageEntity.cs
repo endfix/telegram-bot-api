@@ -2,17 +2,21 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class MessageEntity
 {
-    public string Type { get; set; }
+    public required string Type { get; init; }
 
-    public int Offset { get; set; }
+    public required int Offset { get; init; }
 
-    public int Length { get; set; }
+    public required int Length { get; init; }
 
-    public string Url { get; set; }
+    public string? Url { get; init; }
 
-    public User User { get; set; }
+    public User? User { get; init; }
 
-    public string Language { get; set; }
+    public string? Language { get; init; }
 
-    public string CustomEmojiId { get; set; }
+    public string? CustomEmojiId { get; init; }
+
+    public int? UnixTime { get; init; }
+
+    public string? DateTimeFormat { get; init; }
 }

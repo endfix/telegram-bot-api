@@ -16,11 +16,11 @@ public sealed class UniqueGift
 
     public required UniqueGiftBackdrop Backdrop { get; set; }
 
-    public bool? IsPremium { get; set; } = null;
+    public bool? IsPremium { get; set; }
 
-    public bool? IsBurned { get; set; } = null;
+    public bool? IsBurned { get; set; }
 
-    public bool? IsFromBlockchain { get; set; } = null;
+    public bool? IsFromBlockchain { get; set; }
 
     public UniqueGiftColors? Colors { get; set; }
 

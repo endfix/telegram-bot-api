@@ -2,11 +2,11 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class ChatBoostRemoved
 {
-    public Chat Chat { get; set; }
+    public required Chat Chat { get; init; }
 
-    public string BoostId { get; set; }
+    public required string BoostId { get; init; }
 
-    public int RemoveDate { get; set; }
+    public required int RemoveDate { get; init; }
 
-    public ChatBoostSource Source { get; set; }
+    public required ChatBoostSource Source { get; init; }
 }

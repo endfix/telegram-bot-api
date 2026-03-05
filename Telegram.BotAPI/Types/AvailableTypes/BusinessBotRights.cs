@@ -2,31 +2,31 @@
 
 public sealed class BusinessBotRights
 {
-    public bool CanReply { get; set; }
+    public bool? CanReply { get; init; }
 
-    public bool CanReadMessages { get; set; }
+    public bool? CanReadMessages { get; init; }
 
-    public bool CanDeleteSentMessages { get; set; }
+    public bool? CanDeleteSentMessages { get; init; }
 
-    public bool CanDeleteAllMessages { get; set; }
+    public bool? CanDeleteAllMessages { get; init; }
 
-    public bool CanEditName { get; set; }
+    public bool? CanEditName { get; init; }
 
-    public bool CanEditBio { get; set; }
+    public bool? CanEditBio { get; init; }
 
-    public bool CanEditProfilePhoto { get; set; }
+    public bool? CanEditProfilePhoto { get; init; }
 
-    public bool CanEditUsername { get; set; }
+    public bool? CanEditUsername { get; init; }
 
-    public bool CanChangeGiftSettings { get; set; }
+    public bool? CanChangeGiftSettings { get; init; }
 
-    public bool CanViewGiftsAndStars { get; set; }
+    public bool? CanViewGiftsAndStars { get; init; }
 
-    public bool CanConvertGiftsToStars { get; set; }
+    public bool? CanConvertGiftsToStars { get; init; }
 
-    public bool CanTransferAndUpgradeGifts { get; set; }
+    public bool? CanTransferAndUpgradeGifts { get; init; }
 
-    public bool CanTransferStars { get; set; }
+    public bool? CanTransferStars { get; init; }
 
-    public bool CanManageStories { get; set; }
+    public bool? CanManageStories { get; init; }
 }

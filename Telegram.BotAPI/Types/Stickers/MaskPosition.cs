@@ -4,11 +4,11 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class MaskPosition
 {
-    public MaskPositionPoints Point { get; set; }
+    public required MaskPositionPoints Point { get; init; }
 
-    public float XShift { get; set; }
+    public required float XShift { get; init; }
 
-    public float YShift { get; set; }
+    public required float YShift { get; init; }
 
-    public float Scale { get; set; }
+    public required float Scale { get; init; }
 }

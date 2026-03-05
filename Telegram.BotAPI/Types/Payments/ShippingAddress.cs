@@ -2,15 +2,15 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class ShippingAddress
 {
-    public string CountryCode { get; set; }
+    public required string CountryCode { get; init; }
 
-    public string State { get; set; }
+    public required string State { get; init; }
 
-    public string City { get; set; }
+    public required string City { get; init; }
 
-    public string StreetLine1 { get; set; }
+    public required string StreetLine1 { get; init; }
 
-    public string StreetLine2 { get; set; }
+    public required string StreetLine2 { get; init; }
 
-    public string PostCode { get; set; }
+    public required string PostCode { get; init; }
 }

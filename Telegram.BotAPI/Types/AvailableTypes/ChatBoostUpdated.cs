@@ -2,7 +2,7 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class ChatBoostUpdated
 {
-    public Chat Chat { get; set; }
+    public required Chat Chat { get; init; }
 
-    public ChatBoost Boost { get; set; }
+    public required ChatBoost Boost { get; init; }
 }

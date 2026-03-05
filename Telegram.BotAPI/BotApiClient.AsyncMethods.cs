@@ -8,29 +8,29 @@ namespace Telegram.BotAPI;
 public partial class BotApiClient
 {
     #region Getting updates
-    public async Task<ApiResponse<Update[]>> GetUpdatesAsync(GetUpdatesParameters parameters = null, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<Update[]>> GetUpdatesAsync(GetUpdatesParameters? parameters = null, CancellationToken cancellationToken = default)
     {
         return await RequestAsync<Update[]>(new ApiRequest("getUpdates", parameters), cancellationToken);
     }
 
-    public async Task<ApiResponse<bool>> SetWebhookAsync(SetWebhookParameters parameters = null, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<bool>> SetWebhookAsync(SetWebhookParameters? parameters = null, CancellationToken cancellationToken = default)
     {
         return await RequestAsync<bool>(new ApiRequest("setWebhook", parameters), cancellationToken);
     }
 
-    public async Task<ApiResponse<bool>> DeleteWebhookAsync(DeleteWebhookParameters parameters = null, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<bool>> DeleteWebhookAsync(DeleteWebhookParameters? parameters = null, CancellationToken cancellationToken = default)
     {
         return await RequestAsync<bool>(new ApiRequest("deleteWebhook", parameters), cancellationToken);
     }
 
-    public async Task<ApiResponse<WebhookInfo>> GetWebhookInfoAsync(GetWebhookInfoParameters parameters = null, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<WebhookInfo>> GetWebhookInfoAsync(GetWebhookInfoParameters? parameters = null, CancellationToken cancellationToken = default)
     {
         return await RequestAsync<WebhookInfo>(new ApiRequest("getWebhookInfo", parameters), cancellationToken);
     }
     #endregion
 
     #region Available methods
-    public async Task<ApiResponse<User>> GetMeAsync(GetMeParameters parameters = null, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<User>> GetMeAsync(GetMeParameters? parameters = null, CancellationToken cancellationToken = default)
     {
         return await RequestAsync<User>(new ApiRequest("getMe", parameters), cancellationToken);
     }
@@ -203,6 +203,11 @@ public partial class BotApiClient
     public async Task<ApiResponse<bool>> SetChatAdministratorCustomTitleAsync(SetChatAdministratorCustomTitleParameters parameters, CancellationToken cancellationToken = default)
     {
         return await RequestAsync<bool>(new ApiRequest("setChatAdministratorCustomTitle", parameters), cancellationToken);
+    }
+
+    public async Task<ApiResponse<bool>> SetChatMemberTagAsync(SetChatMemberTagParameters parameters, CancellationToken cancellationToken = default)
+    {
+        return await RequestAsync<bool>(new ApiRequest("setChatMemberTag", parameters), cancellationToken);
     }
 
     public async Task<ApiResponse<bool>> BanChatSenderChatAsync(BanChatSenderChatParameters parameters, CancellationToken cancellationToken = default)
@@ -415,12 +420,12 @@ public partial class BotApiClient
         return await RequestAsync<bool>(new ApiRequest("setMyCommands", parameters), cancellationToken);
     }
 
-    public async Task<ApiResponse<bool>> DeleteMyCommandsAsync(DeleteMyCommandsParameters parameters = null, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<bool>> DeleteMyCommandsAsync(DeleteMyCommandsParameters? parameters = null, CancellationToken cancellationToken = default)
     {
         return await RequestAsync<bool>(new ApiRequest("deleteMyCommands", parameters), cancellationToken);
     }
 
-    public async Task<ApiResponse<BotCommand[]>> GetMyCommandsAsync(GetMyCommandsParameters parameters = null, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<BotCommand[]>> GetMyCommandsAsync(GetMyCommandsParameters? parameters = null, CancellationToken cancellationToken = default)
     {
         return await RequestAsync<BotCommand[]>(new ApiRequest("getMyCommands", parameters), cancellationToken);
     }
@@ -470,7 +475,7 @@ public partial class BotApiClient
         return await RequestAsync<bool>(new ApiRequest("setChatMenuButton", parameters), cancellationToken);
     }
 
-    public async Task<ApiResponse<MenuButton>> GetChatMenuButtonAsync(GetChatMenuButtonParameters parameters, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<MenuButton>> GetChatMenuButtonAsync(GetChatMenuButtonParameters? parameters = null, CancellationToken cancellationToken = default)
     {
         return await RequestAsync<MenuButton>(new ApiRequest("getChatMenuButton", parameters), cancellationToken);
     }

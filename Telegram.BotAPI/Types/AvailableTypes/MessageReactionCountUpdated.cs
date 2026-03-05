@@ -2,11 +2,11 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class MessageReactionCountUpdated
 {
-    public Chat Chat { get; set; }
+    public required Chat Chat { get; init; }
 
-    public int MessageId { get; set; }
+    public required int MessageId { get; init; }
 
-    public int Date { get; set; }
+    public required int Date { get; init; }
 
-    public ReactionCount[] Reactions { get; set; }
+    public required ReactionCount[] Reactions { get; init; }
 }

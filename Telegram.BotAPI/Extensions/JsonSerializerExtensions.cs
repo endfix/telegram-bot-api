@@ -7,18 +7,29 @@ namespace Telegram.BotAPI.Extensions;
 
 public static class JsonSerializerExtensions
 {
-    private static readonly JsonSerializerOptions _option = new()
+    public static readonly JsonSerializerOptions Options = new()
     {
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
         PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
         Converters = {
             new JsonStringEnumConverter(namingPolicy: JsonNamingPolicy.SnakeCaseLower),
-            new MaybeInaccessibleMessageConverter()
+            new BackgroundFillConverter(),
+            new BackgroundTypeConverter(),
+            new BotCommandScopeConverter(),
+            new ChatBoostSourceConverter(),
+            new ChatMemberConverter(),
+            new InputMediaConverter(),
+            new MaybeInaccessibleMessageConverter(),
+            new MenuButtonConverter(),
+            new MessageOriginConverter(),
+            new PaidMediaConverter(),
+            new PassportElementErrorConverter(),
+            new ReactionTypeConverter()
         }
     };
 
-    private static readonly JsonSerializerOptions _indentedOption = new JsonSerializerOptions(_option)
+    public static readonly JsonSerializerOptions IndentedOptions = new JsonSerializerOptions(Options)
     {
         WriteIndented = true,
         IndentCharacter = ' ',
@@ -26,8 +37,8 @@ public static class JsonSerializerExtensions
     };
 
     public static T? Deserialize<T>(this string json) 
-        => string.IsNullOrEmpty(json) ? default : JsonSerializer.Deserialize<T>(json, _option);
+        => string.IsNullOrEmpty(json) ? default : JsonSerializer.Deserialize<T>(json, Options);
 
     public static string Serialize(this object obj, bool writeIndented = false) 
-        => obj is null ? string.Empty : JsonSerializer.Serialize(obj, writeIndented ? _indentedOption : _option);
+        => obj is null ? string.Empty : JsonSerializer.Serialize(obj, writeIndented ? IndentedOptions : Options);
 }

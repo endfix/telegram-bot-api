@@ -2,9 +2,9 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class PollOption
 {
-    public string Text { get; set; }
+    public required string Text { get; init; }
 
-    public MessageEntity[] TextEntities { get; set; }
+    public MessageEntity[]? TextEntities { get; init; }
 
-    public int VoterCount { get; set; }
+    public required int VoterCount { get; init; }
 }

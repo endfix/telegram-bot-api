@@ -2,17 +2,17 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class PreCheckoutQuery
 {
-    public string Id { get; set; }
+    public required string Id { get; init; }
 
-    public User From { get; set; }
+    public required User From { get; init; }
 
-    public string Currency { get; set; }
+    public required string Currency { get; init; }
 
-    public int TotalAmount { get; set; }
+    public required int TotalAmount { get; init; }
 
-    public string InvoicePayload { get; set; }
+    public required string InvoicePayload { get; init; }
 
-    public string ShippingOptionId { get; set; }
+    public string? ShippingOptionId { get; init; }
 
-    public OrderInfo OrderInfo { get; set; }
+    public OrderInfo? OrderInfo { get; init; }
 }

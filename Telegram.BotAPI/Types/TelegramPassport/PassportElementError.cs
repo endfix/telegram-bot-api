@@ -1,22 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
 using Telegram.BotAPI.Enums;
 
 namespace Telegram.BotAPI.Types;
 
-[JsonPolymorphic(TypeDiscriminatorPropertyName = "source")]
-[JsonDerivedType(typeof(PassportElementErrorDataField), "data")]
-[JsonDerivedType(typeof(PassportElementErrorFrontSide), "front_side")]
-[JsonDerivedType(typeof(PassportElementErrorReverseSide), "reverse_side")]
-[JsonDerivedType(typeof(PassportElementErrorSelfie), "selfie")]
-[JsonDerivedType(typeof(PassportElementErrorFile), "file")]
-[JsonDerivedType(typeof(PassportElementErrorFiles), "files")]
-[JsonDerivedType(typeof(PassportElementErrorTranslationFile), "translation_file")]
-[JsonDerivedType(typeof(PassportElementErrorTranslationFiles), "translation_files")]
-[JsonDerivedType(typeof(PassportElementErrorUnspecified), "unspecified")]
 public abstract class PassportElementError
 {
-    [JsonIgnore]
     public abstract PassportElementErrorSources Source { get; }
 
     public required virtual PassportElementErrorTypes Type { get; init; }

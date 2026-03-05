@@ -4,13 +4,8 @@ using Telegram.BotAPI.Enums;
 
 namespace Telegram.BotAPI.Types;
 
-[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
-[JsonDerivedType(typeof(BackgroundFillSolid), "solid")]
-[JsonDerivedType(typeof(BackgroundFillGradient), "gradient")]
-[JsonDerivedType(typeof(BackgroundFillFreeformGradient), "freeform_gradient")]
 public abstract class BackgroundFill
 {
-    [JsonIgnore]
     public abstract BackgroundFillTypes Type { get; }
 }
 

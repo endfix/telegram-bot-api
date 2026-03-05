@@ -2,35 +2,37 @@
 
 public sealed class ChatAdministratorRights
 {
-    public bool IsAnonymous { get; set; }
+    public required bool IsAnonymous { get; init; }
 
-    public bool CanManageChat { get; set; }
+    public required bool CanManageChat { get; init; }
 
-    public bool CanDeleteMessages { get; set; }
+    public required bool CanDeleteMessages { get; init; }
 
-    public bool CanManageVideoChats { get; set; }
+    public required bool CanManageVideoChats { get; init; }
 
-    public bool CanRestrictMembers { get; set; }
+    public required bool CanRestrictMembers { get; init; }
 
-    public bool CanPromoteMembers { get; set; }
+    public required bool CanPromoteMembers { get; init; }
 
-    public bool CanChangeInfo { get; set; }
+    public required bool CanChangeInfo { get; init; }
 
-    public bool CanInviteUsers { get; set; }
+    public required bool CanInviteUsers { get; init; }
 
-    public bool CanPostStories { get; set; }
+    public required bool CanPostStories { get; init; }
 
-    public bool CanEditStories { get; set; }
+    public required bool CanEditStories { get; init; }
 
-    public bool CanDeleteStories { get; set; }
+    public required bool CanDeleteStories { get; init; }
 
-    public bool CanPostMessages { get; set; }
+    public bool? CanPostMessages { get; init; }
 
-    public bool CanEditMessages { get; set; }
+    public bool? CanEditMessages { get; init; }
 
-    public bool CanPinMessages { get; set; }
+    public bool? CanPinMessages { get; init; }
 
-    public bool CanManageTopics { get; set; }
+    public bool? CanManageTopics { get; init; }
 
-    public bool CanManageDirectMessages { get; set; }
+    public bool? CanManageDirectMessages { get; init; }
+
+    public bool? CanManageTags { get; init; }
 }

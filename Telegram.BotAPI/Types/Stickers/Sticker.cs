@@ -4,33 +4,33 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class Sticker
 {
-    public string FileId { get; set; }
+    public required string FileId { get; init; }
 
-    public string FileUniqueId { get; set; }
+    public required string FileUniqueId { get; init; }
 
-    public StickerTypes Type { get; set; }
+    public required StickerTypes Type { get; init; }
 
-    public int Width { get; set; }
+    public required int Width { get; init; }
 
-    public int Height { get; set; }
+    public required int Height { get; init; }
 
-    public bool IsAnimated { get; set; }
+    public required bool IsAnimated { get; init; }
 
-    public bool IsVideo { get; set; }
+    public required bool IsVideo { get; init; }
 
-    public PhotoSize Thumbnail { get; set; }
+    public PhotoSize? Thumbnail { get; init; }
 
-    public string Emoji { get; set; }
+    public string? Emoji { get; init; }
 
-    public string SetName { get; set; }
+    public string? SetName { get; init; }
 
-    public FileStruct PremiumAnimation { get; set; }
+    public FileStruct? PremiumAnimation { get; init; }
 
-    public MaskPosition MaskPosition { get; set; }
+    public MaskPosition? MaskPosition { get; init; }
 
-    public string CustomEmojiId { get; set; }
+    public string? CustomEmojiId { get; init; }
 
-    public bool NeedsRepainting { get; set; }
+    public bool? NeedsRepainting { get; init; }
 
-    public int FileSize { get; set; }
+    public int? FileSize { get; init; }
 }

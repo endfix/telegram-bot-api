@@ -2,13 +2,13 @@
 
 public sealed class ChosenInlineResult
 {
-    public string ResultId { get; set; }
+    public required string ResultId { get; init; }
 
-    public User From { get; set; }
+    public required User From { get; init; }
 
-    public Location Location { get; set; }
+    public Location? Location { get; init; }
 
-    public string InlineMessageId { get; set; }
+    public string? InlineMessageId { get; init; }
 
-    public string Query { get; set; }
+    public required string Query { get; init; }
 }

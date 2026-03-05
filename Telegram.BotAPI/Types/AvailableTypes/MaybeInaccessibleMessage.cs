@@ -2,14 +2,9 @@
 
 public abstract class MaybeInaccessibleMessage
 {
-    //
-}
+    public required virtual Chat Chat { get; init; }
 
-public sealed class InaccessibleMessage : MaybeInaccessibleMessage
-{
-    public Chat Chat { get; set; }
+    public required virtual int MessageId { get; init; }
 
-    public int MessageId { get; set; }
-
-    public int Date { get; set; }
+    public required virtual int Date { get; init; }
 }

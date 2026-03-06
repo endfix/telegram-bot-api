@@ -2,5 +2,5 @@
 
 public sealed class RemoveUserVerificationParameters : ApiRequestParameters
 {
-    public long UserId { get; set; }
+    public required long UserId { get; init; }
 }

@@ -4,7 +4,7 @@ namespace Telegram.BotAPI.Parameters;
 
 public sealed class SetStickerMaskPositionParameters : ApiRequestParameters
 {
-    public string Sticker { get; set; }
+    public required string Sticker { get; init; }
 
-    public MaskPosition MaskPosition { get; set; }
+    public MaskPosition? MaskPosition { get; init; }
 }

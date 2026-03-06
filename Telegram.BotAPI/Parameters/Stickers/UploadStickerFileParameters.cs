@@ -1,21 +1,13 @@
-﻿using Telegram.BotAPI.Types;
+﻿using Telegram.BotAPI.Enums;
+using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Parameters;
 
 public sealed class UploadStickerFileParameters : ApiRequestParameters
 {
-    public long UserId { get; set; }
+    public required long UserId { get; init; }
 
-    public InputFile Sticker { get; set; }
+    public required InputFile Sticker { get; init; }
 
-    public string StickerFormat { get; set; }
-
-    public static class Formats
-    {
-        public const string STATIC = "static";
-
-        public const string ANIMATED = "animated";
-
-        public const string VIDEO = "video";
-    }
+    public required StickerFormat StickerFormat { get; init; }
 }

@@ -1,12 +1,14 @@
-﻿namespace Telegram.BotAPI.Parameters;
+﻿using Telegram.BotAPI.Enums;
+
+namespace Telegram.BotAPI.Parameters;
 
 public sealed class SetStickerSetThumbnailParameters : ApiRequestParameters
 {
-    public string Name { get; set; }
+    public required string Name { get; init; }
 
-    public long UserId { get; set; }
+    public required long UserId { get; init; }
 
-    public object Thumbnail { get; set; }
+    public object? Thumbnail { get; init; }
 
-    public string Format { get; set; }
+    public required StickerFormat Format { get; init; }
 }

@@ -2,15 +2,15 @@
 
 public sealed class EditChatInviteLinkParameters : ApiRequestParameters
 {
-    public object ChatId { get; set; }
+    public required object ChatId { get; init; }
 
-    public string InviteLink { get; set; }
+    public required string InviteLink { get; init; }
 
-    public string Name { set; get; }
+    public string? Name { get; init; }
 
-    public int ExpireDate { set; get; }
+    public int? ExpireDate { get; init; }
 
-    public int MemberLimit { get; set; }
+    public int? MemberLimit { get; init; }
 
-    public bool CreatesJoinRequest { set; get; }
+    public bool? CreatesJoinRequest { get; init; }
 }

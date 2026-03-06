@@ -1,40 +1,41 @@
-﻿using Telegram.BotAPI.Types;
+﻿using System.Collections.Generic;
+using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Parameters;
 
 public sealed class SendDocumentParameters : ApiRequestParameters
 {
-    public string BusinessConnectionId { get; set; }
+    public string? BusinessConnectionId { get; init; }
 
-    public object ChatId { get; set; }
+    public required object ChatId { get; init; }
 
-    public int MessageThreadId { get; set; }
+    public int? MessageThreadId { get; init; }
 
-    public int DirectMessagesTopicId { get; set; }
+    public int? DirectMessagesTopicId { get; init; }
 
-    public object Document { get; set; }
+    public required object Document { get; init; }
 
-    public object Thumbnail { get; set; }
+    public object? Thumbnail { get; init; }
 
-    public string Caption { get; set; }
+    public string? Caption { get; init; }
 
-    public string ParseMode { get; set; }
+    public string? ParseMode { get; init; }
 
-    public MessageEntity[] CaptionEntities { get; set; }
+    public IReadOnlyList<MessageEntity>? CaptionEntities { get; init; }
 
-    public bool DisableContentTypeDetection { get; set; }
+    public bool? DisableContentTypeDetection { get; init; }
 
-    public bool DisableNotification { get; set; }
+    public bool? DisableNotification { get; init; }
 
-    public bool ProtectContent { get; set; }
+    public bool? ProtectContent { get; init; }
 
-    public bool AllowPaidBroadcast { get; set; }
+    public bool? AllowPaidBroadcast { get; init; }
 
-    public string MessageEffectId { get; set; }
+    public string? MessageEffectId { get; init; }
 
-    public SuggestedPostParameters SuggestedPostParameters { get; set; }
+    public SuggestedPostParameters? SuggestedPostParameters { get; init; }
 
-    public ReplyParameters ReplyParameters { get; set; }
+    public ReplyParameters? ReplyParameters { get; init; }
 
-    public ReplyMarkup ReplyMarkup { get; set; }
+    public ReplyMarkup? ReplyMarkup { get; init; }
 }

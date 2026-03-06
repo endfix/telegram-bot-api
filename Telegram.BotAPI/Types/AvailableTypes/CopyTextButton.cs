@@ -2,5 +2,5 @@
 
 public sealed class CopyTextButton
 {
-    public string Text { get; set; }
+    public required string Text { get; init; }
 }

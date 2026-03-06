@@ -2,5 +2,5 @@
 
 public sealed class GetFileParameters : ApiRequestParameters
 {
-    public string FileId { get; set; }
+    public required string FileId { get; init; }
 }

@@ -1,18 +1,19 @@
-﻿using Telegram.BotAPI.Types;
+﻿using System.Collections.Generic;
+using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Parameters;
 
 public sealed class SendMessageDraftParameters : ApiRequestParameters
 {
-    public required long ChatId { get; set; }
+    public required long ChatId { get; init; }
 
-    public int? MessageThreadId { get; set; }
+    public int? MessageThreadId { get; init; }
 
-    public required int DraftId { get; set; }
+    public required int DraftId { get; init; }
 
-    public required string Text { get; set; }
+    public required string Text { get; init; }
 
-    public string? ParseMode { get; set; }
+    public string? ParseMode { get; init; }
 
-    public MessageEntity[]? Entities { get; set; }
+    public IReadOnlyList<MessageEntity>? Entities { get; init; }
 }

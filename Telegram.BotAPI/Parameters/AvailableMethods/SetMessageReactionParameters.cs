@@ -1,14 +1,15 @@
-﻿using Telegram.BotAPI.Types;
+﻿using System.Collections.Generic;
+using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Parameters;
 
 public sealed class SetMessageReactionParameters : ApiRequestParameters
 {
-    public object ChatId { get; set; }
+    public required object ChatId { get; init; }
 
-    public int MessageId { get; set; }
+    public required int MessageId { get; init; }
 
-    public ReactionType[] Reaction { get; set; }
+    public IReadOnlyList<ReactionType>? Reaction { get; init; }
 
-    public bool IsBig { get; set; }
+    public bool? IsBig { get; init; }
 }

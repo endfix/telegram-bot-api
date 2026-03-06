@@ -1,68 +1,69 @@
-﻿using Telegram.BotAPI.Types;
+﻿using System.Collections.Generic;
+using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Parameters;
 
 public sealed class SendInvoiceParameters : ApiRequestParameters
 {
-    public object ChatId { get; set; }
+    public required object ChatId { get; init; }
 
-    public int MessageThreadId { get; set; }
+    public int? MessageThreadId { get; init; }
 
-    public int DirectMessagesTopicId { get; set; }
+    public int? DirectMessagesTopicId { get; init; }
 
-    public string Title { get; set; }
+    public required string Title { get; init; }
 
-    public string Description { get; set; }
+    public required string Description { get; init; }
 
-    public string Payload { get; set; }
+    public required string Payload { get; init; }
 
-    public string ProviderToken { get; set; }
+    public string? ProviderToken { get; init; }
 
-    public string Currency { get; set; }
+    public required string Currency { get; init; }
 
-    public LabeledPrice[] Prices { get; set; }
+    public required IReadOnlyList<LabeledPrice> Prices { get; init; }
 
-    public int MaxTipAmount { get; set; }
+    public int? MaxTipAmount { get; init; }
 
-    public int SuggestedTipAmounts { get; set; }
+    public int? SuggestedTipAmounts { get; init; }
 
-    public string StartParameter { get; set; }
+    public string? StartParameter { get; init; }
 
-    public string ProviderData { get; set; }
+    public string? ProviderData { get; init; }
 
-    public string PhotoUrl { get; set; }
+    public string? PhotoUrl { get; init; }
 
-    public string PhotoSize { get; set; }
+    public string? PhotoSize { get; init; }
 
-    public string PhotoWidth { get; set; }
+    public string? PhotoWidth { get; init; }
 
-    public string PhotoHeight { get; set; }
+    public string? PhotoHeight { get; init; }
 
-    public bool NeedName { get; set; }
+    public bool? NeedName { get; init; }
 
-    public bool NeedPhoneNumber { get; set; }
+    public bool? NeedPhoneNumber { get; init; }
 
-    public bool NeedEmail { get; set; }
+    public bool? NeedEmail { get; init; }
 
-    public bool NeedShippingAddress { get; set; }
+    public bool? NeedShippingAddress { get; init; }
 
-    public bool SendPhoneNumberToProvider { get; set; }
+    public bool? SendPhoneNumberToProvider { get; init; }
 
-    public bool SendEmailToProvider { get; set; }
+    public bool? SendEmailToProvider { get; init; }
 
-    public bool IsFlexible { get; set; }
+    public bool? IsFlexible { get; init; }
 
-    public bool DisableNotification { get; set; }
+    public bool? DisableNotification { get; init; }
 
-    public bool ProtectContent { get; set; }
+    public bool? ProtectContent { get; init; }
 
-    public bool AllowPaidBroadcast { get; set; }
+    public bool? AllowPaidBroadcast { get; init; }
 
-    public string MessageEffectId { get; set; }
+    public string? MessageEffectId { get; init; }
 
-    public SuggestedPostParameters SuggestedPostParameters { get; set; }
+    public SuggestedPostParameters? SuggestedPostParameters { get; init; }
 
-    public ReplyParameters ReplyParameters { get; set; }
+    public ReplyParameters? ReplyParameters { get; init; }
 
-    public InlineKeyboardMarkup ReplyMarkup { get; set; }
+    public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 }

@@ -2,11 +2,11 @@
 
 public sealed class GetGameHighScoresParameters : ApiRequestParameters
 {
-    public long UserId { get; set; }
+    public required long UserId { get; init; }
 
-    public long ChatId { get; set; }
+    public long? ChatId { get; init; }
 
-    public long MessageId { get; set; }
+    public long? MessageId { get; init; }
 
-    public string InlineMessageId { get; set; }
+    public string? InlineMessageId { get; init; }
 }

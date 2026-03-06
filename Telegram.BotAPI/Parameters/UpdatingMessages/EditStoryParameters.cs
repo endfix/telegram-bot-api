@@ -1,20 +1,21 @@
-﻿using Telegram.BotAPI.Types;
+﻿using System.Collections.Generic;
+using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Parameters;
 
 public sealed class EditStoryParameters : ApiRequestParameters
 {
-    public string BusinessConnectionId { get; set; }
+    public required string BusinessConnectionId { get; init; }
 
-    public int StoryId { get; set; }
+    public required int StoryId { get; init; }
 
-    public InputStoryContent Content { get; set; }
+    public required InputStoryContent Content { get; init; }
 
-    public string Caption { get; set; }
+    public string? Caption { get; init; }
 
-    public string ParseMode { get; set; }
+    public string? ParseMode { get; init; }
 
-    public MessageEntity[] CaptionEntities { get; set; }
+    public IReadOnlyList<MessageEntity>? CaptionEntities { get; init; }
 
-    public StoryArea Areas { get; set; }
+    public IReadOnlyList<StoryArea>? Areas { get; init; }
 }

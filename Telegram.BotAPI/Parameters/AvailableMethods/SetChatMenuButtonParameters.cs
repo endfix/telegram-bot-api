@@ -4,7 +4,7 @@ namespace Telegram.BotAPI.Parameters;
 
 public sealed class SetChatMenuButtonParameters : ApiRequestParameters
 {
-    public long ChatId { get; set; }
+    public long? ChatId { get; init; }
 
-    public MenuButton MenuButton { get; set; }
+    public MenuButton? MenuButton { get; init; }
 }

@@ -2,11 +2,11 @@
 
 public sealed class UpgradeGiftParameters : ApiRequestParameters
 {
-    public string BusinessConnectionId { get; set; }
+    public required string BusinessConnectionId { get; init; }
 
-    public string OwnedGiftId { get; set; }
+    public required string OwnedGiftId { get; init; }
 
-    public bool KeepOriginalDetails { get; set; }
+    public bool? KeepOriginalDetails { get; init; }
 
-    public int StarCount { get; set; }
+    public int? StarCount { get; init; }
 }

@@ -4,23 +4,23 @@ namespace Telegram.BotAPI.Parameters;
 
 public sealed class SendGameParameters : ApiRequestParameters
 {
-    public string BusinessConnectionId { get; set; }
+    public string? BusinessConnectionId { get; init; }
 
-    public long ChatId { get; set; }
+    public required long ChatId { get; init; }
 
-    public int MessageThreadId { get; set; }
+    public int? MessageThreadId { get; init; }
 
-    public string GameShortName { get; set; }
+    public required string GameShortName { get; init; }
 
-    public bool DisableNotification { get; set; }
+    public bool? DisableNotification { get; init; }
 
-    public bool ProtectContent { get; set; }
+    public bool? ProtectContent { get; init; }
 
-    public bool AllowPaidBroadcast { get; set; }
+    public bool? AllowPaidBroadcast { get; init; }
 
-    public string MessageEffectId { get; set; }
+    public string? MessageEffectId { get; init; }
 
-    public ReplyParameters ReplyParameters { get; set; }
+    public ReplyParameters? ReplyParameters { get; init; }
 
-    public InlineKeyboardMarkup ReplyMarkup { get; set; }
+    public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 }

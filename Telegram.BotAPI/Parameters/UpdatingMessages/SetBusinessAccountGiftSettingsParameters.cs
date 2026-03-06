@@ -4,9 +4,9 @@ namespace Telegram.BotAPI.Parameters;
 
 public sealed class SetBusinessAccountGiftSettingsParameters : ApiRequestParameters
 {
-    public string BusinessConnectionId { get; set; }
+    public required string BusinessConnectionId { get; init; }
 
-    public bool ShowGiftButton { get; set; }
+    public required bool ShowGiftButton { get; init; }
 
-    public AcceptedGiftTypes AcceptedGiftTypes { get; set; }
+    public required AcceptedGiftTypes AcceptedGiftTypes { get; init; }
 }

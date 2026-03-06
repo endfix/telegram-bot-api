@@ -2,7 +2,7 @@
 
 public sealed class UnbanChatSenderChatParameters : ApiRequestParameters
 {
-    public object ChatId { get; set; }
+    public required object ChatId { get; init; }
 
-    public long SenderChatId { get; set; }
+    public required long SenderChatId { get; init; }
 }

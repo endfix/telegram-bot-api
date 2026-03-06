@@ -2,9 +2,9 @@
 
 public sealed class UnbanChatMemberParameters : ApiRequestParameters
 {
-    public object ChatId { get; set; }
+    public required object ChatId { get; init; }
 
-    public long UserId { get; set; }
+    public required long UserId { get; init; }
 
-    public bool OnlyIfBanned { get; set; }
+    public bool? OnlyIfBanned { get; init; }
 }

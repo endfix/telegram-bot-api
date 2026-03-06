@@ -2,7 +2,7 @@
 
 public sealed class SetBusinessAccountUsernameParameters : ApiRequestParameters
 {
-    public string BusinessConnectionId { get; set; }
+    public required string BusinessConnectionId { get; init; }
 
-    public string Username { get; set; }
+    public string? Username { get; init; }
 }

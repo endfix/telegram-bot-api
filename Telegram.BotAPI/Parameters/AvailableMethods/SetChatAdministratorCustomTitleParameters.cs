@@ -2,9 +2,9 @@
 
 public sealed class SetChatAdministratorCustomTitleParameters : ApiRequestParameters
 {
-    public object ChatId { get; set; }
+    public required object ChatId { get; init; }
 
-    public long UserId { get; set; }
+    public required long UserId { get; init; }
 
-    public string CustomTitle { get; set; }
+    public required string CustomTitle { get; init; }
 }

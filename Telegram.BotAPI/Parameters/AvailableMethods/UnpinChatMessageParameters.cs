@@ -2,9 +2,9 @@
 
 public sealed class UnpinChatMessageParameters : ApiRequestParameters
 {
-    public string BusinessConnectionId { get; set; }
+    public string? BusinessConnectionId { get; init; }
 
-    public object ChatId { get; set; }
+    public required object ChatId { get; init; }
 
-    public int MessageId { get; set; }
+    public int? MessageId { get; init; }
 }

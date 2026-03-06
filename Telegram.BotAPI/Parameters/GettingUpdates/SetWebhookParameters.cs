@@ -1,20 +1,21 @@
-﻿using Telegram.BotAPI.Types;
+﻿using System.Collections.Generic;
+using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Parameters;
 
 public class SetWebhookParameters : ApiRequestParameters
 {
-    public string Url { get; set; }
+    public required string Url { get; init; }
 
-    public InputFile Certificate { get; set; }
+    public InputFile? Certificate { get; init; }
 
-    public string IpAddress { get; set; } = string.Empty;
+    public string? IpAddress { get; init; }
 
-    public int MaxConnections { get; set; }
+    public int? MaxConnections { get; init; }
 
-    public string[] AllowedUpdates { get; set; }
+    public IReadOnlyList<string>? AllowedUpdates { get; init; }
 
-    public bool DropPendingUpdates { get; set; }
+    public bool? DropPendingUpdates { get; init; }
 
-    public string SecretToken { get; set; }
+    public string? SecretToken { get; init; }
 }

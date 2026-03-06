@@ -2,7 +2,7 @@
 
 public sealed class GetChatMemberParameters : ApiRequestParameters
 {
-    public object ChatId { get; set; }
+    public required object ChatId { get; init; }
 
-    public long UserId { get; set; }
+    public required long UserId { get; init; }
 }

@@ -2,9 +2,9 @@
 
 public sealed class ReadBusinessMessageParameters : ApiRequestParameters
 {
-    public string BusinessConnectionId { get; set; }
+    public required string BusinessConnectionId { get; init; }
 
-    public long ChatId { get; set; }
+    public required long ChatId { get; init; }
 
-    public int MessageId { get; set; }
+    public required int MessageId { get; init; }
 }

@@ -2,5 +2,5 @@
 
 public sealed class GetStickerSetParameters : ApiRequestParameters
 {
-    public string Name { get; set; }
+    public required string Name { get; init; }
 }

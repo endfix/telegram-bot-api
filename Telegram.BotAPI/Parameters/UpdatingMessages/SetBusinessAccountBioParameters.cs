@@ -2,7 +2,7 @@
 
 public sealed class SetBusinessAccountBioParameters : ApiRequestParameters
 {
-    public string BusinessConnectionId { get; set; }
+    public required string BusinessConnectionId { get; init; }
 
-    public string Bio { get; set; }
+    public string? Bio { get; init; }
 }

@@ -2,11 +2,11 @@
 
 public sealed class CreateChatSubscriptionInviteLinkParameters : ApiRequestParameters
 {
-    public object ChatId { set; get; }
+    public required object ChatId { get; init; }
 
-    public string Name { set; get; }
+    public string? Name { get; init; }
 
-    public int SubscriptionPeriod { get; set; }
+    public required int SubscriptionPeriod { get; init; }
 
-    public int SubscriptionPrice { get; set; }
+    public required int SubscriptionPrice { get; init; }
 }

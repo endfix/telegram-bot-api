@@ -2,5 +2,5 @@
 
 public sealed class GetChatMenuButtonParameters : ApiRequestParameters
 {
-    public long ChatId { get; set; }
+    public long? ChatId { get; init; }
 }

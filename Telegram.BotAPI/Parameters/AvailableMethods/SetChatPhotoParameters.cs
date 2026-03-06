@@ -4,7 +4,7 @@ namespace Telegram.BotAPI.Parameters;
 
 public sealed class SetChatPhotoParameters : ApiRequestParameters
 {
-    public object ChatId { set; get; }
+    public required object ChatId { get; init; }
 
-    public InputFile Photo { set; get; }
+    public required InputFile Photo { get; init; }
 }

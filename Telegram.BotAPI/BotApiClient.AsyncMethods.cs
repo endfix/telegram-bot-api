@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Telegram.BotAPI.Parameters;
 using Telegram.BotAPI.Types;
@@ -8,12 +9,12 @@ namespace Telegram.BotAPI;
 public partial class BotApiClient
 {
     #region Getting updates
-    public async Task<ApiResponse<Update[]>> GetUpdatesAsync(GetUpdatesParameters? parameters = null, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<IReadOnlyList<Update>>> GetUpdatesAsync(GetUpdatesParameters? parameters = null, CancellationToken cancellationToken = default)
     {
-        return await RequestAsync<Update[]>(new ApiRequest("getUpdates", parameters), cancellationToken);
+        return await RequestAsync<IReadOnlyList<Update>>(new ApiRequest("getUpdates", parameters), cancellationToken);
     }
 
-    public async Task<ApiResponse<bool>> SetWebhookAsync(SetWebhookParameters? parameters = null, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<bool>> SetWebhookAsync(SetWebhookParameters parameters, CancellationToken cancellationToken = default)
     {
         return await RequestAsync<bool>(new ApiRequest("setWebhook", parameters), cancellationToken);
     }
@@ -35,12 +36,12 @@ public partial class BotApiClient
         return await RequestAsync<User>(new ApiRequest("getMe", parameters), cancellationToken);
     }
 
-    public async Task<ApiResponse<bool>> LogOutAsync(LogOutParameters parameters, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<bool>> LogOutAsync(LogOutParameters? parameters = null, CancellationToken cancellationToken = default)
     {
         return await RequestAsync<bool>(new ApiRequest("logOut", parameters), cancellationToken);
     }
 
-    public async Task<ApiResponse<bool>> CloseAsync(CloseParameters parameters, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<bool>> CloseAsync(CloseParameters? parameters = null, CancellationToken cancellationToken = default)
     {
         return await RequestAsync<bool>(new ApiRequest("close", parameters), cancellationToken);
     }
@@ -55,9 +56,9 @@ public partial class BotApiClient
         return await RequestAsync<Message>(new ApiRequest("forwardMessage", parameters), cancellationToken);
     }
 
-    public async Task<ApiResponse<MessageIdStruct[]>> ForwardMessagesAsync(ForwardMessagesParameters parameters, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<IReadOnlyList<MessageIdStruct>>> ForwardMessagesAsync(ForwardMessagesParameters parameters, CancellationToken cancellationToken = default)
     {
-        return await RequestAsync<MessageIdStruct[]>(new ApiRequest("forwardMessages", parameters), cancellationToken);
+        return await RequestAsync<IReadOnlyList<MessageIdStruct>>(new ApiRequest("forwardMessages", parameters), cancellationToken);
     }
 
     public async Task<ApiResponse<MessageIdStruct>> CopyMessageAsync(CopyMessageParameters parameters, CancellationToken cancellationToken = default)
@@ -65,9 +66,9 @@ public partial class BotApiClient
         return await RequestAsync<MessageIdStruct>(new ApiRequest("copyMessage", parameters), cancellationToken);
     }
 
-    public async Task<ApiResponse<MessageIdStruct[]>> CopyMessagesAsync(CopyMessagesParameters parameters, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<IReadOnlyList<MessageIdStruct>>> CopyMessagesAsync(CopyMessagesParameters parameters, CancellationToken cancellationToken = default)
     {
-        return await RequestAsync<MessageIdStruct[]>(new ApiRequest("copyMessages", parameters), cancellationToken);
+        return await RequestAsync<IReadOnlyList<MessageIdStruct>>(new ApiRequest("copyMessages", parameters), cancellationToken);
     }
 
     public async Task<ApiResponse<Message>> SendPhotoAsync(SendPhotoParameters parameters, CancellationToken cancellationToken = default)
@@ -110,9 +111,9 @@ public partial class BotApiClient
         return await RequestAsync<Message>(new ApiRequest("sendPaidMedia", parameters), cancellationToken);
     }
 
-    public async Task<ApiResponse<Message[]>> SendMediaGroupAsync(SendMediaGroupParameters parameters, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<IReadOnlyList<Message>>> SendMediaGroupAsync(SendMediaGroupParameters parameters, CancellationToken cancellationToken = default)
     {
-        return await RequestAsync<Message[]>(new ApiRequest("sendMediaGroup", parameters), cancellationToken);
+        return await RequestAsync<IReadOnlyList<Message>>(new ApiRequest("sendMediaGroup", parameters), cancellationToken);
     }
 
     public async Task<ApiResponse<Message>> SendLocationAsync(SendLocationParameters parameters, CancellationToken cancellationToken = default)
@@ -310,9 +311,9 @@ public partial class BotApiClient
         return await RequestAsync<ChatFullInfo>(new ApiRequest("getChat", parameters), cancellationToken);
     }
 
-    public async Task<ApiResponse<ChatMember[]>> GetChatAdministratorsAsync(GetChatAdministratorsParameters parameters, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<IReadOnlyList<ChatMember>>> GetChatAdministratorsAsync(GetChatAdministratorsParameters parameters, CancellationToken cancellationToken = default)
     {
-        return await RequestAsync<ChatMember[]>(new ApiRequest("getChatAdministrators", parameters), cancellationToken);
+        return await RequestAsync<IReadOnlyList<ChatMember>>(new ApiRequest("getChatAdministrators", parameters), cancellationToken);
     }
 
     public async Task<ApiResponse<int>> GetChatMemberCountAsync(GetChatMemberCountParameters parameters, CancellationToken cancellationToken = default)
@@ -335,9 +336,9 @@ public partial class BotApiClient
         return await RequestAsync<bool>(new ApiRequest("deleteChatStickerSet", parameters), cancellationToken);
     }
 
-    public async Task<ApiResponse<Sticker[]>> GetForumTopicIconStickersAsync(GetForumTopicIconStickersParameters parameters, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<IReadOnlyList<Sticker>>> GetForumTopicIconStickersAsync(GetForumTopicIconStickersParameters parameters, CancellationToken cancellationToken = default)
     {
-        return await RequestAsync<Sticker[]>(new ApiRequest("getForumTopicIconStickers", parameters), cancellationToken);
+        return await RequestAsync<IReadOnlyList<Sticker>>(new ApiRequest("getForumTopicIconStickers", parameters), cancellationToken);
     }
 
     public async Task<ApiResponse<ForumTopic>> CreateForumTopicAsync(CreateForumTopicParameters parameters, CancellationToken cancellationToken = default)
@@ -425,12 +426,12 @@ public partial class BotApiClient
         return await RequestAsync<bool>(new ApiRequest("deleteMyCommands", parameters), cancellationToken);
     }
 
-    public async Task<ApiResponse<BotCommand[]>> GetMyCommandsAsync(GetMyCommandsParameters? parameters = null, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<IReadOnlyList<BotCommand>>> GetMyCommandsAsync(GetMyCommandsParameters? parameters = null, CancellationToken cancellationToken = default)
     {
-        return await RequestAsync<BotCommand[]>(new ApiRequest("getMyCommands", parameters), cancellationToken);
+        return await RequestAsync<IReadOnlyList<BotCommand>>(new ApiRequest("getMyCommands", parameters), cancellationToken);
     }
 
-    public async Task<ApiResponse<bool>> SetMyNameAsync(SetMyNameParameters parameters, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<bool>> SetMyNameAsync(SetMyNameParameters? parameters = null, CancellationToken cancellationToken = default)
     {
         return await RequestAsync<bool>(new ApiRequest("setMyName", parameters), cancellationToken);
     }
@@ -470,7 +471,7 @@ public partial class BotApiClient
         return await RequestAsync<BotShortDescription>(new ApiRequest("removeMyProfilePhoto", parameters), cancellationToken);
     }
 
-    public async Task<ApiResponse<bool>> SetChatMenuButtonAsync(SetChatMenuButtonParameters parameters, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<bool>> SetChatMenuButtonAsync(SetChatMenuButtonParameters? parameters = null, CancellationToken cancellationToken = default)
     {
         return await RequestAsync<bool>(new ApiRequest("setChatMenuButton", parameters), cancellationToken);
     }
@@ -480,76 +481,14 @@ public partial class BotApiClient
         return await RequestAsync<MenuButton>(new ApiRequest("getChatMenuButton", parameters), cancellationToken);
     }
 
-    public async Task<ApiResponse<bool>> SetMyDefaultAdministratorRightsAsync(SetMyDefaultAdministratorRightsParameters parameters, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<bool>> SetMyDefaultAdministratorRightsAsync(SetMyDefaultAdministratorRightsParameters? parameters = null, CancellationToken cancellationToken = default)
     {
         return await RequestAsync<bool>(new ApiRequest("setMyDefaultAdministratorRights", parameters), cancellationToken);
     }
 
-    public async Task<ApiResponse<ChatAdministratorRights>> GetMyDefaultAdministratorRightsAsync(GetMyDefaultAdministratorRightsParameters parameters, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<ChatAdministratorRights>> GetMyDefaultAdministratorRightsAsync(GetMyDefaultAdministratorRightsParameters? parameters = null, CancellationToken cancellationToken = default)
     {
         return await RequestAsync<ChatAdministratorRights>(new ApiRequest("getMyDefaultAdministratorRights", parameters), cancellationToken);
-    }
-    #endregion
-
-    #region Updating messages
-    public async Task<ApiResponse<Message>> EditMessageTextAsync(EditMessageTextParameters parameters, CancellationToken cancellationToken = default)
-    {
-        return await RequestAsync<Message>(new ApiRequest("editMessageText", parameters), cancellationToken);
-    }
-
-    public async Task<ApiResponse<Message>> EditMessageCaptionAsync(EditMessageCaptionParameters parameters, CancellationToken cancellationToken = default)
-    {
-        return await RequestAsync<Message>(new ApiRequest("editMessageCaption", parameters), cancellationToken);
-    }
-
-    public async Task<ApiResponse<Message>> EditMessageMediaAsync(EditMessageMediaParameters parameters, CancellationToken cancellationToken = default)
-    {
-        return await RequestAsync<Message>(new ApiRequest("editMessageMedia", parameters), cancellationToken);
-    }
-
-    public async Task<ApiResponse<Message>> EditMessageLiveLocationAsync(EditMessageLiveLocationParameters parameters, CancellationToken cancellationToken = default)
-    {
-        return await RequestAsync<Message>(new ApiRequest("editMessageLiveLocation", parameters), cancellationToken);
-    }
-
-    public async Task<ApiResponse<Message>> StopMessageLiveLocationAsync(StopMessageLiveLocationParameters parameters, CancellationToken cancellationToken = default)
-    {
-        return await RequestAsync<Message>(new ApiRequest("stopMessageLiveLocation", parameters), cancellationToken);
-    }
-
-    public async Task<ApiResponse<Message>> EditMessageChecklistAsync(EditMessageChecklistParameters parameters, CancellationToken cancellationToken = default)
-    {
-        return await RequestAsync<Message>(new ApiRequest("editMessageChecklist", parameters), cancellationToken);
-    }
-
-    public async Task<ApiResponse<Message>> EditMessageReplyMarkupAsync(EditMessageReplyMarkupParameters parameters, CancellationToken cancellationToken = default)
-    {
-        return await RequestAsync<Message>(new ApiRequest("editMessageReplyMarkup", parameters), cancellationToken);
-    }
-
-    public async Task<ApiResponse<Poll>> StopPollAsync(StopPollParameters parameters, CancellationToken cancellationToken = default)
-    {
-        return await RequestAsync<Poll>(new ApiRequest("stopPoll", parameters), cancellationToken);
-    }
-
-    public async Task<ApiResponse<bool>> ApproveSuggestedPostAsync(ApproveSuggestedPostParameters parameters, CancellationToken cancellationToken = default)
-    {
-        return await RequestAsync<bool>(new ApiRequest("approveSuggestedPost", parameters), cancellationToken);
-    }
-
-    public async Task<ApiResponse<bool>> DeclineSuggestedPostAsync(DeclineSuggestedPostParameters parameters, CancellationToken cancellationToken = default)
-    {
-        return await RequestAsync<bool>(new ApiRequest("declineSuggestedPost", parameters), cancellationToken);
-    }
-
-    public async Task<ApiResponse<bool>> DeleteMessageAsync(DeleteMessageParameters parameters, CancellationToken cancellationToken = default)
-    {
-        return await RequestAsync<bool>(new ApiRequest("deleteMessage", parameters), cancellationToken);
-    }
-
-    public async Task<ApiResponse<bool>> DeleteMessagesAsync(DeleteMessagesParameters parameters, CancellationToken cancellationToken = default)
-    {
-        return await RequestAsync<bool>(new ApiRequest("deleteMessages", parameters), cancellationToken);
     }
 
     public async Task<ApiResponse<GiftsStruct>> GetAvailableGiftsAsync(GetAvailableGiftsParameters parameters, CancellationToken cancellationToken = default)
@@ -672,6 +611,11 @@ public partial class BotApiClient
         return await RequestAsync<Story>(new ApiRequest("postStory", parameters), cancellationToken);
     }
 
+    public async Task<ApiResponse<Story>> RepostStoryAsync(RepostStoryParameters parameters, CancellationToken cancellationToken = default)
+    {
+        return await RequestAsync<Story>(new ApiRequest("repostStory", parameters), cancellationToken);
+    }
+
     public async Task<ApiResponse<Story>> EditStoryAsync(EditStoryParameters parameters, CancellationToken cancellationToken = default)
     {
         return await RequestAsync<Story>(new ApiRequest("editStory", parameters), cancellationToken);
@@ -680,6 +624,68 @@ public partial class BotApiClient
     public async Task<ApiResponse<Story>> DeleteStoryAsync(DeleteStoryParameters parameters, CancellationToken cancellationToken = default)
     {
         return await RequestAsync<Story>(new ApiRequest("deleteStory", parameters), cancellationToken);
+    }
+    #endregion
+
+    #region Updating messages
+    public async Task<ApiResponse<Message>> EditMessageTextAsync(EditMessageTextParameters parameters, CancellationToken cancellationToken = default)
+    {
+        return await RequestAsync<Message>(new ApiRequest("editMessageText", parameters), cancellationToken);
+    }
+
+    public async Task<ApiResponse<Message>> EditMessageCaptionAsync(EditMessageCaptionParameters parameters, CancellationToken cancellationToken = default)
+    {
+        return await RequestAsync<Message>(new ApiRequest("editMessageCaption", parameters), cancellationToken);
+    }
+
+    public async Task<ApiResponse<Message>> EditMessageMediaAsync(EditMessageMediaParameters parameters, CancellationToken cancellationToken = default)
+    {
+        return await RequestAsync<Message>(new ApiRequest("editMessageMedia", parameters), cancellationToken);
+    }
+
+    public async Task<ApiResponse<Message>> EditMessageLiveLocationAsync(EditMessageLiveLocationParameters parameters, CancellationToken cancellationToken = default)
+    {
+        return await RequestAsync<Message>(new ApiRequest("editMessageLiveLocation", parameters), cancellationToken);
+    }
+
+    public async Task<ApiResponse<Message>> StopMessageLiveLocationAsync(StopMessageLiveLocationParameters parameters, CancellationToken cancellationToken = default)
+    {
+        return await RequestAsync<Message>(new ApiRequest("stopMessageLiveLocation", parameters), cancellationToken);
+    }
+
+    public async Task<ApiResponse<Message>> EditMessageChecklistAsync(EditMessageChecklistParameters parameters, CancellationToken cancellationToken = default)
+    {
+        return await RequestAsync<Message>(new ApiRequest("editMessageChecklist", parameters), cancellationToken);
+    }
+
+    public async Task<ApiResponse<Message>> EditMessageReplyMarkupAsync(EditMessageReplyMarkupParameters parameters, CancellationToken cancellationToken = default)
+    {
+        return await RequestAsync<Message>(new ApiRequest("editMessageReplyMarkup", parameters), cancellationToken);
+    }
+
+    public async Task<ApiResponse<Poll>> StopPollAsync(StopPollParameters parameters, CancellationToken cancellationToken = default)
+    {
+        return await RequestAsync<Poll>(new ApiRequest("stopPoll", parameters), cancellationToken);
+    }
+
+    public async Task<ApiResponse<bool>> ApproveSuggestedPostAsync(ApproveSuggestedPostParameters parameters, CancellationToken cancellationToken = default)
+    {
+        return await RequestAsync<bool>(new ApiRequest("approveSuggestedPost", parameters), cancellationToken);
+    }
+
+    public async Task<ApiResponse<bool>> DeclineSuggestedPostAsync(DeclineSuggestedPostParameters parameters, CancellationToken cancellationToken = default)
+    {
+        return await RequestAsync<bool>(new ApiRequest("declineSuggestedPost", parameters), cancellationToken);
+    }
+
+    public async Task<ApiResponse<bool>> DeleteMessageAsync(DeleteMessageParameters parameters, CancellationToken cancellationToken = default)
+    {
+        return await RequestAsync<bool>(new ApiRequest("deleteMessage", parameters), cancellationToken);
+    }
+
+    public async Task<ApiResponse<bool>> DeleteMessagesAsync(DeleteMessagesParameters parameters, CancellationToken cancellationToken = default)
+    {
+        return await RequestAsync<bool>(new ApiRequest("deleteMessages", parameters), cancellationToken);
     }
     #endregion
 
@@ -694,9 +700,9 @@ public partial class BotApiClient
         return await RequestAsync<StickerSet>(new ApiRequest("getStickerSet", parameters), cancellationToken);
     }
 
-    public async Task<ApiResponse<Sticker[]>> GetCustomEmojiStickersAsync(GetCustomEmojiStickersParameters parameters, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<IReadOnlyList<Sticker>>> GetCustomEmojiStickersAsync(GetCustomEmojiStickersParameters parameters, CancellationToken cancellationToken = default)
     {
-        return await RequestAsync<Sticker[]>(new ApiRequest("getCustomEmojiStickers", parameters), cancellationToken);
+        return await RequestAsync<IReadOnlyList<Sticker>>(new ApiRequest("getCustomEmojiStickers", parameters), cancellationToken);
     }
 
     public async Task<ApiResponse<FileStruct>> UploadStickerFileAsync(UploadStickerFileParameters parameters, CancellationToken cancellationToken = default)
@@ -842,9 +848,9 @@ public partial class BotApiClient
         return await RequestAsync<Message>(new ApiRequest("setGameScore", parameters), cancellationToken);
     }
 
-    public async Task<ApiResponse<GameHighScore[]>> GetGameHighScoresAsync(GetGameHighScoresParameters parameters, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<IReadOnlyList<GameHighScore>>> GetGameHighScoresAsync(GetGameHighScoresParameters parameters, CancellationToken cancellationToken = default)
     {
-        return await RequestAsync<GameHighScore[]>(new ApiRequest("getGameHighScores", parameters), cancellationToken);
+        return await RequestAsync<IReadOnlyList<GameHighScore>>(new ApiRequest("getGameHighScores", parameters), cancellationToken);
     }
     #endregion
 }

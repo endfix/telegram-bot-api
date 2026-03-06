@@ -1,20 +1,22 @@
+using System.Collections.Generic;
+
 namespace Telegram.BotAPI.Types;
 
 public sealed class ReplyParameters
 {
-    public long MessageId { get; set; }
+    public required long MessageId { get; init; }
 
-    public object ChatId { get; set; }
+    public object? ChatId { get; init; }
 
-    public bool AllowSendingWithoutReply { get; set; }
+    public bool? AllowSendingWithoutReply { get; init; }
 
-    public string Quote { get; set; } 
+    public string? Quote { get; init; } 
 
-    public string QuoteParseMode { get; set; }
+    public string? QuoteParseMode { get; init; }
 
-    public MessageEntity[] QuoteEntities { get; set; }
+    public IReadOnlyList<MessageEntity>? QuoteEntities { get; init; }
 
-    public int QuotePosition { get; set; }
+    public int? QuotePosition { get; init; }
 
-    public int ChecklistTaskId { get; set; }
+    public int? ChecklistTaskId { get; init; }
 }

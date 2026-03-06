@@ -2,9 +2,9 @@
 
 public sealed class SetChatMemberTagParameters : ApiRequestParameters
 {
-    public required object ChatId { get; set; }
+    public required object ChatId { get; init; }
 
-    public required long UserId { get; set; }
+    public required long UserId { get; init; }
 
-    public string? Tag { get; set; }
+    public string? Tag { get; init; }
 }

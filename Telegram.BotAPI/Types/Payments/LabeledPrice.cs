@@ -2,7 +2,7 @@
 
 public sealed class LabeledPrice
 {
-    public string Label { get; set; }
+    public required string Label { get; init; }
 
-    public int Amount { get; set; }
+    public required int Amount { get; init; }
 }

@@ -2,7 +2,7 @@
 
 public sealed class SetCustomEmojiStickerSetThumbnailParameters : ApiRequestParameters
 {
-    public string Name { get; set; }
+    public required string Name { get; init; }
 
-    public string CustomEmojiId { get; set; }
+    public string? CustomEmojiId { get; init; }
 }

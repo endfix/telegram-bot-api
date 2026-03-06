@@ -1,10 +1,12 @@
-﻿namespace Telegram.BotAPI.Types;
+﻿using System.Collections.Generic;
+
+namespace Telegram.BotAPI.Types;
 
 public sealed class ShippingOption
 {
-    public string Id { get; set; }
+    public required string Id { get; init; }
 
-    public string Title { get; set; }
+    public required string Title { get; init; }
 
-    public LabeledPrice[] Prices { get; set; }
+    public required IReadOnlyList<LabeledPrice> Prices { get; init; }
 }

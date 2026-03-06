@@ -4,9 +4,9 @@ namespace Telegram.BotAPI.Parameters;
 
 public sealed class SetChatPermissionsParameters : ApiRequestParameters
 {
-    public object ChatId { get; set; }
+    public required object ChatId { get; init; }
 
-    public ChatPermissions Permissions { get; set; }
+    public required ChatPermissions Permissions { get; init; }
 
-    public bool UseIndependentChatPermissions { get; set; }
+    public bool? UseIndependentChatPermissions { get; init; }
 }

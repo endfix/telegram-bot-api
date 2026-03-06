@@ -1,20 +1,21 @@
-﻿using Telegram.BotAPI.Types;
+﻿using System.Collections.Generic;
+using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Parameters;
 
 public sealed class SendGiftParameters : ApiRequestParameters
 {
-    public long UserId { get; set; }
+    public long? UserId { get; init; }
 
-    public object ChatId { get; set; }
+    public object? ChatId { get; init; }
 
-    public string GiftId { get; set; }
+    public required string GiftId { get; init; }
 
-    public bool PayForUpgrade { get; set; }
+    public bool? PayForUpgrade { get; init; }
 
-    public string Text { get; set; }
+    public string? Text { get; init; }
 
-    public string TextParseMode { get; set; }
+    public string? TextParseMode { get; init; }
 
-    public MessageEntity[] TextEntities { get; set; }
+    public IReadOnlyList<MessageEntity>? TextEntities { get; init; }
 }

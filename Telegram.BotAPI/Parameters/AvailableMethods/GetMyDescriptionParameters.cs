@@ -2,5 +2,5 @@
 
 public sealed class GetMyDescriptionParameters : ApiRequestParameters
 {
-    public string LanguageCode { get; set; }
+    public string? LanguageCode { get; init; }
 }

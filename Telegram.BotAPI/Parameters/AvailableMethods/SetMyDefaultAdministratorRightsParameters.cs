@@ -4,7 +4,7 @@ namespace Telegram.BotAPI.Parameters;
 
 public sealed class SetMyDefaultAdministratorRightsParameters : ApiRequestParameters
 {
-    public ChatAdministratorRights Rights { get; set; }
+    public ChatAdministratorRights? Rights { get; init; }
 
-    public bool ForChannels { get; set; }
+    public bool? ForChannels { get; init; }
 }

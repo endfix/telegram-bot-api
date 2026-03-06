@@ -4,7 +4,7 @@ namespace Telegram.BotAPI.Parameters;
 
 public sealed class AnswerWebAppQueryParameters : ApiRequestParameters
 {
-    public string WebAppQueryId { get; set; }
+    public required string WebAppQueryId { get; init; }
 
-    public InlineQueryResult Result { get; set; }
+    public required InlineQueryResult Result { get; init; }
 }

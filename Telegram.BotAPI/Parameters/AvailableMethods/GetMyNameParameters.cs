@@ -2,5 +2,5 @@
 
 public class GetMyNameParameters : ApiRequestParameters
 {
-    public string LanguageCode { get; set; }
+    public string? LanguageCode { get; init; }
 }

@@ -1,18 +1,19 @@
-﻿using Telegram.BotAPI.Types;
+﻿using System.Collections.Generic;
+using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Parameters;
 
 public sealed class GiftPremiumSubscriptionParameters : ApiRequestParameters
 {
-    public long UserId { get; set; }
+    public required long UserId { get; init; }
 
-    public int MonthCount { get; set; }
+    public required int MonthCount { get; init; }
 
-    public int StarCount { get; set; }
+    public required int StarCount { get; init; }
 
-    public string Text { get; set; }
+    public string? Text { get; init; }
 
-    public string TextParseMode { get; set; }
+    public string? TextParseMode { get; init; }
 
-    public MessageEntity[] TextEntities { get; set; }
+    public IReadOnlyList<MessageEntity>? TextEntities { get; init; }
 }

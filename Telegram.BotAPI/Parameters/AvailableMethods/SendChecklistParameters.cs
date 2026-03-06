@@ -4,19 +4,19 @@ namespace Telegram.BotAPI.Parameters;
 
 public sealed class SendChecklistParameters : ApiRequestParameters
 {
-    public string BusinessConnectionId { get; set; }
+    public required string BusinessConnectionId { get; init; }
 
-    public long ChatId { get; set; }
+    public required long ChatId { get; init; }
 
-    public InputChecklist Checklist { get; set; }
+    public required InputChecklist Checklist { get; init; }
 
-    public bool DisableNotification { get; set; }
+    public bool? DisableNotification { get; init; }
 
-    public bool ProtectContent { get; set; }
+    public bool? ProtectContent { get; init; }
 
-    public string MessageEffectId { get; set; }
+    public string? MessageEffectId { get; init; }
 
-    public ReplyParameters ReplyParameters { get; set; }
+    public ReplyParameters? ReplyParameters { get; init; }
 
-    public InlineKeyboardMarkup ReplyMarkup { get; set; }
+    public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 }

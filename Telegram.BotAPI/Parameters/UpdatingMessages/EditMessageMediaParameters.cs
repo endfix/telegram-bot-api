@@ -4,15 +4,15 @@ namespace Telegram.BotAPI.Parameters;
 
 public sealed class EditMessageMediaParameters : ApiRequestParameters
 {
-    public string BusinessConnectionId { get; set; }
+    public string? BusinessConnectionId { get; init; }
 
-    public object ChatId { get; set; }
+    public object? ChatId { get; init; }
 
-    public int MessageId { get; set; }
+    public int? MessageId { get; init; }
 
-    public string InlineMessageId { get; set; }
+    public string? InlineMessageId { get; init; }
 
-    public InputMedia Media { get; set; }
+    public required InputMedia Media { get; init; }
 
-    public InlineKeyboardMarkup ReplyMarkup { get; set; }
+    public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 }

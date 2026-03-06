@@ -4,11 +4,11 @@ namespace Telegram.BotAPI.Parameters;
 
 public sealed class ReplaceStickerInSetParameters : ApiRequestParameters
 {
-    public long UserId { get; set; }
+    public required long UserId { get; init; }
 
-    public string Name { get; set; }
+    public required string Name { get; init; }
 
-    public string OldSticker { get; set; }
+    public required string OldSticker { get; init; }
 
-    public InputSticker Sticker { get; set; }
+    public required InputSticker Sticker { get; init; }
 }

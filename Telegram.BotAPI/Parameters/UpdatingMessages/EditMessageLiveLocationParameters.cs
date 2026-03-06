@@ -4,25 +4,25 @@ namespace Telegram.BotAPI.Parameters;
 
 public sealed class EditMessageLiveLocationParameters : ApiRequestParameters
 {
-    public string BusinessConnectionId { get; set; }
+    public string? BusinessConnectionId { get; init; }
 
-    public object ChatId { get; set; }
+    public object? ChatId { get; init; }
 
-    public long MessageId { get; set; }
+    public long? MessageId { get; init; }
 
-    public string InlineMessageId { get; set; }
+    public string? InlineMessageId { get; init; }
 
-    public float Latitude { get; set; }
+    public required double Latitude { get; init; }
 
-    public float Longitude { get; set; }
+    public required double Longitude { get; init; }
 
-    public int LivePeriod { get; set; }
+    public int? LivePeriod { get; init; }
 
-    public float HorizontalAccuracy { get; set; }
+    public float? HorizontalAccuracy { get; init; }
 
-    public int Heading { get; set; }
+    public int? Heading { get; init; }
 
-    public int ProximityAlertRadius { get; set; }
+    public int? ProximityAlertRadius { get; init; }
 
-    public InlineKeyboardMarkup ReplyMarkup { get; set; }
+    public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 }

@@ -1,52 +1,54 @@
-﻿using Telegram.BotAPI.Types;
+﻿using System.Collections.Generic;
+using Telegram.BotAPI.Enums;
+using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Parameters;
 
 public sealed class SendPollParameters : ApiRequestParameters
 {
-    public string BusinessConnectionId { get; set; }
+    public string? BusinessConnectionId { get; init; }
 
-    public object ChatId { get; set; }
+    public required object ChatId { get; init; }
 
-    public int MessageThreadId { get; set; }
+    public int? MessageThreadId { get; init; }
 
-    public string Question { get; set; }
+    public required string Question { get; init; }
 
-    public string QuestionParseMode { get; set; }
+    public string? QuestionParseMode { get; init; }
 
-    public MessageEntity[] QuestionEntities { get; set; }
+    public IReadOnlyList<MessageEntity>? QuestionEntities { get; init; }
 
-    public InputPollOption[] Options { get; set; }
+    public required IReadOnlyList<InputPollOption> Options { get; init; }
 
-    public bool IsAnonymous { get; set; }
+    public bool? IsAnonymous { get; init; }
 
-    public string Type { get; set; }
+    public PollTypes? Type { get; init; }
 
-    public bool AllowsMultipleAnswers { get; set; }
+    public bool? AllowsMultipleAnswers { get; init; }
 
-    public int CorrectOptionId { get; set; }
+    public int? CorrectOptionId { get; init; }
 
-    public string Explanation { get; set; }
+    public string? Explanation { get; init; }
 
-    public string ExplanationParseMode { get; set; }
+    public string? ExplanationParseMode { get; init; }
 
-    public MessageEntity[] ExplanationEntities { get; set; }
+    public IReadOnlyList<MessageEntity>? ExplanationEntities { get; init; }
 
-    public int OpenPeriod { get; set; }
+    public int? OpenPeriod { get; init; }
 
-    public int CloseDate { get; set; }
+    public int? CloseDate { get; init; }
 
-    public bool IsClosed { get; set; }
+    public bool? IsClosed { get; init; }
 
-    public bool DisableNotification { get; set; }
+    public bool? DisableNotification { get; init; }
 
-    public bool ProtectContent { get; set; }
+    public bool? ProtectContent { get; init; }
 
-    public bool AllowPaidBroadcast { get; set; }
+    public bool? AllowPaidBroadcast { get; init; }
 
-    public string MessageEffectId { get; set; }
+    public string? MessageEffectId { get; init; }
 
-    public ReplyParameters ReplyParameters { get; set; }
+    public ReplyParameters? ReplyParameters { get; init; }
 
-    public ReplyMarkup ReplyMarkup { get; set; }
+    public ReplyMarkup? ReplyMarkup { get; init; }
 }

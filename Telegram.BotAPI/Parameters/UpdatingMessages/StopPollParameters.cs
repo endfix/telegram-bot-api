@@ -4,11 +4,11 @@ namespace Telegram.BotAPI.Parameters;
 
 public sealed class StopPollParameters : ApiRequestParameters
 {
-    public string BusinessConnectionId { get; set; }
+    public string? BusinessConnectionId { get; init; }
 
-    public object ChatId { get; set; }
+    public required object ChatId { get; init; }
 
-    public long MessageId { get; set; }
+    public required long MessageId { get; init; }
 
-    public InlineKeyboardMarkup ReplyMarkup { get; set; }
+    public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 }

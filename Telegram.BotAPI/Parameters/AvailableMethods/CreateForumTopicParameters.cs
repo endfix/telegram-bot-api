@@ -2,11 +2,11 @@
 
 public sealed class CreateForumTopicParameters : ApiRequestParameters
 {
-    public object ChatId { get; set; }
+    public required object ChatId { get; init; }
 
-    public string Name { get; set; }
+    public required string Name { get; init; }
 
-    public int IconColor { get; set; }
+    public int? IconColor { get; init; }
 
-    public string IconCustomEmojiId { get; set; }
+    public string? IconCustomEmojiId { get; init; }
 }

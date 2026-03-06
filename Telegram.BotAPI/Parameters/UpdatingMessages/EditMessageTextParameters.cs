@@ -1,24 +1,25 @@
-﻿using Telegram.BotAPI.Types;
+﻿using System.Collections.Generic;
+using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Parameters;
 
 public sealed class EditMessageTextParameters : ApiRequestParameters
 {
-    public string BusinessConnectionId { get; set; }
+    public string? BusinessConnectionId { get; init; }
 
-    public object ChatId { get; set; }
+    public object? ChatId { get; init; }
 
-    public int MessageId { get; set; }
+    public int? MessageId { get; init; }
 
-    public string InlineMessageId { get; set; }
+    public string? InlineMessageId { get; init; }
 
-    public string Text { get; set; }
+    public required string Text { get; init; }
 
-    public string ParseMode { get; set; }
+    public string? ParseMode { get; init; }
 
-    public MessageEntity[] Entities { get; set; }
+    public IReadOnlyList<MessageEntity>? Entities { get; init; }
 
-    public LinkPreviewOptions LinkPreviewOptions { get; set; }
+    public LinkPreviewOptions? LinkPreviewOptions { get; init; }
 
-    public InlineKeyboardMarkup ReplyMarkup { get; set; }
+    public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 }

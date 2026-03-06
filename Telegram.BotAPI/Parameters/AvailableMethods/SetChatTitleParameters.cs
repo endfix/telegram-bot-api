@@ -2,7 +2,7 @@
 
 public sealed class SetChatTitleParameters : ApiRequestParameters
 {
-    public object ChatId { set; get; }
+    public required object ChatId { get; init; }
 
-    public string Title { set; get; }
+    public required string Title { get; init; }
 }

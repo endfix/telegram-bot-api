@@ -2,13 +2,13 @@
 
 public sealed class CreateChatInviteLinkParameters : ApiRequestParameters
 {
-    public object ChatId { get; set; }
+    public required object ChatId { get; init; }
 
-    public string Name { get; set; }
+    public string? Name { get; init; }
 
-    public int ExpireDate { get; set; }
+    public int? ExpireDate { get; init; }
 
-    public int MemberLimit { get; set; }
+    public int? MemberLimit { get; init; }
 
-    public bool CreatesJoinRequest { get; set; }
+    public bool? CreatesJoinRequest { get; init; }
 }

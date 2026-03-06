@@ -2,11 +2,11 @@
 
 public sealed class BanChatMemberParameters : ApiRequestParameters
 {
-    public object ChatId { get; set; }
+    public required object ChatId { get; init; }
 
-    public long UserId { get; set; }
+    public required long UserId { get; init; }
 
-    public int UntilDate { get; set; }
+    public int? UntilDate { get; init; }
 
-    public bool RevokeMessages { get; set; }
+    public bool? RevokeMessages { get; init; }
 }

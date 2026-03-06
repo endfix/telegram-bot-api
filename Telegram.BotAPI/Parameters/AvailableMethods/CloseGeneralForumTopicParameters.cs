@@ -2,5 +2,5 @@
 
 public sealed class CloseGeneralForumTopicParameters : ApiRequestParameters
 {
-    public object ChatId { set; get; }
+    public required object ChatId { get; init; }
 }

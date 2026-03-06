@@ -2,5 +2,5 @@
 
 public sealed class DeleteStickerFromSetParameters : ApiRequestParameters
 {
-    public string Sticker { get; set; }
+    public required string Sticker { get; init; }
 }

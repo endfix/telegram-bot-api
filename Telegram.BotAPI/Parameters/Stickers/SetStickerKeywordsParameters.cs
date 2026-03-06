@@ -1,8 +1,10 @@
-﻿namespace Telegram.BotAPI.Parameters;
+﻿using System.Collections.Generic;
+
+namespace Telegram.BotAPI.Parameters;
 
 public sealed class SetStickerKeywordsParameters : ApiRequestParameters
 {
-    public string Sticker { get; set; }
+    public required string Sticker { get; init; }
 
-    public string[] Keywords { get; set; }
+    public IReadOnlyList<string>? Keywords { get; init; }
 }

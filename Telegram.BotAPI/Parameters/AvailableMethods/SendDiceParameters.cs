@@ -4,27 +4,27 @@ namespace Telegram.BotAPI.Parameters;
 
 public sealed class SendDiceParameters : ApiRequestParameters
 {
-    public string BusinessConnectionId { get; set; }
+    public string? BusinessConnectionId { get; init; }
 
-    public object ChatId { get; set; }
+    public required object ChatId { get; init; }
 
-    public int MessageThreadId { get; set; }
+    public int? MessageThreadId { get; init; }
 
-    public int DirectMessagesTopicId { get; set; }
+    public int? DirectMessagesTopicId { get; init; }
 
-    public string Emoji { get; set; }
+    public string? Emoji { get; init; }
 
-    public bool DisableNotification { get; set; }
+    public bool? DisableNotification { get; init; }
 
-    public bool ProtectContent { get; set; }
+    public bool? ProtectContent { get; init; }
 
-    public bool AllowPaidBroadcast { get; set; }
+    public bool? AllowPaidBroadcast { get; init; }
 
-    public string MessageEffectId { get; set; }
+    public string? MessageEffectId { get; init; }
 
-    public SuggestedPostParameters SuggestedPostParameters { get; set; }
+    public SuggestedPostParameters? SuggestedPostParameters { get; init; }
 
-    public ReplyParameters ReplyParameters { get; set; }
+    public ReplyParameters? ReplyParameters { get; init; }
 
-    public ReplyMarkup ReplyMarkup { get; set; }
+    public ReplyMarkup? ReplyMarkup { get; init; }
 }

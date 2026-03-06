@@ -2,5 +2,5 @@
 
 public sealed class SentWebAppMessage
 {
-    public string InlineMessageId { get; set; }
+    public string? InlineMessageId { get; init; }
 }

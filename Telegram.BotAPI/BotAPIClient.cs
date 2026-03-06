@@ -37,14 +37,18 @@ public sealed partial class BotApiClient
     public async Task StartPollingAsync(GetUpdatesParameters? parameters = null, CancellationToken cancellationToken = default)
     {
         var lastUpdateId = 0L;
-        var pollingParameters = parameters ?? new GetUpdatesParameters();
 
         while (!cancellationToken.IsCancellationRequested)
         {
             try
             {
-                pollingParameters.Offset = lastUpdateId;
-                if (pollingParameters.Timeout == 0) pollingParameters.Timeout = 20;
+                var pollingParameters = new GetUpdatesParameters
+                {
+                    Offset = lastUpdateId,
+                    Limit = parameters?.Limit,
+                    Timeout = parameters?.Timeout ?? 20,
+                    AllowedUpdates = parameters?.AllowedUpdates
+                };
 
                 var response = await GetUpdatesAsync(pollingParameters, cancellationToken).ConfigureAwait(false);
 

@@ -1,6 +1,8 @@
-﻿namespace Telegram.BotAPI.Parameters;
+﻿using System.Collections.Generic;
+
+namespace Telegram.BotAPI.Parameters;
 
 public sealed class GetCustomEmojiStickersParameters : ApiRequestParameters
 {
-    public string[] CustomEmojiIds { get; set; }
+    public required IReadOnlyList<string> CustomEmojiIds { get; init; }
 }

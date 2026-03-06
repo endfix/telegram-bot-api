@@ -2,5 +2,5 @@
 
 public sealed class GetMyDefaultAdministratorRightsParameters : ApiRequestParameters
 {
-    public bool ForChannels { get; set; }
+    public bool? ForChannels { get; init; }
 }

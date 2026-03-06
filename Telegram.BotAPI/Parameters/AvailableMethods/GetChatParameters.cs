@@ -2,5 +2,5 @@
 
 public sealed class GetChatParameters : ApiRequestParameters
 {
-    public object ChatId { get; set; }
+    public required object ChatId { get; init; }
 }

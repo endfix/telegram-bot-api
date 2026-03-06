@@ -4,7 +4,7 @@ namespace Telegram.BotAPI.Parameters;
 
 public sealed class GetMyCommandsParameters : ApiRequestParameters
 {
-    public BotCommandScope Scope { get; set; }
+    public BotCommandScope? Scope { get; init; }
 
-    public string LanguageCode { get; set; }
+    public string? LanguageCode { get; init; }
 }

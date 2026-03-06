@@ -2,11 +2,11 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class LoginUrl
 {
-    public string Url { get; set; }
+    public required string Url { get; init; }
 
-    public string ForwardText { get; set; }
+    public string? ForwardText { get; init; }
 
-    public string BotUsername { get; set; }
+    public string? BotUsername { get; init; }
 
-    public bool RequestWriteAccess { get; set; }
+    public bool? RequestWriteAccess { get; init; }
 }

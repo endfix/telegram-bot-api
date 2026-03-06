@@ -2,7 +2,7 @@
 
 public sealed class RefundStarPaymentParameters : ApiRequestParameters
 {
-    public long UserId { get; set; }
+    public required long UserId { get; init; }
 
-    public string TelegramPaymentChargeId { get; set; }
+    public required string TelegramPaymentChargeId { get; init; }
 }

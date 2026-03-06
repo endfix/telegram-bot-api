@@ -2,5 +2,5 @@
 
 public sealed class GetBusinessConnectionParameters : ApiRequestParameters
 {
-    public string BusinessConnectionId { get; set; }
+    public required string BusinessConnectionId { get; init; }
 }

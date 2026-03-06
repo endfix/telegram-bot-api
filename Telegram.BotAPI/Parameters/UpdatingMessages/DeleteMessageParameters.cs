@@ -2,7 +2,7 @@
 
 public sealed class DeleteMessageParameters : ApiRequestParameters
 {
-    public object ChatId { get; set; }
+    public required object ChatId { get; init; }
 
-    public long MessageId { get; set; }
+    public required long MessageId { get; init; }
 }

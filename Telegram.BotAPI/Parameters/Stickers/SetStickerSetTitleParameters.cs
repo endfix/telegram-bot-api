@@ -2,7 +2,7 @@
 
 public sealed class SetStickerSetTitleParameters : ApiRequestParameters
 {
-    public string Name { get; set; }
+    public required string Name { get; init; }
 
-    public string Title { get; set; }
+    public required string Title { get; init; }
 }

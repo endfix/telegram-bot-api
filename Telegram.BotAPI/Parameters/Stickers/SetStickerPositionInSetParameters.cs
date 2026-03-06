@@ -2,7 +2,7 @@
 
 public sealed class SetStickerPositionInSetParameters : ApiRequestParameters
 {
-    public string Sticker { get; set; }
+    public required string Sticker { get; init; }
 
-    public int Position { get; set; }
+    public required int Position { get; init; }
 }

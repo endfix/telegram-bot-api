@@ -2,9 +2,9 @@
 
 public sealed class AnswerPreCheckoutQueryParameters : ApiRequestParameters
 {
-    public string PreCheckoutQueryId { get; set; }
+    public required string PreCheckoutQueryId { get; init; }
 
-    public bool Ok { get; set; }
+    public required bool Ok { get; init; }
 
-    public string ErrorMessage { get; set; }
+    public string? ErrorMessage { get; init; }
 }

@@ -1,26 +1,19 @@
-﻿using Telegram.BotAPI.Types;
+﻿using System.Collections.Generic;
+using Telegram.BotAPI.Enums;
+using Telegram.BotAPI.Types;
 namespace Telegram.BotAPI.Parameters;
 
 public sealed class CreateNewStickerSetParameters : ApiRequestParameters
 {
-    public long UserId { get; set; }
+    public required long UserId { get; init; }
 
-    public string Name { get; set; }
+    public required string Name { get; init; }
 
-    public string Title { get; set; }
+    public required string Title { get; init; }
 
-    public InputSticker[] Stickers { get; set; }
+    public required IReadOnlyList<InputSticker> Stickers { get; init; }
 
-    public string StickerType { get; set; }
+    public StickerTypes? StickerType { get; init; }
 
-    public bool NeedsRepainting { get; set; }
-
-    public static class Types
-    {
-        public const string REGULAR = "regular";
-
-        public const string MASK = "mask";
-
-        public const string CUSTOM_EMOJI = "custom_emoji";
-    }
+    public bool? NeedsRepainting { get; init; }
 }

@@ -1,14 +1,15 @@
-﻿using Telegram.BotAPI.Types;
+﻿using System.Collections.Generic;
+using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Parameters;
 
 public sealed class AnswerShippingQueryParameters : ApiRequestParameters
 {
-    public string ShippingQueryId { get; set; }
+    public required string ShippingQueryId { get; init; }
 
-    public bool Ok { get; set; }
+    public required bool Ok { get; init; }
 
-    public ShippingOption[] ShippingOptions { get; set; }
+    public IReadOnlyList<ShippingOption>? ShippingOptions { get; init; }
 
-    public string ErrorMessage { get; set; }
+    public string? ErrorMessage { get; init; }
 }

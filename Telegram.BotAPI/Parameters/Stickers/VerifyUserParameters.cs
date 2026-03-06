@@ -2,7 +2,7 @@
 
 public sealed class VerifyUserParameters : ApiRequestParameters
 {
-    public long UserId { get; set; }
+    public required long UserId { get; init; }
 
-    public string CustomDescription { get; set; }
+    public string? CustomDescription { get; init; }
 }

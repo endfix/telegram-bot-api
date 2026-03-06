@@ -2,9 +2,9 @@
 
 public sealed class InlineQueryResultsButton
 {
-    public string Text { get; set; }
+    public required string Text { get; init; }
 
-    public WebAppInfo WebApp { get; set; }
+    public WebAppInfo? WebApp { get; init; }
 
-    public string StartParameter { get; set; }
+    public string? StartParameter { get; init; }
 }

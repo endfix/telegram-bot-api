@@ -2,7 +2,7 @@
 
 public sealed class DeleteForumTopicParameters : ApiRequestParameters
 {
-    public object ChatId { get; set; }
+    public required object ChatId { get; init; }
 
-    public int MessageThreadId { get; set; }
+    public required int MessageThreadId { get; init; }
 }

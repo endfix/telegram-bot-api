@@ -2,17 +2,17 @@
 
 public sealed class SetGameScoreParameters : ApiRequestParameters
 {
-    public long UserId { get; set; }
+    public required long UserId { get; init; }
 
-    public int Score { get; set; }
+    public required int Score { get; init; }
 
-    public bool Force { get; set; }
+    public bool? Force { get; init; }
 
-    public bool DisableEditMessage { get; set; }
+    public bool? DisableEditMessage { get; init; }
 
-    public long ChatId { get; set; }
+    public long? ChatId { get; init; }
 
-    public long MessageId { get; set; }
+    public long? MessageId { get; init; }
 
-    public string InlineMessageId { get; set; }
+    public string? InlineMessageId { get; init; }
 }

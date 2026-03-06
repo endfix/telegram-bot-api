@@ -1,6 +1,8 @@
+using System.Collections.Generic;
+
 namespace Telegram.BotAPI.Types;
 
 public sealed class InlineKeyboardMarkup : ReplyMarkup
 {
-    public InlineKeyboardButton[][] InlineKeyboard { get; set; }
+    public required IReadOnlyList<IReadOnlyList<InlineKeyboardButton>> InlineKeyboard { get; init; }
 }

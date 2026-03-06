@@ -1,8 +1,10 @@
-﻿namespace Telegram.BotAPI.Parameters;
+﻿using System.Collections.Generic;
+
+namespace Telegram.BotAPI.Parameters;
 
 public sealed class DeleteBusinessMessagesParameters : ApiRequestParameters
 {
-    public string BusinessConnectionId {  get; set; }
+    public required string BusinessConnectionId {  get; init; }
 
-    public int[] MessageIds { get; set; }
+    public required IReadOnlyList<int> MessageIds { get; init; }
 }

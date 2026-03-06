@@ -2,7 +2,7 @@
 
 public sealed class UnpinAllForumTopicMessagesParameters : ApiRequestParameters
 {
-    public object ChatId { get; set; }
+    public required object ChatId { get; init; }
 
-    public int MessageThreadId { set; get; }
+    public required int MessageThreadId { get; init; }
 }

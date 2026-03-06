@@ -2,7 +2,7 @@
 
 public sealed class GetStarTransactionsyParameters : ApiRequestParameters
 {
-    public int Offset { get; set; }
+    public int? Offset { get; init; }
 
-    public int Limit { get; set; }
+    public int? Limit { get; init; }
 }

@@ -2,11 +2,11 @@
 
 public sealed class SendChatActionParameters : ApiRequestParameters
 {
-    public string BusinessConnectionId { get; set; }
+    public string? BusinessConnectionId { get; init; }
 
-    public object ChatId { get; set; }
+    public required object ChatId { get; init; }
 
-    public int MessageThreadId { get; set; }
+    public int? MessageThreadId { get; init; }
 
-    public string Action { get; set; }
+    public required string Action { get; init; }
 }

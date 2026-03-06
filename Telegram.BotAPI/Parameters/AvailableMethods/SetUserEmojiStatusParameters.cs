@@ -2,9 +2,9 @@
 
 public sealed class SetUserEmojiStatusParameters : ApiRequestParameters
 {
-    public long UserId { get; set; }
+    public required long UserId { get; init; }
 
-    public string EmojiStatusCustomEmojiId { get; set; }
+    public string? EmojiStatusCustomEmojiId { get; init; }
 
-    public int EmojiStatusExpirationDate { get; set; }
+    public int? EmojiStatusExpirationDate { get; init; }
 }

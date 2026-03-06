@@ -2,5 +2,5 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class WebAppInfo
 {
-    public string Url { get; set; }
+    public required string Url { get; init; }
 }

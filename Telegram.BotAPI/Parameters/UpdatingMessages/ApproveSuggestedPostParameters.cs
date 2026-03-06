@@ -2,9 +2,9 @@
 
 public sealed class ApproveSuggestedPostParameters : ApiRequestParameters
 {
-    public long ChatId { get; set; }
+    public required long ChatId { get; init; }
 
-    public int MessageId { get; set; }
+    public required int MessageId { get; init; }
 
-    public int SendDate { get; set; }
+    public int? SendDate { get; init; }
 }

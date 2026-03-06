@@ -2,11 +2,11 @@
 
 public sealed class PinChatMessageParameters : ApiRequestParameters
 {
-    public string BusinessConnectionId { set; get; }
+    public string? BusinessConnectionId { get; init; }
 
-    public object ChatId { get; set; }
+    public required object ChatId { get; init; }
 
-    public int MessageId { set; get; }
+    public required int MessageId { get; init; }
 
-    public bool DisableNotification { set; get; }
+    public bool? DisableNotification { get; init; }
 }

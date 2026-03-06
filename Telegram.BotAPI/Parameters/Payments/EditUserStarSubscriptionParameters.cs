@@ -2,9 +2,9 @@
 
 public sealed class EditUserStarSubscriptionParameters : ApiRequestParameters
 {
-    public long UserId { get; set; }
+    public required long UserId { get; init; }
 
-    public string TelegramPaymentChargeId { get; set; }
+    public required string TelegramPaymentChargeId { get; init; }
 
-    public bool IsCanceled { get; set; }
+    public required bool IsCanceled { get; init; }
 }

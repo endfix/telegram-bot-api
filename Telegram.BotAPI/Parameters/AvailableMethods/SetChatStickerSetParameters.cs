@@ -2,7 +2,7 @@
 
 public sealed class SetChatStickerSetParameters : ApiRequestParameters
 {
-    public object ChatId { set; get; }
+    public required object ChatId { get; init; }
 
-    public string StickerSetName { set; get; }
+    public required string StickerSetName { get; init; }
 }

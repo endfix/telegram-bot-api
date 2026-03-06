@@ -2,7 +2,7 @@
 
 public sealed class ConvertGiftToStarsParameters : ApiRequestParameters
 {
-    public string BusinessConnectionId { get; set; }
+    public required string BusinessConnectionId { get; init; }
 
-    public string OwnedGiftId { get; set; }
+    public required string OwnedGiftId { get; init; }
 }

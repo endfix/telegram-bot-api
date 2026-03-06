@@ -4,29 +4,29 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class InlineKeyboardButton
 {
-    public required string Text { get; set; }
+    public required string Text { get; init; }
 
-    public string? IconCustomEmojiId { get; set; }
+    public string? IconCustomEmojiId { get; init; }
 
-    public KeyboardButtonStyles Style { get; set; }
+    public KeyboardButtonStyles? Style { get; init; }
 
-    public string? Url { get; set; }
+    public string? Url { get; init; }
 
-    public string? CallbackData { get; set; }
+    public string? CallbackData { get; init; }
 
-    public WebAppInfo? WebApp { get; set; }
+    public WebAppInfo? WebApp { get; init; }
 
-    public LoginUrl? LoginUrl { get; set; }
+    public LoginUrl? LoginUrl { get; init; }
 
-    public string? SwitchInlineQuery { get; set; }
+    public string? SwitchInlineQuery { get; init; }
 
-    public string? SwitchInlineQueryCurrentChat { get; set; }
+    public string? SwitchInlineQueryCurrentChat { get; init; }
 
-    public SwitchInlineQueryChosenChat? SwitchInlineQueryChosenChat { get; set; }
+    public SwitchInlineQueryChosenChat? SwitchInlineQueryChosenChat { get; init; }
 
-    public CopyTextButton? CopyText { get; set; }
+    public CopyTextButton? CopyText { get; init; }
 
-    public CallbackGame? CallbackGame { get; set; }
+    public CallbackGame? CallbackGame { get; init; }
 
-    public bool Pay { get; set; }
+    public bool? Pay { get; init; }
 }

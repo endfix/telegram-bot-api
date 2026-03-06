@@ -2,9 +2,9 @@
 
 public sealed class GetUserProfileAudiosParameters : ApiRequestParameters
 {
-    public required long UserId { get; set; }
+    public required long UserId { get; init; }
 
-    public int? Offset { get; set; }
+    public int? Offset { get; init; }
 
-    public int? Limit { get; set; }
+    public int? Limit { get; init; }
 }

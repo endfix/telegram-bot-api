@@ -2,5 +2,5 @@
 
 public sealed class DeleteWebhookParameters : ApiRequestParameters
 {
-    public bool DropPendingUpdates { get; set; }
+    public bool? DropPendingUpdates { get; init; }
 }

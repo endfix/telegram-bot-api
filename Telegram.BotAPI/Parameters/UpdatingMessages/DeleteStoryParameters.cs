@@ -2,7 +2,7 @@
 
 public sealed class DeleteStoryParameters : ApiRequestParameters
 {
-    public string BusinessConnectionId { get; set; }
+    public required string BusinessConnectionId { get; init; }
 
-    public int StoryId;
+    public required int StoryId { get; init; }
 }

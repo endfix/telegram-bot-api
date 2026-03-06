@@ -2,11 +2,11 @@
 
 public sealed class EditForumTopicParameters : ApiRequestParameters
 {
-    public object ChatId { get; set; }
+    public required object ChatId { get; init; }
 
-    public int MessageThreadId { set; get; }
+    public required int MessageThreadId { get; init; }
 
-    public string Name { get; set; }
+    public string? Name { get; init; }
 
-    public string IconCustomEmojiId { get; set; }
+    public string? IconCustomEmojiId { get; init; }
 }

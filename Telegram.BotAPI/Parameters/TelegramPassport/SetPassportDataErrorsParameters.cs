@@ -1,10 +1,11 @@
-﻿using Telegram.BotAPI.Types;
+﻿using System.Collections.Generic;
+using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Parameters;
 
 public sealed class SetPassportDataErrorsParameters : ApiRequestParameters
 {
-    public long UserId { get; set; }
+    public required long UserId { get; init; }
 
-    public PassportElementError[] Errors { get; set; }
+    public required IReadOnlyList<PassportElementError> Errors { get; init; }
 }

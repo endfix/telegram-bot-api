@@ -2,7 +2,7 @@
 
 public sealed class BanChatSenderChatParameters : ApiRequestParameters
 {
-    public string ChatId { get; set; }
+    public required string ChatId { get; init; }
 
-    public long SenderChatId { get; set; }
+    public required long SenderChatId { get; init; }
 }

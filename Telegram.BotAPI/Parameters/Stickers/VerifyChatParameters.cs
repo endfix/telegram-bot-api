@@ -2,7 +2,7 @@
 
 public sealed class VerifyChatParameters : ApiRequestParameters
 {
-    public object ChatId { get; set; }
+    public required object ChatId { get; init; }
 
-    public string CustomDescription { get; set; }
+    public string? CustomDescription { get; init; }
 }

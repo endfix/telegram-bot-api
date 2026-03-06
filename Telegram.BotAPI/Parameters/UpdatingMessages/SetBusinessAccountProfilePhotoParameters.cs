@@ -4,9 +4,9 @@ namespace Telegram.BotAPI.Parameters;
 
 public sealed class SetBusinessAccountProfilePhotoParameters : ApiRequestParameters
 {
-    public string BusinessConnectionId { get; set; }
+    public required string BusinessConnectionId { get; init; }
 
-    public InputProfilePhoto Photo { get; set; }
+    public required InputProfilePhoto Photo { get; init; }
 
-    public bool IsPublic { get; set; }
+    public bool? IsPublic { get; init; }
 }

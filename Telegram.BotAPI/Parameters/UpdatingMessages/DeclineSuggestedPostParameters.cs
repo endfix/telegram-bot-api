@@ -1,12 +1,10 @@
-﻿using Telegram.BotAPI.Types;
-
-namespace Telegram.BotAPI.Parameters;
+﻿namespace Telegram.BotAPI.Parameters;
 
 public sealed class DeclineSuggestedPostParameters : ApiRequestParameters
 {
-    public long ChatId { get; set; }
+    public required long ChatId { get; init; }
 
-    public int MessageId { get; set; }
+    public required int MessageId { get; init; }
 
-    public string Comment { get; set; }
+    public string? Comment { get; init; }
 }

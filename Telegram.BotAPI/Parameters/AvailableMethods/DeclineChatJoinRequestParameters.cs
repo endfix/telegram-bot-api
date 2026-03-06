@@ -2,7 +2,7 @@
 
 public sealed class DeclineChatJoinRequestParameters : ApiRequestParameters
 {
-    public object ChatId { set; get; }
+    public required object ChatId { get; init; }
 
-    public long UserId { set; get; }
+    public required long UserId { get; init; }
 }

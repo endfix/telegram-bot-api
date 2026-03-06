@@ -2,25 +2,25 @@
 
 public class GetBusinessAccountGiftsParameters : ApiRequestParameters
 {
-    public string BusinessConnectionId { get; set; }
+    public required string BusinessConnectionId { get; init; }
 
-    public bool ExcludeUnsaved { get; set; }
+    public bool? ExcludeUnsaved { get; init; }
 
-    public bool ExcludeSaved { get; set; }
+    public bool? ExcludeSaved { get; init; }
 
-    public bool ExcludeUnlimited { get; set; }
+    public bool? ExcludeUnlimited { get; init; }
 
-    public bool ExcludeLimitedUpgradable { get; set; }
+    public bool? ExcludeLimitedUpgradable { get; init; }
 
-    public bool ExcludeLimitedNonUpgradable { get; set; }
+    public bool? ExcludeLimitedNonUpgradable { get; init; }
 
-    public bool ExcludeUnique { get; set; }
+    public bool? ExcludeUnique { get; init; }
 
-    public bool ExcludeFromBlockchain { get; set; }
+    public bool? ExcludeFromBlockchain { get; init; }
 
-    public bool SortByPrice { get; set; }
+    public bool? SortByPrice { get; init; }
 
-    public string Offset { get; set; }
+    public string? Offset { get; init; }
 
-    public int Limit { get; set; }
+    public int? Limit { get; init; }
 }

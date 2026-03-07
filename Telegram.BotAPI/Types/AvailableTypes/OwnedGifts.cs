@@ -1,10 +1,12 @@
-﻿namespace Telegram.BotAPI.Types;
+﻿using System.Collections.Generic;
+
+namespace Telegram.BotAPI.Types;
 
 public sealed class OwnedGifts
 {
-    public int TotalCount { get; set; }
+    public required int TotalCount { get; init; }
 
-    public OwnedGift[] Gifts { get; set; }
+    public required IReadOnlyList<OwnedGift> Gifts { get; init; }
     
-    public string NextOffset { get; set; }
+    public string? NextOffset { get; init; }
 }

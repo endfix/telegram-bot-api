@@ -1,54 +1,56 @@
+using System.Collections.Generic;
+
 namespace Telegram.BotAPI.Types;
 
 public sealed class ExternalReplyInfo
 {
-    public MessageOrigin Origin { get; set; }
+    public required MessageOrigin Origin { get; init; }
 
-    public Chat Chat { get; set; }
+    public Chat? Chat { get; init; }
 
-    public long MessageId { get; set; }
+    public long? MessageId { get; init; }
 
-    public LinkPreviewOptions LinkRreviewOptions { get; set; }
+    public LinkPreviewOptions? LinkRreviewOptions { get; init; }
 
-    public Animation Animation { get; set; }
+    public Animation? Animation { get; init; }
 
-    public Audio Audio { get; set; }
+    public Audio? Audio { get; init; }
 
-    public Document Document { get; set; }
+    public Document? Document { get; init; }
 
-    public PaidMediaInfo PaidMedia { get; set; }
+    public PaidMediaInfo? PaidMedia { get; init; }
 
-    public PhotoSize[] Photo { get; set; }
+    public IReadOnlyList<PhotoSize>? Photo { get; init; }
 
-    public Sticker Sticker { get; set; }
+    public Sticker? Sticker { get; init; }
 
-    public Story Story { get; set; }
+    public Story? Story { get; init; }
 
-    public Video Video { get; set; }
+    public Video? Video { get; init; }
 
-    public VideoNote VideoNote { get; set; }
+    public VideoNote? VideoNote { get; init; }
 
-    public Voice Voice { get; set; }
+    public Voice? Voice { get; init; }
 
-    public bool HasMediaSpoiler { get; set; }
+    public bool? HasMediaSpoiler { get; init; }
 
-    public Checklist Checklist { get; set; }
+    public Checklist? Checklist { get; init; }
 
-    public Contact Contact { get; set; }
+    public Contact? Contact { get; init; }
 
-    public Dice Dice { get; set; }
+    public Dice? Dice { get; init; }
 
-    public Game Game { get; set; }
+    public Game? Game { get; init; }
 
-    public Giveaway Giveaway { get; set; }
+    public Giveaway? Giveaway { get; init; }
 
-    public GiveawayWinners GiveawayWinners { get; set; }
+    public GiveawayWinners? GiveawayWinners { get; init; }
 
-    public Invoice Invoice { get; set; }
+    public Invoice? Invoice { get; init; }
 
-    public Location Location { get; set; }
+    public Location? Location { get; init; }
 
-    public Poll Poll { get; set; }
+    public Poll? Poll { get; init; }
 
-    public Venue Venue { get; set; }
+    public Venue? Venue { get; init; }
 }

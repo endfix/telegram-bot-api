@@ -2,9 +2,11 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class GiveawayCompleted
 {
-    public int WinnerCount { get; set; }
+    public required int WinnerCount { get; init; }
 
-    public int UnclaimedPrizeCount { get; set; }
+    public int? UnclaimedPrizeCount { get; init; }
 
-    public Message GiveawayMessage { get; set; }
+    public Message? GiveawayMessage { get; init; }
+
+    public bool? IsStarGiveaway { get; init; }
 }

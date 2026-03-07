@@ -1,14 +1,16 @@
+using System.Collections.Generic;
+
 namespace Telegram.BotAPI.Types;
 
 public sealed class SharedUser
 {
-    public long UserId { get; set; }
+    public required long UserId { get; init; }
 
-    public string FirstName { get; set; }
+    public string? FirstName { get; init; }
 
-    public string LastName { get; set; }
+    public string? LastName { get; init; }
 
-    public string Username { get; set; }
+    public string? Username { get; init; }
 
-    public PhotoSize[] Photo { get; set; }
+    public IReadOnlyList<PhotoSize>? Photo { get; init; }
 }

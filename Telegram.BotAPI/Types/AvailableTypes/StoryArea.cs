@@ -2,7 +2,7 @@
 
 public sealed class StoryArea
 {
-    public StoryAreaPosition Position { get; set; }
+    public required StoryAreaPosition Position { get; init; }
 
-    public StoryAreaType Type { get; set; }
+    public required StoryAreaType Type { get; init; }
 }

@@ -2,7 +2,7 @@
 
 public sealed class SuggestedPostPrice
 {
-    public string Currency { get; set; }
+    public required string Currency { get; init; }
 
-    public int Amount { get; set; }
+    public required int Amount { get; init; }
 }

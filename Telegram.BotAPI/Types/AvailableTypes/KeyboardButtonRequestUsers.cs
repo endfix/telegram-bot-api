@@ -2,17 +2,17 @@
 
 public sealed class KeyboardButtonRequestUsers
 {
-    public int RequestId { get; set; }
+    public required int RequestId { get; init; }
 
-    public bool UserIsBot { get; set; }
+    public bool? UserIsBot { get; init; }
 
-    public bool UserIsPremium { get; set; }
+    public bool? UserIsPremium { get; init; }
 
-    public int MaxQuantity { get; set; }
+    public int? MaxQuantity { get; init; }
 
-    public bool RequestName { get; set; }
+    public bool? RequestName { get; init; }
 
-    public bool RequestUsername { get; set; }
+    public bool? RequestUsername { get; init; }
 
-    public bool RequestPhoto { get; set; }
+    public bool? RequestPhoto { get; init; }
 }

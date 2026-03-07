@@ -1,6 +1,8 @@
+using System.Collections.Generic;
+
 namespace Telegram.BotAPI.Types;
 
 public sealed class VideoChatParticipantsInvited
 {
-    public User[] Users { get; set; }
+    public required IReadOnlyList<User> Users { get; init; }
 }

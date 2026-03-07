@@ -1,28 +1,30 @@
+using System.Collections.Generic;
+
 namespace Telegram.BotAPI.Types;
 
 public sealed class Video
 {
-    public required string FileId { get; set; }
+    public required string FileId { get; init; }
 
-    public required string FileUniqueId { get; set; }
+    public required string FileUniqueId { get; init; }
 
-    public required int Width { get; set; }
+    public required int Width { get; init; }
 
-    public required int Height { get; set; }
+    public required int Height { get; init; }
 
-    public required int Duration { get; set; }
+    public required int Duration { get; init; }
 
-    public PhotoSize? Thumbnail { get; set; }
+    public PhotoSize? Thumbnail { get; init; }
 
-    public PhotoSize[]? Cover { get; set; }
+    public IReadOnlyList<PhotoSize>? Cover { get; init; }
 
-    public int StartTimestamp { get; set; }
+    public int StartTimestamp { get; init; }
 
-    public VideoQuality[]? Qualities { get; set; }
+    public IReadOnlyList<VideoQuality>? Qualities { get; init; }
 
-    public string? FileName { get; set; }
+    public string? FileName { get; init; }
 
-    public string? MimeType { get; set; }
+    public string? MimeType { get; init; }
 
-    public int FileSize { get; set; }
+    public int FileSize { get; init; }
 }

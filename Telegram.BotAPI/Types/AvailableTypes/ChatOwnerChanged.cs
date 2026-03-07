@@ -2,5 +2,5 @@
 
 public sealed class ChatOwnerChanged
 {
-    public required User NewOwner { get; set; }
+    public required User NewOwner { get; init; }
 }

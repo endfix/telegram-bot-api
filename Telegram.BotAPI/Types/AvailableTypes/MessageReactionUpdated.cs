@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Telegram.BotAPI.Types;
 
 public sealed class MessageReactionUpdated
@@ -12,7 +14,7 @@ public sealed class MessageReactionUpdated
 
     public required int Date { get; init; }
 
-    public required ReactionType[] OldReaction { get; init; }
+    public required IReadOnlyList<ReactionType> OldReaction { get; init; }
 
-    public required ReactionType[] NewReaction { get; init; }
+    public required IReadOnlyList<ReactionType> NewReaction { get; init; }
 }

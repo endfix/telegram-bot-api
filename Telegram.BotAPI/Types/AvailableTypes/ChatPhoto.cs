@@ -2,11 +2,11 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class ChatPhoto
 {
-    public string SmallFileId { get; set; }
+    public required string SmallFileId { get; init; }
 
-    public string SmallFileUniqueId { get; set; }
+    public required string SmallFileUniqueId { get; init; }
 
-    public string BigFileId { get; set; }
+    public required string BigFileId { get; init; }
 
-    public string BigFileUniqueId { get; set; }
+    public required string BigFileUniqueId { get; init; }
 }

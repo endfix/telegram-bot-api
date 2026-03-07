@@ -1,8 +1,10 @@
+using System.Collections.Generic;
+
 namespace Telegram.BotAPI.Types;
 
 public sealed class PaidMediaInfo
 {
-    public int StarCount { get; set; }
+    public required int StarCount { get; init; }
 
-    public PaidMedia[] PaidMedia { get; set; }
+    public required IReadOnlyList<PaidMedia> PaidMedia { get; init; }
 }

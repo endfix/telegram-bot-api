@@ -1,9 +1,12 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.BotAPI.Extensions;
@@ -104,9 +107,18 @@ public sealed partial class BotApiClient
             }
 
             using var responseMessage = await GetResponse(request, cancellation);
-            var apiResponse = (await responseMessage.Content.ReadAsStringAsync().ConfigureAwait(false)).Deserialize<ApiResponse<T>>();
+            using var responseStream = await responseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            var apiResponse = await JsonSerializer.DeserializeAsync<ApiResponse<T>>(
+                responseStream,
+                JsonSerializerExtensions.Options,
+                cancellation);
 
-            if (apiResponse!.ErrorCode == 429)
+            if (apiResponse is null)
+            {
+                throw new InvalidOperationException($"Failed to {request.MethodName}: response was empty.");
+            }
+
+            if (apiResponse.ErrorCode == 429)
             {
                 if (retryCount < 5)
                 {
@@ -210,9 +222,8 @@ public sealed partial class BotApiClient
                 }
                 else
                 {
-                    var content = new StringContent(value is object ? value.Serialize() : value!.ToString(), Encoding.UTF8);
-
-                    httpContent.Add(content, property.Name.ToSnake());
+                    var jsonValue = value is string s ? s : value.Serialize();
+                    httpContent.Add(new StringContent(jsonValue, Encoding.UTF8), property.Name.ToSnake());
                 }
             }
 
@@ -222,11 +233,38 @@ public sealed partial class BotApiClient
                 return await _httpClient.GetAsync(requestUri, cancellation).ConfigureAwait(false);
             }
 
-            return await _httpClient.PostAsync(requestUri, httpContent, cancellation);
+            return await _httpClient.PostAsync(requestUri, httpContent, cancellation).ConfigureAwait(false);
         }
         catch
         {
             httpContent.Dispose();
+            throw;
+        }
+    }
+
+    public async Task<IReadOnlyDictionary<string, Currency>> GetCurrencies(CancellationToken cancellation = default)
+    {
+        try
+        {
+            using var response = await _httpClient.GetAsync("https://core.telegram.org/bots/payments/currencies.json", cancellation);
+
+            response.EnsureSuccessStatusCode();
+
+            using var stream = await response.Content.ReadAsStreamAsync();
+            var result = await JsonSerializer.DeserializeAsync<Dictionary<string, Currency>>(
+                stream,
+                JsonSerializerExtensions.Options,
+                cancellation);
+
+            return result ?? throw new InvalidOperationException("Failed to deserialize currencies: response was empty or wrong syntax.");
+        }
+        catch (JsonException ex)
+        {
+            _logger.LogError("JSON Error: {Message} at {Path}", ex.Message, ex.Path);
+            throw;
+        }
+        catch
+        {
             throw;
         }
     }

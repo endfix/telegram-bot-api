@@ -2,13 +2,13 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class Contact
 {
-    public string PhoneNumber { get; set; }
+    public required string PhoneNumber { get; init; }
 
-    public string FirstName { get; set; }
+    public required string FirstName { get; init; }
 
-    public string LastName { get; set; }
+    public string? LastName { get; init; }
 
-    public long UserId { get; set; }
+    public long? UserId { get; init; }
 
-    public string VCard { get; set; }
+    public string? VCard { get; init; }
 }

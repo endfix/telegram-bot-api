@@ -2,9 +2,9 @@
 
 public sealed class UniqueGiftBackdrop
 {
-    public string Name { get; set; }
+    public required string Name { get; init; }
 
-    public UniqueGiftBackdropColors Colors { get; set; }
+    public required UniqueGiftBackdropColors Colors { get; init; }
 
-    public int RarityPerMille { get; set; }
+    public required int RarityPerMille { get; init; }
 }

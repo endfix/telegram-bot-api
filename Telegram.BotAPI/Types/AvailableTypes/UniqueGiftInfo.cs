@@ -4,17 +4,17 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class UniqueGiftInfo
 {
-    public UniqueGift Gift { get; set; }
+    public required UniqueGift Gift { get; init; }
 
-    public UniqueGiftInfoOrigins Origin { get; set; }
+    public required UniqueGiftInfoOrigins Origin { get; init; }
 
-    public string LastResaleCurrency { get; set; }
+    public string? LastResaleCurrency { get; init; }
 
-    public int LastResaleAmount { get; set; }
+    public int? LastResaleAmount { get; init; }
 
-    public string OwnedGiftId { get; set; }
+    public string? OwnedGiftId { get; init; }
 
-    public int TransferStarCount { get; set; }
+    public int? TransferStarCount { get; init; }
 
-    public int NextTransferDate { get; set; }
+    public int? NextTransferDate { get; init; }
 }

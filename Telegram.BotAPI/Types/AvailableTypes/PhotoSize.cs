@@ -2,13 +2,13 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class PhotoSize
 {
-    public string FileId { get; set; }
+    public required string FileId { get; init; }
 
-    public string FileUniqueId { get; set; }
+    public required string FileUniqueId { get; init; }
 
-    public int Width { get; set; }
+    public required int Width { get; init; }
 
-    public int Height { get; set; }
+    public required int Height { get; init; }
 
-    public int FileSize { get; set; }
+    public int? FileSize { get; init; }
 }

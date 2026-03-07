@@ -2,15 +2,15 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class VideoNote
 {
-    public string FileId { get; set; }
+    public required string FileId { get; init; }
 
-    public string FileUniqueId { get; set; }
+    public required string FileUniqueId { get; init; }
 
-    public int Length { get; set; }
+    public required int Length { get; init; }
 
-    public int Duration { get; set; }
+    public required int Duration { get; init; }
 
-    public PhotoSize Thumbnail { get; set; }
+    public PhotoSize? Thumbnail { get; init; }
 
-    public int FileSize { get; set; }
+    public int? FileSize { get; init; }
 }

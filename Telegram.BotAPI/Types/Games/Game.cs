@@ -1,16 +1,18 @@
+using System.Collections.Generic;
+
 namespace Telegram.BotAPI.Types;
 
 public sealed class Game
 {
-    public string Title { get; set; }
+    public required string Title { get; init; }
 
-    public string Description { get; set; }
+    public required string Description { get; init; }
 
-    public PhotoSize[] Photo { get; set; }
+    public required IReadOnlyList<PhotoSize> Photo { get; init; }
 
-    public string Text { get; set; }
+    public string? Text { get; init; }
 
-    public MessageEntity[] TextEntities { get; set; }
+    public IReadOnlyList<MessageEntity>? TextEntities { get; init; }
 
-    public Animation Animation { get; set; }
+    public Animation? Animation { get; init; }
 }

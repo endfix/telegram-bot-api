@@ -1,18 +1,20 @@
+using System.Collections.Generic;
+
 namespace Telegram.BotAPI.Types;
 
 public sealed class GiveawayCreated
 {
-    public Chat[] Chats { get; set; }
+    public required IReadOnlyList<Chat> Chats { get; init; }
 
-    public int WinnersSelectionDate { get; set; }
+    public required int WinnersSelectionDate { get; init; }
 
-    public int WinnerCount { get; set; }
+    public required int WinnerCount { get; init; }
 
-    public bool OnlyNewMembers { get; set; }
+    public bool? OnlyNewMembers { get; init; }
 
-    public bool HasPublicWinners { get; set; }
+    public bool? HasPublicWinners { get; init; }
 
-    public string PrizeDescription { get; set; }
+    public string? PrizeDescription { get; init; }
 
-    public string[] CountryCodes { get; set; }
+    public IReadOnlyList<string>? CountryCodes { get; init; }
 }

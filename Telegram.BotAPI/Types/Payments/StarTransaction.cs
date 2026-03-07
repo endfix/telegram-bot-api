@@ -2,15 +2,15 @@
 
 public sealed class StarTransaction
 {
-    public string Id { get; set; }
+    public required string Id { get; init; }
 
-    public int Amount { get; set; }
+    public required int Amount { get; init; }
 
-    public int NanostarAmount { get; set; }
+    public int? NanostarAmount { get; init; }
 
-    public int Date { get; set; }
+    public int? Date { get; init; }
 
-    public TransactionPartner Source { get; set; }
+    public TransactionPartner? Source { get; init; }
 
-    public TransactionPartner Receiver { get; set; }
+    public TransactionPartner? Receiver { get; init; }
 }

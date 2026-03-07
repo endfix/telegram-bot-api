@@ -2,7 +2,7 @@
 
 public sealed class DirectMessagePriceChanged
 {
-    public bool AreDirectMessagesEnabled { get; set; }
+    public required bool AreDirectMessagesEnabled { get; init; }
 
-    public int DirectMessageStarCount { get; set; }
+    public int? DirectMessageStarCount { get; init; }
 }

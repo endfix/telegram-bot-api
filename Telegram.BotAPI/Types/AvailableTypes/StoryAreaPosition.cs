@@ -2,15 +2,15 @@
 
 public sealed class StoryAreaPosition
 {
-    public float XPercentage { get; set; }
+    public required float XPercentage { get; init; }
 
-    public float YPercentage { get; set; }
+    public required float YPercentage { get; init; }
 
-    public float WidthPercentage { get; set; }
+    public required float WidthPercentage { get; init; }
 
-    public float HeightPercentage { get; set; }
+    public required float HeightPercentage { get; init; }
 
-    public float RotationAngle { get; set; }
+    public required float RotationAngle { get; init; }
 
-    public float CornerRadiusPercentage { get; set; }
+    public required float CornerRadiusPercentage { get; init; }
 }

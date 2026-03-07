@@ -1,8 +1,10 @@
+using System.Collections.Generic;
+
 namespace Telegram.BotAPI.Types;
 
 public sealed class BusinessOpeningHours
 {
-    public string TimeZoneName { get; set; }
+    public required string TimeZoneName { get; init; }
 
-    public BusinessOpeningHoursInterval[] OpeningHours { get; set; }
+    public required IReadOnlyList<BusinessOpeningHoursInterval> OpeningHours { get; init; }
 }

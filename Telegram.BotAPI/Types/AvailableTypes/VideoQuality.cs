@@ -4,15 +4,15 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class VideoQuality
 {
-    public required string FileId { get; set; }
+    public required string FileId { get; init; }
 
-    public required string FileUniqueId { get; set; }
+    public required string FileUniqueId { get; init; }
 
-    public required int Width { get; set; }
+    public required int Width { get; init; }
 
-    public required int Height { get; set; }
+    public required int Height { get; init; }
 
-    public required VideoQualityCodecs Codec { get; set; }
+    public required VideoQualityCodecs Codec { get; init; }
 
-    public int FileSize { get; set; }
+    public int? FileSize { get; init; }
 }

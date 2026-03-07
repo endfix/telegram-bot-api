@@ -1,16 +1,18 @@
+using System.Collections.Generic;
+
 namespace Telegram.BotAPI.Types;
 
 public sealed class ReplyKeyboardMarkup : ReplyMarkup
 {
-    public KeyboardButton[][] Keyboard { get; set; }
+    public required IReadOnlyList<IReadOnlyList<KeyboardButton>> Keyboard { get; init; }
 
-    public bool IsPersistent { get; set; }
+    public bool? IsPersistent { get; init; }
 
-    public bool ResizeKeyboard { get; set; }
+    public bool? ResizeKeyboard { get; init; }
 
-    public bool OneTimeKeyboard { get; set; }
+    public bool? OneTimeKeyboard { get; init; }
 
-    public string InputFieldPlaceholder { get; set; }
+    public string? InputFieldPlaceholder { get; init; }
 
-    public bool Selective { get; set; }
+    public bool? Selective { get; init; }
 }

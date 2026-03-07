@@ -2,5 +2,5 @@
 
 public sealed class ChatOwnerLeft
 {
-    public required User NewOwner { get; set; }
+    public User? NewOwner { get; init; }
 }

@@ -2,7 +2,7 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class BusinessOpeningHoursInterval
 {
-    public int OpeningMinute { get; set; }
+    public required int OpeningMinute { get; init; }
 
-    public int ClosingMinute { get; set; }
+    public required int ClosingMinute { get; init; }
 }

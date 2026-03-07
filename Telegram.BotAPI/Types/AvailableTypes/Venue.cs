@@ -2,17 +2,17 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class Venue
 {
-    public Location Location { get; set; }
+    public required Location Location { get; init; }
 
-    public string Title { get; set; }
+    public required string Title { get; init; }
 
-    public string Address { get; set; }
+    public required string Address { get; init; }
 
-    public string FoursquareId { get; set; }
+    public string? FoursquareId { get; init; }
 
-    public string FoursquareType { get; set; }
+    public string? FoursquareType { get; init; }
 
-    public string GooglePlaceId { get; set; }
+    public string? GooglePlaceId { get; init; }
 
-    public string GooglePlaceType { get; set; }
+    public string? GooglePlaceType { get; init; }
 }

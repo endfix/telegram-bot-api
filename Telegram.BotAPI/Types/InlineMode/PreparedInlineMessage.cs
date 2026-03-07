@@ -2,7 +2,7 @@
 
 public sealed class PreparedInlineMessage
 {
-    public string Id { get; set; }
+    public required string Id { get; init; }
 
-    public int ExpirationDate { get; set; }
+    public required int ExpirationDate { get; init; }
 }

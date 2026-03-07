@@ -56,7 +56,7 @@ public sealed class ChatMemberBanned : ChatMember
 {
     public override ChatMemberStatus Status => ChatMemberStatus.Kicked;
 
-    public int UntilDate { get; init; }
+    public required int UntilDate { get; init; }
 }
 
 public sealed class ChatMemberLeft : ChatMember

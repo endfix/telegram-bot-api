@@ -2,9 +2,9 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class ProximityAlertTriggered
 {
-    public User Traveler { get; set; }
+    public required User Traveler { get; init; }
 
-    public User Watcher { get; set; }
+    public required User Watcher { get; init; }
 
-    public int Distance { get; set; }
+    public required int Distance { get; init; }
 }

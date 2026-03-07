@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Telegram.BotAPI.Types;
 
 public sealed class Message : MaybeInaccessibleMessage
@@ -52,7 +54,7 @@ public sealed class Message : MaybeInaccessibleMessage
 
     public string? Text { get; init; }
 
-    public MessageEntity[]? Entities { get; init; }
+    public IReadOnlyList<MessageEntity>? Entities { get; init; }
 
     public LinkPreviewOptions? LinkPreviewOptions { get; init; }
 
@@ -68,7 +70,7 @@ public sealed class Message : MaybeInaccessibleMessage
 
     public PaidMediaInfo? PaidMedia { get; init; }
 
-    public PhotoSize[]? Photo { get; init; }
+    public IReadOnlyList<PhotoSize>? Photo { get; init; }
 
     public Sticker? Sticker { get; init; }
 
@@ -82,7 +84,7 @@ public sealed class Message : MaybeInaccessibleMessage
 
     public string? Caption { get; init; }
 
-    public MessageEntity[]? CaptionEntities { get; init; }
+    public IReadOnlyList<MessageEntity>? CaptionEntities { get; init; }
 
     public bool? ShowCaptionAboveMedia { get; init; }
 
@@ -102,7 +104,7 @@ public sealed class Message : MaybeInaccessibleMessage
 
     public Location? Location { get; init; }
 
-    public User[]? NewChatMembers { get; init; }
+    public IReadOnlyList<User>? NewChatMembers { get; init; }
 
     public User? LeftChatMember { get; init; }
 
@@ -112,7 +114,7 @@ public sealed class Message : MaybeInaccessibleMessage
 
     public string? NewChatTitle { get; init; }
 
-    public PhotoSize[]? NewChatPhoto { get; init; }
+    public IReadOnlyList<PhotoSize>? NewChatPhoto { get; init; }
 
     public bool? DeleteChatPhoto { get; init; }
 

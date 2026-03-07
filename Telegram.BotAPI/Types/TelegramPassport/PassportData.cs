@@ -1,8 +1,10 @@
+using System.Collections.Generic;
+
 namespace Telegram.BotAPI.Types;
 
 public sealed class PassportData
 {
-    public EncryptedPassportElement[] Data { get; set; }
+    public required IReadOnlyList<EncryptedPassportElement> Data { get; init; }
 
-    public EncryptedCredentials Credentials { get; set; }
+    public required EncryptedCredentials Credentials { get; init; }
 }

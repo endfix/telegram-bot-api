@@ -1,5 +1,4 @@
-﻿using System;
-using Telegram.BotAPI.Enums;
+﻿using Telegram.BotAPI.Enums;
 
 namespace Telegram.BotAPI.Types;
 
@@ -12,45 +11,45 @@ public sealed class StoryAreaTypeLocation : StoryAreaType
 {
     public override StoryAreaTypes Type => StoryAreaTypes.Location;
 
-    public float Latitude { get; set; }
+    public required double Latitude { get; init; }
 
-    public float Longitude { get; set; }
+    public required double Longitude { get; init; }
 
-    public LocationAddress Address { get; set; }
+    public LocationAddress? Address { get; init; }
 }
 
 public sealed class StoryAreaTypeSuggestedReaction : StoryAreaType
 {
     public override StoryAreaTypes Type => StoryAreaTypes.SuggestedReaction;
 
-    public ReactionType ReactionType { get; set; }
+    public required ReactionType ReactionType { get; init; }
 
-    public bool IsDark { get; set; }
+    public bool? IsDark { get; init; }
 
-    public bool IsFlipped { get; set; }
+    public bool? IsFlipped { get; init; }
 }
 
 public sealed class StoryAreaTypeLink : StoryAreaType
 {
     public override StoryAreaTypes Type => StoryAreaTypes.Link;
 
-    public string Url { get; set; }
+    public required string Url { get; init; }
 }
 
 public sealed class StoryAreaTypeWeather : StoryAreaType
 {
     public override StoryAreaTypes Type => StoryAreaTypes.Weather;
 
-    public float Temperature { get; set; }
+    public required float Temperature { get; init; }
 
-    public string Emoji { get; set; }
+    public required string Emoji { get; init; }
 
-    public int BackgroundColor { get; set; }
+    public required int BackgroundColor { get; init; }
 }
 
 public sealed class StoryAreaTypeUniqueGift : StoryAreaType
 {
     public override StoryAreaTypes Type => StoryAreaTypes.UniqueGift;
 
-    public string Name { get; set; }
+    public required string Name { get; init; }
 }

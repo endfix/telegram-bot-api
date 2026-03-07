@@ -2,5 +2,5 @@
 
 public sealed class MessageIdStruct
 {
-    public long MessageId { get; set; }
+    public required long MessageId { get; init; }
 }

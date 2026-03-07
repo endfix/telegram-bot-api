@@ -12,6 +12,7 @@ public static class JsonSerializerExtensions
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
         PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
+        NumberHandling = JsonNumberHandling.AllowReadingFromString,
         Converters = {
             new JsonStringEnumConverter(namingPolicy: JsonNamingPolicy.SnakeCaseLower),
             new BackgroundFillConverter(),
@@ -23,6 +24,7 @@ public static class JsonSerializerExtensions
             new MaybeInaccessibleMessageConverter(),
             new MenuButtonConverter(),
             new MessageOriginConverter(),
+            new OwnedGiftConverter(),
             new PaidMediaConverter(),
             new PassportElementErrorConverter(),
             new ReactionTypeConverter()

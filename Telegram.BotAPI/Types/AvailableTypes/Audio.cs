@@ -2,21 +2,21 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class Audio
 {
-    public string FileId { get; set; }
+    public required string FileId { get; init; }
 
-    public string FileUniqueId { get; set; }
+    public required string FileUniqueId { get; init; }
 
-    public int Duration { get; set; }
+    public required int Duration { get; init; }
 
-    public string Performer { get; set; }
+    public string? Performer { get; init; }
 
-    public string Title { get; set; }
+    public string? Title { get; init; }
 
-    public string FileName { get; set; }
+    public string? FileName { get; init; }
 
-    public string MimeType { get; set; }
+    public string? MimeType { get; init; }
 
-    public int FileSize { get; set; }
+    public int? FileSize { get; init; }
 
-    public PhotoSize Thumbnail { get; set; }
+    public PhotoSize? Thumbnail { get; init; }
 }

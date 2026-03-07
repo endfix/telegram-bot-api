@@ -2,9 +2,9 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class WriteAccessAllowed
 {
-    public bool FromRequest { get; set; }
+    public bool? FromRequest { get; init; }
 
-    public string WebAppName { get; set; }
+    public string? WebAppName { get; init; }
 
-    public bool FromAttachmentMenu { get; set; }
+    public bool? FromAttachmentMenu { get; init; }
 }

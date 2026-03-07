@@ -2,5 +2,5 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class VideoChatScheduled
 {
-    public int StartDate { get; set; }
+    public required int StartDate { get; init; }
 }

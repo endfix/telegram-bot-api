@@ -1,16 +1,17 @@
-﻿using Telegram.BotAPI.Enums;
+﻿using System.Collections.Generic;
+using Telegram.BotAPI.Enums;
 
 namespace Telegram.BotAPI.Types;
 
 public sealed class StickerSet
 {
-    public string Name { get; set; }
+    public required string Name { get; init; }
 
-    public string Title { get; set; }
+    public required string Title { get; init; }
 
-    public StickerTypes StickerType { get; set; }
+    public required StickerTypes StickerType { get; init; }
 
-    public Sticker[] Stickers { get; set; }
+    public required IReadOnlyList<Sticker> Stickers { get; init; }
 
-    public PhotoSize Thumbnail { get; set; }
+    public PhotoSize? Thumbnail { get; init; }
 }

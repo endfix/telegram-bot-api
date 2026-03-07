@@ -2,7 +2,7 @@
 
 public sealed class SuggestedPostDeclined
 {
-    public Message SuggestedPostMessage { get; set; }
+    public Message? SuggestedPostMessage { get; init; }
 
-    public string Comment { get; set; }
+    public string? Comment { get; init; }
 }

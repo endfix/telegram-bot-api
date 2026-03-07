@@ -2,11 +2,11 @@
 
 public sealed class SuggestedPostPaid
 {
-    public Message SuggestedPostMessage { get; set; }
+    public Message? SuggestedPostMessage { get; init; }
 
-    public string Currency { get; set; }
+    public required string Currency { get; init; }
 
-    public int Amount { get; set; }
+    public int? Amount { get; init; }
 
-    public StarAmount StarAmount { get; set; }
+    public StarAmount? StarAmount { get; init; }
 }

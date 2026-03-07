@@ -1,24 +1,26 @@
-﻿namespace Telegram.BotAPI.Types;
+﻿using System.Collections.Generic;
+
+namespace Telegram.BotAPI.Types;
 
 public sealed class GiftInfo
 {
-    public Gift Gift { get; set; }
+    public required Gift Gift { get; init; }
 
-    public string OwnedGiftId { get; set; }
+    public string? OwnedGiftId { get; init; }
 
-    public int ConvertStarCount { get; set; }
+    public int? ConvertStarCount { get; init; }
 
-    public int PrepaidUpgradeStarCount { get; set; }
+    public int? PrepaidUpgradeStarCount { get; init; }
 
-    public bool IsUpgradeSeparate { get; set; }
+    public bool? IsUpgradeSeparate { get; init; }
 
-    public bool CanBeUpgraded { get; set; }
+    public bool? CanBeUpgraded { get; init; }
 
-    public string Text { get; set; }
+    public string? Text { get; init; }
 
-    public MessageEntity[] Entities { get; set; }
+    public IReadOnlyList<MessageEntity>? Entities { get; init; }
 
-    public bool IsPrivate { get; set; }
+    public bool? IsPrivate { get; init; }
 
-    public int UniqueGiftNumber { get; set; }
+    public int? UniqueGiftNumber { get; init; }
 }

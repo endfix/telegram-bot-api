@@ -1,6 +1,8 @@
-﻿namespace Telegram.BotAPI.Types;
+﻿using System.Collections.Generic;
+
+namespace Telegram.BotAPI.Types;
 
 public sealed class UserChatBoosts
 {
-    public ChatBoost[] Boosts { get; set; }
+    public required IReadOnlyList<ChatBoost> Boosts { get; init; }
 }

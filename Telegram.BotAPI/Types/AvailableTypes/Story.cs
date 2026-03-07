@@ -2,7 +2,7 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class Story
 {
-    public Chat Chat { get; set; }
+    public required Chat Chat { get; init; }
 
-    public long Id { get; set; }
+    public required long Id { get; init; }
 }

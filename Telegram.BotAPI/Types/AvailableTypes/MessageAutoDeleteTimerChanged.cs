@@ -2,5 +2,5 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class MessageAutoDeleteTimerChanged
 {
-    public int MessageAutoDeleteTime { get; set; }
+    public required int MessageAutoDeleteTime { get; init; }
 }

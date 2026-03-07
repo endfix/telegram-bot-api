@@ -2,7 +2,7 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class Dice
 {
-    public string Emoji { get; set; }
+    public required string Emoji { get; init; }
 
-    public int Value { get; set; }
+    public required int Value { get; init; }
 }

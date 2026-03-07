@@ -2,23 +2,23 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class SuccessfulPayment
 {
-    public string Currency { get; set; }
+    public required string Currency { get; init; }
 
-    public int TotalAmount { get; set; }
+    public required int TotalAmount { get; init; }
 
-    public string InvoicePayload { get; set; }
+    public required string InvoicePayload { get; init; }
 
-    public int SubscriptionExpirationDate { get; set; }
+    public int? SubscriptionExpirationDate { get; init; }
 
-    public bool IsRecurring { get; set; }
+    public bool? IsRecurring { get; init; }
 
-    public bool IsFirstRecurring { get; set; }
+    public bool? IsFirstRecurring { get; init; }
 
-    public string ShippingOptionId { get; set; }
+    public string? ShippingOptionId { get; init; }
 
-    public OrderInfo OrderInfo { get; set; }
+    public OrderInfo? OrderInfo { get; init; }
 
-    public string TelegramPaymentChargeId { get; set; }
+    public required string TelegramPaymentChargeId { get; init; }
 
-    public string ProviderPaymentChargeId { get; set; }
+    public required string ProviderPaymentChargeId { get; init; }
 }

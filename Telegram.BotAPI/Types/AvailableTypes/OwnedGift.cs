@@ -1,4 +1,5 @@
-﻿using Telegram.BotAPI.Enums;
+﻿using System.Collections.Generic;
+using Telegram.BotAPI.Enums;
 
 namespace Telegram.BotAPI.Types;
 
@@ -11,52 +12,52 @@ public sealed class OwnedGiftRegular : OwnedGift
 {
     public override OwnedGiftTypes Type => OwnedGiftTypes.Regular;
 
-    public Gift Gift { get; set; }
+    public required Gift Gift { get; init; }
 
-    public string OwnedGiftId { get; set; }
+    public string? OwnedGiftId { get; init; }
 
-    public User SenderUser { get; set; }
+    public User? SenderUser { get; init; }
 
-    public int SendDate { get; set; }
+    public required int SendDate { get; init; }
 
-    public string Text { get; set; }
+    public string? Text { get; init; }
 
-    public MessageEntity[] Entities { get; set; }
+    public IReadOnlyList<MessageEntity>? Entities { get; init; }
 
-    public bool IsPrivate { get; set; }
+    public bool? IsPrivate { get; init; }
 
-    public bool IsSaved { get; set; }
+    public bool? IsSaved { get; init; }
 
-    public bool CanBeUpgraded { get; set; }
+    public bool? CanBeUpgraded { get; init; }
 
-    public bool WasRefunded { get; set; }
+    public bool? WasRefunded { get; init; }
 
-    public int ConvertStarCount { get; set; }
+    public int? ConvertStarCount { get; init; }
 
-    public int PrepaidUpgradeStarCount { get; set; }
+    public int? PrepaidUpgradeStarCount { get; init; }
 
-    public bool IsUpgradeSeparate { get; set; }
+    public bool? IsUpgradeSeparate { get; init; }
 
-    public int UniqueGiftNumber { get; set; }
+    public int? UniqueGiftNumber { get; init; }
 }
 
 public sealed class OwnedGiftUnique : OwnedGift
 {
     public override OwnedGiftTypes Type => OwnedGiftTypes.Unique;
 
-    public UniqueGift Gift { get; set; }
+    public required UniqueGift Gift { get; init; }
 
-    public string OwnedGiftId { get; set; }
+    public string? OwnedGiftId { get; init; }
 
-    public User SenderUser { set; get; }
+    public User? SenderUser { get; init; }
 
-    public int SendDate { set; get; }
+    public int? SendDate { get; init; }
 
-    public bool IsSaved { get; set; }
+    public bool? IsSaved { get; init; }
 
-    public bool CanBeTransferred { get; set; }
+    public bool? CanBeTransferred { get; init; }
 
-    public int TransferStarCount { get; set; }
+    public int? TransferStarCount { get; init; }
 
-    public int NextTransferDate { set; get; }
+    public int? NextTransferDate { get; init; }
 }

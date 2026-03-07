@@ -2,7 +2,7 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class WebAppData
 {
-    public string Data { get; set; }
+    public required string Data { get; init; }
 
-    public string ButtonText { get; set; }
+    public required string ButtonText { get; init; }
 }

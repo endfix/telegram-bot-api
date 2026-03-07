@@ -1,22 +1,25 @@
+using System.Collections.Generic;
+using Telegram.BotAPI.Enums;
+
 namespace Telegram.BotAPI.Types;
 
 public sealed class WebhookInfo
 {
-    public string Url { get; set; }
+    public required string Url { get; init; }
 
-    public bool HasCustomCertificate { get; set; }
+    public required bool HasCustomCertificate { get; init; }
 
-    public int PendingUpdateCount { get; set; }
+    public required int PendingUpdateCount { get; init; }
 
-    public string IpAddress { get; set; }
+    public string? IpAddress { get; init; }
 
-    public int LastErrorDate { get; set; }
+    public int? LastErrorDate { get; init; }
 
-    public string LastErrorMessage { get; set; }
+    public string? LastErrorMessage { get; init; }
 
-    public int LastSynchronizationErrorDate { get; set; }
+    public int? LastSynchronizationErrorDate { get; init; }
 
-    public int MaxConnections { get; set; }
+    public int? MaxConnections { get; init; }
 
-    public string[] AllowedUpdates { get; set; }
+    public IReadOnlyList<UpdateTypes>? AllowedUpdates { get; init; }
 }

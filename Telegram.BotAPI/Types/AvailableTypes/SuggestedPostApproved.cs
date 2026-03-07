@@ -2,9 +2,9 @@
 
 public sealed class SuggestedPostApproved
 {
-    public Message SuggestedPostMessage { get; set; }
+    public Message? SuggestedPostMessage { get; init; }
 
-    public SuggestedPostPrice Price { get; set; }
+    public SuggestedPostPrice? Price { get; init; }
 
-    public int SendDate { get; set; }
+    public required int SendDate { get; init; }
 }

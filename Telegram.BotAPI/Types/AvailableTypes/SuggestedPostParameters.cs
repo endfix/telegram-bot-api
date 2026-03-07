@@ -2,7 +2,7 @@
 
 public sealed class SuggestedPostParameters
 {
-    public SuggestedPostPrice Price { get; set; }
+    public SuggestedPostPrice? Price { get; init; }
 
-    public int SendDate { get; set; }
+    public int? SendDate { get; init; }
 }

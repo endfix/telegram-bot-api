@@ -1,14 +1,18 @@
-﻿namespace Telegram.BotAPI.Types;
+﻿using System.Collections.Generic;
+
+namespace Telegram.BotAPI.Types;
 
 public sealed class ChecklistTask
 {
-    public int Id { get; set; }
+    public required int Id { get; init; }
 
-    public string Text { get; set; }
+    public required string Text { get; init; }
 
-    public MessageEntity[] TextEntities { get; set; }
+    public IReadOnlyList<MessageEntity>? TextEntities { get; init; }
 
-    public User CompletedByUser { get; set; }
+    public User? CompletedByUser { get; init; }
 
-    public int CompletionDate { get; set; }
+    public Chat? CompletedByChat { get; init; }
+
+    public int? CompletionDate { get; init; }
 }

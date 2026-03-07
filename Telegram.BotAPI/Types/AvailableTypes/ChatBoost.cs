@@ -2,11 +2,11 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class ChatBoost
 {
-    public string BoostId { get; set; }
+    public required string BoostId { get; init; }
 
-    public int AddDate { get; set; }
+    public required int AddDate { get; init; }
 
-    public int ExpirationDate { get; set; }
+    public required int ExpirationDate { get; init; }
 
-    public ChatBoostSource Source { get; set; }
+    public required ChatBoostSource Source { get; init; }
 }

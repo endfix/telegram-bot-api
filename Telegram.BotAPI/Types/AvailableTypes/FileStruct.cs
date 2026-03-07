@@ -1,12 +1,12 @@
 namespace Telegram.BotAPI.Types;
 
-public sealed class PassportFile
+public sealed class FileStruct
 {
     public required string FileId { get; init; }
 
     public required string FileUniqueId { get; init; }
 
-    public required int FileSize { get; init; }
+    public int? FileSize { get; init; }
 
-    public required int FileDate { get; init; }
+    public string? FilePath { get; init; }
 }

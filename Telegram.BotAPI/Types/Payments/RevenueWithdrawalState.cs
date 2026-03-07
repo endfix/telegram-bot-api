@@ -16,9 +16,9 @@ public sealed class RevenueWithdrawalStateSucceeded : RevenueWithdrawalState
 {
     public override RevenueWithdrawalStateTypes Type => RevenueWithdrawalStateTypes.Succeeded;
 
-    public int Date { get; set; }
+    public required int Date { get; init; }
 
-    public string Url { get; set; }
+    public required string Url { get; init; }
 }
 
 public sealed class RevenueWithdrawalStateFailed : RevenueWithdrawalState

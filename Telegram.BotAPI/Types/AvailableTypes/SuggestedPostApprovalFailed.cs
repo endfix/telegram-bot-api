@@ -2,7 +2,7 @@
 
 public sealed class SuggestedPostApprovalFailed
 {
-    public Message SuggestedPostMessage { get; set; }
+    public Message? SuggestedPostMessage { get; init; }
 
-    public SuggestedPostPrice Price { get; set; }
+    public required SuggestedPostPrice Price { get; init; }
 }

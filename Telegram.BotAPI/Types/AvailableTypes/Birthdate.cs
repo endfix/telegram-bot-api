@@ -2,9 +2,9 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class Birthdate
 {
-    public int Day { get; set; }
+    public required int Day { get; init; }
 
-    public int Month { get; set; }
+    public required int Month { get; init; }
 
-    public int Year { get; set; }
+    public int? Year { get; init; }
 }

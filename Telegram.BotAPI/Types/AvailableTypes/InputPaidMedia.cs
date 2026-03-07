@@ -6,7 +6,7 @@ public abstract class InputPaidMedia
 {
     public abstract InputPaidMediaTypes Type { get; }
 
-    public virtual string Media { get; set; }
+    public required virtual string Media { get; init; }
 }
 
 public sealed class InputPaidMediaPhoto : InputPaidMedia
@@ -18,17 +18,17 @@ public sealed class InputPaidMediaVideo : InputPaidMedia
 {
     public override InputPaidMediaTypes Type => InputPaidMediaTypes.Video;
 
-    public object Thumbnail { get; set; }
+    public object? Thumbnail { get; init; }
 
-    public string Cover { get; set; }
+    public string? Cover { get; init; }
 
-    public int StartTimestamp { get; set; }
+    public int? StartTimestamp { get; init; }
 
-    public int Width { get; set; }
+    public int? Width { get; init; }
 
-    public int Height { get; set; }
+    public int? Height { get; init; }
 
-    public int Duration { get; set; }
+    public int? Duration { get; init; }
 
-    public bool SupportsStreaming { get; set; }
+    public bool? SupportsStreaming { get; init; }
 }

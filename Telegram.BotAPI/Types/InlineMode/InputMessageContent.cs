@@ -1,4 +1,6 @@
-﻿namespace Telegram.BotAPI.Types;
+﻿using System.Collections.Generic;
+
+namespace Telegram.BotAPI.Types;
 
 public abstract class InputMessageContent
 {
@@ -11,7 +13,7 @@ public sealed class InputTextMessageContent : InputMessageContent
 
     public string? ParseMode { get; init; }
 
-    public MessageEntity[]? Entities { get; init; }
+    public IReadOnlyList<MessageEntity>? Entities { get; init; }
 
     public LinkPreviewOptions? LinkPreviewOptions { get; init; }
 }
@@ -73,11 +75,11 @@ public sealed class InputInvoiceMessageContent : InputMessageContent
 
     public required string Currency { get; init; }
 
-    public required LabeledPrice[] Prices { get; init; }
+    public required IReadOnlyList<LabeledPrice> Prices { get; init; }
 
     public int? MaxTipAmount { get; init; }
 
-    public int[]? SuggestedTipAmounts { get; init; }
+    public IReadOnlyList<int>? SuggestedTipAmounts { get; init; }
 
     public string? ProviderData { get; init; }
 

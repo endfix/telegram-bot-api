@@ -2,11 +2,11 @@
 
 public sealed class AcceptedGiftTypes
 {
-    public bool UnlimitedGifts {  get; set; }
+    public required bool UnlimitedGifts {  get; init; }
 
-    public bool LimitedGifts { get; set; }
+    public required bool LimitedGifts { get; init; }
 
-    public bool UniqueGifts { get; set; }
+    public required bool UniqueGifts { get; init; }
 
-    public bool GiftsFromChannels { get; set; }
+    public required bool GiftsFromChannels { get; init; }
 }

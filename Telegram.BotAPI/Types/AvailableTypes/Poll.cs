@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Telegram.BotAPI.Enums;
 
 namespace Telegram.BotAPI.Types;
@@ -8,9 +9,9 @@ public sealed class Poll
 
     public required string Question { get; init; }
 
-    public MessageEntity[]? QuestionEntities { get; init; }
+    public IReadOnlyList<MessageEntity>? QuestionEntities { get; init; }
 
-    public required PollOption[] Options { get; init; }
+    public required IReadOnlyList<PollOption> Options { get; init; }
 
     public required int TotalVoterCount { get; init; }
 
@@ -26,7 +27,7 @@ public sealed class Poll
 
     public string? Explanation { get; init; }
 
-    public MessageEntity[]? ExplanationEntities { get; init; }
+    public IReadOnlyList<MessageEntity>? ExplanationEntities { get; init; }
 
     public int? OpenPeriod { get; init; }
 

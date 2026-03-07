@@ -2,7 +2,7 @@
 
 public sealed class StarAmount
 {
-    public int Amount {  get; set; }
+    public required int Amount {  get; init; }
 
-    public int NanostarAmount { get; set; }
+    public int? NanostarAmount { get; init; }
 }

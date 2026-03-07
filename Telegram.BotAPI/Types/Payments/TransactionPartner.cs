@@ -1,4 +1,5 @@
-﻿using Telegram.BotAPI.Enums;
+﻿using System.Collections.Generic;
+using Telegram.BotAPI.Enums;
 
 namespace Telegram.BotAPI.Types;
 
@@ -11,48 +12,48 @@ public sealed class TransactionPartnerUser : TransactionPartner
 {
     public override TransactionPartnerTypes Type => TransactionPartnerTypes.User;
 
-    public TransactionTypes TransactionType { get; set; }
+    public required TransactionTypes TransactionType { get; init; }
 
-    public User User { get; set; }
+    public required User User { get; init; }
 
-    public AffiliateInfo Affiliate { get; set; }
+    public AffiliateInfo? Affiliate { get; init; }
 
-    public string InvoicePayload { get; set; }
+    public string? InvoicePayload { get; init; }
 
-    public int SubscriptionPeriod { get; set; }
+    public int? SubscriptionPeriod { get; init; }
 
-    public PaidMedia[] PaidMedia { get; set; }
+    public IReadOnlyList<PaidMedia>? PaidMedia { get; init; }
 
-    public string PaidMediaPayload { get; set; }
+    public string? PaidMediaPayload { get; init; }
 
-    public string Gift { get; set; }
+    public string? Gift { get; init; }
 
-    public int PremiumSubscriptionDuration { get; set; }
+    public int? PremiumSubscriptionDuration { get; init; }
 }
 
 public sealed class TransactionPartnerChat : TransactionPartner
 {
     public override TransactionPartnerTypes Type => TransactionPartnerTypes.Chat;
 
-    public Chat Chat { get; set; }
+    public required Chat Chat { get; init; }
 
-    public Gift Gift { get; set; }
+    public Gift? Gift { get; init; }
 }
 
 public sealed class TransactionPartnerAffiliateProgram : TransactionPartner
 {
     public override TransactionPartnerTypes Type => TransactionPartnerTypes.AffiliateProgram;
 
-    public User SponsorUser { get; set; }
+    public User? SponsorUser { get; init; }
 
-    public int CommissionPerMille { get; set; }
+    public required int CommissionPerMille { get; init; }
 }
 
 public sealed class TransactionPartnerFragment : TransactionPartner
 {
     public override TransactionPartnerTypes Type => TransactionPartnerTypes.Fragment;
 
-    public RevenueWithdrawalState WithdrawalState { get; set; }
+    public RevenueWithdrawalState? WithdrawalState { get; init; }
 }
 
 public sealed class TransactionPartnerTelegramAds : TransactionPartner
@@ -64,7 +65,7 @@ public sealed class TransactionPartnerTelegramApi : TransactionPartner
 {
     public override TransactionPartnerTypes Type => TransactionPartnerTypes.TelegramApi;
 
-    public int RequestCount { get; set; }
+    public required int RequestCount { get; init; }
 }
 
 public sealed class TransactionPartnerOther : TransactionPartner

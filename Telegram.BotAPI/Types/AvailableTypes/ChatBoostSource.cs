@@ -5,13 +5,13 @@ namespace Telegram.BotAPI.Types;
 public abstract class ChatBoostSource
 {
     public abstract ChatBoostSources Source { get; }
-
-    public required virtual User User { get; init; }
 }
 
 public sealed class ChatBoostSourceGiftCode : ChatBoostSource
 {
     public override ChatBoostSources Source => ChatBoostSources.GiftCode;
+
+    public required User User { get; init; }
 }
 
 public sealed class ChatBoostSourceGiveaway : ChatBoostSource
@@ -19,6 +19,8 @@ public sealed class ChatBoostSourceGiveaway : ChatBoostSource
     public override ChatBoostSources Source => ChatBoostSources.Giveaway;
 
     public required int GiveawayMessageId { get; init; }
+
+    public User? User { get; init; }
 
     public int? PrizeStarCount { get; init; }
 
@@ -28,4 +30,6 @@ public sealed class ChatBoostSourceGiveaway : ChatBoostSource
 public sealed class ChatBoostSourcePremium : ChatBoostSource
 {
     public override ChatBoostSources Source => ChatBoostSources.Premium;
+
+    public required User User { get; init; }
 }

@@ -2,7 +2,7 @@
 
 public sealed class DirectMessagesTopic
 {
-    public int topic_id { get; set; }
+    public required int TopicId { get; init; }
 
-    public User User { get; set; }
+    public User? User { get; init; }
 }

@@ -2,9 +2,9 @@
 
 public sealed class GameHighScore
 {
-    public int Position { get; set; }
+    public required int Position { get; init; }
 
-    public User User { get; set; }
+    public required User User { get; init; }
 
-    public int Score { get; set; }
+    public required int Score { get; init; }
 }

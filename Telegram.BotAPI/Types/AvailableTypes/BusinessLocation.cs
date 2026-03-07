@@ -2,7 +2,7 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class BusinessLocation
 {
-    public string Address { get; set; }
+    public required string Address { get; init; }
 
-    public Location Location { get; set; }
+    public Location? Location { get; init; }
 }

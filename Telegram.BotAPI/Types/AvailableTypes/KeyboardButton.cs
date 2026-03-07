@@ -4,21 +4,21 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class KeyboardButton
 {
-    public string Text { get; set; }
+    public required string Text { get; init; }
 
-    public string IconCustomEmojiId { get; set; }
+    public string? IconCustomEmojiId { get; init; }
 
-    public KeyboardButtonStyles Style { get; set; }
+    public KeyboardButtonStyles? Style { get; init; }
 
-    public KeyboardButtonRequestUsers RequestUsers { get; set; }
+    public KeyboardButtonRequestUsers? RequestUsers { get; init; }
 
-    public KeyboardButtonRequestChat RequestChat { get; set; }
+    public KeyboardButtonRequestChat? RequestChat { get; init; }
 
-    public bool RequestContact { get; set; }
+    public bool? RequestContact { get; init; }
 
-    public bool RequestLocation { get; set; }
+    public bool? RequestLocation { get; init; }
 
-    public KeyboardButtonPollType RequestPoll { get; set; }
+    public KeyboardButtonPollType? RequestPoll { get; init; }
 
-    public WebAppInfo WebApp { get; set; }
+    public WebAppInfo? WebApp { get; init; }
 }

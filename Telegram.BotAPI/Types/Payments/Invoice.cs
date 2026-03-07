@@ -2,13 +2,13 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class Invoice
 {
-    public string Title { get; set; }
+    public required string Title { get; init; }
 
-    public string Description { get; set; }
+    public required string Description { get; init; }
 
-    public string StartParameter { get; set; }
+    public required string StartParameter { get; init; }
 
-    public string Currency { get; set; }
+    public required string Currency { get; init; }
 
-    public int TotalAmount { get; set; }
+    public required int TotalAmount { get; init; }
 }

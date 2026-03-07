@@ -1,4 +1,3 @@
-using System.Text.Json.Serialization;
 using Telegram.BotAPI.Enums;
 
 namespace Telegram.BotAPI.Types;
@@ -34,9 +33,9 @@ public sealed class BackgroundTypePattern : BackgroundType
 
     public required int Intensity { get; init; }
 
-    public required bool IsInverted { get; init; }
+    public bool? IsInverted { get; init; }
 
-    public required bool IsMoving { get; init; }
+    public bool? IsMoving { get; init; }
 }
 
 public sealed class BackgroundTypeWallpaper : BackgroundType
@@ -47,7 +46,7 @@ public sealed class BackgroundTypeWallpaper : BackgroundType
 
     public required int DarkThemeDimming { get; init; }
 
-    public required bool IsBlurred { get; init; }
+    public bool? IsBlurred { get; init; }
 
-    public required bool IsMoving { get; init; }
+    public bool? IsMoving { get; init; }
 }

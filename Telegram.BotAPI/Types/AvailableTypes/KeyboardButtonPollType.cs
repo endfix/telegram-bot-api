@@ -4,5 +4,5 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class KeyboardButtonPollType
 {
-    public PollTypes Type { get; set; }
+    public PollTypes? Type { get; init; }
 }

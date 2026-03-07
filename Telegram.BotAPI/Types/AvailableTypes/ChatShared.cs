@@ -1,14 +1,16 @@
+using System.Collections.Generic;
+
 namespace Telegram.BotAPI.Types;
 
 public sealed class ChatShared
 {
-    public int RequestId { get; set; }
+    public required int RequestId { get; init; }
 
-    public long ChatId { get; set; }
+    public required long ChatId { get; init; }
 
-    public string Title { get; set; }
+    public string? Title { get; init; }
 
-    public string Username { get; set; }
+    public string? Username { get; init; }
 
-    public PhotoSize[] Photo { get; set; }
+    public IReadOnlyList<PhotoSize>? Photo { get; init; }
 }

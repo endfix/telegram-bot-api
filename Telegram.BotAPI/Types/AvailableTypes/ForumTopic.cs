@@ -2,13 +2,13 @@
 
 public sealed class ForumTopic
 {
-    public int MessageThreadId { get; set; }
+    public required int MessageThreadId { get; init; }
 
-    public string Name { get; set; }
+    public required string Name { get; init; }
 
-    public int IconColor { get; set; }
+    public required int IconColor { get; init; }
 
-    public string IconCustomEmojiId { get; set; }
+    public string? IconCustomEmojiId { get; init; }
 
-    public bool IsNameImplicit { get; set; }
+    public bool? IsNameImplicit { get; init; }
 }

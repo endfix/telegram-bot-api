@@ -2,5 +2,5 @@
 
 public sealed class PaidMessagePriceChanged
 {
-    public int PaidMessageStarCount { get; set; }
+    public required int PaidMessageStarCount { get; init; }
 }

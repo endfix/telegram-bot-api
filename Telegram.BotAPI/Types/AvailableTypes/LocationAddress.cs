@@ -2,11 +2,11 @@
 
 public sealed class LocationAddress
 {
-    public string CountryCode { get; set; }
+    public required string CountryCode { get; init; }
 
-    public string State { get; set; }
+    public string? State { get; init; }
 
-    public string City { get; set; }
+    public string? City { get; init; }
 
-    public string Street { get; set; }
+    public string? Street { get; init; }
 }

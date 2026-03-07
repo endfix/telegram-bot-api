@@ -2,7 +2,7 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class BotCommand
 {
-    public string Command { get; set; }
+    public required string Command { get; init; }
 
-    public string Description { get; set; }
+    public required string Description { get; init; }
 }

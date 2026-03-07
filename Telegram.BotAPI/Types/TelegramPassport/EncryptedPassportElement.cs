@@ -1,26 +1,27 @@
+using System.Collections.Generic;
 using Telegram.BotAPI.Enums;
 
 namespace Telegram.BotAPI.Types;
 
 public sealed class EncryptedPassportElement
 {
-    public EncryptedPassportElementTypes Type { get; set; }
+    public required EncryptedPassportElementTypes Type { get; init; }
 
-    public string Data { get; set; }
+    public string? Data { get; init; }
 
-    public string PhoneNumber { get; set; }
+    public string? PhoneNumber { get; init; }
 
-    public string Email { get; set; }
+    public string? Email { get; init; }
 
-    public PassportFile[] Files { get; set; }
+    public IReadOnlyList<PassportFile>? Files { get; init; }
 
-    public PassportFile FrontSide { get; set; }
+    public PassportFile? FrontSide { get; init; }
 
-    public PassportFile ReverseSide { get; set; }
+    public PassportFile? ReverseSide { get; init; }
 
-    public PassportFile Selfie { get; set; }
+    public PassportFile? Selfie { get; init; }
 
-    public PassportFile[] Translation { get; set; }
+    public IReadOnlyList<PassportFile>? Translation { get; init; }
 
-    public string Hash { get; set; }
+    public string? Hash { get; init; }
 }

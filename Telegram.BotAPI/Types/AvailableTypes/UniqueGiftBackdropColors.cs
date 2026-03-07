@@ -2,11 +2,11 @@
 
 public sealed class UniqueGiftBackdropColors
 {
-    public int CenterColor { get; set; }
+    public required int CenterColor { get; init; }
 
-    public int EdgeColor { get; set; }
+    public required int EdgeColor { get; init; }
 
-    public int SymbolColor { get; set; }
+    public required int SymbolColor { get; init; }
 
-    public int TextColor { get; set; }
+    public required int TextColor { get; init; }
 }

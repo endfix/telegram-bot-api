@@ -2,7 +2,7 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class ReactionCount
 {
-    public ReactionType Type { get; set; }
+    public required ReactionType Type { get; init; }
 
-    public int TotalCount { get; set; }
+    public required int TotalCount { get; init; }
 }

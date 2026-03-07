@@ -1,8 +1,10 @@
+using System.Collections.Generic;
+
 namespace Telegram.BotAPI.Types;
 
 public sealed class UsersShared
 {
-    public int RequestId { get; set; }
+    public required int RequestId { get; init; }
 
-    public SharedUser[] Users { get; set; }
+    public required IReadOnlyList<SharedUser> Users { get; init; }
 }

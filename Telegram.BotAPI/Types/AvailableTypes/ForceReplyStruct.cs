@@ -2,9 +2,9 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class ForceReplyStruct : ReplyMarkup
 {
-    public bool ForceReply { get; set; }
+    public required bool ForceReply { get; init; }
 
-    public string InputFieldPlaceholder { get; set; }
+    public string? InputFieldPlaceholder { get; init; }
 
-    public bool Selective { get; set; }
+    public bool? Selective { get; init; }
 }

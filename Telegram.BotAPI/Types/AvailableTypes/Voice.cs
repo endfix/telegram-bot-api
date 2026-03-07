@@ -2,13 +2,13 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class Voice
 {
-    public string FileId { get; set; }
+    public required string FileId { get; init; }
 
-    public string FileUniqueId { get; set; }
+    public required string FileUniqueId { get; init; }
 
-    public int Duration { get; set; }
+    public required int Duration { get; init; }
 
-    public string MimeType { get; set; }
+    public string? MimeType { get; init; }
 
-    public int FileSize { get; set; }
+    public int? FileSize { get; init; }
 }

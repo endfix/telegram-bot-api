@@ -1,10 +1,12 @@
-﻿namespace Telegram.BotAPI.Types;
+﻿using Telegram.BotAPI.Enums;
+
+namespace Telegram.BotAPI.Types;
 
 public sealed class SuggestedPostInfo
 {
-    public string State { get; set; }
+    public SuggestedPostInfoState State { get; init; }
 
-    public SuggestedPostPrice Price { get; set; }
+    public SuggestedPostPrice? Price { get; init; }
 
-    public int SendDate { get; set; }
+    public int? SendDate { get; init; }
 }

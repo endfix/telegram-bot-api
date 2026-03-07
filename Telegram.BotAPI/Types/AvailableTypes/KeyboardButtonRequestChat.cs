@@ -2,25 +2,25 @@
 
 public sealed class KeyboardButtonRequestChat
 {
-    public int RequestId { get; set; }
+    public required int RequestId { get; init; }
 
-    public bool ChatIsChannel { get; set; }
+    public required bool ChatIsChannel { get; init; }
 
-    public bool ChatIsForum { get; set; }
+    public bool? ChatIsForum { get; init; }
 
-    public bool ChatHasUsername { get; set; }
+    public bool? ChatHasUsername { get; init; }
 
-    public bool ChatIsCreated { get; set; }
+    public bool? ChatIsCreated { get; init; }
 
-    public ChatAdministratorRights UserAdministratorRights { get; set; }
+    public ChatAdministratorRights? UserAdministratorRights { get; init; }
 
-    public ChatAdministratorRights BotAdministratorRights { get; set; }
+    public ChatAdministratorRights? BotAdministratorRights { get; init; }
 
-    public bool BotIsMember { get; set; }
+    public bool? BotIsMember { get; init; }
 
-    public bool RequestTitle { get; set; }
+    public bool? RequestTitle { get; init; }
 
-    public bool RequestUsername { get; set; }
+    public bool? RequestUsername { get; init; }
 
-    public bool RequestPhoto { get; set; }
+    public bool? RequestPhoto { get; init; }
 }

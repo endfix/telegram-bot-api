@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Telegram.BotAPI.Types;
 
 public sealed class MessageReactionCountUpdated
@@ -8,5 +10,5 @@ public sealed class MessageReactionCountUpdated
 
     public required int Date { get; init; }
 
-    public required ReactionCount[] Reactions { get; init; }
+    public required IReadOnlyList<ReactionCount> Reactions { get; init; }
 }

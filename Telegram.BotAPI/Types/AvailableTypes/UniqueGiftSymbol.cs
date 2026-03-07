@@ -2,9 +2,9 @@
 
 public sealed class UniqueGiftSymbol
 {
-    public string Name { get; set; }
+    public required string Name { get; init; }
 
-    public Sticker Sticker { get; set; }
+    public required Sticker Sticker { get; init; }
 
-    public int RarityPerMille { get; set; }
+    public required int RarityPerMille { get; init; }
 }

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Telegram.BotAPI.Enums;
 using Telegram.BotAPI.Extensions;
 using Telegram.BotAPI.Types;
 
@@ -10,43 +8,39 @@ namespace Telegram.BotAPI.Serialization.Converters;
 
 public sealed class PassportElementErrorConverter : JsonConverter<PassportElementError>
 {
-    public override PassportElementError Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override PassportElementError? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        var innerOptions = new JsonSerializerOptions(options);
-        var thisConverter = innerOptions.Converters.FirstOrDefault(c => c is PassportElementErrorConverter);
-        if (thisConverter != null)
+        using var doc = JsonDocument.ParseValue(ref reader);
+        var root = doc.RootElement;
+
+        if (!root.TryGetProperty("source", out var source))
         {
-            innerOptions.Converters.Remove(thisConverter);
+            throw new JsonException("Missing discriminator 'source' in PassportElementError");
         }
 
-        using var jsonDocument = JsonDocument.ParseValue(ref reader);
-        var jsonElement = jsonDocument.RootElement;
-        var source = jsonElement.GetProperty("source").Deserialize<PassportElementErrorSources>(options);
-
-        return source switch
+        return source.GetString() switch
         {
-            PassportElementErrorSources.Data => jsonElement.Deserialize<PassportElementErrorDataField>(innerOptions)!,
-            PassportElementErrorSources.FrontSide => jsonElement.Deserialize<PassportElementErrorFrontSide>(innerOptions)!,
-            PassportElementErrorSources.ReverseSide => jsonElement.Deserialize<PassportElementErrorReverseSide>(innerOptions)!,
-            PassportElementErrorSources.Selfie => jsonElement.Deserialize<PassportElementErrorSelfie>(innerOptions)!,
-            PassportElementErrorSources.File => jsonElement.Deserialize<PassportElementErrorFile>(innerOptions)!,
-            PassportElementErrorSources.Files => jsonElement.Deserialize<PassportElementErrorFiles>(innerOptions)!,
-            PassportElementErrorSources.TranslationFile => jsonElement.Deserialize<PassportElementErrorTranslationFile>(innerOptions)!,
-            PassportElementErrorSources.TranslationFiles => jsonElement.Deserialize<PassportElementErrorTranslationFiles>(innerOptions)!,
-            PassportElementErrorSources.Unspecified => jsonElement.Deserialize<PassportElementErrorUnspecified>(innerOptions)!,
-            _ => throw new JsonException($"Unknown type: {source}")
+            "data" => root.Deserialize<PassportElementErrorDataField>(options),
+            "front_side" => root.Deserialize<PassportElementErrorFrontSide>(options),
+            "reverse_side" => root.Deserialize<PassportElementErrorReverseSide>(options),
+            "selfie" => root.Deserialize<PassportElementErrorSelfie>(options),
+            "file" => root.Deserialize<PassportElementErrorFile>(options),
+            "files" => root.Deserialize<PassportElementErrorFiles>(options),
+            "translation_file" => root.Deserialize<PassportElementErrorTranslationFile>(options),
+            "translation_files" => root.Deserialize<PassportElementErrorTranslationFiles>(options),
+            "unspecified" => root.Deserialize<PassportElementErrorUnspecified>(options),
+            _ => throw new JsonException($"Unknown PassportElementError source: {source}")
         };
     }
 
     public override void Write(Utf8JsonWriter writer, PassportElementError value, JsonSerializerOptions options)
     {
-        var innerOptions = new JsonSerializerOptions(options);
-        var converter = innerOptions.Converters.FirstOrDefault(c => c is PassportElementErrorConverter);
-        if (converter != null)
+        if (value is null)
         {
-            innerOptions.Converters.Remove(converter);
+            writer.WriteNullValue();
+            return;
         }
 
-        JsonSerializer.Serialize(writer, value, value.GetType(), innerOptions);
+        JsonSerializer.Serialize(writer, (object)value, options);
     }
 }

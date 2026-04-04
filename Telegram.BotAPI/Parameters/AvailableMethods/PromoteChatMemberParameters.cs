@@ -1,8 +1,10 @@
-﻿namespace Telegram.BotAPI.Parameters;
+﻿using Telegram.BotAPI.Types;
+
+namespace Telegram.BotAPI.Parameters;
 
 public sealed class PromoteChatMemberParameters : ApiRequestParameters
 {
-    public required object ChatId { get; set; }
+    public required ChatIdSource ChatId { get; set; }
 
     public required long UserId { get; set; }
 

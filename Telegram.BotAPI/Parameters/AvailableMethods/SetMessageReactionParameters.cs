@@ -5,9 +5,9 @@ namespace Telegram.BotAPI.Parameters;
 
 public sealed class SetMessageReactionParameters : ApiRequestParameters
 {
-    public required object ChatId { get; init; }
+    public required ChatIdSource ChatId { get; init; }
 
-    public required int MessageId { get; init; }
+    public required long MessageId { get; init; }
 
     public IReadOnlyList<ReactionType>? Reaction { get; init; }
 

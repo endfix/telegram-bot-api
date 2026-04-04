@@ -1,8 +1,10 @@
-﻿namespace Telegram.BotAPI.Parameters;
+﻿using Telegram.BotAPI.Types;
+
+namespace Telegram.BotAPI.Parameters;
 
 public sealed class SetChatAdministratorCustomTitleParameters : ApiRequestParameters
 {
-    public required object ChatId { get; init; }
+    public required ChatIdSource ChatId { get; init; }
 
     public required long UserId { get; init; }
 

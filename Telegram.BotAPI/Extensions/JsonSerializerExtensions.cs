@@ -15,6 +15,8 @@ public static class JsonSerializerExtensions
         NumberHandling = JsonNumberHandling.AllowReadingFromString,
         Converters = {
             new JsonStringEnumConverter(namingPolicy: JsonNamingPolicy.SnakeCaseLower),
+            new ChatIdSourceConverter(),
+            new MediaSourceConverter(),
             new BackgroundFillConverter(),
             new BackgroundTypeConverter(),
             new BotCommandScopeConverter(),
@@ -31,7 +33,7 @@ public static class JsonSerializerExtensions
         }
     };
 
-    public static readonly JsonSerializerOptions IndentedOptions = new JsonSerializerOptions(Options)
+    public static readonly JsonSerializerOptions IndentedOptions = new(Options)
     {
         WriteIndented = true,
         IndentCharacter = ' ',

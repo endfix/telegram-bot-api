@@ -6,9 +6,9 @@ public sealed class GiveawayWinners
 {
     public required Chat Chat { get; init; }
 
-    public required int GiveawayMessageId { get; init; }
+    public required long GiveawayMessageId { get; init; }
 
-    public required int WinnersSelectionDate { get; init; }
+    public required long WinnersSelectionDate { get; init; }
 
     public required int WinnerCount { get; init; }
 

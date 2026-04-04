@@ -7,13 +7,13 @@ public sealed class SendAudioParameters : ApiRequestParameters
 {
     public string? BusinessConnectionId { get; init; }
 
-    public required object ChatId { get; init; }
+    public required ChatIdSource ChatId { get; init; }
 
     public int? MessageThreadId { get; init; }
 
     public int? DirectMessagesTopicId { get; init; }
 
-    public required object Audio { get; init; }
+    public required AudioSource Audio { get; init; }
 
     public string? Caption { get; init; }
 

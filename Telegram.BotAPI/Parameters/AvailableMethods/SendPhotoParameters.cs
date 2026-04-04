@@ -7,13 +7,13 @@ public sealed class SendPhotoParameters : ApiRequestParameters
 {
     public string? BusinessConnectionId { get; init; }
 
-    public required object ChatId { get; init; }
+    public required ChatIdSource ChatId { get; init; }
 
     public int? MessageThreadId { get; init; }
 
     public int? DirectMessagesTopicId { get; init; }
 
-    public required object Photo { get; init; }
+    public required PhotoSource Photo { get; init; }
 
     public string? Caption { get; init; }
 

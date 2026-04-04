@@ -7,13 +7,13 @@ public sealed class SendVideoParameters : ApiRequestParameters
 {
     public string? BusinessConnectionId { get; init; }
 
-    public required object ChatId { get; init; }
+    public required ChatIdSource ChatId { get; init; }
 
     public int? MessageThreadId { get; init; }
 
     public int? DirectMessagesTopicId { get; init; }
 
-    public required object Video { get; init; }
+    public required VideoSource Video { get; init; }
 
     public int? Duration { get; init; }
 

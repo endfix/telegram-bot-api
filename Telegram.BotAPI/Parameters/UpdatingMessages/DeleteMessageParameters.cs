@@ -1,8 +1,10 @@
-﻿namespace Telegram.BotAPI.Parameters;
+﻿using Telegram.BotAPI.Types;
+
+namespace Telegram.BotAPI.Parameters;
 
 public sealed class DeleteMessageParameters : ApiRequestParameters
 {
-    public required object ChatId { get; init; }
+    public required ChatIdSource ChatId { get; init; }
 
     public required long MessageId { get; init; }
 }

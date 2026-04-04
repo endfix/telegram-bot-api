@@ -2,7 +2,7 @@
 
 public sealed class ResponseParameters
 {
-    public int? MigrateToChatId { get; init; }
+    public long? MigrateToChatId { get; init; }
 
     public int? RetryAfter { get; init; }
 }

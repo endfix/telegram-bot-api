@@ -1,44 +1,38 @@
 ﻿using System;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Telegram.BotAPI.Enums;
 using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Serialization.Converters;
 
 public sealed class OwnedGiftConverter : JsonConverter<OwnedGift>
 {
-    public override OwnedGift Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override OwnedGift? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        var innerOptions = new JsonSerializerOptions(options);
-        var thisConverter = innerOptions.Converters.FirstOrDefault(c => c is OwnedGiftConverter);
-        if (thisConverter != null)
+        using var doc = JsonDocument.ParseValue(ref reader);
+        var root = doc.RootElement;
+
+        if (!root.TryGetProperty("type", out var type))
         {
-            innerOptions.Converters.Remove(thisConverter);
+            throw new JsonException("Missing discriminator 'type' in OwnedGift");
         }
 
-        using var jsonDocument = JsonDocument.ParseValue(ref reader);
-        var jsonElement = jsonDocument.RootElement;
-        var type = jsonElement.GetProperty("type").Deserialize<OwnedGiftTypes>(options);
-
-        return type switch
+        return type.GetString() switch
         {
-            OwnedGiftTypes.Regular => jsonElement.Deserialize<OwnedGiftRegular>(innerOptions)!,
-            OwnedGiftTypes.Unique => jsonElement.Deserialize<OwnedGiftUnique>(innerOptions)!,
-            _ => throw new JsonException($"Unknown type: {type}")
+            "regular" => root.Deserialize<OwnedGiftRegular>(options),
+            "unique" => root.Deserialize<OwnedGiftUnique>(options),
+            _ => throw new JsonException($"Unknown OwnedGift type: {type}")
         };
     }
 
     public override void Write(Utf8JsonWriter writer, OwnedGift value, JsonSerializerOptions options)
     {
-        var innerOptions = new JsonSerializerOptions(options);
-        var converter = innerOptions.Converters.FirstOrDefault(c => c is OwnedGiftConverter);
-        if (converter != null)
+        if (value is null)
         {
-            innerOptions.Converters.Remove(converter);
+            writer.WriteNullValue();
+            return;
         }
 
-        JsonSerializer.Serialize(writer, value, value.GetType(), innerOptions);
+        JsonSerializer.Serialize(writer, (object)value, options);
     }
 }

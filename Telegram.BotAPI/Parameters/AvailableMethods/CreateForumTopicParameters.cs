@@ -1,8 +1,10 @@
-﻿namespace Telegram.BotAPI.Parameters;
+﻿using Telegram.BotAPI.Types;
+
+namespace Telegram.BotAPI.Parameters;
 
 public sealed class CreateForumTopicParameters : ApiRequestParameters
 {
-    public required object ChatId { get; init; }
+    public required ChatIdSource ChatId { get; init; }
 
     public required string Name { get; init; }
 

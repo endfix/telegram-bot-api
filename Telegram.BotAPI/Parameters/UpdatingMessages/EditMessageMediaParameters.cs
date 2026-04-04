@@ -6,9 +6,9 @@ public sealed class EditMessageMediaParameters : ApiRequestParameters
 {
     public string? BusinessConnectionId { get; init; }
 
-    public object? ChatId { get; init; }
+    public ChatIdSource? ChatId { get; init; }
 
-    public int? MessageId { get; init; }
+    public long? MessageId { get; init; }
 
     public string? InlineMessageId { get; init; }
 

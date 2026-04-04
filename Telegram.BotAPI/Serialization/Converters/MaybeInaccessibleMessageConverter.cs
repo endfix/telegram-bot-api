@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Telegram.BotAPI.Types;
@@ -8,48 +7,29 @@ namespace Telegram.BotAPI.Serialization.Converters;
 
 public class MaybeInaccessibleMessageConverter : JsonConverter<MaybeInaccessibleMessage>
 {
-    public override MaybeInaccessibleMessage Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override MaybeInaccessibleMessage? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        var readerCopy = reader;
-        if (readerCopy.TokenType != JsonTokenType.StartObject)
+        using var doc = JsonDocument.ParseValue(ref reader);
+        var root = doc.RootElement;
+
+        if (!root.TryGetProperty("date", out var date))
         {
-            throw new JsonException("Expected StartObject token.");
+            throw new JsonException("Property 'date' not found in MaybeInaccessibleMessage.");
         }
 
-        var dateValue = 0;
-        var dateFound = false;
-
-        while (readerCopy.Read() && readerCopy.TokenType != JsonTokenType.EndObject)
-        {
-            if (readerCopy.TokenType == JsonTokenType.PropertyName && readerCopy.ValueTextEquals("date"))
-            {
-                readerCopy.Read();
-                dateValue = readerCopy.GetInt32();
-                dateFound = true;
-                break;
-            }
-            readerCopy.Skip();
-        }
-
-        if (!dateFound)
-        {
-            throw new JsonException("Required property 'date' not found.");
-        }
-
-        return dateValue > 0
-            ? (Message)JsonSerializer.Deserialize(ref reader, typeof(Message), options)!
-            : (InaccessibleMessage)JsonSerializer.Deserialize(ref reader, typeof(InaccessibleMessage), options)!;
+        return date.GetInt64() > 0
+            ? root.Deserialize<Message>(options)
+            : root.Deserialize<InaccessibleMessage>(options);
     }
 
     public override void Write(Utf8JsonWriter writer, MaybeInaccessibleMessage value, JsonSerializerOptions options)
     {
-        var innerOptions = new JsonSerializerOptions(options);
-        var converter = innerOptions.Converters.FirstOrDefault(c => c is MaybeInaccessibleMessageConverter);
-        if (converter != null)
+        if (value is null)
         {
-            innerOptions.Converters.Remove(converter);
+            writer.WriteNullValue();
+            return;
         }
 
-        JsonSerializer.Serialize(writer, value, value.GetType(), innerOptions);
+        JsonSerializer.Serialize(writer, (object)value, options);
     }
 }

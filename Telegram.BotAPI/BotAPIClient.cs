@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.BotAPI.Extensions;
@@ -220,10 +221,14 @@ public sealed partial class BotApiClient
                 {
                     httpContent.Add(new StreamContent(inputFile.GetStream()), inputFile.Type.Serialize(), inputFile.FileName);
                 }
+                else if (value is IEnumerable<InputMedia> mediaList)
+                {
+                    var jsonArray = PrepareMediaGroup(mediaList, httpContent);
+                    httpContent.Add(new StringContent(jsonArray, Encoding.UTF8), property.Name.ToSnake());
+                }
                 else
                 {
-                    var jsonValue = value is string s ? s : value.Serialize();
-                    httpContent.Add(new StringContent(jsonValue, Encoding.UTF8), property.Name.ToSnake());
+                    httpContent.Add(new StringContent(value is string s ? s : value.Serialize(), Encoding.UTF8), property.Name.ToSnake());
                 }
             }
 
@@ -267,5 +272,27 @@ public sealed partial class BotApiClient
         {
             throw;
         }
+    }
+
+    private string PrepareMediaGroup(IEnumerable<InputMedia> mediaList, MultipartFormDataContent content)
+    {
+        var jsonArray = new JsonArray();
+        var fileIdx = 0;
+
+        foreach (var inputMedia in mediaList)
+        {
+            var node = JsonSerializer.SerializeToNode(inputMedia, JsonSerializerExtensions.Options)!.AsObject();
+            if (inputMedia.Media.Value is InputFile file)
+            {
+                var attachName = $"attach_{fileIdx++}";
+                content.Add(new StreamContent(file.GetStream()), attachName, file.FileName);
+
+                node["media"] = $"attach://{attachName}";
+            }
+
+            jsonArray.Add(node);
+        }
+
+        return jsonArray.ToJsonString();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Telegram.BotAPI.Enums;
 using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Parameters;
@@ -13,7 +14,7 @@ public class SetWebhookParameters : ApiRequestParameters
 
     public int? MaxConnections { get; init; }
 
-    public IReadOnlyList<string>? AllowedUpdates { get; init; }
+    public IReadOnlyList<UpdateTypes>? AllowedUpdates { get; init; }
 
     public bool? DropPendingUpdates { get; init; }
 

@@ -6,7 +6,7 @@ public sealed class EditMessageLiveLocationParameters : ApiRequestParameters
 {
     public string? BusinessConnectionId { get; init; }
 
-    public object? ChatId { get; init; }
+    public ChatIdSource? ChatId { get; init; }
 
     public long? MessageId { get; init; }
 

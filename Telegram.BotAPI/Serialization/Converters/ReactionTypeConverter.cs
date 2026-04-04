@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Telegram.BotAPI.Enums;
 using Telegram.BotAPI.Extensions;
 using Telegram.BotAPI.Types;
 
@@ -10,37 +8,33 @@ namespace Telegram.BotAPI.Serialization.Converters;
 
 public sealed class ReactionTypeConverter : JsonConverter<ReactionType>
 {
-    public override ReactionType Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override ReactionType? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        var innerOptions = new JsonSerializerOptions(options);
-        var thisConverter = innerOptions.Converters.FirstOrDefault(c => c is ReactionTypeConverter);
-        if (thisConverter != null)
+        using var doc = JsonDocument.ParseValue(ref reader);
+        var root = doc.RootElement;
+
+        if (!root.TryGetProperty("type", out var type))
         {
-            innerOptions.Converters.Remove(thisConverter);
+            throw new JsonException("Missing discriminator 'type' in ReactionType");
         }
 
-        using var jsonDocument = JsonDocument.ParseValue(ref reader);
-        var jsonElement = jsonDocument.RootElement;
-        var type = jsonElement.GetProperty("type").Deserialize<ReactionTypes>(options);
-
-        return type switch
+        return type.GetString() switch
         {
-            ReactionTypes.Emoji => jsonElement.Deserialize<ReactionTypeEmoji>(innerOptions)!,
-            ReactionTypes.CustomEmoji => jsonElement.Deserialize<ReactionTypeCustomEmoji>(innerOptions)!,
-            ReactionTypes.Paid => jsonElement.Deserialize<ReactionTypePaid>(innerOptions)!,
-            _ => throw new JsonException($"Unknown type: {type}")
+            "emoji" => root.Deserialize<ReactionTypeEmoji>(options),
+            "custom_emoji" => root.Deserialize<ReactionTypeCustomEmoji>(options),
+            "paid" => root.Deserialize<ReactionTypePaid>(options),
+            _ => throw new JsonException($"Unknown ReactionType: {type}")
         };
     }
 
     public override void Write(Utf8JsonWriter writer, ReactionType value, JsonSerializerOptions options)
     {
-        var innerOptions = new JsonSerializerOptions(options);
-        var converter = innerOptions.Converters.FirstOrDefault(c => c is ReactionTypeConverter);
-        if (converter != null)
+        if (value is null)
         {
-            innerOptions.Converters.Remove(converter);
+            writer.WriteNullValue();
+            return;
         }
 
-        JsonSerializer.Serialize(writer, value, value.GetType(), innerOptions);
+        JsonSerializer.Serialize(writer, (object)value, options);
     }
 }

@@ -6,7 +6,7 @@ public sealed class BusinessConnection
 
     public required User User { get; init; }
 
-    public required int UserChatId { get; init; }
+    public required long UserChatId { get; init; }
 
     public required int Date { get; init; }
 

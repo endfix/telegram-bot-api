@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Telegram.BotAPI.Enums;
 using Telegram.BotAPI.Extensions;
 using Telegram.BotAPI.Types;
 
@@ -10,37 +8,33 @@ namespace Telegram.BotAPI.Serialization.Converters;
 
 public sealed class BackgroundFillConverter : JsonConverter<BackgroundFill>
 {
-    public override BackgroundFill Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override BackgroundFill? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        var innerOptions = new JsonSerializerOptions(options);
-        var thisConverter = innerOptions.Converters.FirstOrDefault(c => c is BackgroundFillConverter);
-        if (thisConverter != null)
+        using var jsonDocument = JsonDocument.ParseValue(ref reader);
+        var root = jsonDocument.RootElement;
+
+        if (!root.TryGetProperty("type", out var type))
         {
-            innerOptions.Converters.Remove(thisConverter);
+            throw new JsonException("Missing discriminator 'type' in BackgroundFill");
         }
 
-        using var jsonDocument = JsonDocument.ParseValue(ref reader);
-        var jsonElement = jsonDocument.RootElement;
-        var type = jsonElement.GetProperty("type").Deserialize<BackgroundFillTypes>(options);
-
-        return type switch
+        return type.GetString() switch
         {
-            BackgroundFillTypes.Solid => jsonElement.Deserialize<BackgroundFillSolid>(innerOptions)!,
-            BackgroundFillTypes.Gradient => jsonElement.Deserialize<BackgroundFillGradient>(innerOptions)!,
-            BackgroundFillTypes.FreeformGradient => jsonElement.Deserialize<BackgroundFillFreeformGradient>(innerOptions)!,
-            _ => throw new JsonException($"Unknown type: {type}")
+            "solid" => root.Deserialize<BackgroundFillSolid>(options),
+            "gradient" => root.Deserialize<BackgroundFillGradient>(options),
+            "freeform_gradient" => root.Deserialize<BackgroundFillFreeformGradient>(options),
+            _ => throw new JsonException($"Unknown BackgroundFill type: {type}")
         };
     }
 
     public override void Write(Utf8JsonWriter writer, BackgroundFill value, JsonSerializerOptions options)
     {
-        var innerOptions = new JsonSerializerOptions(options);
-        var converter = innerOptions.Converters.FirstOrDefault(c => c is BackgroundFillConverter);
-        if (converter != null)
+        if (value is null)
         {
-            innerOptions.Converters.Remove(converter);
+            writer.WriteNullValue();
+            return;
         }
 
-        JsonSerializer.Serialize(writer, value, value.GetType(), innerOptions);
+        JsonSerializer.Serialize(writer, (object)value, options);
     }
 }

@@ -26,21 +26,21 @@ public sealed class BotCommandScopeChat : BotCommandScope
 {
     public override BotCommandScopeTypes Type => BotCommandScopeTypes.Chat;
 
-    public required object ChatId { get; init; }
+    public required ChatIdSource ChatId { get; init; }
 }
 
 public sealed class BotCommandScopeChatAdministrators : BotCommandScope
 {
     public override BotCommandScopeTypes Type => BotCommandScopeTypes.ChatAdministrators;
 
-    public required object ChatId { get; init; }
+    public required ChatIdSource ChatId { get; init; }
 }
 
 public sealed class BotCommandScopeChatMember : BotCommandScope
 {
     public override BotCommandScopeTypes Type => BotCommandScopeTypes.ChatMember;
 
-    public required object ChatId { get; init; }
+    public required ChatIdSource ChatId { get; init; }
 
     public required long UserId { get; init; }
 }

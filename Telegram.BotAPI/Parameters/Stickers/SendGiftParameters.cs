@@ -7,7 +7,7 @@ public sealed class SendGiftParameters : ApiRequestParameters
 {
     public long? UserId { get; init; }
 
-    public object? ChatId { get; init; }
+    public ChatIdSource? ChatId { get; init; }
 
     public required string GiftId { get; init; }
 

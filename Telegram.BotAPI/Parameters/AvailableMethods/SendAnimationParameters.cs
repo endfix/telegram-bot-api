@@ -7,13 +7,13 @@ public sealed class SendAnimationParameters : ApiRequestParameters
 {
     public string? BusinessConnectionId { get; init; }
 
-    public required object ChatId { get; init; }
+    public required ChatIdSource ChatId { get; init; }
 
     public int? MessageThreadId { get; init; }
 
     public int? DirectMessagesTopicId { get; init; }
 
-    public required object Animation { get; init; }
+    public required AnimationSource Animation { get; init; }
 
     public int? Duration { get; init; }
 

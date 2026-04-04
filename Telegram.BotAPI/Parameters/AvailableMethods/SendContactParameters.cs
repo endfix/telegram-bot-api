@@ -6,7 +6,7 @@ public sealed class SendContactParameters : ApiRequestParameters
 {
     public string? BusinessConnectionId { get; init; }
 
-    public required object ChatId { get; init; }
+    public required ChatIdSource ChatId { get; init; }
 
     public int MessageThreadId { get; init; }
 

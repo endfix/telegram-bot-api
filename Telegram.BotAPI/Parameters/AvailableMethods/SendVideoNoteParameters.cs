@@ -6,13 +6,13 @@ public sealed class SendVideoNoteParameters : ApiRequestParameters
 {
     public string? BusinessConnectionId { get; init; }
 
-    public required object ChatId { get; init; }
+    public required ChatIdSource ChatId { get; init; }
 
     public int? MessageThreadId { get; init; }
 
     public int? DirectMessagesTopicId { get; init; }
 
-    public required object VideoNote { get; init; }
+    public required VideoNoteSource VideoNote { get; init; }
 
     public int? Duration { get; init; }
 

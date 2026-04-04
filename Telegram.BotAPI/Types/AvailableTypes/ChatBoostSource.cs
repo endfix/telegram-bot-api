@@ -18,7 +18,7 @@ public sealed class ChatBoostSourceGiveaway : ChatBoostSource
 {
     public override ChatBoostSources Source => ChatBoostSources.Giveaway;
 
-    public required int GiveawayMessageId { get; init; }
+    public required long GiveawayMessageId { get; init; }
 
     public User? User { get; init; }
 

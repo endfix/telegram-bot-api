@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Telegram.BotAPI.Enums;
 using Telegram.BotAPI.Extensions;
 using Telegram.BotAPI.Types;
 
@@ -10,38 +8,34 @@ namespace Telegram.BotAPI.Serialization.Converters;
 
 public sealed class MessageOriginConverter : JsonConverter<MessageOrigin>
 {
-    public override MessageOrigin Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override MessageOrigin? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        var innerOptions = new JsonSerializerOptions(options);
-        var thisConverter = innerOptions.Converters.FirstOrDefault(c => c is MessageOriginConverter);
-        if (thisConverter != null)
+        using var doc = JsonDocument.ParseValue(ref reader);
+        var root = doc.RootElement;
+
+        if (!root.TryGetProperty("type", out var type))
         {
-            innerOptions.Converters.Remove(thisConverter);
+            throw new JsonException("Missing discriminator 'type' in MessageOrigin");
         }
-
-        using var jsonDocument = JsonDocument.ParseValue(ref reader);
-        var jsonElement = jsonDocument.RootElement;
-        var type = jsonElement.GetProperty("type").Deserialize<MessageOriginTypes>(options);
-
-        return type switch
+        
+        return type.GetString() switch
         {
-            MessageOriginTypes.User => jsonElement.Deserialize<MessageOriginUser>(innerOptions)!,
-            MessageOriginTypes.HiddenUser => jsonElement.Deserialize<MessageOriginHiddenUser>(innerOptions)!,
-            MessageOriginTypes.Chat => jsonElement.Deserialize<MessageOriginChat>(innerOptions)!,
-            MessageOriginTypes.Channel => jsonElement.Deserialize<MessageOriginChannel>(innerOptions)!,
-            _ => throw new JsonException($"Unknown type: {type}")
+            "user" => root.Deserialize<MessageOriginUser>(options),
+            "hidden_user" => root.Deserialize<MessageOriginHiddenUser>(options),
+            "chat" => root.Deserialize<MessageOriginChat>(options),
+            "channel" => root.Deserialize<MessageOriginChannel>(options),
+            _ => throw new JsonException($"Unknown MessageOrigin type: {type}")
         };
     }
 
     public override void Write(Utf8JsonWriter writer, MessageOrigin value, JsonSerializerOptions options)
     {
-        var innerOptions = new JsonSerializerOptions(options);
-        var converter = innerOptions.Converters.FirstOrDefault(c => c is MessageOriginConverter);
-        if (converter != null)
+        if (value is null)
         {
-            innerOptions.Converters.Remove(converter);
+            writer.WriteNullValue();
+            return;
         }
 
-        JsonSerializer.Serialize(writer, value, value.GetType(), innerOptions);
+        JsonSerializer.Serialize(writer, (object)value, options);
     }
 }

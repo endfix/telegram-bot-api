@@ -7,7 +7,7 @@ public abstract class InputMedia
 {
     public abstract InputMediaTypes Type { get; }
 
-    public required virtual string Media { get; init; }
+    public required virtual MediaSource Media { get; init; }
 
     public virtual string? Caption { get; init; }
 
@@ -20,7 +20,7 @@ public sealed class InputMediaAnimation : InputMedia
 {
     public override InputMediaTypes Type => InputMediaTypes.Animation;
 
-    public string? Thumbnail { get; init; }
+    public object? Thumbnail { get; init; }
 
     public bool? ShowCaptionAboveMedia { get; init; }
 
@@ -37,7 +37,7 @@ public sealed class InputMediaDocument : InputMedia
 {
     public override InputMediaTypes Type => InputMediaTypes.Document;
 
-    public string? Thumbnail { get; init; }
+    public object? Thumbnail { get; init; }
 
     public bool? DisableContentTypeDetection { get; init; }
 }
@@ -46,7 +46,7 @@ public sealed class InputMediaAudio : InputMedia
 {
     public override InputMediaTypes Type => InputMediaTypes.Audio;
 
-    public string? Thumbnail { get; init; }
+    public object? Thumbnail { get; init; }
 
     public int? Duration { get; init; }
 
@@ -68,7 +68,7 @@ public sealed class InputMediaVideo : InputMedia
 {
     public override InputMediaTypes Type => InputMediaTypes.Video;
 
-    public string? Thumbnail { get; init; }
+    public object? Thumbnail { get; init; }
 
     public string? Cover { get; init; }
 

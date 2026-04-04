@@ -95,7 +95,7 @@ public sealed class ChatFullInfo
 
     public bool? CustomEmojiStickerSetName { get; init; }
 
-    public int? LinkedChatId { get; init; }
+    public long? LinkedChatId { get; init; }
 
     public ChatLocation? Location { get; init; }
 

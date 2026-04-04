@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Telegram.BotAPI.Enums;
 using Telegram.BotAPI.Extensions;
 using Telegram.BotAPI.Types;
 
@@ -12,39 +10,29 @@ public sealed class BotCommandScopeConverter : JsonConverter<BotCommandScope>
 {
     public override BotCommandScope Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        var innerOptions = new JsonSerializerOptions(options);
-        var thisConverter = innerOptions.Converters.FirstOrDefault(c => c is BotCommandScopeConverter);
-        if (thisConverter != null)
+        using var jsonDocument = JsonDocument.ParseValue(ref reader);
+        var root = jsonDocument.RootElement;
+
+        if (!root.TryGetProperty("type", out var type))
         {
-            innerOptions.Converters.Remove(thisConverter);
+            throw new JsonException("Missing discriminator 'type' in BotCommandScope");
         }
 
-        using var jsonDocument = JsonDocument.ParseValue(ref reader);
-        var jsonElement = jsonDocument.RootElement;
-        var type = jsonElement.GetProperty("type").Deserialize<BotCommandScopeTypes>(options);
-
-        return type switch
+        return type.GetString() switch
         {
-            BotCommandScopeTypes.Default => jsonElement.Deserialize<BotCommandScopeDefault>(innerOptions)!,
-            BotCommandScopeTypes.AllPrivateChats => jsonElement.Deserialize<BotCommandScopeAllPrivateChats>(innerOptions)!,
-            BotCommandScopeTypes.AllGroupChats => jsonElement.Deserialize<BotCommandScopeAllGroupChats>(innerOptions)!,
-            BotCommandScopeTypes.AllChatAdministrators => jsonElement.Deserialize<BotCommandScopeAllChatAdministrators>(innerOptions)!,
-            BotCommandScopeTypes.Chat => jsonElement.Deserialize<BotCommandScopeChat>(innerOptions)!,
-            BotCommandScopeTypes.ChatAdministrators => jsonElement.Deserialize<BotCommandScopeChatAdministrators>(innerOptions)!,
-            BotCommandScopeTypes.ChatMember => jsonElement.Deserialize<BotCommandScopeChatMember>(innerOptions)!,
-            _ => throw new JsonException($"Unknown type: {type}")
+            "default" => root.Deserialize<BotCommandScopeDefault>(options)!,
+            "all_private_chats" => root.Deserialize<BotCommandScopeAllPrivateChats>(options)!,
+            "all_group_chats" => root.Deserialize<BotCommandScopeAllGroupChats>(options)!,
+            "all_chat_administrators" => root.Deserialize<BotCommandScopeAllChatAdministrators>(options)!,
+            "chat" => root.Deserialize<BotCommandScopeChat>(options)!,
+            "chat_administrators" => root.Deserialize<BotCommandScopeChatAdministrators>(options)!,
+            "chat_member" => root.Deserialize<BotCommandScopeChatMember>(options)!,
+            _ => throw new JsonException($"Unknown BotCommandScope type: {type}")
         };
     }
 
     public override void Write(Utf8JsonWriter writer, BotCommandScope value, JsonSerializerOptions options)
     {
-        var innerOptions = new JsonSerializerOptions(options);
-        var converter = innerOptions.Converters.FirstOrDefault(c => c is BotCommandScopeConverter);
-        if (converter != null)
-        {
-            innerOptions.Converters.Remove(converter);
-        }
-
-        JsonSerializer.Serialize(writer, value, value.GetType(), innerOptions);
+        JsonSerializer.Serialize(writer, value, value.GetType(), options);
     }
 }

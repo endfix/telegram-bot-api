@@ -8,5 +8,5 @@ public sealed class BusinessMessagesDeleted
 
     public required Chat Chat { get; init; }
 
-    public required IReadOnlyList<int> MessageIds { get; init; }
+    public required IReadOnlyList<long> MessageIds { get; init; }
 }

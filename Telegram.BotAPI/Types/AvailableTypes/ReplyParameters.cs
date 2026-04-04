@@ -6,7 +6,7 @@ public sealed class ReplyParameters
 {
     public required long MessageId { get; init; }
 
-    public object? ChatId { get; init; }
+    public ChatIdSource? ChatId { get; init; }
 
     public bool? AllowSendingWithoutReply { get; init; }
 

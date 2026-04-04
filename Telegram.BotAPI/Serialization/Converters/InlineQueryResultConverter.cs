@@ -20,49 +20,49 @@ public sealed class InlineQueryResultConverter : JsonConverter<InlineQueryResult
 
         using var jsonDocument = JsonDocument.ParseValue(ref reader);
         var jsonElement = jsonDocument.RootElement;
-        var type = jsonElement.GetProperty("type").Deserialize<InlineQueryResultTypes>(options);
+        var type = jsonElement.GetProperty("type").Deserialize<InlineQueryResultType>(options);
 
         return type switch
         {
-            InlineQueryResultTypes.Article => jsonElement.Deserialize<InlineQueryResultArticle>(innerOptions)!,
+            InlineQueryResultType.Article => jsonElement.Deserialize<InlineQueryResultArticle>(innerOptions)!,
 
-            InlineQueryResultTypes.Photo => jsonElement.TryGetProperty("photo_url", out _)
+            InlineQueryResultType.Photo => jsonElement.TryGetProperty("photo_url", out _)
                 ? jsonElement.Deserialize<InlineQueryResultPhoto>(innerOptions)!
                 : jsonElement.Deserialize<InlineQueryResultCachedPhoto>(innerOptions)!,
 
-            InlineQueryResultTypes.Gif => jsonElement.TryGetProperty("gif_url", out _)
+            InlineQueryResultType.Gif => jsonElement.TryGetProperty("gif_url", out _)
                 ? jsonElement.Deserialize<InlineQueryResultGif>(innerOptions)!
                 : jsonElement.Deserialize<InlineQueryResultCachedGif>(innerOptions)!,
 
-            InlineQueryResultTypes.Mpeg4Gif => jsonElement.TryGetProperty("mpeg4_url", out _)
+            InlineQueryResultType.Mpeg4Gif => jsonElement.TryGetProperty("mpeg4_url", out _)
                 ? jsonElement.Deserialize<InlineQueryResultMpeg4Gif>(innerOptions)!
                 : jsonElement.Deserialize<InlineQueryResultCachedMpeg4Gif>(innerOptions)!,
 
-            InlineQueryResultTypes.Video => jsonElement.TryGetProperty("video_url", out _)
+            InlineQueryResultType.Video => jsonElement.TryGetProperty("video_url", out _)
                 ? jsonElement.Deserialize<InlineQueryResultVideo>(innerOptions)!
                 : jsonElement.Deserialize<InlineQueryResultCachedVideo>(innerOptions)!,
 
-            InlineQueryResultTypes.Audio => jsonElement.TryGetProperty("audio_url", out _)
+            InlineQueryResultType.Audio => jsonElement.TryGetProperty("audio_url", out _)
                 ? jsonElement.Deserialize<InlineQueryResultAudio>(innerOptions)!
                 : jsonElement.Deserialize<InlineQueryResultCachedAudio>(innerOptions)!,
 
-            InlineQueryResultTypes.Voice => jsonElement.TryGetProperty("voice_url", out _)
+            InlineQueryResultType.Voice => jsonElement.TryGetProperty("voice_url", out _)
                 ? jsonElement.Deserialize<InlineQueryResultVoice>(innerOptions)!
                 : jsonElement.Deserialize<InlineQueryResultCachedVoice>(innerOptions)!,
 
-            InlineQueryResultTypes.Document => jsonElement.TryGetProperty("document_url", out _)
+            InlineQueryResultType.Document => jsonElement.TryGetProperty("document_url", out _)
                 ? jsonElement.Deserialize<InlineQueryResultDocument>(innerOptions)!
                 : jsonElement.Deserialize<InlineQueryResultCachedDocument>(innerOptions)!,
 
-            InlineQueryResultTypes.CachedSticker => jsonElement.Deserialize<InlineQueryResultCachedSticker>(innerOptions)!,
+            InlineQueryResultType.CachedSticker => jsonElement.Deserialize<InlineQueryResultCachedSticker>(innerOptions)!,
 
-            InlineQueryResultTypes.Location => jsonElement.Deserialize<InlineQueryResultLocation>(innerOptions)!,
+            InlineQueryResultType.Location => jsonElement.Deserialize<InlineQueryResultLocation>(innerOptions)!,
 
-            InlineQueryResultTypes.Venue => jsonElement.Deserialize<InlineQueryResultVenue>(innerOptions)!,
+            InlineQueryResultType.Venue => jsonElement.Deserialize<InlineQueryResultVenue>(innerOptions)!,
 
-            InlineQueryResultTypes.Contact => jsonElement.Deserialize<InlineQueryResultContact>(innerOptions)!,
+            InlineQueryResultType.Contact => jsonElement.Deserialize<InlineQueryResultContact>(innerOptions)!,
 
-            InlineQueryResultTypes.Game => jsonElement.Deserialize<InlineQueryResultGame>(innerOptions)!,
+            InlineQueryResultType.Game => jsonElement.Deserialize<InlineQueryResultGame>(innerOptions)!,
 
             _ => throw new JsonException($"Unknown InlineQueryResult type: {type}")
         };

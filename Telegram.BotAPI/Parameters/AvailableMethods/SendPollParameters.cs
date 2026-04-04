@@ -22,11 +22,19 @@ public sealed class SendPollParameters : ApiRequestParameters
 
     public bool? IsAnonymous { get; init; }
 
-    public PollTypes? Type { get; init; }
+    public PollType? Type { get; init; }
 
     public bool? AllowsMultipleAnswers { get; init; }
 
-    public int? CorrectOptionId { get; init; }
+    public bool? AllowsRevoting { get; init; }
+
+    public bool? ShuffleOptions { get; init; }
+
+    public bool? AllowAddingOptions { get; init; }
+
+    public bool? HideResultsUntilCloses { get; init; }
+
+    public IReadOnlyList<int>? CorrectOptionIds { get; init; }
 
     public string? Explanation { get; init; }
 
@@ -39,6 +47,12 @@ public sealed class SendPollParameters : ApiRequestParameters
     public int? CloseDate { get; init; }
 
     public bool? IsClosed { get; init; }
+
+    public string? Description { get; init; }
+
+    public string? DescriptionParseMode { get; init; }
+
+    public IReadOnlyList<MessageEntity>? DescriptionEntities { get; init; }
 
     public bool? DisableNotification { get; init; }
 

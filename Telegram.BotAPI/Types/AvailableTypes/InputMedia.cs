@@ -5,7 +5,7 @@ namespace Telegram.BotAPI.Types;
 
 public abstract class InputMedia
 {
-    public abstract InputMediaTypes Type { get; }
+    public abstract InputMediaType Type { get; }
 
     public required virtual MediaSource Media { get; init; }
 
@@ -18,7 +18,7 @@ public abstract class InputMedia
 
 public sealed class InputMediaAnimation : InputMedia
 {
-    public override InputMediaTypes Type => InputMediaTypes.Animation;
+    public override InputMediaType Type => InputMediaType.Animation;
 
     public object? Thumbnail { get; init; }
 
@@ -35,7 +35,7 @@ public sealed class InputMediaAnimation : InputMedia
 
 public sealed class InputMediaDocument : InputMedia
 {
-    public override InputMediaTypes Type => InputMediaTypes.Document;
+    public override InputMediaType Type => InputMediaType.Document;
 
     public object? Thumbnail { get; init; }
 
@@ -44,7 +44,7 @@ public sealed class InputMediaDocument : InputMedia
 
 public sealed class InputMediaAudio : InputMedia
 {
-    public override InputMediaTypes Type => InputMediaTypes.Audio;
+    public override InputMediaType Type => InputMediaType.Audio;
 
     public object? Thumbnail { get; init; }
 
@@ -57,7 +57,7 @@ public sealed class InputMediaAudio : InputMedia
 
 public sealed class InputMediaPhoto : InputMedia
 {
-    public override InputMediaTypes Type => InputMediaTypes.Photo;
+    public override InputMediaType Type => InputMediaType.Photo;
 
     public bool? ShowCaptionAboveMedia { get; init; }
 
@@ -66,7 +66,7 @@ public sealed class InputMediaPhoto : InputMedia
 
 public sealed class InputMediaVideo : InputMedia
 {
-    public override InputMediaTypes Type => InputMediaTypes.Video;
+    public override InputMediaType Type => InputMediaType.Video;
 
     public object? Thumbnail { get; init; }
 

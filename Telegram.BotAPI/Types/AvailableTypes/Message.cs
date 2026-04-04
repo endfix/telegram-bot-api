@@ -36,6 +36,8 @@ public sealed class Message : MaybeInaccessibleMessage
 
     public int? ReplyToChecklistTaskId { get; init; }
 
+    public string? ReplyToPollOptionId { get; init; }
+
     public User? ViaBot { get; init; }
 
     public int? EditDate { get; init; }
@@ -186,7 +188,13 @@ public sealed class Message : MaybeInaccessibleMessage
 
     public GiveawayCompleted? GiveawayCompleted { get; init; }
 
+    public ManagedBotCreated? ManagedBotCreated { get; init; }
+
     public PaidMessagePriceChanged? PaidMessagePriceChanged { get; init; }
+
+    public PollOptionAdded? PollOptionAdded { get; init; }
+
+    public PollOptionDeleted? PollOptionDeleted { get; init; }
 
     public SuggestedPostApproved? SuggestedPostApproved { get; init; }
 

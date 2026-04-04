@@ -13,7 +13,7 @@ public sealed class CreateNewStickerSetParameters : ApiRequestParameters
 
     public required IReadOnlyList<InputSticker> Stickers { get; init; }
 
-    public StickerTypes? StickerType { get; init; }
+    public StickerType? StickerType { get; init; }
 
     public bool? NeedsRepainting { get; init; }
 }

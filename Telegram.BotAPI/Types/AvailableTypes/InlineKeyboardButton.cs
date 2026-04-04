@@ -8,7 +8,7 @@ public sealed class InlineKeyboardButton
 
     public string? IconCustomEmojiId { get; init; }
 
-    public KeyboardButtonStyles? Style { get; init; }
+    public KeyboardButtonStyle? Style { get; init; }
 
     public string? Url { get; init; }
 

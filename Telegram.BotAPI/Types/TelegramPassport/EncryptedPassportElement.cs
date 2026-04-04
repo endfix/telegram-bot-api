@@ -5,7 +5,7 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class EncryptedPassportElement
 {
-    public required EncryptedPassportElementTypes Type { get; init; }
+    public required EncryptedPassportElementType Type { get; init; }
 
     public string? Data { get; init; }
 

@@ -10,5 +10,5 @@ public sealed class UniqueGiftModel
 
     public required int RarityPerMille { get; init; }
 
-    public UniqueGiftModelRarities? Rarity { get; init; }
+    public UniqueGiftModelRarity? Rarity { get; init; }
 }

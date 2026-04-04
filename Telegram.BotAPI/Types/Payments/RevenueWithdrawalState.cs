@@ -4,17 +4,17 @@ namespace Telegram.BotAPI.Types;
 
 public abstract class RevenueWithdrawalState
 {
-    public abstract RevenueWithdrawalStateTypes Type { get; }
+    public abstract RevenueWithdrawalStateType Type { get; }
 }
 
 public sealed class RevenueWithdrawalStatePending : RevenueWithdrawalState
 {
-    public override RevenueWithdrawalStateTypes Type => RevenueWithdrawalStateTypes.Pending;
+    public override RevenueWithdrawalStateType Type => RevenueWithdrawalStateType.Pending;
 }
 
 public sealed class RevenueWithdrawalStateSucceeded : RevenueWithdrawalState
 {
-    public override RevenueWithdrawalStateTypes Type => RevenueWithdrawalStateTypes.Succeeded;
+    public override RevenueWithdrawalStateType Type => RevenueWithdrawalStateType.Succeeded;
 
     public required int Date { get; init; }
 
@@ -23,5 +23,5 @@ public sealed class RevenueWithdrawalStateSucceeded : RevenueWithdrawalState
 
 public sealed class RevenueWithdrawalStateFailed : RevenueWithdrawalState
 {
-    public override RevenueWithdrawalStateTypes Type => RevenueWithdrawalStateTypes.Failed;
+    public override RevenueWithdrawalStateType Type => RevenueWithdrawalStateType.Failed;
 }

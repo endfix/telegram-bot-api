@@ -5,19 +5,19 @@ namespace Telegram.BotAPI.Types;
 
 public abstract class BackgroundFill
 {
-    public abstract BackgroundFillTypes Type { get; }
+    public abstract BackgroundFillType Type { get; }
 }
 
 public sealed class BackgroundFillSolid : BackgroundFill
 {
-    public override BackgroundFillTypes Type => BackgroundFillTypes.Solid;
+    public override BackgroundFillType Type => BackgroundFillType.Solid;
 
     public required int Color { get; init; }
 }
 
 public sealed class BackgroundFillGradient : BackgroundFill
 {
-    public override BackgroundFillTypes Type => BackgroundFillTypes.Gradient;
+    public override BackgroundFillType Type => BackgroundFillType.Gradient;
 
     public required int TopColor { get; init; }
 
@@ -28,7 +28,7 @@ public sealed class BackgroundFillGradient : BackgroundFill
 
 public sealed class BackgroundFillFreeformGradient : BackgroundFill
 {
-    public override BackgroundFillTypes Type => BackgroundFillTypes.FreeformGradient;
+    public override BackgroundFillType Type => BackgroundFillType.FreeformGradient;
 
     public required IReadOnlyList<int> Colors { get; init; }
 }

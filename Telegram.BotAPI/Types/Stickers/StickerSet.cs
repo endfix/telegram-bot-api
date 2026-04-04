@@ -9,7 +9,7 @@ public sealed class StickerSet
 
     public required string Title { get; init; }
 
-    public required StickerTypes StickerType { get; init; }
+    public required StickerType StickerType { get; init; }
 
     public required IReadOnlyList<Sticker> Stickers { get; init; }
 

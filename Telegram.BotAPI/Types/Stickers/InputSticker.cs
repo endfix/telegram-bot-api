@@ -7,7 +7,7 @@ public sealed class InputSticker
 {
     public required object Sticker { get; init; }
 
-    public required InputStickerFormats Format { get; init; }
+    public required InputStickerFormat Format { get; init; }
 
     public required IReadOnlyList<string> EmojiList { get; init; }
 

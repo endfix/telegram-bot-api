@@ -19,11 +19,13 @@ public sealed class Poll
 
     public required bool IsAnonymous { get; init; }
 
-    public required PollTypes Type { get; init; }
+    public required PollType Type { get; init; }
 
     public required bool AllowsMultipleAnswers { get; init; }
 
-    public int? CorrectOptionId { get; init; }
+    public required bool AllowsRevoting { get; init; }
+
+    public IReadOnlyList<int>? CorrectOptionIds { get; init; }
 
     public string? Explanation { get; init; }
 
@@ -32,4 +34,8 @@ public sealed class Poll
     public int? OpenPeriod { get; init; }
 
     public int? CloseDate { get; init; }
+
+    public string? Description { get; init; }
+
+    public IReadOnlyList<MessageEntity>? DescriptionEntities { get; init; }
 }

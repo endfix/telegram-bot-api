@@ -8,11 +8,13 @@ public sealed class KeyboardButton
 
     public string? IconCustomEmojiId { get; init; }
 
-    public KeyboardButtonStyles? Style { get; init; }
+    public KeyboardButtonStyle? Style { get; init; }
 
     public KeyboardButtonRequestUsers? RequestUsers { get; init; }
 
     public KeyboardButtonRequestChat? RequestChat { get; init; }
+
+    public KeyboardButtonRequestManagedBot? RequestManagedBot { get; init; }
 
     public bool? RequestContact { get; init; }
 

@@ -31,4 +31,6 @@ public sealed class User
     public bool? HasTopicsEnabled { get; init; }
 
     public bool? AllowsUsersToCreateTopics { get; init; }
+
+    public bool? CanManageBots { get; init; }
 }

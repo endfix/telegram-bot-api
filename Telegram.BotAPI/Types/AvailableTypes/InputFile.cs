@@ -5,7 +5,7 @@ namespace Telegram.BotAPI.Types;
 
 public abstract class InputFile(string path)
 {
-    public abstract InputFileTypes Type { get; }
+    public abstract InputFileType Type { get; }
 
     public string FileName { get; } = Path.GetFileName(path);
 
@@ -22,55 +22,55 @@ public abstract class InputFile(string path)
 
 public sealed class InputCertificateFile(string path) : InputFile(path)
 {
-    public override InputFileTypes Type => InputFileTypes.Certificate;
+    public override InputFileType Type => InputFileType.Certificate;
 }
 
 public sealed class InputPhotoFile(string path) : InputFile(path)
 {
-    public override InputFileTypes Type => InputFileTypes.Photo;
+    public override InputFileType Type => InputFileType.Photo;
 }
 
 public sealed class InputAudioFile(string path) : InputFile(path)
 {
-    public override InputFileTypes Type => InputFileTypes.Audio;
+    public override InputFileType Type => InputFileType.Audio;
 }
 
 public sealed class InputDocumentFile(string path) : InputFile(path)
 {
-    public override InputFileTypes Type => InputFileTypes.Document;
+    public override InputFileType Type => InputFileType.Document;
 }
 
 public sealed class InputVideoFile(string path) : InputFile(path)
 {
-    public override InputFileTypes Type => InputFileTypes.Video;
+    public override InputFileType Type => InputFileType.Video;
 }
 
 public sealed class InputAnimationFile(string path) : InputFile(path)
 {
-    public override InputFileTypes Type => InputFileTypes.Animation;
+    public override InputFileType Type => InputFileType.Animation;
 }
 
 public sealed class InputVoiceFile(string path) : InputFile(path)
 {
-    public override InputFileTypes Type => InputFileTypes.Voice;
+    public override InputFileType Type => InputFileType.Voice;
 }
 
 public sealed class InputVideoNoteFile(string path) : InputFile(path)
 {
-    public override InputFileTypes Type => InputFileTypes.VideoNote;
+    public override InputFileType Type => InputFileType.VideoNote;
 }
 
 public sealed class InputStickerFile(string path) : InputFile(path)
 {
-    public override InputFileTypes Type => InputFileTypes.Sticker;
+    public override InputFileType Type => InputFileType.Sticker;
 }
 
 public sealed class InputCoverFile(string path) : InputFile(path)
 {
-    public override InputFileTypes Type => InputFileTypes.Cover;
+    public override InputFileType Type => InputFileType.Cover;
 }
 
 public sealed class InputThumbnailFile(string path) : InputFile(path)
 {
-    public override InputFileTypes Type => InputFileTypes.Thumbnail;
+    public override InputFileType Type => InputFileType.Thumbnail;
 }

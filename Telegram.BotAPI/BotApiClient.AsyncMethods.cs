@@ -416,6 +416,16 @@ public partial class BotApiClient
         return await RequestAsync<BusinessConnection>(new ApiRequest("getBusinessConnection", parameters), cancellationToken);
     }
 
+    public async Task<ApiResponse<string>> GetManagedBotTokenAsync(GetManagedBotTokenParameters parameters, CancellationToken cancellationToken = default)
+    {
+        return await RequestAsync<string>(new ApiRequest("getManagedBotToken", parameters), cancellationToken);
+    }
+
+    public async Task<ApiResponse<string>> ReplaceManagedBotTokenAsync(ReplaceManagedBotTokenParameters parameters, CancellationToken cancellationToken = default)
+    {
+        return await RequestAsync<string>(new ApiRequest("replaceManagedBotToken", parameters), cancellationToken);
+    }
+
     public async Task<ApiResponse<bool>> SetMyCommandsAsync(SetMyCommandsParameters parameters, CancellationToken cancellationToken = default)
     {
         return await RequestAsync<bool>(new ApiRequest("setMyCommands", parameters), cancellationToken);
@@ -785,6 +795,11 @@ public partial class BotApiClient
     public async Task<ApiResponse<PreparedInlineMessage>> SavePreparedInlineMessageAsync(SavePreparedInlineMessageParameters parameters, CancellationToken cancellationToken = default)
     {
         return await RequestAsync<PreparedInlineMessage>(new ApiRequest("savePreparedInlineMessage", parameters), cancellationToken);
+    }
+
+    public async Task<ApiResponse<PreparedKeyboardButton>> SavePreparedKeyboardButtonAsync(SavePreparedKeyboardButtonParameters parameters, CancellationToken cancellationToken = default)
+    {
+        return await RequestAsync<PreparedKeyboardButton>(new ApiRequest("savePreparedKeyboardButton", parameters), cancellationToken);
     }
     #endregion
 

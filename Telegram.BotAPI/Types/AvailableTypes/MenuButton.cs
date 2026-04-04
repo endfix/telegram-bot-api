@@ -4,22 +4,22 @@ namespace Telegram.BotAPI.Types;
 
 public abstract class MenuButton
 {
-    public abstract MenuButtonTypes Type { get; }
+    public abstract MenuButtonType Type { get; }
 }
 
 public sealed class MenuButtonCommands : MenuButton
 {
-    public override MenuButtonTypes Type => MenuButtonTypes.Commands;
+    public override MenuButtonType Type => MenuButtonType.Commands;
 }
 
 public sealed class MenuButtonDefault : MenuButton
 {
-    public override MenuButtonTypes Type => MenuButtonTypes.Default;
+    public override MenuButtonType Type => MenuButtonType.Default;
 }
 
 public sealed class MenuButtonWebApp : MenuButton
 {
-    public override MenuButtonTypes Type => MenuButtonTypes.WebApp;
+    public override MenuButtonType Type => MenuButtonType.WebApp;
 
     public required string Text { get; init; }
 

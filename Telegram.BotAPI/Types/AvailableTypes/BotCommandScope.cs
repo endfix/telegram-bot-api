@@ -4,41 +4,41 @@ namespace Telegram.BotAPI.Types;
 
 public abstract class BotCommandScope
 {
-    public abstract BotCommandScopeTypes Type { get; }
+    public abstract BotCommandScopeType Type { get; }
 }
 
 public sealed class BotCommandScopeAllChatAdministrators : BotCommandScope
 {
-    public override BotCommandScopeTypes Type => BotCommandScopeTypes.AllChatAdministrators;
+    public override BotCommandScopeType Type => BotCommandScopeType.AllChatAdministrators;
 }
 
 public sealed class BotCommandScopeAllGroupChats : BotCommandScope
 {
-    public override BotCommandScopeTypes Type => BotCommandScopeTypes.AllGroupChats;
+    public override BotCommandScopeType Type => BotCommandScopeType.AllGroupChats;
 }
 
 public sealed class BotCommandScopeAllPrivateChats : BotCommandScope
 {
-    public override BotCommandScopeTypes Type => BotCommandScopeTypes.AllPrivateChats;
+    public override BotCommandScopeType Type => BotCommandScopeType.AllPrivateChats;
 }
 
 public sealed class BotCommandScopeChat : BotCommandScope
 {
-    public override BotCommandScopeTypes Type => BotCommandScopeTypes.Chat;
+    public override BotCommandScopeType Type => BotCommandScopeType.Chat;
 
     public required ChatIdSource ChatId { get; init; }
 }
 
 public sealed class BotCommandScopeChatAdministrators : BotCommandScope
 {
-    public override BotCommandScopeTypes Type => BotCommandScopeTypes.ChatAdministrators;
+    public override BotCommandScopeType Type => BotCommandScopeType.ChatAdministrators;
 
     public required ChatIdSource ChatId { get; init; }
 }
 
 public sealed class BotCommandScopeChatMember : BotCommandScope
 {
-    public override BotCommandScopeTypes Type => BotCommandScopeTypes.ChatMember;
+    public override BotCommandScopeType Type => BotCommandScopeType.ChatMember;
 
     public required ChatIdSource ChatId { get; init; }
 
@@ -47,5 +47,5 @@ public sealed class BotCommandScopeChatMember : BotCommandScope
 
 public sealed class BotCommandScopeDefault : BotCommandScope
 {
-    public override BotCommandScopeTypes Type => BotCommandScopeTypes.Default;
+    public override BotCommandScopeType Type => BotCommandScopeType.Default;
 }

@@ -4,12 +4,12 @@ namespace Telegram.BotAPI.Types;
 
 public abstract class MessageOrigin
 {
-    public abstract MessageOriginTypes Type { get; }
+    public abstract MessageOriginType Type { get; }
 }
 
 public sealed class MessageOriginChannel : MessageOrigin
 {
-    public override MessageOriginTypes Type => MessageOriginTypes.Channel;
+    public override MessageOriginType Type => MessageOriginType.Channel;
 
     public required int Date { get; init; }
 
@@ -22,7 +22,7 @@ public sealed class MessageOriginChannel : MessageOrigin
 
 public sealed class MessageOriginChat : MessageOrigin
 {
-    public override MessageOriginTypes Type => MessageOriginTypes.Chat;
+    public override MessageOriginType Type => MessageOriginType.Chat;
 
     public required int Date { get; init; }
 
@@ -33,7 +33,7 @@ public sealed class MessageOriginChat : MessageOrigin
 
 public sealed class MessageOriginHiddenUser : MessageOrigin
 {
-    public override MessageOriginTypes Type => MessageOriginTypes.HiddenUser;
+    public override MessageOriginType Type => MessageOriginType.HiddenUser;
 
     public required int Date { get; init; }
 
@@ -42,7 +42,7 @@ public sealed class MessageOriginHiddenUser : MessageOrigin
 
 public sealed class MessageOriginUser : MessageOrigin
 {
-    public override MessageOriginTypes Type => MessageOriginTypes.User;
+    public override MessageOriginType Type => MessageOriginType.User;
 
     public required int Date { get; init; }
 

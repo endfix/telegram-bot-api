@@ -6,7 +6,7 @@ public sealed class UniqueGiftInfo
 {
     public required UniqueGift Gift { get; init; }
 
-    public required UniqueGiftInfoOrigins Origin { get; init; }
+    public required UniqueGiftInfoOrigin Origin { get; init; }
 
     public string? LastResaleCurrency { get; init; }
 

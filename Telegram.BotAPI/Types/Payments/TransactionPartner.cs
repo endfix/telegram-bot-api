@@ -5,14 +5,14 @@ namespace Telegram.BotAPI.Types;
 
 public abstract class TransactionPartner
 {
-    public abstract TransactionPartnerTypes Type { get; }
+    public abstract TransactionPartnerType Type { get; }
 }
 
 public sealed class TransactionPartnerUser : TransactionPartner
 {
-    public override TransactionPartnerTypes Type => TransactionPartnerTypes.User;
+    public override TransactionPartnerType Type => TransactionPartnerType.User;
 
-    public required TransactionTypes TransactionType { get; init; }
+    public required TransactionType TransactionType { get; init; }
 
     public required User User { get; init; }
 
@@ -33,7 +33,7 @@ public sealed class TransactionPartnerUser : TransactionPartner
 
 public sealed class TransactionPartnerChat : TransactionPartner
 {
-    public override TransactionPartnerTypes Type => TransactionPartnerTypes.Chat;
+    public override TransactionPartnerType Type => TransactionPartnerType.Chat;
 
     public required Chat Chat { get; init; }
 
@@ -42,7 +42,7 @@ public sealed class TransactionPartnerChat : TransactionPartner
 
 public sealed class TransactionPartnerAffiliateProgram : TransactionPartner
 {
-    public override TransactionPartnerTypes Type => TransactionPartnerTypes.AffiliateProgram;
+    public override TransactionPartnerType Type => TransactionPartnerType.AffiliateProgram;
 
     public User? SponsorUser { get; init; }
 
@@ -51,24 +51,24 @@ public sealed class TransactionPartnerAffiliateProgram : TransactionPartner
 
 public sealed class TransactionPartnerFragment : TransactionPartner
 {
-    public override TransactionPartnerTypes Type => TransactionPartnerTypes.Fragment;
+    public override TransactionPartnerType Type => TransactionPartnerType.Fragment;
 
     public RevenueWithdrawalState? WithdrawalState { get; init; }
 }
 
 public sealed class TransactionPartnerTelegramAds : TransactionPartner
 {
-    public override TransactionPartnerTypes Type => TransactionPartnerTypes.TelegramAds;
+    public override TransactionPartnerType Type => TransactionPartnerType.TelegramAds;
 }
 
 public sealed class TransactionPartnerTelegramApi : TransactionPartner
 {
-    public override TransactionPartnerTypes Type => TransactionPartnerTypes.TelegramApi;
+    public override TransactionPartnerType Type => TransactionPartnerType.TelegramApi;
 
     public required int RequestCount { get; init; }
 }
 
 public sealed class TransactionPartnerOther : TransactionPartner
 {
-    public override TransactionPartnerTypes Type => TransactionPartnerTypes.Other;
+    public override TransactionPartnerType Type => TransactionPartnerType.Other;
 }

@@ -4,19 +4,19 @@ namespace Telegram.BotAPI.Types;
 
 public abstract class InputPaidMedia
 {
-    public abstract InputPaidMediaTypes Type { get; }
+    public abstract InputPaidMediaType Type { get; }
 
     public required virtual string Media { get; init; }
 }
 
 public sealed class InputPaidMediaPhoto : InputPaidMedia
 {
-    public override InputPaidMediaTypes Type => InputPaidMediaTypes.Photo;
+    public override InputPaidMediaType Type => InputPaidMediaType.Photo;
 }
 
 public sealed class InputPaidMediaVideo : InputPaidMedia
 {
-    public override InputPaidMediaTypes Type => InputPaidMediaTypes.Video;
+    public override InputPaidMediaType Type => InputPaidMediaType.Video;
 
     public object? Thumbnail { get; init; }
 

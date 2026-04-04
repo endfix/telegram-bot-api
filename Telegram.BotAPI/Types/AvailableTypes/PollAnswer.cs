@@ -11,4 +11,6 @@ public sealed class PollAnswer
     public User? User { get; init; }
 
     public required IReadOnlyList<int> OptionIds { get; init; }
+
+    public required IReadOnlyList<string> OptionPersistentIds { get; init; }
 }

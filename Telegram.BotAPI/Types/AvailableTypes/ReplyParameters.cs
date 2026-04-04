@@ -19,4 +19,6 @@ public sealed class ReplyParameters
     public int? QuotePosition { get; init; }
 
     public int? ChecklistTaskId { get; init; }
+
+    public string? PollOptionId { get; init; }
 }

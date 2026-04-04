@@ -21,5 +21,5 @@ public sealed class WebhookInfo
 
     public int? MaxConnections { get; init; }
 
-    public IReadOnlyList<UpdateTypes>? AllowedUpdates { get; init; }
+    public IReadOnlyList<UpdateType>? AllowedUpdates { get; init; }
 }

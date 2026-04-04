@@ -8,7 +8,7 @@ public sealed class Sticker
 
     public required string FileUniqueId { get; init; }
 
-    public required StickerTypes Type { get; init; }
+    public required StickerType Type { get; init; }
 
     public required int Width { get; init; }
 

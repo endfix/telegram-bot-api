@@ -1,5 +1,5 @@
 # Telegram Bot API (С#)
-[![Bot%20API](https://img.shields.io/badge/Bot%20API-9.5-red.svg)](https://core.telegram.org/bots/api#march-1-2026)
+[![Bot%20API](https://img.shields.io/badge/Bot%20API-9.6-red.svg)](https://core.telegram.org/bots/api#april-3-2026)
 [![.NET%20Standart](https://img.shields.io/badge/.NET%20Standart-2.0-blue.svg)](https://learn.microsoft.com/en-us/dotnet/standard/net-standard?tabs=net-standard-2-0)
 
 The Bot API is an HTTP-based interface created for developers keen on building bots for Telegram on programming language the C Sharp.

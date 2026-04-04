@@ -5,12 +5,12 @@ namespace Telegram.BotAPI.Types;
 
 public abstract class OwnedGift
 {
-    public abstract OwnedGiftTypes Type { get; }
+    public abstract OwnedGiftType Type { get; }
 }
 
 public sealed class OwnedGiftRegular : OwnedGift
 {
-    public override OwnedGiftTypes Type => OwnedGiftTypes.Regular;
+    public override OwnedGiftType Type => OwnedGiftType.Regular;
 
     public required Gift Gift { get; init; }
 
@@ -43,7 +43,7 @@ public sealed class OwnedGiftRegular : OwnedGift
 
 public sealed class OwnedGiftUnique : OwnedGift
 {
-    public override OwnedGiftTypes Type => OwnedGiftTypes.Unique;
+    public override OwnedGiftType Type => OwnedGiftType.Unique;
 
     public required UniqueGift Gift { get; init; }
 

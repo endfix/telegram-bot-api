@@ -5,19 +5,19 @@ namespace Telegram.BotAPI.Types;
 
 public abstract class PaidMedia
 {
-    public abstract PaidMediaTypes Type { get; }
+    public abstract PaidMediaType Type { get; }
 }
 
 public sealed class PaidMediaPhoto : PaidMedia
 {
-    public override PaidMediaTypes Type => PaidMediaTypes.Photo;
+    public override PaidMediaType Type => PaidMediaType.Photo;
 
     public required IReadOnlyList<PhotoSize> Photo { get; init; }
 }
 
 public sealed class PaidMediaPreview : PaidMedia
 {
-    public override PaidMediaTypes Type => PaidMediaTypes.Preview;
+    public override PaidMediaType Type => PaidMediaType.Preview;
 
     public int? Width { get; init; }
 
@@ -28,7 +28,7 @@ public sealed class PaidMediaPreview : PaidMedia
 
 public sealed class PaidMediaVideo : PaidMedia
 {
-    public override PaidMediaTypes Type => PaidMediaTypes.Video;
+    public override PaidMediaType Type => PaidMediaType.Video;
 
     public required Video Video { get; init; }
 }

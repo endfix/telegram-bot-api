@@ -12,7 +12,7 @@ public sealed class VideoQuality
 
     public required int Height { get; init; }
 
-    public required VideoQualityCodecs Codec { get; init; }
+    public required VideoQualityCodec Codec { get; init; }
 
     public int? FileSize { get; init; }
 }

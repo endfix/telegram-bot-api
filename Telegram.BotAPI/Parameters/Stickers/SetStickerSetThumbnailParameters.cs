@@ -1,4 +1,5 @@
 ﻿using Telegram.BotAPI.Enums;
+using Telegram.BotAPI.Protocol;
 
 namespace Telegram.BotAPI.Parameters;
 

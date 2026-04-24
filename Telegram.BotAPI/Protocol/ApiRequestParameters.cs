@@ -1,4 +1,4 @@
-﻿namespace Telegram.BotAPI;
+﻿namespace Telegram.BotAPI.Protocol;
 
 public abstract class ApiRequestParameters
 {

@@ -1,4 +1,5 @@
-﻿using Telegram.BotAPI.Types;
+﻿using Telegram.BotAPI.Protocol;
+using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Parameters;
 

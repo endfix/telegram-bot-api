@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Telegram.BotAPI.Protocol;
 
 namespace Telegram.BotAPI.Parameters;
 

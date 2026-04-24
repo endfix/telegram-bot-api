@@ -1,17 +1,20 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Net.Http;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
+using Telegram.BotAPI.Exceptions;
 using Telegram.BotAPI.Extensions;
 using Telegram.BotAPI.Parameters;
+using Telegram.BotAPI.Protocol;
 using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI;
@@ -27,6 +30,10 @@ public sealed partial class BotApiClient
     private readonly HttpClient _httpClient;
 
     private readonly ILogger<BotApiClient> _logger;
+
+    private static readonly ConcurrentDictionary<Type, PropertyInfo[]> _parametersCache = new();
+
+    private static readonly ConcurrentDictionary<string, string> _fieldNamesCache = new();
 
     public BotApiClient(string token, HttpClient? httpClient = null, ILogger<BotApiClient> ? logger = null)
     {
@@ -54,13 +61,14 @@ public sealed partial class BotApiClient
                     AllowedUpdates = parameters?.AllowedUpdates
                 };
 
-                var response = await GetUpdatesAsync(pollingParameters, cancellationToken).ConfigureAwait(false);
+                var tasks = new List<Task>();
 
-                if (response.Ok && response.Result is not null)
+                var updates = await GetUpdatesAsync(pollingParameters, cancellationToken).ConfigureAwait(false);
+                if (updates is { Count: > 0 })
                 {
-                    foreach (var update in response.Result)
+                    foreach (var update in updates)
                     {
-                        _ = Task.Run(() =>
+                        tasks.Add(Task.Run(() =>
                         {
                             try
                             {
@@ -70,17 +78,19 @@ public sealed partial class BotApiClient
                             {
                                 _logger.LogError("OnUpdate Id: {UpdateId} Message: {Message}", update.UpdateId, e.Message);
                             }
-                        });
+                        }));
 
                         lastUpdateId = update.UpdateId + 1;
                     }
-                }
-                else if (!response.Ok)
-                {
-                    _logger.LogWarning("Long Polling: {Description}", response.Description);
-                    await Task.Delay(5000, cancellationToken).ConfigureAwait(false);
+
+                    await Task.WhenAll(tasks).ConfigureAwait(false);
                 }
             }
+            catch (ApiRequestException e)
+            {
+                _logger.LogWarning("Long Polling: {Message}", e.Message);
+                await Task.Delay(5000, cancellationToken).ConfigureAwait(false);
+            } 
             catch (OperationCanceledException)
             {
                 break;
@@ -153,11 +163,22 @@ public sealed partial class BotApiClient
                 Ok = false,
                 ErrorCode = 500,
                 Description = e.Message,
-                Result = default
+                Result = default!
             };
 
             return response;
         }
+    }
+
+    private async Task<TResult> ExecuteAsync<TResult>(ApiRequest request, CancellationToken cancellationToken)
+    {
+        var response = await RequestAsync<TResult>(request, cancellationToken);
+        if (!response.Ok)
+        {
+            throw new ApiRequestException(response.ErrorCode, response.Description, response.Parameters);
+        }
+
+        return response.Result;
     }
 
     public async Task<ApiResponse<byte[]>> GetFileBytesAsync(string filePath, CancellationToken cancellation = default)
@@ -190,6 +211,7 @@ public sealed partial class BotApiClient
         }
     }
 
+
     private async Task<HttpResponseMessage> GetResponse(ApiRequest request, CancellationToken cancellation)
     {
         var requestUri = $"/bot{_token}/{request.MethodName}";
@@ -201,7 +223,7 @@ public sealed partial class BotApiClient
             return await _httpClient.GetAsync(requestUri, cancellation).ConfigureAwait(false);
         }
 
-        var properties = parameters.GetType().GetProperties();
+        var properties = _parametersCache.GetOrAdd(parameters.GetType(), type => type.GetProperties());
         var hasParameters = false;
         var httpContent = new MultipartFormDataContent();
 
@@ -224,11 +246,11 @@ public sealed partial class BotApiClient
                 else if (value is IEnumerable<InputMedia> mediaList)
                 {
                     var jsonArray = PrepareMediaGroup(mediaList, httpContent);
-                    httpContent.Add(new StringContent(jsonArray, Encoding.UTF8), property.Name.ToSnake());
+                    httpContent.Add(new StringContent(jsonArray, Encoding.UTF8), _fieldNamesCache.GetOrAdd(property.Name, name => name.ToSnake()));
                 }
                 else
                 {
-                    httpContent.Add(new StringContent(value is string s ? s : value.Serialize(), Encoding.UTF8), property.Name.ToSnake());
+                    httpContent.Add(new StringContent(value is string s ? s : value.Serialize(), Encoding.UTF8), _fieldNamesCache.GetOrAdd(property.Name, name => name.ToSnake()));
                 }
             }
 

@@ -1,4 +1,6 @@
-﻿namespace Telegram.BotAPI.Parameters;
+﻿using Telegram.BotAPI.Protocol;
+
+namespace Telegram.BotAPI.Parameters;
 
 public sealed class CloseParameters : ApiRequestParameters
 {

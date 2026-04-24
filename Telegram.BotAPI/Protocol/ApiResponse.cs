@@ -1,4 +1,4 @@
-﻿namespace Telegram.BotAPI;
+﻿namespace Telegram.BotAPI.Protocol;
 
 public sealed class ApiResponse<T>
 {
@@ -10,5 +10,5 @@ public sealed class ApiResponse<T>
 
     public ApiResponseParameters? Parameters { get; set; }
 
-    public T? Result { get; set; }
+    public T Result { get; set; } = default!;
 }

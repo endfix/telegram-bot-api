@@ -13,40 +13,25 @@ var api = new BotApiClient(
 );
 ```
 
-## Long polling mode
-```cs
-api.OnUpdate += (client, update) =>
-{
-    switch (update.Type)
-    {
-        default:
-            {
-                Console.WriteLine($"Received a message of the type: {update.Type}");
-                break;
-            }
-    }
-};
-
-_ = api.StartPollingAsync();
-```
-
-
+## Examples
+ * [Long polling](https://github.com/endfix/telegram-bot-api/tree/main/Examples/LongPolling)
+ * [Webhook](https://github.com/endfix/telegram-bot-api/tree/main/Examples/Webhook)
 
 ## Download file
 Use this method to get basic information about a file and prepare it for downloading. For the moment, bots can download files of up to 20MB in size.
 ```cs
-var message = (await api.SendDocumentAsync(new SendDocumentParameters
+var message = await api.SendDocumentAsync(new()
 {
-	ChatId = 1234567890,
-	Document = new InputDocumentFile("path to file")
-})).Result;
+    ChatId = 1234567890,
+    Document = new InputDocumentFile("path to file")
+});
 
-var file = (await api.GetFileAsync(new GetFileParameters
+var file = await api.GetFileAsync(new()
 {
-	FileId = message.Document.FileId
-})).Result;
+    FileId = message.Document!.FileId
+});
 
-var fileBytes = (await api.GetFileBytesAsync(filePath: file.Result.FilePath)).Result;
+var fileBytes = await api.GetFileBytesAsync(filePath: file.FilePath!);
 
-File.WriteAllBytes("downloaded file", fileBytes);
+File.WriteAllBytes("path to downloaded file", fileBytes);
 ```

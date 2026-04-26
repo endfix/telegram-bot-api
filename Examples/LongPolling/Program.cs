@@ -1,10 +1,7 @@
-﻿using Telegram.BotAPI;
-using Telegram.BotAPI.Enums;
+﻿using Telegram.BotAPI.Enums;
 using Telegram.BotAPI.Extensions;
-using Telegram.BotAPI.Parameters;
-using Telegram.BotAPI.Types;
 
-namespace LongPolling;
+namespace Telegram.BotAPI.Example.LongPolling;
 
 internal class Program
 {
@@ -25,7 +22,7 @@ internal class Program
 
             var api = new BotApiClient("123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11", client);
 
-            await api.DeleteWebhookAsync(new DeleteWebhookParameters { DropPendingUpdates = true });
+            await api.DeleteWebhookAsync(new() { DropPendingUpdates = true });
 
             api.OnUpdate += (client, update) =>
             {
@@ -40,7 +37,7 @@ internal class Program
                                 _ = Task.Run(async () =>
                                 {
                                     // echo (ping - pong)
-                                    var result = await api.SendMessageAsync(new SendMessageParameters
+                                    var result = await api.SendMessageAsync(new()
                                     {
                                         ChatId = update.Message!.Chat.Id,
                                         Text = update.Message?.Text ?? string.Empty,
@@ -62,23 +59,7 @@ internal class Program
                 }                
             };
 
-            _ = api.StartPollingAsync(new GetUpdatesParameters { Limit = 10 });
-
-            var message = await api.SendDocumentAsync(new SendDocumentParameters
-            {
-                ChatId = 1234567890,
-                Document = new InputDocumentFile("path to file")
-            });
-
-            var file = await api.GetFileAsync(new GetFileParameters
-            {
-                FileId = message.Document!.FileId
-            });
-
-            var fileBytes = await api.GetFileBytesAsync(filePath: file.FilePath!);
-
-            File.WriteAllBytes("downloaded file", fileBytes);
-
+            _ = api.StartPollingAsync(new() { Limit = 10 });
         }
         catch (Exception e)
         {

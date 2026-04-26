@@ -3,7 +3,7 @@ using Telegram.BotAPI.Protocol;
 
 namespace Telegram.BotAPI.Exceptions;
 
-public sealed class ApiRequestException(int errorCode, string? description, ApiResponseParameters? parameters) 
+public sealed class ApiRequestException(int errorCode, string? description, ApiResponseParameters? parameters = null) 
     : Exception(description ?? $"API Error {errorCode}")
 {
     public int ErrorCode { get; } = errorCode;

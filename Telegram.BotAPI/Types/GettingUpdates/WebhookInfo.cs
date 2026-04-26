@@ -13,11 +13,11 @@ public sealed class WebhookInfo
 
     public string? IpAddress { get; init; }
 
-    public int? LastErrorDate { get; init; }
+    public long? LastErrorDate { get; init; }
 
     public string? LastErrorMessage { get; init; }
 
-    public int? LastSynchronizationErrorDate { get; init; }
+    public long? LastSynchronizationErrorDate { get; init; }
 
     public int? MaxConnections { get; init; }
 

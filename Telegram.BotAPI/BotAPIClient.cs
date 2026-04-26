@@ -181,7 +181,7 @@ public sealed partial class BotApiClient
         return response.Result;
     }
 
-    public async Task<ApiResponse<byte[]>> GetFileBytesAsync(string filePath, CancellationToken cancellation = default)
+    public async Task<byte[]> GetFileBytesAsync(string filePath, CancellationToken cancellation = default)
     {
         try
         {
@@ -193,21 +193,11 @@ public sealed partial class BotApiClient
             using var response = await _httpClient.GetAsync($"/file/bot{_token}/{filePath}", cancellation);
             var bytes = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
 
-            return new ApiResponse<byte[]>
-            {
-                Ok = true,
-                Result = bytes
-            };
+            return bytes;
         }
         catch (Exception e)
         {
-            return new ApiResponse<byte[]>
-            {
-                Ok = false,
-                ErrorCode = 500,
-                Description = e.Message,
-                Result = default
-            };
+            throw new ApiRequestException(500, e.Message);
         }
     }
 

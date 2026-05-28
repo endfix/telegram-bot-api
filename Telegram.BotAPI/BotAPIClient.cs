@@ -19,34 +19,44 @@ using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI;
 
-public sealed partial class BotApiClient
+public sealed class BotApiClient : IBotApiClient
 {
-    public delegate void UpdateHandler(BotApiClient client, Update update);
+    public delegate Task UpdateHandler(IBotApiClient client, Update update);
 
     public event UpdateHandler? OnUpdate;
-
-    private readonly string _token;
-
-    private readonly HttpClient _httpClient;
-
-    private readonly ILogger<BotApiClient> _logger;
 
     private static readonly ConcurrentDictionary<Type, PropertyInfo[]> _parametersCache = new();
 
     private static readonly ConcurrentDictionary<string, string> _fieldNamesCache = new();
 
-    public BotApiClient(string token, HttpClient? httpClient = null, ILogger<BotApiClient> ? logger = null)
+    private readonly string _token;
+
+    private readonly HttpClient _httpClient;
+
+    private IReadOnlyList<int> _retryDelays;
+
+    private readonly ILogger<IBotApiClient> _logger;
+
+    public BotApiClient(string token, HttpClient? httpClient = null, string? url = null, IReadOnlyList<int>? retryDelays = null, ILogger<IBotApiClient>? logger = null)
     {
         _token = token ?? throw new ArgumentNullException(nameof(token));
 
         _httpClient = httpClient ?? new HttpClient();
-        _httpClient.BaseAddress = new Uri("https://api.telegram.org");
+        _httpClient.BaseAddress = new Uri(url ?? "https://api.telegram.org");
 
-        _logger = logger ?? NullLogger<BotApiClient>.Instance;
+        _retryDelays = retryDelays ?? [5, 10, 25, 30, 60, 120];
+
+        _logger = logger ?? NullLogger<IBotApiClient>.Instance;
     }
 
-    public async Task StartPollingAsync(GetUpdatesParameters? parameters = null, CancellationToken cancellationToken = default)
+    public async Task StartPollingAsync(GetUpdatesParameters? parameters = null, int maxParallel = 10, CancellationToken cancellationToken = default)
     {
+        if (maxParallel < 1)
+        {
+            throw new ArgumentOutOfRangeException(nameof(maxParallel));
+        }
+
+        using var throttling = new SemaphoreSlim(maxParallel, maxParallel);
         var lastUpdateId = 0L;
 
         while (!cancellationToken.IsCancellationRequested)
@@ -63,22 +73,30 @@ public sealed partial class BotApiClient
 
                 var tasks = new List<Task>();
 
-                var updates = await GetUpdatesAsync(pollingParameters, cancellationToken).ConfigureAwait(false);
+                var updates = await this.GetUpdatesAsync(pollingParameters, cancellationToken).ConfigureAwait(false);
                 if (updates is { Count: > 0 })
                 {
                     foreach (var update in updates)
                     {
-                        tasks.Add(Task.Run(() =>
+                        tasks.Add(Task.Run(async () =>
                         {
+                            await throttling.WaitAsync(cancellationToken);
                             try
                             {
-                                OnUpdate?.Invoke(this, update);
+                                if (OnUpdate is not null)
+                                {
+                                    await OnUpdate.Invoke(this, update);
+                                }
                             }
                             catch (Exception e)
                             {
-                                _logger.LogError("OnUpdate Id: {UpdateId} Message: {Message}", update.UpdateId, e.Message);
+                                _logger.LogError(e, "Error processing update {Id}", update.UpdateId);
                             }
-                        }));
+                            finally
+                            {
+                                throttling.Release();
+                            }
+                        }, cancellationToken));
 
                         lastUpdateId = update.UpdateId + 1;
                     }
@@ -126,15 +144,16 @@ public sealed partial class BotApiClient
 
             if (apiResponse is null)
             {
-                throw new InvalidOperationException($"Failed to {request.MethodName}: response was empty.");
+                _logger.LogWarning($"RequestAsync: Failed to {request.MethodName}: response was empty.");
+                throw new ApiRequestException(500, $"Failed to {request.MethodName}: response was empty.");
             }
 
             if (apiResponse.ErrorCode == 429)
             {
-                if (retryCount < 5)
+                if (retryCount < _retryDelays.Count)
                 {
                     var secondsDelay = (apiResponse.Parameters?.RetryAfter ?? 0) + 1;
-                    await Task.Delay(secondsDelay * 1000, cancellation);
+                    await Task.Delay(TimeSpan.FromSeconds(secondsDelay), cancellation);
 
                     return await RequestAsync<T>(request, cancellation, ++retryCount);
                 }
@@ -142,22 +161,34 @@ public sealed partial class BotApiClient
 
             return apiResponse;
         }
-        catch (OperationCanceledException) when (cancellation.IsCancellationRequested)
+        catch (OperationCanceledException e)
         {
+            if (e is TaskCanceledException && !cancellation.IsCancellationRequested && retryCount < _retryDelays.Count)
+            {
+                return await RequestAsync<T>(request, cancellation, ++retryCount);
+            }
+
+            if (!cancellation.IsCancellationRequested)
+            {
+                _logger.LogWarning("RequestAsync: {Message}", e.Message);
+            }
+
             throw;
         }
         catch (Exception e)
         {
             if (e is HttpRequestException requestException && requestException.InnerException is SocketException)
             {
-                if (retryCount < 5)
+                if (retryCount < _retryDelays.Count)
                 {
-                    await Task.Delay(60 * 1000, cancellation);
+                    await Task.Delay(TimeSpan.FromSeconds(_retryDelays[retryCount]), cancellation);
 
                     return await RequestAsync<T>(request, cancellation, ++retryCount);
                 }
             }
-            
+
+            _logger.LogError("RequestAsync: {Message}", e.Message);
+
             var response = new ApiResponse<T>
             {
                 Ok = false,
@@ -170,7 +201,7 @@ public sealed partial class BotApiClient
         }
     }
 
-    private async Task<TResult> ExecuteAsync<TResult>(ApiRequest request, CancellationToken cancellationToken)
+    public async Task<TResult> ExecuteAsync<TResult>(ApiRequest request, CancellationToken cancellationToken)
     {
         var response = await RequestAsync<TResult>(request, cancellationToken);
         if (!response.Ok)
@@ -246,7 +277,6 @@ public sealed partial class BotApiClient
 
             if (!hasParameters)
             {
-                httpContent.Dispose();
                 return await _httpClient.GetAsync(requestUri, cancellation).ConfigureAwait(false);
             }
 

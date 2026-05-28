@@ -14,8 +14,8 @@ var api = new BotApiClient(
 ```
 
 ## Examples
- * [Long polling](https://github.com/endfix/telegram-bot-api/tree/main/Examples/LongPolling)
- * [Webhook](https://github.com/endfix/telegram-bot-api/tree/main/Examples/Webhook)
+ * [**Long polling**: Sequential (FIFO) or parallel update processing.](https://github.com/endfix/telegram-bot-api/tree/main/Examples/LongPolling)
+ * [**Webhook**: Built-in exponential backoff and retry policy.](https://github.com/endfix/telegram-bot-api/tree/main/Examples/Webhook)
 
 ## Download file
 Use this method to get basic information about a file and prepare it for downloading. For the moment, bots can download files of up to 20MB in size.

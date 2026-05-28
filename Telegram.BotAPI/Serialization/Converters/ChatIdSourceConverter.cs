@@ -21,7 +21,13 @@ public sealed class ChatIdSourceConverter : JsonConverter<ChatIdSource>
             {
                 return id;
             }
-            return value!;
+
+            if (value is null)
+            {
+                throw new JsonException(nameof(value));
+            }
+
+            return value;
         }
 
         throw new JsonException($"Unexpected token type for ChatIdSource: {reader.TokenType}");
@@ -40,7 +46,7 @@ public sealed class ChatIdSourceConverter : JsonConverter<ChatIdSource>
         }
         else
         {
-            writer.WriteNullValue();
+            throw new JsonException($"Unsupported type for ChatIdSource: {innerValue.GetType().Name}");
         }
     }
 }

@@ -106,4 +106,6 @@ public sealed class ChatFullInfo
     public UniqueGiftColors? UniqueGiftColors { get; init; }
 
     public int? PaidMessageStarCount { get; init; }
+
+    public User? GuardBot { get; init; }
 }

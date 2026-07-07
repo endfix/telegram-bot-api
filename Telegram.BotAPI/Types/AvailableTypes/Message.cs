@@ -70,6 +70,8 @@ public sealed class Message : MaybeInaccessibleMessage
 
     public string? EffectId { get; init; }
 
+    public RichMessage? RichMessage { get; init; }
+
     public Animation? Animation { get; init; }
 
     public Audio? Audio { get; init; }

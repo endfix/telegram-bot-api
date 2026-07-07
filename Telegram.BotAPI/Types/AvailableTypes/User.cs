@@ -35,4 +35,6 @@ public sealed class User
     public bool? AllowsUsersToCreateTopics { get; init; }
 
     public bool? CanManageBots { get; init; }
+
+    public bool? SupportsJoinRequestQueries { get; init; }
 }

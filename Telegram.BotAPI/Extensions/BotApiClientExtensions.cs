@@ -170,6 +170,12 @@ public static class IBotApiClientExtensions
     public static async Task<bool> DeclineChatJoinRequestAsync(this IBotApiClient client, DeclineChatJoinRequestParameters parameters, CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("declineChatJoinRequest", parameters), cancellationToken);
 
+    public static async Task<bool> AnswerChatJoinRequestQueryAsync(this IBotApiClient client, AnswerChatJoinRequestQueryParameters parameters, CancellationToken cancellationToken = default)
+        => await client.ExecuteAsync<bool>(new ApiRequest("answerChatJoinRequestQuery", parameters), cancellationToken);
+
+    public static async Task<bool> SendChatJoinRequestWebAppAsync(this IBotApiClient client, SendChatJoinRequestWebAppParameters parameters, CancellationToken cancellationToken = default)
+        => await client.ExecuteAsync<bool>(new ApiRequest("sendChatJoinRequestWebApp", parameters), cancellationToken);
+
     public static async Task<bool> SetChatPhotoAsync(this IBotApiClient client, SetChatPhotoParameters parameters, CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("setChatPhoto", parameters), cancellationToken);
 
@@ -494,6 +500,14 @@ public static class IBotApiClientExtensions
 
     public static async Task<bool> DeleteStickerSetAsync(this IBotApiClient client, DeleteStickerSetParameters parameters, CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("deleteStickerSet", parameters), cancellationToken);
+    #endregion
+
+    #region Rich messages
+    public static async Task<Message> SendRichMessageAsync(this IBotApiClient client, SendRichMessageParameters parameters, CancellationToken cancellationToken = default)
+        => await client.ExecuteAsync<Message>(new ApiRequest("sendRichMessage", parameters), cancellationToken);
+
+    public static async Task<bool> SendRichMessageDraftAsync(this IBotApiClient client, SendRichMessageDraftParameters parameters, CancellationToken cancellationToken = default)
+        => await client.ExecuteAsync<bool>(new ApiRequest("sendRichMessageDraft", parameters), cancellationToken);
     #endregion
 
     #region Inline mode

@@ -13,4 +13,6 @@ public sealed class ChatJoinRequest
     public string? Bio { get; set; }
 
     public ChatInviteLink? InviteLink { get; set; }
+
+    public string? QueryId { get; set; }
 }

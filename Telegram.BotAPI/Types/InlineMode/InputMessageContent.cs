@@ -18,6 +18,17 @@ public sealed class InputTextMessageContent : InputMessageContent
     public LinkPreviewOptions? LinkPreviewOptions { get; init; }
 }
 
+public sealed class InputRichMessageContent : InputMessageContent
+{
+    public required string MessageText { get; init; }
+
+    public string? ParseMode { get; init; }
+
+    public IReadOnlyList<MessageEntity>? Entities { get; init; }
+
+    public LinkPreviewOptions? LinkPreviewOptions { get; init; }
+}
+
 public sealed class InputLocationMessageContent : InputMessageContent
 {
     public required double Latitude { get; init; }

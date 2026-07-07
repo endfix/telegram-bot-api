@@ -22,5 +22,7 @@ public sealed class EditMessageTextParameters : ApiRequestParameters
 
     public LinkPreviewOptions? LinkPreviewOptions { get; init; }
 
+    public InputRichMessage? RichMessage { get; init; }
+
     public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 }

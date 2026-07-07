@@ -35,6 +35,10 @@ public sealed class SendPollParameters : ApiRequestParameters
 
     public bool? HideResultsUntilCloses { get; init; }
 
+    public bool? MembersOnly { get; init; }
+
+    public IReadOnlyList<string>? CountryCodes { get; init; }
+
     public IReadOnlyList<int>? CorrectOptionIds { get; init; }
 
     public string? Explanation { get; init; }
@@ -42,6 +46,8 @@ public sealed class SendPollParameters : ApiRequestParameters
     public string? ExplanationParseMode { get; init; }
 
     public IReadOnlyList<MessageEntity>? ExplanationEntities { get; init; }
+
+    public InputPollMedia? ExplanationMedia { get; init; }
 
     public int? OpenPeriod { get; init; }
 
@@ -54,6 +60,8 @@ public sealed class SendPollParameters : ApiRequestParameters
     public string? DescriptionParseMode { get; init; }
 
     public IReadOnlyList<MessageEntity>? DescriptionEntities { get; init; }
+
+    public InputPollMedia? Media { get; init; }
 
     public bool? DisableNotification { get; init; }
 

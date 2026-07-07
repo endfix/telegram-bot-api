@@ -110,6 +110,8 @@ public sealed class ChatMemberRestricted : ChatMember
 
     public required bool CanAddWebPagePreviews { get; init; }
 
+    public required bool CanReactToMessages { get; init; }
+
     public required bool CanEditTag { get; init; }
 
     public required bool CanChangeInfo { get; init; }

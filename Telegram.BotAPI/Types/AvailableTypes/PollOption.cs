@@ -10,6 +10,8 @@ public sealed class PollOption
 
     public IReadOnlyList<MessageEntity>? TextEntities { get; init; }
 
+    public PollMedia? Media { get; init; }
+
     public required int VoterCount { get; init; }
 
     public User? AddedByUser { get; init; }

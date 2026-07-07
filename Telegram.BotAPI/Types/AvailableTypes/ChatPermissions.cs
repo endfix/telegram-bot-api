@@ -22,6 +22,8 @@ public sealed class ChatPermissions
 
     public bool? CanAddWebPagePreviews { get; init; }
 
+    public bool? CanReactToMessages { get; init; }
+
     public bool? CanEditTag { get; init; }
 
     public bool? CanChangeInfo { get; init; }

@@ -8,6 +8,13 @@ public abstract class PaidMedia
     public abstract PaidMediaType Type { get; }
 }
 
+public sealed class PaidMediaLivePhoto : PaidMedia
+{
+    public override PaidMediaType Type => PaidMediaType.LivePhoto;
+
+    public required LivePhoto LivePhoto { get; init; }
+}
+
 public sealed class PaidMediaPhoto : PaidMedia
 {
     public override PaidMediaType Type => PaidMediaType.Photo;

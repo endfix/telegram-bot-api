@@ -2,6 +2,7 @@
 
 public enum InputPaidMediaType
 {
+    LivePhoto,
     Photo,
     Video
 }

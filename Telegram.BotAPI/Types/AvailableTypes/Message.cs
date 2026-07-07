@@ -18,6 +18,8 @@ public sealed class Message : MaybeInaccessibleMessage
 
     public string? SenderTag { get; init; }
 
+    public string? GuestQueryId { get; init; }
+
     public string? BusinessConnectionId { get; init; }
 
     public MessageOrigin? ForwardOrigin { get; init; }
@@ -39,6 +41,10 @@ public sealed class Message : MaybeInaccessibleMessage
     public string? ReplyToPollOptionId { get; init; }
 
     public User? ViaBot { get; init; }
+
+    public User? GuestBotCallerUser { get; init; }
+
+    public Chat? GuestBotCallerChat { get; init; }
 
     public int? EditDate { get; init; }
 
@@ -69,6 +75,8 @@ public sealed class Message : MaybeInaccessibleMessage
     public Audio? Audio { get; init; }
 
     public Document? Document { get; init; }
+
+    public LivePhoto? LivePhoto { get; init; }
 
     public PaidMediaInfo? PaidMedia { get; init; }
 

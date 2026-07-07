@@ -9,4 +9,6 @@ public sealed class InputPollOption
     public string? TextParseMode { get; init; }
 
     public IReadOnlyList<MessageEntity>? TextEntities { get; init; }
+
+    public InputPollOptionMedia? Media { get; init; }
 }

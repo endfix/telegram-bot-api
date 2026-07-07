@@ -6,7 +6,14 @@ public abstract class InputPaidMedia
 {
     public abstract InputPaidMediaType Type { get; }
 
-    public required virtual string Media { get; init; }
+    public required virtual MediaSource Media { get; init; }
+}
+
+public sealed class InputPaidMediaLivePhoto : InputPaidMedia
+{
+    public override InputPaidMediaType Type => InputPaidMediaType.LivePhoto;
+
+    public required MediaSource Photo { get; init; }
 }
 
 public sealed class InputPaidMediaPhoto : InputPaidMedia

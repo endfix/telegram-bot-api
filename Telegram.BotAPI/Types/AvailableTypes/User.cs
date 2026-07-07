@@ -22,6 +22,8 @@ public sealed class User
 
     public bool? CanReadAllGroupMessages { get; init; }
 
+    public bool? SupportsGuestQueries { get; init; }
+
     public bool? SupportsInlineQueries { get; init; }
 
     public bool? CanConnectToBusiness { get; init; }

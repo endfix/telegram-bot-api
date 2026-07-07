@@ -55,6 +55,35 @@ public sealed class InputMediaAudio : InputMedia
     public string? Title { get; init; }
 }
 
+public sealed class InputMediaLink : InputMedia
+{
+    public override InputMediaType Type => InputMediaType.Link;
+
+    public required string Url { get; init; }
+}
+
+public sealed class InputMediaLivePhoto : InputMedia
+{
+    public override InputMediaType Type => InputMediaType.LivePhoto;
+
+    public required MediaSource Photo { get; init; }
+
+    public bool? ShowCaptionAboveMedia { get; init; }
+
+    public bool? HasSpoiler { get; init; }
+}
+
+public sealed class InputMediaLocation : InputMedia
+{
+    public override InputMediaType Type => InputMediaType.Location;
+
+    public required double Latitude { get; init; }
+
+    public required double Longitude { get; init; }
+
+    public double? HorizontalAccuracy { get; init; }
+}
+
 public sealed class InputMediaPhoto : InputMedia
 {
     public override InputMediaType Type => InputMediaType.Photo;
@@ -62,6 +91,34 @@ public sealed class InputMediaPhoto : InputMedia
     public bool? ShowCaptionAboveMedia { get; init; }
 
     public bool? HasSpoiler { get; init; }
+}
+
+public sealed class InputMediaSticker : InputMedia
+{
+    public override InputMediaType Type => InputMediaType.Sticker;
+
+    public string? Emoji { get; init; }
+}
+
+public sealed class InputMediaVenue : InputMedia
+{
+    public override InputMediaType Type => InputMediaType.Venue;
+
+    public required double Latitude { get; init; }
+
+    public required double Longitude { get; init; }
+
+    public required string Title { get; init; }
+
+    public required string Address { get; init; }
+
+    public string? FoursquareId { get; init; }
+
+    public string? FoursquareType { get; init; }
+
+    public string? GooglePlaceId { get; init; }
+
+    public string? GooglePlaceType { get; init; }
 }
 
 public sealed class InputMediaVideo : InputMedia

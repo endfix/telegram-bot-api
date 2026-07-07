@@ -12,7 +12,7 @@ public sealed class SendMessageDraftParameters : ApiRequestParameters
 
     public required int DraftId { get; init; }
 
-    public required string Text { get; init; }
+    public string? Text { get; init; }
 
     public string? ParseMode { get; init; }
 

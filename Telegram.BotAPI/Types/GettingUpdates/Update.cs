@@ -23,6 +23,8 @@ public sealed class Update
 
     public BusinessMessagesDeleted? DeletedBusinessMessages { get; init; }
 
+    public Message? GuestMessage { get; init; }
+
     public MessageReactionUpdated? MessageReaction { get; init; }
 
     public MessageReactionCountUpdated? MessageReactionCount { get; init; }

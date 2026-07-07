@@ -18,6 +18,8 @@ public sealed class ExternalReplyInfo
 
     public Document? Document { get; init; }
 
+    public LivePhoto? LivePhoto { get; init; }
+
     public PaidMediaInfo? PaidMedia { get; init; }
 
     public IReadOnlyList<PhotoSize>? Photo { get; init; }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Telegram.BotAPI.Enums;
 using Telegram.BotAPI.Extensions;
 using Telegram.BotAPI.Types;
 
@@ -13,20 +14,20 @@ public sealed class BotCommandScopeConverter : JsonConverter<BotCommandScope>
         using var jsonDocument = JsonDocument.ParseValue(ref reader);
         var root = jsonDocument.RootElement;
 
-        if (!root.TryGetProperty("type", out var type))
+        if (!root.TryGetProperty("type", out var typeProperty) || !typeProperty.TryGetEnum<BotCommandScopeType>(options, out var type))
         {
             throw new JsonException("Missing discriminator 'type' in BotCommandScope");
         }
 
-        return type.GetString() switch
+        return type switch
         {
-            "default" => root.Deserialize<BotCommandScopeDefault>(options)!,
-            "all_private_chats" => root.Deserialize<BotCommandScopeAllPrivateChats>(options)!,
-            "all_group_chats" => root.Deserialize<BotCommandScopeAllGroupChats>(options)!,
-            "all_chat_administrators" => root.Deserialize<BotCommandScopeAllChatAdministrators>(options)!,
-            "chat" => root.Deserialize<BotCommandScopeChat>(options)!,
-            "chat_administrators" => root.Deserialize<BotCommandScopeChatAdministrators>(options)!,
-            "chat_member" => root.Deserialize<BotCommandScopeChatMember>(options)!,
+            BotCommandScopeType.Default => root.Deserialize<BotCommandScopeDefault>(options)!,
+            BotCommandScopeType.AllPrivateChats => root.Deserialize<BotCommandScopeAllPrivateChats>(options)!,
+            BotCommandScopeType.AllGroupChats => root.Deserialize<BotCommandScopeAllGroupChats>(options)!,
+            BotCommandScopeType.AllChatAdministrators => root.Deserialize<BotCommandScopeAllChatAdministrators>(options)!,
+            BotCommandScopeType.Chat => root.Deserialize<BotCommandScopeChat>(options)!,
+            BotCommandScopeType.ChatAdministrators => root.Deserialize<BotCommandScopeChatAdministrators>(options)!,
+            BotCommandScopeType.ChatMember => root.Deserialize<BotCommandScopeChatMember>(options)!,
             _ => throw new JsonException($"Unknown BotCommandScope type: {type}")
         };
     }

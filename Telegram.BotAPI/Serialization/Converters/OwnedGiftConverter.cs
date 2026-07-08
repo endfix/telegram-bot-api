@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Telegram.BotAPI.Enums;
+using Telegram.BotAPI.Extensions;
 using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Serialization.Converters;
@@ -12,15 +14,15 @@ public sealed class OwnedGiftConverter : JsonConverter<OwnedGift>
         using var doc = JsonDocument.ParseValue(ref reader);
         var root = doc.RootElement;
 
-        if (!root.TryGetProperty("type", out var type))
+        if (!root.TryGetProperty("type", out var typeProperty) || !typeProperty.TryGetEnum<OwnedGiftType>(options, out var type))
         {
             throw new JsonException("Missing discriminator 'type' in OwnedGift");
         }
 
-        return type.GetString() switch
+        return type switch
         {
-            "regular" => root.Deserialize<OwnedGiftRegular>(options),
-            "unique" => root.Deserialize<OwnedGiftUnique>(options),
+            OwnedGiftType.Regular => root.Deserialize<OwnedGiftRegular>(options),
+            OwnedGiftType.Unique => root.Deserialize<OwnedGiftUnique>(options),
             _ => throw new JsonException($"Unknown OwnedGift type: {type}")
         };
     }

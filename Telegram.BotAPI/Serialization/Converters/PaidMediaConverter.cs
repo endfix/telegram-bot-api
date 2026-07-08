@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Telegram.BotAPI.Enums;
 using Telegram.BotAPI.Extensions;
 using Telegram.BotAPI.Types;
 
@@ -13,16 +14,17 @@ public sealed class PaidMediaConverter : JsonConverter<PaidMedia>
         using var doc = JsonDocument.ParseValue(ref reader);
         var root = doc.RootElement;
 
-        if (!root.TryGetProperty("type", out var type))
+        if (!root.TryGetProperty("type", out var typeProperty) || !typeProperty.TryGetEnum<PaidMediaType>(options, out var type))
         {
             throw new JsonException("Missing discriminator 'type' in PaidMedia");
         }
 
-        return type.GetString() switch
+        return type switch
         {
-            "photo" => root.Deserialize<PaidMediaPhoto>(options),
-            "video" => root.Deserialize<PaidMediaVideo>(options),
-            "preview" => root.Deserialize<PaidMediaPreview>(options),
+            PaidMediaType.LivePhoto => root.Deserialize<PaidMediaLivePhoto>(options),
+            PaidMediaType.Photo => root.Deserialize<PaidMediaPhoto>(options),
+            PaidMediaType.Video => root.Deserialize<PaidMediaVideo>(options),
+            PaidMediaType.Preview => root.Deserialize<PaidMediaPreview>(options),
             _ => throw new JsonException($"Unknown PaidMedia type: {type}")
         };
     }

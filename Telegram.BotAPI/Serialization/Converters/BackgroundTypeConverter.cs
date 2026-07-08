@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Telegram.BotAPI.Enums;
 using Telegram.BotAPI.Extensions;
 using Telegram.BotAPI.Types;
 
@@ -13,17 +14,17 @@ public sealed class BackgroundTypeConverter : JsonConverter<BackgroundType>
         using var jsonDocument = JsonDocument.ParseValue(ref reader);
         var root = jsonDocument.RootElement;
 
-        if (!root.TryGetProperty("type", out var type))
+        if (!root.TryGetProperty("type", out var typeProperty) || !typeProperty.TryGetEnum<BackgroundTypes>(options, out var type))
         {
             throw new JsonException("Missing discriminator 'type' in BackgroundType");
         }
 
-        return type.GetString() switch
+        return type switch
         {
-            "fill" => root.Deserialize<BackgroundTypeFill>(options),
-            "wallpaper" => root.Deserialize<BackgroundTypeWallpaper>(options),
-            "pattern" => root.Deserialize<BackgroundTypePattern>(options),
-            "chat_theme" => root.Deserialize<BackgroundTypeChatTheme>(options),
+            BackgroundTypes.Fill => root.Deserialize<BackgroundTypeFill>(options),
+            BackgroundTypes.Wallpaper => root.Deserialize<BackgroundTypeWallpaper>(options),
+            BackgroundTypes.Pattern => root.Deserialize<BackgroundTypePattern>(options),
+            BackgroundTypes.ChatTheme => root.Deserialize<BackgroundTypeChatTheme>(options),
             _ => throw new JsonException($"Unknown BackgroundType: {type}")
         };
     }

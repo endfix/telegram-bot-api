@@ -4,7 +4,7 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class RichBlockTableCell
 {
-    public RichText? Text { get; init; }
+    public RichTextSource? Text { get; init; }
 
     public bool? IsHeader { get; init; }
 

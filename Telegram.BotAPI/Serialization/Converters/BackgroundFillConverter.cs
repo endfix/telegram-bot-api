@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Telegram.BotAPI.Enums;
 using Telegram.BotAPI.Extensions;
 using Telegram.BotAPI.Types;
 
@@ -13,16 +14,16 @@ public sealed class BackgroundFillConverter : JsonConverter<BackgroundFill>
         using var jsonDocument = JsonDocument.ParseValue(ref reader);
         var root = jsonDocument.RootElement;
 
-        if (!root.TryGetProperty("type", out var type))
+        if (!root.TryGetProperty("type", out var typeProperty) || !typeProperty.TryGetEnum<BackgroundFillType>(options, out var type))
         {
             throw new JsonException("Missing discriminator 'type' in BackgroundFill");
         }
 
-        return type.GetString() switch
+        return type switch
         {
-            "solid" => root.Deserialize<BackgroundFillSolid>(options),
-            "gradient" => root.Deserialize<BackgroundFillGradient>(options),
-            "freeform_gradient" => root.Deserialize<BackgroundFillFreeformGradient>(options),
+            BackgroundFillType.Solid => root.Deserialize<BackgroundFillSolid>(options),
+            BackgroundFillType.Gradient => root.Deserialize<BackgroundFillGradient>(options),
+            BackgroundFillType.FreeformGradient => root.Deserialize<BackgroundFillFreeformGradient>(options),
             _ => throw new JsonException($"Unknown BackgroundFill type: {type}")
         };
     }

@@ -29,7 +29,10 @@ public static class JsonSerializerExtensions
             new OwnedGiftConverter(),
             new PaidMediaConverter(),
             new PassportElementErrorConverter(),
-            new ReactionTypeConverter()
+            new ReactionTypeConverter(),
+            new RichTextSourceConverter(),
+            new RichTextConverter(),
+            new RichBlockConverter()
         }
     };
 

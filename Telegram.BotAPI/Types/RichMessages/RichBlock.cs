@@ -12,14 +12,14 @@ public sealed class RichBlockParagraph : RichBlock
 {
     public override RichBlockType Type => RichBlockType.Paragraph;
 
-    public required RichText Text { get; init; }
+    public required RichTextSource Text { get; init; }
 }
 
 public sealed class RichBlockSectionHeading : RichBlock
 {
     public override RichBlockType Type => RichBlockType.Heading;
 
-    public required RichText Text { get; init; }
+    public required RichTextSource Text { get; init; }
 
     public required int Size { get; init; }
 }
@@ -28,7 +28,7 @@ public sealed class RichBlockPreformatted : RichBlock
 {
     public override RichBlockType Type => RichBlockType.Pre;
 
-    public required RichText Text { get; init; }
+    public required RichTextSource Text { get; init; }
 
     public string? Language { get; init; }
 }
@@ -37,7 +37,7 @@ public sealed class RichBlockFooter : RichBlock
 {
     public override RichBlockType Type => RichBlockType.Footer;
 
-    public required RichText Text { get; init; }
+    public required RichTextSource Text { get; init; }
 }
 
 public sealed class RichBlockDivider : RichBlock
@@ -72,16 +72,16 @@ public sealed class RichBlockBlockQuotation : RichBlock
 
     public required IReadOnlyList<RichBlock> Blocks { get; init; }
 
-    public RichText? Credit { get; init; }
+    public RichTextSource? Credit { get; init; }
 }
 
 public sealed class RichBlockPullQuotation : RichBlock
 {
     public override RichBlockType Type => RichBlockType.Pullquote;
 
-    public required RichText Text { get; init; }
+    public required RichTextSource Text { get; init; }
 
-    public RichText? Credit { get; init; }
+    public RichTextSource? Credit { get; init; }
 }
 
 public sealed class RichBlockCollage : RichBlock
@@ -112,14 +112,14 @@ public sealed class RichBlockTable : RichBlock
 
     public bool? IsStriped { get; init; }
 
-    public RichText? Caption { get; init; }
+    public RichTextSource? Caption { get; init; }
 }
 
 public sealed class RichBlockDetails : RichBlock
 {
     public override RichBlockType Type => RichBlockType.Details;
 
-    public required RichText Summary { get; init; }
+    public required RichTextSource Summary { get; init; }
 
     public required IReadOnlyList<RichBlock> Blocks { get; init; }
 
@@ -147,7 +147,7 @@ public sealed class RichBlockAnimation : RichBlock
 
     public required Animation Animation { get; init; }
 
-    public bool? has_spoiler { get; init; }
+    public bool? HasSpoiler { get; init; }
 
     public RichBlockCaption? Caption { get; init; }
 }
@@ -196,5 +196,5 @@ public sealed class RichBlockThinking : RichBlock
 {
     public override RichBlockType Type => RichBlockType.Thinking;
 
-    public required RichText Text { get; init; }
+    public required RichTextSource Text { get; init; }
 }

@@ -2,7 +2,7 @@
 
 public sealed class RichBlockCaption
 {
-    public required RichText Text { get; init; }
+    public required RichTextSource Text { get; init; }
 
-    public RichText? Credit { get; init; }
+    public RichTextSource? Credit { get; init; }
 }

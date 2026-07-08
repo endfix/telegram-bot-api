@@ -11,6 +11,9 @@ public static class Utils
     public static long GetRandomLong(long min = 1, long max = long.MaxValue) 
         => Random.Shared.NextInt64(min, max);
 
+    public static double GetRandomDouble(double min = 1, double max = double.MaxValue)
+        => Random.Shared.NextDouble() * (max - min) + min;
+
     public static string GetRandomText(int length = 1024)
     {
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

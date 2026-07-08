@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Telegram.BotAPI.Enums;
 using Telegram.BotAPI.Extensions;
 using Telegram.BotAPI.Types;
 
@@ -13,16 +14,16 @@ public sealed class MenuButtonConverter : JsonConverter<MenuButton>
         using var doc = JsonDocument.ParseValue(ref reader);
         var root = doc.RootElement;
 
-        if (!root.TryGetProperty("type", out var type))
+        if (!root.TryGetProperty("type", out var typeProperty) || !typeProperty.TryGetEnum<MenuButtonType>(options, out var type))
         {
             throw new JsonException("Missing discriminator 'type' in MenuButton");
         }
 
-        return type.GetString() switch
+        return type switch
         {
-            "commands" => root.Deserialize<MenuButtonCommands>(options),
-            "web_app" => root.Deserialize<MenuButtonWebApp>(options),
-            "default" => root.Deserialize<MenuButtonDefault>(options),
+            MenuButtonType.Commands => root.Deserialize<MenuButtonCommands>(options),
+            MenuButtonType.WebApp => root.Deserialize<MenuButtonWebApp>(options),
+            MenuButtonType.Default => root.Deserialize<MenuButtonDefault>(options),
             _ => throw new JsonException($"Unknown MenuButton type: {type}")
         };
     }

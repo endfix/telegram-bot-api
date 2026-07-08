@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Telegram.BotAPI.Enums;
 using Telegram.BotAPI.Extensions;
 using Telegram.BotAPI.Types;
 
@@ -13,17 +14,17 @@ public sealed class MessageOriginConverter : JsonConverter<MessageOrigin>
         using var doc = JsonDocument.ParseValue(ref reader);
         var root = doc.RootElement;
 
-        if (!root.TryGetProperty("type", out var type))
+        if (!root.TryGetProperty("type", out var typeProperty) || !typeProperty.TryGetEnum<MessageOriginType>(options, out var type))
         {
             throw new JsonException("Missing discriminator 'type' in MessageOrigin");
         }
         
-        return type.GetString() switch
+        return type switch
         {
-            "user" => root.Deserialize<MessageOriginUser>(options),
-            "hidden_user" => root.Deserialize<MessageOriginHiddenUser>(options),
-            "chat" => root.Deserialize<MessageOriginChat>(options),
-            "channel" => root.Deserialize<MessageOriginChannel>(options),
+            MessageOriginType.User => root.Deserialize<MessageOriginUser>(options),
+            MessageOriginType.HiddenUser => root.Deserialize<MessageOriginHiddenUser>(options),
+            MessageOriginType.Chat => root.Deserialize<MessageOriginChat>(options),
+            MessageOriginType.Channel => root.Deserialize<MessageOriginChannel>(options),
             _ => throw new JsonException($"Unknown MessageOrigin type: {type}")
         };
     }

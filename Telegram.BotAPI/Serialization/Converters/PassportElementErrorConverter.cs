@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Telegram.BotAPI.Enums;
 using Telegram.BotAPI.Extensions;
 using Telegram.BotAPI.Types;
 
@@ -13,22 +14,22 @@ public sealed class PassportElementErrorConverter : JsonConverter<PassportElemen
         using var doc = JsonDocument.ParseValue(ref reader);
         var root = doc.RootElement;
 
-        if (!root.TryGetProperty("source", out var source))
+        if (!root.TryGetProperty("source", out var sourceProperty) || !sourceProperty.TryGetEnum<PassportElementErrorSource>(options, out var source))
         {
             throw new JsonException("Missing discriminator 'source' in PassportElementError");
         }
 
-        return source.GetString() switch
+        return source switch
         {
-            "data" => root.Deserialize<PassportElementErrorDataField>(options),
-            "front_side" => root.Deserialize<PassportElementErrorFrontSide>(options),
-            "reverse_side" => root.Deserialize<PassportElementErrorReverseSide>(options),
-            "selfie" => root.Deserialize<PassportElementErrorSelfie>(options),
-            "file" => root.Deserialize<PassportElementErrorFile>(options),
-            "files" => root.Deserialize<PassportElementErrorFiles>(options),
-            "translation_file" => root.Deserialize<PassportElementErrorTranslationFile>(options),
-            "translation_files" => root.Deserialize<PassportElementErrorTranslationFiles>(options),
-            "unspecified" => root.Deserialize<PassportElementErrorUnspecified>(options),
+            PassportElementErrorSource.Data => root.Deserialize<PassportElementErrorDataField>(options),
+            PassportElementErrorSource.FrontSide => root.Deserialize<PassportElementErrorFrontSide>(options),
+            PassportElementErrorSource.ReverseSide => root.Deserialize<PassportElementErrorReverseSide>(options),
+            PassportElementErrorSource.Selfie => root.Deserialize<PassportElementErrorSelfie>(options),
+            PassportElementErrorSource.File => root.Deserialize<PassportElementErrorFile>(options),
+            PassportElementErrorSource.Files => root.Deserialize<PassportElementErrorFiles>(options),
+            PassportElementErrorSource.TranslationFile => root.Deserialize<PassportElementErrorTranslationFile>(options),
+            PassportElementErrorSource.TranslationFiles => root.Deserialize<PassportElementErrorTranslationFiles>(options),
+            PassportElementErrorSource.Unspecified => root.Deserialize<PassportElementErrorUnspecified>(options),
             _ => throw new JsonException($"Unknown PassportElementError source: {source}")
         };
     }

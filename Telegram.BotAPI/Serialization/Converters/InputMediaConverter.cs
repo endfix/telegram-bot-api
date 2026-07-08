@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Telegram.BotAPI.Enums;
 using Telegram.BotAPI.Extensions;
 using Telegram.BotAPI.Types;
 
@@ -13,24 +14,31 @@ public sealed class InputMediaConverter : JsonConverter<InputMedia>
         using var jsonDocument = JsonDocument.ParseValue(ref reader);
         var root = jsonDocument.RootElement;
 
-        if (!root.TryGetProperty("type", out var type))
+        if (!root.TryGetProperty("type", out var typeProperty) || !typeProperty.TryGetEnum<InputMediaType>(options, out var type))
         {
             throw new JsonException("Missing discriminator 'type' in InputMedia");
         }
 
-        return type.GetString() switch
+        return type switch
         {
-            "animation" => root.Deserialize<InputMediaAnimation>(options),
-            "document" => root.Deserialize<InputMediaDocument>(options),
-            "audio" => root.Deserialize<InputMediaAudio>(options),
-            "photo" => root.Deserialize<InputMediaPhoto>(options),
-            "video" => root.Deserialize<InputMediaVideo>(options),
+            InputMediaType.Animation => root.Deserialize<InputMediaAnimation>(options),
+            InputMediaType.Audio => root.Deserialize<InputMediaAudio>(options),
+            InputMediaType.Document => root.Deserialize<InputMediaDocument>(options),
+            InputMediaType.LivePhoto => root.Deserialize<InputMediaPhoto>(options),
+            InputMediaType.Photo => root.Deserialize<InputMediaPhoto>(options),
+            InputMediaType.Video => root.Deserialize<InputMediaVideo>(options),
             _ => throw new JsonException($"Unknown InputMedia type: {type}")
         };
     }
 
     public override void Write(Utf8JsonWriter writer, InputMedia value, JsonSerializerOptions options)
     {
+        if (value is null)
+        {
+            writer.WriteNullValue();
+            return;
+        }
+
         JsonSerializer.Serialize(writer, value, value.GetType(), options);
     }
 }

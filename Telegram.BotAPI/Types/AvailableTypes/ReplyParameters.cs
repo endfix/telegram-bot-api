@@ -4,9 +4,11 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class ReplyParameters
 {
-    public required long MessageId { get; init; }
+    public long? MessageId { get; init; }
 
     public ChatIdSource? ChatId { get; init; }
+
+    public long? EphemeralMessageId { get; init; }
 
     public bool? AllowSendingWithoutReply { get; init; }
 

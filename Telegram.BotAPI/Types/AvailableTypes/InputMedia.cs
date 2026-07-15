@@ -143,3 +143,10 @@ public sealed class InputMediaVideo : InputMedia
 
     public bool? HasSpoiler { get; init; }
 }
+
+public sealed class InputMediaVoiceNote : InputMedia
+{
+    public override InputMediaType Type =>  InputMediaType.VoiceNote;
+
+    public int? Duration { get; init; }
+}

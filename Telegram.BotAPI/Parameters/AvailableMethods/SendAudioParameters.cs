@@ -14,6 +14,10 @@ public sealed class SendAudioParameters : ApiRequestParameters
 
     public int? DirectMessagesTopicId { get; init; }
 
+    public long? ReceiverUserId { get; init; }
+
+    public string? CallbackQueryId { get; init; }
+
     public required AudioSource Audio { get; init; }
 
     public string? Caption { get; init; }

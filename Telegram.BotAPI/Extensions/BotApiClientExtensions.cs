@@ -436,6 +436,18 @@ public static class IBotApiClientExtensions
     public static async Task<Poll> StopPollAsync(this IBotApiClient client, StopPollParameters parameters, CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Poll>(new ApiRequest("stopPoll", parameters), cancellationToken);
 
+    public static async Task<Poll> EditEphemeralMessageTextAsync(this IBotApiClient client, EditEphemeralMessageTextParameters parameters, CancellationToken cancellationToken = default)
+        => await client.ExecuteAsync<Poll>(new ApiRequest("editEphemeralMessageText", parameters), cancellationToken);
+
+    public static async Task<Poll> EditEphemeralMessageMediaAsync(this IBotApiClient client, EditEphemeralMessageMediaParameters parameters, CancellationToken cancellationToken = default)
+        => await client.ExecuteAsync<Poll>(new ApiRequest("editEphemeralMessageMedia", parameters), cancellationToken);
+
+    public static async Task<Poll> EditEphemeralMessageCaptionAsync(this IBotApiClient client, EditEphemeralMessageCaptionParameters parameters, CancellationToken cancellationToken = default)
+        => await client.ExecuteAsync<Poll>(new ApiRequest("editEphemeralMessageCaption", parameters), cancellationToken);
+
+    public static async Task<Poll> EditEphemeralMessageReplyMarkupAsync(this IBotApiClient client, EditEphemeralMessageReplyMarkupParameters parameters, CancellationToken cancellationToken = default)
+        => await client.ExecuteAsync<Poll>(new ApiRequest("editEphemeralMessageReplyMarkup", parameters), cancellationToken);
+
     public static async Task<bool> ApproveSuggestedPostAsync(this IBotApiClient client, ApproveSuggestedPostParameters parameters, CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("approveSuggestedPost", parameters), cancellationToken);
 

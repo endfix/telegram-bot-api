@@ -13,6 +13,10 @@ public sealed class SendStickerParameters : ApiRequestParameters
 
     public int? DirectMessagesTopicId { get; init; }
 
+    public long? ReceiverUserId { get; init; }
+
+    public string? CallbackQueryId { get; init; }
+
     public required object Sticker { get; init; }
 
     public string? Emoji { get; init; }

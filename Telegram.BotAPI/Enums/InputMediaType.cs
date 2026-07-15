@@ -11,5 +11,6 @@ public enum InputMediaType
     Photo,
     Sticker,
     Venue,
-    Video
+    Video,
+    VoiceNote
 }

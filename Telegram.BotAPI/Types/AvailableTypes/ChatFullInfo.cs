@@ -108,4 +108,6 @@ public sealed class ChatFullInfo
     public int? PaidMessageStarCount { get; init; }
 
     public User? GuardBot { get; init; }
+
+    public Community? Community { get; init; }
 }

@@ -14,6 +14,10 @@ public sealed class SendPhotoParameters : ApiRequestParameters
 
     public int? DirectMessagesTopicId { get; init; }
 
+    public long? ReceiverUserId { get; init; }
+
+    public string? CallbackQueryId { get; init; }
+
     public required PhotoSource Photo { get; init; }
 
     public string? Caption { get; init; }

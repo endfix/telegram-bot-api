@@ -120,5 +120,6 @@ public class RichMessagesSerializationTests
             }, 
             Width = 100, 
             Height = 100, 
-            Zoom = 1 };
+            Zoom = 1 
+        };
 }

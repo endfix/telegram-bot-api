@@ -14,6 +14,10 @@ public sealed class SendAnimationParameters : ApiRequestParameters
 
     public int? DirectMessagesTopicId { get; init; }
 
+    public long? ReceiverUserId { get; init; }
+
+    public string? CallbackQueryId { get; init; }
+
     public required AnimationSource Animation { get; init; }
 
     public int? Duration { get; init; }

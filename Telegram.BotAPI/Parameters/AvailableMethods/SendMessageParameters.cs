@@ -14,6 +14,10 @@ public sealed class SendMessageParameters : ApiRequestParameters
 
     public int? DirectMessagesTopicId { get; init; }
 
+    public long? ReceiverUserId { get; init; }
+
+    public string? CallbackQueryId { get; init; }
+
     public required string Text { get; init; }
 
     public string? ParseMode { get; init; }

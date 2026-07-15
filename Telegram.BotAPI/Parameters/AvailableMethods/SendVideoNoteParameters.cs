@@ -13,6 +13,10 @@ public sealed class SendVideoNoteParameters : ApiRequestParameters
 
     public int? DirectMessagesTopicId { get; init; }
 
+    public long? ReceiverUserId { get; init; }
+
+    public string? CallbackQueryId { get; init; }
+
     public required VideoNoteSource VideoNote { get; init; }
 
     public int? Duration { get; init; }

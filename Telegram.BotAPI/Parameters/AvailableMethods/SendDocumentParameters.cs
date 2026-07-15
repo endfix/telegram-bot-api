@@ -14,6 +14,10 @@ public sealed class SendDocumentParameters : ApiRequestParameters
 
     public int? DirectMessagesTopicId { get; init; }
 
+    public long? ReceiverUserId { get; init; }
+
+    public string? CallbackQueryId { get; init; }
+
     public required DocumentSource Document { get; init; }
 
     public object? Thumbnail { get; init; }

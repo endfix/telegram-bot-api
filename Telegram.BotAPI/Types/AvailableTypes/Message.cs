@@ -18,6 +18,10 @@ public sealed class Message : MaybeInaccessibleMessage
 
     public string? SenderTag { get; init; }
 
+    public User? ReceiverUser { get; init; }
+
+    public long? EphemeralMessageId { get; init; }
+
     public string? GuestQueryId { get; init; }
 
     public string? BusinessConnectionId { get; init; }
@@ -175,6 +179,10 @@ public sealed class Message : MaybeInaccessibleMessage
     public ChecklistTasksDone? ChecklistTasksDone { get; init; }
 
     public ChecklistTasksAdded? ChecklistTasksAdded { get; init; }
+
+    public CommunityChatAdded? CommunityChatAdded { get; init; }
+
+    public CommunityChatRemoved? CommunityChatRemoved { get; init; }
 
     public DirectMessagePriceChanged? DirectMessagePriceChanged { get; init; }
 

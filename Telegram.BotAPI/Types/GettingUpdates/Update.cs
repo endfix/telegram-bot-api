@@ -57,6 +57,8 @@ public sealed class Update
 
     public ManagedBotUpdated? ManagedBot { get; init; }
 
+    public BotSubscriptionUpdated? Subscription { get; init; }
+
     [JsonIgnore]
     public UpdateType Type => this switch
     {

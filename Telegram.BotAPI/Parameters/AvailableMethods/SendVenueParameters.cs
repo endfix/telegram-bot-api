@@ -13,6 +13,10 @@ public sealed class SendVenueParameters : ApiRequestParameters
 
     public int? DirectMessagesTopicId { get; init; }
 
+    public long? ReceiverUserId { get; init; }
+
+    public string? CallbackQueryId { get; init; }
+
     public required double Latitude { get; init; }
 
     public required double Longitude { get; init; }

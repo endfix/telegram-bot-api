@@ -13,6 +13,10 @@ public sealed class SendContactParameters : ApiRequestParameters
 
     public int DirectMessagesTopicId { get; init; }
 
+    public long? ReceiverUserId { get; init; }
+
+    public string? CallbackQueryId { get; init; }
+
     public required string PhoneNumber { get; init; }
 
     public required string FirstName { get; init; }

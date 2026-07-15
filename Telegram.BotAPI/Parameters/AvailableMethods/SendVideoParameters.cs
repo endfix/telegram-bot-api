@@ -14,6 +14,10 @@ public sealed class SendVideoParameters : ApiRequestParameters
 
     public int? DirectMessagesTopicId { get; init; }
 
+    public long? ReceiverUserId { get; init; }
+
+    public string? CallbackQueryId { get; init; }
+
     public required VideoSource Video { get; init; }
 
     public int? Duration { get; init; }

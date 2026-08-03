@@ -31,9 +31,9 @@ internal class Program
                 Timeout = TimeSpan.FromMinutes(5)
             };
 
-            IBotApiClient api = new BotApiClient(token: token, client);
+            var api = new BotApiClient(token: token, client);
 
-            await api.DeleteWebhookAsync(new() { DropPendingUpdates = true });
+            await api.DeleteWebhookAsync(dropPendingUpdates: true);
 
             api.OnUpdate += async (client, update) =>
             {
@@ -54,11 +54,7 @@ internal class Program
                                 }
                                 
                                 // echo (ping - pong)
-                                var result = await api.SendMessageAsync(new()
-                                {
-                                    ChatId = update.Message!.Chat.Id,
-                                    Text = text,
-                                });
+                                var result = await api.SendMessageAsync(chatId: update.Message!.Chat.Id, text: text);
 
                                 break;
                             }
@@ -75,7 +71,7 @@ internal class Program
                 }
             };
 
-            await api.StartPollingAsync(parameters: new() { Limit = 10 }, cancellationToken: cts.Token);
+            await api.StartPollingAsync(limit: 10, cancellationToken: cts.Token);
         }
         catch (Exception e)
         {

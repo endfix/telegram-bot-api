@@ -6,7 +6,7 @@ public readonly struct MediaSource
     private MediaSource(object value) => _value = value;
 
     public static implicit operator MediaSource(string fileIdOrUrl) => new(fileIdOrUrl);
-    public static implicit operator MediaSource(InputFile file) => new(file);
+    public static implicit operator MediaSource(InputFile inputFile) => new(inputFile);
 
     public object Value => _value;
 }

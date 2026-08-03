@@ -23,7 +23,7 @@ public sealed class SendVideoNoteParameters : ApiRequestParameters
 
     public int? Length { get; init; }
 
-    public object? Thumbnail { get; init; }
+    public ThumbnailSource? Thumbnail { get; init; }
 
     public bool? DisableNotification { get; init; }
 

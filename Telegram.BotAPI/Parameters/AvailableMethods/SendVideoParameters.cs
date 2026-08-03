@@ -26,9 +26,9 @@ public sealed class SendVideoParameters : ApiRequestParameters
 
     public int? Height { get; init; }
 
-    public object? Thumbnail { get; init; }
+    public ThumbnailSource? Thumbnail { get; init; }
 
-    public object? Cover { get; init; }
+    public CoverSource? Cover { get; init; }
 
     public int? StartTimestamp { get; init; }
 

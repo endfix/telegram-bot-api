@@ -20,7 +20,7 @@ public sealed class SendDocumentParameters : ApiRequestParameters
 
     public required DocumentSource Document { get; init; }
 
-    public object? Thumbnail { get; init; }
+    public ThumbnailSource? Thumbnail { get; init; }
 
     public string? Caption { get; init; }
 

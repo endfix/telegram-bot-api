@@ -11,6 +11,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
+using Telegram.BotAPI.Enums;
 using Telegram.BotAPI.Exceptions;
 using Telegram.BotAPI.Extensions;
 using Telegram.BotAPI.Parameters;
@@ -49,7 +50,7 @@ public sealed class BotApiClient : IBotApiClient
         _logger = logger ?? NullLogger<IBotApiClient>.Instance;
     }
 
-    public async Task StartPollingAsync(GetUpdatesParameters? parameters = null, int maxParallel = 10, CancellationToken cancellationToken = default)
+    public async Task StartPollingAsync(int limit = 1, int timeout = 20, IReadOnlyList<UpdateType>? allowedUpdates = null, int maxParallel = 10, CancellationToken cancellationToken = default)
     {
         if (maxParallel < 1)
         {
@@ -63,17 +64,15 @@ public sealed class BotApiClient : IBotApiClient
         {
             try
             {
-                var pollingParameters = new GetUpdatesParameters
-                {
-                    Offset = lastUpdateId,
-                    Limit = parameters?.Limit,
-                    Timeout = parameters?.Timeout ?? 20,
-                    AllowedUpdates = parameters?.AllowedUpdates
-                };
-
                 var tasks = new List<Task>();
 
-                var updates = await this.GetUpdatesAsync(pollingParameters, cancellationToken).ConfigureAwait(false);
+                var updates = await this.GetUpdatesAsync(
+                    offset: lastUpdateId,
+                    limit: limit,
+                    timeout: timeout,
+                    AllowedUpdates: allowedUpdates,
+                    cancellationToken).ConfigureAwait(false);
+
                 if (updates is { Count: > 0 })
                 {
                     foreach (var update in updates)

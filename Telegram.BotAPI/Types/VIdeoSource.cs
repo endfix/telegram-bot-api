@@ -6,7 +6,7 @@ public readonly struct VideoSource
     private VideoSource(object value) => _value = value;
 
     public static implicit operator VideoSource(string fileIdOrUrl) => new(fileIdOrUrl);
-    public static implicit operator VideoSource(InputVideoFile file) => new(file);
+    public static implicit operator VideoSource(InputVideoFile inputVideoFile) => new(inputVideoFile);
 
     public object Value => _value;
 }

@@ -6,7 +6,7 @@ public readonly struct AnimationSource
     private AnimationSource(object value) => _value = value;
 
     public static implicit operator AnimationSource(string fileIdOrUrl) => new(fileIdOrUrl);
-    public static implicit operator AnimationSource(InputAnimationFile file) => new(file);
+    public static implicit operator AnimationSource(InputAnimationFile inputAnimationFile) => new(inputAnimationFile);
 
     public object Value => _value;
 }

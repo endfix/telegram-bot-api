@@ -5,7 +5,7 @@ namespace Telegram.BotAPI.Parameters;
 
 public sealed class AnswerChatJoinRequestQueryParameters : ApiRequestParameters
 {
-    public required string chat_join_request_query_id { get; init; }
+    public required string ChatJoinRequestQueryId { get; init; }
 
     public required AnswerChatJoinRequestQueryResult Result { get; init; }
 }

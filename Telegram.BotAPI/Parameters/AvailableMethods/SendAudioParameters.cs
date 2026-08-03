@@ -32,7 +32,7 @@ public sealed class SendAudioParameters : ApiRequestParameters
 
     public string? Title { get; init; }
 
-    public object? Thumbnail { get; init; }
+    public ThumbnailSource? Thumbnail { get; init; }
 
     public bool? DisableNotification { get; init; }
 

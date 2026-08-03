@@ -1,7 +1,5 @@
 using System.Net;
-using Telegram.BotAPI;
 using Telegram.BotAPI.Extensions;
-using Telegram.BotAPI.Parameters;
 using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Example.Webhook;
@@ -34,12 +32,10 @@ public class Program
         {
             try
             {
-                var setWebhookResult = await api.SetWebhookAsync(new SetWebhookParameters
-                {
-                    Url = webhookUrl,
-                    MaxConnections = 100,
-                    SecretToken = serverSecretToken
-                });
+                var setWebhookResult = await api.SetWebhookAsync(
+                    url: webhookUrl,
+                    maxConnections: 100,
+                    secretToken: serverSecretToken);
 
                 app.Logger.LogInformation($"setWebhook: {(setWebhookResult ? "success" : "failure")}");
 
@@ -67,11 +63,9 @@ public class Program
                 try
                 {
                     // echo (ping - pong)
-                    var result = await api.SendMessageAsync(new SendMessageParameters
-                    {
-                        ChatId = update.Message!.Chat.Id,
-                        Text = update.Message?.Text ?? string.Empty,
-                    });
+                    var result = await api.SendMessageAsync(
+                        chatId: update.Message!.Chat.Id,
+                        text: update.Message?.Text ?? string.Empty);
                 }
                 catch (Exception e)
                 {

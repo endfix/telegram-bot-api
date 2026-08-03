@@ -17,7 +17,7 @@ public sealed class SendStickerParameters : ApiRequestParameters
 
     public string? CallbackQueryId { get; init; }
 
-    public required object Sticker { get; init; }
+    public required StickerSource Sticker { get; init; }
 
     public string? Emoji { get; init; }
 

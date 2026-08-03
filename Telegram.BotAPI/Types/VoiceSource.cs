@@ -6,7 +6,7 @@ public readonly struct VoiceSource
     private VoiceSource(object value) => _value = value;
 
     public static implicit operator VoiceSource(string fileIdOrUrl) => new(fileIdOrUrl);
-    public static implicit operator VoiceSource(InputVoiceFile file) => new(file);
+    public static implicit operator VoiceSource(InputVoiceFile inputVoiceFile) => new(inputVoiceFile);
 
     public object Value => _value;
 }

@@ -6,7 +6,7 @@ public readonly struct PhotoSource
     private PhotoSource(object value) => _value = value;
 
     public static implicit operator PhotoSource(string fileIdOrUrl) => new(fileIdOrUrl);
-    public static implicit operator PhotoSource(InputPhotoFile file) => new(file);
+    public static implicit operator PhotoSource(InputPhotoFile inputPhotoFile) => new(inputPhotoFile);
 
     public object Value => _value;
 }

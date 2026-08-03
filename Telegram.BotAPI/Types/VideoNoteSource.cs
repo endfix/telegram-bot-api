@@ -6,7 +6,7 @@ public readonly struct VideoNoteSource
     private VideoNoteSource(object value) => _value = value;
 
     public static implicit operator VideoNoteSource(string fileIdOrUrl) => new(fileIdOrUrl);
-    public static implicit operator VideoNoteSource(InputVideoNoteFile file) => new(file);
+    public static implicit operator VideoNoteSource(InputVideoNoteFile inputVideoNoteFile) => new(inputVideoNoteFile);
 
     public object Value => _value;
 }

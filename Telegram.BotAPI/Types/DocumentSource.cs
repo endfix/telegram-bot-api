@@ -6,7 +6,7 @@ public readonly struct DocumentSource
     private DocumentSource(object value) => _value = value;
 
     public static implicit operator DocumentSource(string fileIdOrUrl) => new(fileIdOrUrl);
-    public static implicit operator DocumentSource(InputDocumentFile file) => new(file);
+    public static implicit operator DocumentSource(InputDocumentFile inputDocumentFile) => new(inputDocumentFile);
 
     public object Value => _value;
 }

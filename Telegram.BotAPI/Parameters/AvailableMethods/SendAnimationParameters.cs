@@ -26,7 +26,7 @@ public sealed class SendAnimationParameters : ApiRequestParameters
 
     public int? Height { get; init; }
 
-    public object? Thumbnail { get; init; }
+    public ThumbnailSource? Thumbnail { get; init; }
 
     public string? Caption { get; init; }
 

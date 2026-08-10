@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
@@ -20,6 +20,12 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Telegram.BotAPI\Telegram.BotAPI.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="Fixtures\**\*.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
 	</ItemGroup>
 
 </Project>

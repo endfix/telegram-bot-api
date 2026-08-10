@@ -14,22 +14,15 @@ var api = new BotApiClient(
 ```
 
 ## Examples
- * [**Long polling**: Sequential (FIFO) or parallel update processing.](https://github.com/endfix/telegram-bot-api/tree/main/Examples/LongPolling)
- * [**Webhook**: Built-in exponential backoff and retry policy.](https://github.com/endfix/telegram-bot-api/tree/main/Examples/Webhook)
+ * [**Long polling**: Sequential (FIFO) or parallel update processing.](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/LongPolling)
+ * [**Webhook**: Built-in exponential backoff and retry policy.](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/Webhook)
 
 ## Download file
 Use this method to get basic information about a file and prepare it for downloading. For the moment, bots can download files of up to 20MB in size.
 ```cs
-var message = await api.SendDocumentAsync(new()
-{
-    ChatId = 1234567890,
-    Document = new InputDocumentFile("path to file")
-});
+var message = await api.SendDocumentAsync(chatId: 1234567890, document: new InputDocumentFile("path to file"));
 
-var file = await api.GetFileAsync(new()
-{
-    FileId = message.Document!.FileId
-});
+var file = await api.GetFileAsync(fileId: message.Document!.FileId);
 
 var fileBytes = await api.GetFileBytesAsync(filePath: file.FilePath!);
 

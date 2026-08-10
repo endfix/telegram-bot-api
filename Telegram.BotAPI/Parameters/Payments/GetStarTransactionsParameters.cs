@@ -2,7 +2,7 @@
 
 namespace Telegram.BotAPI.Parameters;
 
-public sealed class GetStarTransactionsyParameters : ApiRequestParameters
+public sealed class GetStarTransactionsParameters : ApiRequestParameters
 {
     public int? Offset { get; init; }
 

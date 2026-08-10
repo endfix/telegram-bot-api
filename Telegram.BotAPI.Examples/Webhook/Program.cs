@@ -11,9 +11,9 @@ public class Program
         var builder     = WebApplication.CreateBuilder(args);
         var app         = builder.Build();
 
-        var token       = builder.Configuration.GetSection("Telegram:Token").Value;
-        var webhookUrl  = builder.Configuration.GetSection("Telegram:WebhookUrl").Value;
-        var serverSecretToken = builder.Configuration.GetSection("Telegram:SecretToken").Value;
+        var token       = builder.Configuration.GetSection("Telegram:Token").Value!;
+        var webhookUrl  = builder.Configuration.GetSection("Telegram:WebhookUrl").Value!;
+        var serverSecretToken = builder.Configuration.GetSection("Telegram:SecretToken").Value!;
 
         var handler = new SocketsHttpHandler
         {

@@ -1,15 +1,49 @@
 ﻿using Xunit;
 using Telegram.BotAPI.Extensions;
 using Telegram.BotAPI.Enums;
-using Telegram.BotAPI.Parameters;
 
 namespace Telegram.BotAPI.Tests;
 
 public class LongPollingTests
 {
-    private readonly BotApiClient _api;
+    [Fact]
+    public async Task AwaitMessage()
+    {
+        var token = Environment.GetEnvironmentVariable("TELEGRAM_BOTAPI_TEST_TOKEN");
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            return;
+        }
 
-    public LongPollingTests()
+        var api = CreateApi(token);
+        using var cts = new CancellationTokenSource(TimeSpan.FromMinutes(1));
+
+        await api.DeleteWebhookAsync(dropPendingUpdates: true, cancellationToken: cts.Token);
+
+        api.OnUpdate += async (client, update) =>
+        {
+            try
+            {
+                if (update.Type == UpdateType.Message)
+                {
+                    // echo (ping - pong)
+                    var result = await api.SendMessageAsync(
+                        chatId: update.Message!.Chat.Id,
+                        text: update.Message?.Text ?? "No text");
+
+                    cts.Cancel();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error processing update: " + e.ToString());
+            }
+        };
+
+        await api.StartPollingAsync(limit: 10, cancellationToken: cts.Token);
+    }
+
+    private static BotApiClient CreateApi(string token)
     {
         var handler = new SocketsHttpHandler
         {
@@ -22,41 +56,9 @@ public class LongPollingTests
             Timeout = TimeSpan.FromMinutes(5)
         };
 
-        _api = new BotApiClient(
-            token: "[REDACTED_TELEGRAM_BOT_TOKEN]",
+        return new BotApiClient(
+            token: token,
             httpClient: client,
             retryDelays: [ 10, 30, 60 ]);
-    }
-
-    [Fact]
-    public async Task AwaitMessage()
-    {
-        using var cts = new CancellationTokenSource();
-
-        await _api.DeleteWebhookAsync(new() { DropPendingUpdates = true });
-
-        _api.OnUpdate += async (client, update) =>
-        {
-            try
-            {
-                if (update.Type == UpdateType.Message)
-                {
-                    // echo (ping - pong)
-                    var result = await _api.SendMessageAsync(new()
-                    {
-                        ChatId = update.Message!.Chat.Id,
-                        Text = update.Message?.Text ?? "No text",
-                    });
-
-                    cts.Cancel();
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error processing update: " + e.ToString());
-            }
-        };
-
-        await _api.StartPollingAsync(parameters: new GetUpdatesParameters() { Limit = 10 }, cancellationToken: cts.Token);
     }
 }

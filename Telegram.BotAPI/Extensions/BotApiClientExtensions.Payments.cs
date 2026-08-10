@@ -197,7 +197,7 @@ public static partial class BotApiClientExtensions
 
     internal static async Task<StarTransactions> GetStarTransactionsAsync(
         this IBotApiClient client, 
-        GetStarTransactionsyParameters parameters, 
+        GetStarTransactionsParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<StarTransactions>(new ApiRequest("getStarTransactions", parameters), cancellationToken);
 
@@ -206,7 +206,7 @@ public static partial class BotApiClientExtensions
         int? offset = null,
         int? limit = null,
         CancellationToken cancellationToken = default)
-        => await client.GetStarTransactionsAsync(new GetStarTransactionsyParameters
+        => await client.GetStarTransactionsAsync(new GetStarTransactionsParameters
         {
             Offset = offset,
             Limit = limit

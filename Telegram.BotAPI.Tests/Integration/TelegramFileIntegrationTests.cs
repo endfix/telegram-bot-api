@@ -1,3 +1,4 @@
+using Telegram.BotAPI.Extensions;
 using Telegram.BotAPI.Parameters;
 using Telegram.BotAPI.Protocol;
 using Telegram.BotAPI.Types;
@@ -172,6 +173,102 @@ public sealed class TelegramFileIntegrationTests : IDisposable
             Assert.NotNull(resend.PaidMedia);
             Assert.Equal(1, resend.PaidMedia.StarCount);
             Assert.IsType<PaidMediaPhoto>(Assert.Single(resend.PaidMedia.PaidMedia));
+        }
+        finally
+        {
+            await DeleteMessagesAsync(sentMessageIds);
+        }
+    }
+
+    [TelegramIntegrationFact]
+    public async Task UpdatingMethods_ForwardChatAndReplyMarkupParameters()
+    {
+        var sentMessageIds = new List<long>();
+
+        try
+        {
+            var message = await RequestAsync<Message>("sendMessage", new SendMessageParameters
+            {
+                ChatId = _chatId,
+                Text = "[Telegram.BotAPI integration] editMessageReplyMarkup",
+                ReplyMarkup = new InlineKeyboardMarkup
+                {
+                    InlineKeyboard =
+                    [
+                        [new InlineKeyboardButton { Text = "Before", CallbackData = "before" }]
+                    ]
+                }
+            });
+            sentMessageIds.Add(message.MessageId);
+
+            var edited = await _client.EditMessageReplyMarkupAsync(
+                chatId: _chatId,
+                messageId: message.MessageId,
+                replyMarkup: new InlineKeyboardMarkup
+                {
+                    InlineKeyboard =
+                    [
+                        [new InlineKeyboardButton { Text = "After", CallbackData = "after" }]
+                    ]
+                });
+
+            Assert.Equal("after", edited.ReplyMarkup!.InlineKeyboard[0][0].CallbackData);
+
+            var location = await RequestAsync<Message>("sendLocation", new SendLocationParameters
+            {
+                ChatId = _chatId,
+                Latitude = 55.751244,
+                Longitude = 37.618423,
+                LivePeriod = 60
+            });
+            sentMessageIds.Add(location.MessageId);
+
+            var stopped = await _client.StopMessageLiveLocationAsync(
+                chatId: _chatId,
+                messageId: location.MessageId);
+
+            Assert.Equal(location.MessageId, stopped.MessageId);
+        }
+        finally
+        {
+            await DeleteMessagesAsync(sentMessageIds);
+        }
+    }
+
+    [TelegramMediaIntegrationFact]
+    public async Task SendMediaGroup_UploadsTypedVideoThumbnailAndCover()
+    {
+        var videoPath = Environment.GetEnvironmentVariable(TelegramIntegrationFactAttribute.VideoPathVariable)!;
+        var imagePath = Environment.GetEnvironmentVariable(TelegramIntegrationFactAttribute.ImagePathVariable)!;
+        var sentMessageIds = new List<long>();
+
+        try
+        {
+            var messages = await RequestAsync<IReadOnlyList<Message>>(
+                "sendMediaGroup",
+                new SendMediaGroupParameters
+                {
+                    ChatId = _chatId,
+                    Media =
+                    [
+                        new InputMediaVideo
+                        {
+                            Media = new InputVideoFile(videoPath),
+                            Thumbnail = new InputThumbnailFile(imagePath),
+                            Cover = new InputCoverFile(imagePath),
+                            Caption = "[Telegram.BotAPI integration] InputMediaVideo: thumbnail + cover"
+                        },
+                        new InputMediaPhoto
+                        {
+                            Media = new InputPhotoFile(imagePath),
+                            Caption = "[Telegram.BotAPI integration] media group companion"
+                        }
+                    ]
+                });
+
+            Assert.Equal(2, messages.Count);
+            Assert.NotNull(messages[0].Video);
+            sentMessageIds.AddRange(messages.Select(message => message.MessageId));
         }
         finally
         {

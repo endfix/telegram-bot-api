@@ -6,44 +6,25 @@ namespace Telegram.BotAPI.Tests;
 
 internal static class JsonContract
 {
-    public static T DeserializeFixture<T>(string fixturePath)
+    public static T AssertRoundtrip<T>(T expected)
+        where T : notnull
     {
-        var json = ReadFixture(fixturePath);
-        var value = JsonSerializer.Deserialize<T>(json, JsonSerializerExtensions.Options);
+        var json = expected.Serialize();
+        var actual = json.Deserialize<T>();
 
-        value.Should().NotBeNull("fixture {0} must deserialize to {1}", fixturePath, typeof(T).Name);
+        actual.Should().NotBeNull("serialized {0} should deserialize", typeof(T).Name);
+        actual.Should().BeEquivalentTo(
+            expected,
+            options => options.PreferringRuntimeMemberTypes());
 
-        return value!;
+        return actual!;
     }
 
-    public static void AssertRoundtripsToEquivalentJson<T>(string fixturePath)
+    public static void AssertDiscriminator<T>(T value, string expected, string propertyName = "type")
+        where T : notnull
     {
-        var expectedJson = ReadFixture(fixturePath);
-        var value = DeserializeFixture<T>(fixturePath);
-        var actualJson = JsonSerializer.Serialize(value, JsonSerializerExtensions.Options);
+        using var document = JsonDocument.Parse(value.Serialize());
 
-        AssertJsonEquivalent(actualJson, expectedJson, fixturePath);
-    }
-
-    private static void AssertJsonEquivalent(string actualJson, string expectedJson, string because)
-    {
-        using var actualDocument = JsonDocument.Parse(actualJson);
-        using var expectedDocument = JsonDocument.Parse(expectedJson);
-
-        JsonElement.DeepEquals(actualDocument.RootElement, expectedDocument.RootElement)
-            .Should().BeTrue(
-                "serialized JSON should match fixture {0}. Actual: {1}. Expected: {2}",
-                because,
-                actualJson,
-                expectedJson);
-    }
-
-    private static string ReadFixture(string fixturePath)
-    {
-        var fullPath = Path.Combine(AppContext.BaseDirectory, "Fixtures", fixturePath);
-
-        File.Exists(fullPath).Should().BeTrue("fixture {0} should be copied to the test output", fullPath);
-
-        return File.ReadAllText(fullPath);
+        document.RootElement.GetProperty(propertyName).GetString().Should().Be(expected);
     }
 }

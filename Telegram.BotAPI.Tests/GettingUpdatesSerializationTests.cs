@@ -1,4 +1,4 @@
-﻿using Telegram.BotAPI.Enums;
+using Telegram.BotAPI.Enums;
 using Telegram.BotAPI.Types;
 using Xunit;
 
@@ -11,17 +11,17 @@ public class GettingUpdatesSerializationTests
     {
         Utils.AssertRoundtrip(new Update
         {
-            UpdateId = Utils.GetRandomLong(),
+            UpdateId = 1001,
             Message = new() { 
-                MessageId = Utils.GetRandomLong(),
-                MessageThreadId = Utils.GetRandomLong(),
+                MessageId = 2002,
+                MessageThreadId = 3003,
                 Chat = new()
                 {
-                    Id = Utils.GetRandomLong(),
-                    Type = Utils.GetRandomEnum<ChatTypes>()
+                    Id = -1001234567890,
+                    Type = ChatTypes.Supergroup
                 },
-                Date = Utils.GetRandomLong(),
-                Text = Utils.GetRandomText()
+                Date = 1_700_000_000,
+                Text = "Deterministic update message"
             }
         });
     }
@@ -31,15 +31,15 @@ public class GettingUpdatesSerializationTests
     {
         Utils.AssertRoundtrip(new WebhookInfo
         {
-            Url = Utils.GetRandomText(2048),
-            HasCustomCertificate = Utils.GetRandomBool(),
-            PendingUpdateCount = Utils.GetRandomInt(),
-            IpAddress = Utils.GetRandomText(39),
-            LastErrorDate = Utils.GetRandomLong(),
-            LastErrorMessage = Utils.GetRandomText(255),
-            LastSynchronizationErrorDate = Utils.GetRandomLong(),
-            MaxConnections = Utils.GetRandomInt(),
-            AllowedUpdates = [ Utils.GetRandomEnum<UpdateType>(), Utils.GetRandomEnum<UpdateType>(), Utils.GetRandomEnum<UpdateType>() ]
+            Url = "https://example.com/telegram/webhook",
+            HasCustomCertificate = true,
+            PendingUpdateCount = 7,
+            IpAddress = "203.0.113.42",
+            LastErrorDate = 1_700_000_001,
+            LastErrorMessage = "Connection timed out",
+            LastSynchronizationErrorDate = 1_700_000_002,
+            MaxConnections = 40,
+            AllowedUpdates = [UpdateType.Message, UpdateType.CallbackQuery, UpdateType.ChatMember]
         });
     }
 }

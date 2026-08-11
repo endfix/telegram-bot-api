@@ -24,9 +24,14 @@ internal sealed class InputMediaConverter : JsonConverter<InputMedia>
             InputMediaType.Animation => root.Deserialize<InputMediaAnimation>(options),
             InputMediaType.Audio => root.Deserialize<InputMediaAudio>(options),
             InputMediaType.Document => root.Deserialize<InputMediaDocument>(options),
-            InputMediaType.LivePhoto => root.Deserialize<InputMediaPhoto>(options),
+            InputMediaType.Link => root.Deserialize<InputMediaLink>(options),
+            InputMediaType.LivePhoto => root.Deserialize<InputMediaLivePhoto>(options),
+            InputMediaType.Location => root.Deserialize<InputMediaLocation>(options),
             InputMediaType.Photo => root.Deserialize<InputMediaPhoto>(options),
+            InputMediaType.Sticker => root.Deserialize<InputMediaSticker>(options),
+            InputMediaType.Venue => root.Deserialize<InputMediaVenue>(options),
             InputMediaType.Video => root.Deserialize<InputMediaVideo>(options),
+            InputMediaType.VoiceNote => root.Deserialize<InputMediaVoiceNote>(options),
             _ => throw new JsonException($"Unknown InputMedia type: {type}")
         };
     }

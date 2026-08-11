@@ -1,6 +1,6 @@
 ﻿namespace Telegram.BotAPI.Types;
 
-public readonly struct ThumbnailSource
+public readonly struct ThumbnailSource : IFileSource
 {
     private readonly object _value;
     private ThumbnailSource(object value) => _value = value;

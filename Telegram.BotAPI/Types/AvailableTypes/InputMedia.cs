@@ -127,7 +127,7 @@ public sealed class InputMediaVideo : InputMedia
 
     public object? Thumbnail { get; init; }
 
-    public string? Cover { get; init; }
+    public object? Cover { get; init; }
 
     public int? StartTimestamp { get; init; }
 

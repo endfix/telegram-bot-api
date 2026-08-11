@@ -1,6 +1,6 @@
 ﻿namespace Telegram.BotAPI.Types;
 
-public readonly struct AnimationSource
+public readonly struct AnimationSource : IFileSource
 {
     private readonly object _value;
     private AnimationSource(object value) => _value = value;

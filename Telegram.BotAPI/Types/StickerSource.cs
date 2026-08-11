@@ -1,6 +1,6 @@
 ﻿namespace Telegram.BotAPI.Types;
 
-public readonly struct StickerSource
+public readonly struct StickerSource : IFileSource
 {
     private readonly object _value;
     private StickerSource(object value) => _value = value;

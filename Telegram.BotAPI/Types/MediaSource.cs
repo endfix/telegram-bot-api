@@ -1,6 +1,6 @@
 ﻿namespace Telegram.BotAPI.Types;
 
-public readonly struct MediaSource
+public readonly struct MediaSource : IFileSource
 {
     private readonly object _value;
     private MediaSource(object value) => _value = value;

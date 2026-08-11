@@ -142,7 +142,7 @@ public static partial class BotApiClientExtensions
     public static async Task<Message> StopMessageLiveLocationAsync(
         this IBotApiClient client,
         string? businessConnectionId = null,
-        object? chatId = null,
+        ChatIdSource? chatId = null,
         long? messageId = null,
         string? inlineMessageId = null,
         InlineKeyboardMarkup? replyMarkup = null,
@@ -188,14 +188,18 @@ public static partial class BotApiClientExtensions
     public static async Task<Message> EditMessageReplyMarkupAsync(
         this IBotApiClient client,
         string? businessConnectionId = null,
-        object? chatId = null,
+        ChatIdSource? chatId = null,
         long? messageId = null,
         string? inlineMessageId = null,
         InlineKeyboardMarkup? replyMarkup = null,
         CancellationToken cancellationToken = default)
         => await client.EditMessageReplyMarkupAsync(new EditMessageReplyMarkupParameters
         {
-
+            BusinessConnectionId = businessConnectionId,
+            ChatId = chatId,
+            MessageId = messageId,
+            InlineMessageId = inlineMessageId,
+            ReplyMarkup = replyMarkup
         }, cancellationToken);
 
     internal static async Task<Poll> StopPollAsync(

@@ -126,6 +126,59 @@ public sealed class TelegramFileIntegrationTests : IDisposable
         }
     }
 
+    [TelegramIntegrationFact]
+    public async Task SendPaidMedia_UploadsLocalPhoto_ThenResendsByFileId()
+    {
+        await using var file = await TemporaryFile.CreateAsync(".png", PngBytes);
+        var sentMessageIds = new List<long>();
+
+        try
+        {
+            var upload = await RequestAsync<Message>("sendPaidMedia", new SendPaidMediaParameters
+            {
+                ChatId = _chatId,
+                StarCount = 1,
+                Media =
+                [
+                    new InputPaidMediaPhoto
+                    {
+                        Media = new InputPhotoFile(file.Path)
+                    }
+                ],
+                Caption = "[Telegram.BotAPI integration] sendPaidMedia: InputPhotoFile"
+            });
+            sentMessageIds.Add(upload.MessageId);
+
+            Assert.NotNull(upload.PaidMedia);
+            Assert.Equal(1, upload.PaidMedia.StarCount);
+            var paidPhoto = Assert.IsType<PaidMediaPhoto>(Assert.Single(upload.PaidMedia.PaidMedia));
+            var fileId = paidPhoto.Photo[^1].FileId;
+
+            var resend = await RequestAsync<Message>("sendPaidMedia", new SendPaidMediaParameters
+            {
+                ChatId = _chatId,
+                StarCount = 1,
+                Media =
+                [
+                    new InputPaidMediaPhoto
+                    {
+                        Media = fileId
+                    }
+                ],
+                Caption = "[Telegram.BotAPI integration] sendPaidMedia: file_id"
+            });
+            sentMessageIds.Add(resend.MessageId);
+
+            Assert.NotNull(resend.PaidMedia);
+            Assert.Equal(1, resend.PaidMedia.StarCount);
+            Assert.IsType<PaidMediaPhoto>(Assert.Single(resend.PaidMedia.PaidMedia));
+        }
+        finally
+        {
+            await DeleteMessagesAsync(sentMessageIds);
+        }
+    }
+
     public void Dispose() => _httpClient.Dispose();
 
     private async Task<T> RequestAsync<T>(string methodName, ApiRequestParameters parameters)

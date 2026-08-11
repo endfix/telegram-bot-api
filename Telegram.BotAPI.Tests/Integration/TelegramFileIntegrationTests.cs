@@ -1,0 +1,183 @@
+using Telegram.BotAPI.Parameters;
+using Telegram.BotAPI.Protocol;
+using Telegram.BotAPI.Types;
+using Xunit;
+
+namespace Telegram.BotAPI.Tests.Integration;
+
+[Trait("Category", "Integration")]
+public sealed class TelegramFileIntegrationTests : IDisposable
+{
+    private static readonly byte[] PngBytes = Convert.FromBase64String(
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=");
+
+    private readonly HttpClient _httpClient = new();
+    private readonly BotApiClient _client;
+    private readonly long _chatId;
+
+    public TelegramFileIntegrationTests()
+    {
+        var token = Environment.GetEnvironmentVariable(TelegramIntegrationFactAttribute.TokenVariable)
+            ?? throw new InvalidOperationException("Telegram bot token is not configured.");
+        _chatId = long.Parse(
+            Environment.GetEnvironmentVariable(TelegramIntegrationFactAttribute.ChatIdVariable)
+                ?? throw new InvalidOperationException("Telegram chat id is not configured."));
+        _client = new BotApiClient(token, _httpClient);
+    }
+
+    [TelegramIntegrationFact]
+    public async Task SendPhoto_UploadsLocalFile_ThenResendsByFileId()
+    {
+        await using var file = await TemporaryFile.CreateAsync(".png", PngBytes);
+        var sentMessageIds = new List<long>();
+
+        try
+        {
+            var upload = await RequestAsync<Message>("sendPhoto", new SendPhotoParameters
+            {
+                ChatId = _chatId,
+                Photo = new InputPhotoFile(file.Path),
+                Caption = "[Telegram.BotAPI integration] sendPhoto: InputPhotoFile"
+            });
+            sentMessageIds.Add(upload.MessageId);
+
+            var fileId = Assert.Single(upload.Photo!).FileId;
+            var resend = await RequestAsync<Message>("sendPhoto", new SendPhotoParameters
+            {
+                ChatId = _chatId,
+                Photo = fileId,
+                Caption = "[Telegram.BotAPI integration] sendPhoto: file_id"
+            });
+            sentMessageIds.Add(resend.MessageId);
+        }
+        finally
+        {
+            await DeleteMessagesAsync(sentMessageIds);
+        }
+    }
+
+    [TelegramIntegrationFact]
+    public async Task SendDocument_UploadsLocalFile_ThenResendsByFileId()
+    {
+        await using var file = await TemporaryFile.CreateAsync(
+            ".txt",
+            "Telegram.BotAPI integration document"u8.ToArray());
+        var sentMessageIds = new List<long>();
+
+        try
+        {
+            var upload = await RequestAsync<Message>("sendDocument", new SendDocumentParameters
+            {
+                ChatId = _chatId,
+                Document = new InputDocumentFile(file.Path),
+                Caption = "[Telegram.BotAPI integration] sendDocument: InputDocumentFile"
+            });
+            sentMessageIds.Add(upload.MessageId);
+
+            var resend = await RequestAsync<Message>("sendDocument", new SendDocumentParameters
+            {
+                ChatId = _chatId,
+                Document = upload.Document!.FileId,
+                Caption = "[Telegram.BotAPI integration] sendDocument: file_id"
+            });
+            sentMessageIds.Add(resend.MessageId);
+        }
+        finally
+        {
+            await DeleteMessagesAsync(sentMessageIds);
+        }
+    }
+
+    [TelegramIntegrationFact]
+    public async Task SendMediaGroup_UploadsFilesThroughAttachReferences()
+    {
+        await using var firstFile = await TemporaryFile.CreateAsync(".png", PngBytes);
+        await using var secondFile = await TemporaryFile.CreateAsync(".png", PngBytes);
+        var sentMessageIds = new List<long>();
+
+        try
+        {
+            var messages = await RequestAsync<IReadOnlyList<Message>>(
+                "sendMediaGroup",
+                new SendMediaGroupParameters
+                {
+                    ChatId = _chatId,
+                    Media =
+                    [
+                        new InputMediaPhoto
+                        {
+                            Media = new InputPhotoFile(firstFile.Path),
+                            Caption = "[Telegram.BotAPI integration] sendMediaGroup: attach://attach_0"
+                        },
+                        new InputMediaPhoto
+                        {
+                            Media = new InputPhotoFile(secondFile.Path),
+                            Caption = "[Telegram.BotAPI integration] sendMediaGroup: attach://attach_1"
+                        }
+                    ]
+                });
+
+            messages.ShouldHaveCount(2);
+            sentMessageIds.AddRange(messages.Select(message => message.MessageId));
+        }
+        finally
+        {
+            await DeleteMessagesAsync(sentMessageIds);
+        }
+    }
+
+    public void Dispose() => _httpClient.Dispose();
+
+    private async Task<T> RequestAsync<T>(string methodName, ApiRequestParameters parameters)
+    {
+        var response = await _client.RequestAsync<T>(new ApiRequest(methodName, parameters));
+        Assert.True(response.Ok, $"Telegram API {methodName} failed ({response.ErrorCode}): {response.Description}");
+        return response.Result;
+    }
+
+    private async Task DeleteMessagesAsync(IEnumerable<long> messageIds)
+    {
+        if (bool.TryParse(
+            Environment.GetEnvironmentVariable(TelegramIntegrationFactAttribute.KeepMessagesVariable),
+            out var keepMessages) && keepMessages)
+        {
+            return;
+        }
+
+        foreach (var messageId in messageIds)
+        {
+            await _client.RequestAsync<bool>(new ApiRequest("deleteMessage", new DeleteMessageParameters
+            {
+                ChatId = _chatId,
+                MessageId = messageId
+            }));
+        }
+    }
+
+    private sealed class TemporaryFile(string path) : IAsyncDisposable
+    {
+        public string Path => path;
+
+        public static async Task<TemporaryFile> CreateAsync(string extension, byte[] content)
+        {
+            var path = System.IO.Path.Combine(
+                System.IO.Path.GetTempPath(),
+                $"telegram-botapi-{Guid.NewGuid():N}{extension}");
+
+            await File.WriteAllBytesAsync(path, content);
+            return new TemporaryFile(path);
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            File.Delete(path);
+            return ValueTask.CompletedTask;
+        }
+    }
+}
+
+internal static class IntegrationAssertions
+{
+    public static void ShouldHaveCount<T>(this IReadOnlyCollection<T> items, int expected)
+        => Assert.Equal(expected, items.Count);
+}

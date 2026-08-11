@@ -25,9 +25,9 @@ public sealed class InputPaidMediaVideo : InputPaidMedia
 {
     public override InputPaidMediaType Type => InputPaidMediaType.Video;
 
-    public object? Thumbnail { get; init; }
+    public ThumbnailSource? Thumbnail { get; init; }
 
-    public object? Cover { get; init; }
+    public CoverSource? Cover { get; init; }
 
     public int? StartTimestamp { get; init; }
 

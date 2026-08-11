@@ -5,7 +5,7 @@ namespace Telegram.BotAPI.Types;
 
 public sealed class InputSticker
 {
-    public required object Sticker { get; init; }
+    public required StickerSource Sticker { get; init; }
 
     public required InputStickerFormat Format { get; init; }
 

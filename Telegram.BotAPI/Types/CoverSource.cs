@@ -6,7 +6,7 @@ public readonly struct CoverSource : IFileSource
     private CoverSource(object value) => _value = value;
 
     public static implicit operator CoverSource(string fileId) => new(fileId);
-    public static implicit operator CoverSource(InputFile inputFile) => new(inputFile);
+    public static implicit operator CoverSource(InputCoverFile inputFile) => new(inputFile);
 
     public object Value => _value;
 }

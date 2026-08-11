@@ -20,7 +20,7 @@ public sealed class InputMediaAnimation : InputMedia
 {
     public override InputMediaType Type => InputMediaType.Animation;
 
-    public object? Thumbnail { get; init; }
+    public ThumbnailSource? Thumbnail { get; init; }
 
     public bool? ShowCaptionAboveMedia { get; init; }
 
@@ -37,7 +37,7 @@ public sealed class InputMediaDocument : InputMedia
 {
     public override InputMediaType Type => InputMediaType.Document;
 
-    public object? Thumbnail { get; init; }
+    public ThumbnailSource? Thumbnail { get; init; }
 
     public bool? DisableContentTypeDetection { get; init; }
 }
@@ -46,7 +46,7 @@ public sealed class InputMediaAudio : InputMedia
 {
     public override InputMediaType Type => InputMediaType.Audio;
 
-    public object? Thumbnail { get; init; }
+    public ThumbnailSource? Thumbnail { get; init; }
 
     public int? Duration { get; init; }
 
@@ -125,9 +125,9 @@ public sealed class InputMediaVideo : InputMedia
 {
     public override InputMediaType Type => InputMediaType.Video;
 
-    public object? Thumbnail { get; init; }
+    public ThumbnailSource? Thumbnail { get; init; }
 
-    public object? Cover { get; init; }
+    public CoverSource? Cover { get; init; }
 
     public int? StartTimestamp { get; init; }
 

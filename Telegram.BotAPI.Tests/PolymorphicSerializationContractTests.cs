@@ -122,7 +122,15 @@ public class PolymorphicSerializationContractTests
             },
             "venue"
         },
-        { new InputMediaVideo { Media = "video-id" }, "video" },
+        {
+            new InputMediaVideo
+            {
+                Media = "video-id",
+                Thumbnail = "thumbnail-id",
+                Cover = "cover-id"
+            },
+            "video"
+        },
         { new InputMediaVoiceNote { Media = "voice-note-id", Duration = 5 }, "voice_note" }
     };
 
@@ -137,7 +145,15 @@ public class PolymorphicSerializationContractTests
             "live_photo"
         },
         { new InputPaidMediaPhoto { Media = "photo-id" }, "photo" },
-        { new InputPaidMediaVideo { Media = "video-id" }, "video" }
+        {
+            new InputPaidMediaVideo
+            {
+                Media = "video-id",
+                Thumbnail = "thumbnail-id",
+                Cover = "cover-id"
+            },
+            "video"
+        }
     };
 
     public static TheoryData<MessageOrigin, string> MessageOrigins => new()
@@ -295,6 +311,17 @@ public class PolymorphicSerializationContractTests
     [MemberData(nameof(InputPaidMediaValues))]
     public void InputPaidMedia_Roundtrips(InputPaidMedia value, string discriminator)
         => AssertRoundtrip(value, discriminator);
+
+    [Fact]
+    public void InputSticker_Roundtrips()
+    {
+        JsonContract.AssertRoundtrip(new InputSticker
+        {
+            Sticker = "sticker-file-id",
+            Format = Telegram.BotAPI.Enums.InputStickerFormat.Static,
+            EmojiList = ["test"]
+        });
+    }
 
     [Theory]
     [MemberData(nameof(MessageOrigins))]

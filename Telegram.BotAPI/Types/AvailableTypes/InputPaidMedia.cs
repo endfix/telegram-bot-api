@@ -27,7 +27,7 @@ public sealed class InputPaidMediaVideo : InputPaidMedia
 
     public object? Thumbnail { get; init; }
 
-    public string? Cover { get; init; }
+    public object? Cover { get; init; }
 
     public int? StartTimestamp { get; init; }
 

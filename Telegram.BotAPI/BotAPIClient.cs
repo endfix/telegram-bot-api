@@ -276,6 +276,11 @@ public sealed class BotApiClient : IBotApiClient
                     var jsonArray = PrepareMediaGroup(mediaList, httpContent);
                     httpContent.Add(new StringContent(jsonArray, Encoding.UTF8), _fieldNamesCache.GetOrAdd(property.Name, name => name.ToSnake()));
                 }
+                else if (value is IEnumerable<InputPaidMedia> paidMediaList)
+                {
+                    var jsonArray = PreparePaidMedia(paidMediaList, httpContent);
+                    httpContent.Add(new StringContent(jsonArray, Encoding.UTF8), _fieldNamesCache.GetOrAdd(property.Name, name => name.ToSnake()));
+                }
                 else
                 {
                     httpContent.Add(new StringContent(value is string s ? s : value.Serialize(), Encoding.UTF8), _fieldNamesCache.GetOrAdd(property.Name, name => name.ToSnake()));
@@ -348,6 +353,34 @@ public sealed class BotApiClient : IBotApiClient
                     AttachInputFile(node, "photo", livePhoto.Photo.Value, content, ref fileIdx);
                     break;
                 case InputMediaVideo video:
+                    AttachInputFile(node, "thumbnail", video.Thumbnail, content, ref fileIdx);
+                    AttachInputFile(node, "cover", video.Cover, content, ref fileIdx);
+                    break;
+            }
+
+            jsonArray.Add(node);
+        }
+
+        return jsonArray.ToJsonString();
+    }
+
+    private string PreparePaidMedia(IEnumerable<InputPaidMedia> mediaList, MultipartFormDataContent content)
+    {
+        var jsonArray = new JsonArray();
+        var fileIdx = 0;
+
+        foreach (var inputMedia in mediaList)
+        {
+            var node = JsonSerializer.SerializeToNode(inputMedia, JsonSerializerExtensions.Options)!.AsObject();
+
+            AttachInputFile(node, "media", inputMedia.Media.Value, content, ref fileIdx);
+
+            switch (inputMedia)
+            {
+                case InputPaidMediaLivePhoto livePhoto:
+                    AttachInputFile(node, "photo", livePhoto.Photo.Value, content, ref fileIdx);
+                    break;
+                case InputPaidMediaVideo video:
                     AttachInputFile(node, "thumbnail", video.Thumbnail, content, ref fileIdx);
                     AttachInputFile(node, "cover", video.Cover, content, ref fileIdx);
                     break;

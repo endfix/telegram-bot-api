@@ -17,7 +17,7 @@ public class PolymorphicSerializationContractTests
     {
         { new BackgroundFillSolid { Color = 16711680 }, "solid" },
         { new BackgroundFillGradient { TopColor = 16711680, BottomColor = 255, RotationAngle = 45 }, "gradient" },
-        { new BackgroundFillFreeformGradient { Colors = new[] { 16711680, 65280, 255 } }, "freeform_gradient" }
+        { new BackgroundFillFreeformGradient { Colors = [16711680, 65280, 255] }, "freeform_gradient" }
     };
 
     public static TheoryData<BackgroundType, string> BackgroundTypes => new()
@@ -89,27 +89,41 @@ public class PolymorphicSerializationContractTests
     public static TheoryData<PaidMedia, string> PaidMediaValues => new()
     {
         { new PaidMediaPreview { Width = 320, Height = 240, Duration = 12 }, "preview" },
+        { new PaidMediaPhoto { Photo = [Cases.PhotoSize()]  }, "photo" },
+        { new PaidMediaVideo { Video = Cases.Video() }, "video" },
+        { new PaidMediaLivePhoto { LivePhoto = Cases.LivePhoto() }, "live_photo" }
+    };
+
+    public static TheoryData<InputMedia, string> InputMediaValues => new()
+    {
+        { new InputMediaAnimation { Media = "animation-id" }, "animation" },
+        { new InputMediaAudio { Media = "audio-id" }, "audio" },
+        { new InputMediaDocument { Media = "document-id" }, "document" },
+        { new InputMediaLink { Media = "link-id", Url = "https://example.com/media" }, "link" },
         {
-            new PaidMediaPhoto
+            new InputMediaLivePhoto
             {
-                Photo = new[] { Cases.PhotoSize() }
-            },
-            "photo"
-        },
-        {
-            new PaidMediaVideo
-            {
-                Video = Cases.Video()
-            },
-            "video"
-        },
-        {
-            new PaidMediaLivePhoto
-            {
-                LivePhoto = Cases.LivePhoto()
+                Media = "live-photo-video-id",
+                Photo = "live-photo-image-id"
             },
             "live_photo"
-        }
+        },
+        { new InputMediaLocation { Media = "location-id", Latitude = 55.75, Longitude = 37.62 }, "location" },
+        { new InputMediaPhoto { Media = "photo-id" }, "photo" },
+        { new InputMediaSticker { Media = "sticker-id", Emoji = "test" }, "sticker" },
+        {
+            new InputMediaVenue
+            {
+                Media = "venue-id",
+                Latitude = 55.75,
+                Longitude = 37.62,
+                Title = "Venue",
+                Address = "Test address"
+            },
+            "venue"
+        },
+        { new InputMediaVideo { Media = "video-id" }, "video" },
+        { new InputMediaVoiceNote { Media = "voice-note-id", Duration = 5 }, "voice_note" }
     };
 
     public static TheoryData<MessageOrigin, string> MessageOrigins => new()
@@ -259,6 +273,11 @@ public class PolymorphicSerializationContractTests
         => AssertRoundtrip(value, discriminator);
 
     [Theory]
+    [MemberData(nameof(InputMediaValues))]
+    public void InputMedia_Roundtrips(InputMedia value, string discriminator)
+        => AssertRoundtrip(value, discriminator);
+
+    [Theory]
     [MemberData(nameof(MessageOrigins))]
     public void MessageOrigin_Roundtrips(MessageOrigin value, string discriminator)
         => AssertRoundtrip(value, discriminator);
@@ -304,7 +323,7 @@ public class PolymorphicSerializationContractTests
             Height = 240,
             Duration = 3,
             MimeType = "video/mp4",
-            Photo = new[] { PhotoSize() }
+            Photo = [PhotoSize()]
         };
 
         public static Video Video() => new()

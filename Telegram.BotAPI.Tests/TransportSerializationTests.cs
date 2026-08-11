@@ -1,4 +1,5 @@
 using FluentAssertions;
+using System.Text.Json;
 using Telegram.BotAPI.Parameters;
 using Telegram.BotAPI.Protocol;
 using Telegram.BotAPI.Tests.Infrastructure;
@@ -216,6 +217,71 @@ public sealed class TransportSerializationTests
             .Which.Content.Should().Equal(0x01, 0x02);
         context.Handler.LastRequest.Parts.Should().ContainSingle(part => part.Name == "photo")
             .Which.Content.Should().Equal(0x03, 0x04);
+    }
+
+    [Fact]
+    public async Task SendPaidMedia_WithLocalFiles_SendsAllNestedAttachments()
+    {
+        var files = new List<TemporaryFile>();
+        for (byte value = 0x41; value <= 0x46; value++)
+        {
+            files.Add(await TemporaryFile.CreateAsync([value]));
+        }
+
+        try
+        {
+            using var context = new ClientContext();
+
+            await context.Client.RequestAsync<bool>(new ApiRequest("sendPaidMedia", new SendPaidMediaParameters
+            {
+                ChatId = 123456789L,
+                StarCount = 1,
+                Media =
+                [
+                    new InputPaidMediaPhoto
+                    {
+                        Media = new InputPhotoFile(files[0].Path)
+                    },
+                    new InputPaidMediaLivePhoto
+                    {
+                        Media = new InputVideoFile(files[1].Path),
+                        Photo = new InputPhotoFile(files[2].Path)
+                    },
+                    new InputPaidMediaVideo
+                    {
+                        Media = new InputVideoFile(files[3].Path),
+                        Thumbnail = new InputThumbnailFile(files[4].Path),
+                        Cover = new InputCoverFile(files[5].Path)
+                    }
+                ]
+            }));
+
+            context.Handler.LastRequest.Should().NotBeNull();
+            var request = context.Handler.LastRequest!;
+            for (var index = 0; index < files.Count; index++)
+            {
+                request.Parts.Should().ContainSingle(part => part.Name == $"attach_{index}")
+                    .Which.Content.Should().Equal((byte)(0x41 + index));
+            }
+
+            var mediaJson = request.Parts.Should().ContainSingle(part => part.Name == "media").Which.Text;
+            using var document = JsonDocument.Parse(mediaJson);
+            var media = document.RootElement;
+
+            media[0].GetProperty("media").GetString().Should().Be("attach://attach_0");
+            media[1].GetProperty("media").GetString().Should().Be("attach://attach_1");
+            media[1].GetProperty("photo").GetString().Should().Be("attach://attach_2");
+            media[2].GetProperty("media").GetString().Should().Be("attach://attach_3");
+            media[2].GetProperty("thumbnail").GetString().Should().Be("attach://attach_4");
+            media[2].GetProperty("cover").GetString().Should().Be("attach://attach_5");
+        }
+        finally
+        {
+            foreach (var file in files)
+            {
+                await file.DisposeAsync();
+            }
+        }
     }
 
     private sealed class ClientContext : IDisposable

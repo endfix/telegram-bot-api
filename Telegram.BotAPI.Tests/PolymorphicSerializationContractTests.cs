@@ -126,6 +126,20 @@ public class PolymorphicSerializationContractTests
         { new InputMediaVoiceNote { Media = "voice-note-id", Duration = 5 }, "voice_note" }
     };
 
+    public static TheoryData<InputPaidMedia, string> InputPaidMediaValues => new()
+    {
+        {
+            new InputPaidMediaLivePhoto
+            {
+                Media = "live-photo-video-id",
+                Photo = "live-photo-image-id"
+            },
+            "live_photo"
+        },
+        { new InputPaidMediaPhoto { Media = "photo-id" }, "photo" },
+        { new InputPaidMediaVideo { Media = "video-id" }, "video" }
+    };
+
     public static TheoryData<MessageOrigin, string> MessageOrigins => new()
     {
         {
@@ -275,6 +289,11 @@ public class PolymorphicSerializationContractTests
     [Theory]
     [MemberData(nameof(InputMediaValues))]
     public void InputMedia_Roundtrips(InputMedia value, string discriminator)
+        => AssertRoundtrip(value, discriminator);
+
+    [Theory]
+    [MemberData(nameof(InputPaidMediaValues))]
+    public void InputPaidMedia_Roundtrips(InputPaidMedia value, string discriminator)
         => AssertRoundtrip(value, discriminator);
 
     [Theory]

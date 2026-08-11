@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace Telegram.BotAPI.Types;
 
@@ -20,13 +20,7 @@ public sealed class InputTextMessageContent : InputMessageContent
 
 public sealed class InputRichMessageContent : InputMessageContent
 {
-    public required string MessageText { get; init; }
-
-    public string? ParseMode { get; init; }
-
-    public IReadOnlyList<MessageEntity>? Entities { get; init; }
-
-    public LinkPreviewOptions? LinkPreviewOptions { get; init; }
+    public required InputRichMessage RichMessage { get; init; }
 }
 
 public sealed class InputLocationMessageContent : InputMessageContent

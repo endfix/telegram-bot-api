@@ -32,7 +32,15 @@ public static class JsonSerializerExtensions
             new ReactionTypeConverter(),
             new RichTextSourceConverter(),
             new RichTextConverter(),
-            new RichBlockConverter()
+            new RichBlockConverter(),
+            new InlineQueryResultConverter(),
+            new TransactionPartnerConverter(),
+            new RevenueWithdrawalStateConverter(),
+            new StoryAreaTypeConverter(),
+            new InputMessageContentConverter(),
+            new InputProfilePhotoConverter(),
+            new InputStoryContentConverter(),
+            new InputPaidMediaConverter()
         }
     };
 

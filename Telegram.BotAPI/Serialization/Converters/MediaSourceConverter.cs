@@ -5,7 +5,7 @@ using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Serialization.Converters;
 
-public sealed class MediaSourceConverter : JsonConverter<MediaSource>
+internal sealed class MediaSourceConverter : JsonConverter<MediaSource>
 {
     public override MediaSource Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         => reader.GetString()!;

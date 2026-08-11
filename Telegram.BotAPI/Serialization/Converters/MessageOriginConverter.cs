@@ -7,7 +7,7 @@ using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Serialization.Converters;
 
-public sealed class MessageOriginConverter : JsonConverter<MessageOrigin>
+internal sealed class MessageOriginConverter : JsonConverter<MessageOrigin>
 {
     public override MessageOrigin? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {

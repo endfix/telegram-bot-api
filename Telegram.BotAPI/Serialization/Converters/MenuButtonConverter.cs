@@ -7,7 +7,7 @@ using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Serialization.Converters;
 
-public sealed class MenuButtonConverter : JsonConverter<MenuButton>
+internal sealed class MenuButtonConverter : JsonConverter<MenuButton>
 {
     public override MenuButton? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {

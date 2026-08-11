@@ -5,7 +5,7 @@ using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Serialization.Converters;
 
-public class MaybeInaccessibleMessageConverter : JsonConverter<MaybeInaccessibleMessage>
+internal class MaybeInaccessibleMessageConverter : JsonConverter<MaybeInaccessibleMessage>
 {
     public override MaybeInaccessibleMessage? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {

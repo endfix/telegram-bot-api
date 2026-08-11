@@ -7,7 +7,7 @@ using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Serialization.Converters;
 
-public sealed class ReactionTypeConverter : JsonConverter<ReactionType>
+internal sealed class ReactionTypeConverter : JsonConverter<ReactionType>
 {
     public override ReactionType? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {

@@ -7,7 +7,7 @@ using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Serialization.Converters;
 
-public sealed class BotCommandScopeConverter : JsonConverter<BotCommandScope>
+internal sealed class BotCommandScopeConverter : JsonConverter<BotCommandScope>
 {
     public override BotCommandScope Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -34,6 +34,12 @@ public sealed class BotCommandScopeConverter : JsonConverter<BotCommandScope>
 
     public override void Write(Utf8JsonWriter writer, BotCommandScope value, JsonSerializerOptions options)
     {
+        if (value is null)
+        {
+            writer.WriteNullValue();
+            return;
+        }
+
         JsonSerializer.Serialize(writer, value, value.GetType(), options);
     }
 }

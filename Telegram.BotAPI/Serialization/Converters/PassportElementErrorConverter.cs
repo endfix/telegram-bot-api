@@ -7,7 +7,7 @@ using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Serialization.Converters;
 
-public sealed class PassportElementErrorConverter : JsonConverter<PassportElementError>
+internal sealed class PassportElementErrorConverter : JsonConverter<PassportElementError>
 {
     public override PassportElementError? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {

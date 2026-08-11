@@ -7,7 +7,7 @@ using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Serialization.Converters;
 
-public sealed class BackgroundTypeConverter : JsonConverter<BackgroundType>
+internal sealed class BackgroundTypeConverter : JsonConverter<BackgroundType>
 {
     public override BackgroundType? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {

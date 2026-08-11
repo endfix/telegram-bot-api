@@ -7,7 +7,7 @@ using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Serialization.Converters;
 
-public sealed class ChatBoostSourceConverter : JsonConverter<ChatBoostSource>
+internal sealed class ChatBoostSourceConverter : JsonConverter<ChatBoostSource>
 {
     public override ChatBoostSource? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {

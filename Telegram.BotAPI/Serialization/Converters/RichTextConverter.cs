@@ -7,7 +7,7 @@ using Telegram.BotAPI.Types;
 
 namespace Telegram.BotAPI.Serialization.Converters;
 
-public sealed class RichTextConverter : JsonConverter<RichText>
+internal sealed class RichTextConverter : JsonConverter<RichText>
 {
     public override RichText? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {

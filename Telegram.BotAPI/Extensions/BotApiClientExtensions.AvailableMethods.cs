@@ -2862,7 +2862,7 @@ public static partial class BotApiClientExtensions
         this IBotApiClient client,
         string businessConnectionId,
         string ownedGiftId,
-        int newOwnerChatId,
+        long newOwnerChatId,
         int? starCount = null,
         CancellationToken cancellationToken = default)
         => await client.TransferGiftAsync(new TransferGiftParameters

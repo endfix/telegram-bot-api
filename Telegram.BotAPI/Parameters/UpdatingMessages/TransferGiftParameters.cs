@@ -8,7 +8,7 @@ public sealed class TransferGiftParameters : ApiRequestParameters
 
     public required string OwnedGiftId { get; init; }
 
-    public required int NewOwnerChatId { get; init; }
+    public required long NewOwnerChatId { get; init; }
 
     public int? StarCount { get; init; }
 }

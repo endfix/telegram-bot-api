@@ -26,7 +26,7 @@ public sealed class TransactionPartnerUser : TransactionPartner
 
     public string? PaidMediaPayload { get; init; }
 
-    public string? Gift { get; init; }
+    public Gift? Gift { get; init; }
 
     public int? PremiumSubscriptionDuration { get; init; }
 }

@@ -26,7 +26,7 @@ public sealed class SendInvoiceParameters : ApiRequestParameters
 
     public int? MaxTipAmount { get; init; }
 
-    public int? SuggestedTipAmounts { get; init; }
+    public IReadOnlyList<int>? SuggestedTipAmounts { get; init; }
 
     public string? StartParameter { get; init; }
 
@@ -34,11 +34,11 @@ public sealed class SendInvoiceParameters : ApiRequestParameters
 
     public string? PhotoUrl { get; init; }
 
-    public string? PhotoSize { get; init; }
+    public int? PhotoSize { get; init; }
 
-    public string? PhotoWidth { get; init; }
+    public int? PhotoWidth { get; init; }
 
-    public string? PhotoHeight { get; init; }
+    public int? PhotoHeight { get; init; }
 
     public bool? NeedName { get; init; }
 

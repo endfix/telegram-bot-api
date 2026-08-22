@@ -30,11 +30,11 @@ public sealed class CreateInvoiceLinkParameters : ApiRequestParameters
 
     public string? PhotoUrl { get; init; }
 
-    public string? PhotoSize { get; init; }
+    public int? PhotoSize { get; init; }
 
-    public string? PhotoWidth { get; init; }
+    public int? PhotoWidth { get; init; }
 
-    public string? PhotoHeight { get; init; }
+    public int? PhotoHeight { get; init; }
 
     public bool? NeedName { get; init; }
 

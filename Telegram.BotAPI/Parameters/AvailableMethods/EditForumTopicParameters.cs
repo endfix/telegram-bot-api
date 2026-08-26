@@ -7,7 +7,7 @@ public sealed class EditForumTopicParameters : ApiRequestParameters
 {
     public required ChatIdSource ChatId { get; init; }
 
-    public required int MessageThreadId { get; init; }
+    public required long MessageThreadId { get; init; }
 
     public string? Name { get; init; }
 

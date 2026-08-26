@@ -9,9 +9,9 @@ public sealed class SendDiceParameters : ApiRequestParameters
 
     public required ChatIdSource ChatId { get; init; }
 
-    public int? MessageThreadId { get; init; }
+    public long? MessageThreadId { get; init; }
 
-    public int? DirectMessagesTopicId { get; init; }
+    public long? DirectMessagesTopicId { get; init; }
 
     public string? Emoji { get; init; }
 

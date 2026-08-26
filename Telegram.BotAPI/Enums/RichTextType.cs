@@ -23,6 +23,7 @@ public enum RichTextType
     Hashtag,
     Cashtag,
     BotCommand,
+    Button,
     Anchor,
     AnchorLink,
     Reference,

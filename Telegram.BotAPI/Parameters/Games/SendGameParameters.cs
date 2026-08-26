@@ -9,7 +9,7 @@ public sealed class SendGameParameters : ApiRequestParameters
 
     public required long ChatId { get; init; }
 
-    public int? MessageThreadId { get; init; }
+    public long? MessageThreadId { get; init; }
 
     public required string GameShortName { get; init; }
 

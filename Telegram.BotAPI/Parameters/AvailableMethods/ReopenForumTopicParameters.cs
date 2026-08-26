@@ -7,5 +7,5 @@ public sealed class ReopenForumTopicParameters : ApiRequestParameters
 {
     public required ChatIdSource ChatId { get; init; }
 
-    public required int MessageThreadId { get; init; }
+    public required long MessageThreadId { get; init; }
 }

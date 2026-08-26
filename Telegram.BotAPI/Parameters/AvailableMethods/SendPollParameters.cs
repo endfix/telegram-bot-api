@@ -11,7 +11,7 @@ public sealed class SendPollParameters : ApiRequestParameters
 
     public required ChatIdSource ChatId { get; init; }
 
-    public int? MessageThreadId { get; init; }
+    public long? MessageThreadId { get; init; }
 
     public required string Question { get; init; }
 

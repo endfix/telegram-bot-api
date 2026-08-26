@@ -8,13 +8,17 @@ public sealed class SendMessageDraftParameters : ApiRequestParameters
 {
     public required long ChatId { get; init; }
 
-    public int? MessageThreadId { get; init; }
+    public long? MessageThreadId { get; init; }
 
-    public required int DraftId { get; init; }
+    public required long DraftId { get; init; }
 
     public string? Text { get; init; }
 
     public string? ParseMode { get; init; }
 
     public IReadOnlyList<MessageEntity>? Entities { get; init; }
+
+    public bool? CanStop { get; init; }
+
+    public bool? KeepOnStop { get; init; }
 }

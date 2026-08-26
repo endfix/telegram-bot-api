@@ -14,6 +14,8 @@ public sealed class SendLivePhotoParameters : ApiRequestParameters
 
     public long? DirectMessagesTopicId { get; init; }
 
+    public EphemeralMessageParameters? EphemeralMessageParameters { get; init; }
+
     public MediaSource LivePhoto { get; init; }
 
     public MediaSource Photo { get; init; }

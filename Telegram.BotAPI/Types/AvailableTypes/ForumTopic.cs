@@ -2,7 +2,7 @@
 
 public sealed class ForumTopic
 {
-    public required int MessageThreadId { get; init; }
+    public required long MessageThreadId { get; init; }
 
     public required string Name { get; init; }
 

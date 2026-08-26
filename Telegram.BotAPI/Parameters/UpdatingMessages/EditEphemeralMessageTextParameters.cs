@@ -18,6 +18,8 @@ public sealed class EditEphemeralMessageTextParameters : ApiRequestParameters
 
     public IReadOnlyList<MessageEntity>? Entities { get; init; }
 
+    public InputRichMessage? RichMessage { get; init; }
+
     public LinkPreviewOptions? LinkPreviewOptions { get; init; }
 
     public InlineKeyboardMarkup? ReplyMarkup { get; init; }

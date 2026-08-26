@@ -26,5 +26,7 @@ public enum UpdateType
     ChatJoinRequest,
     ChatBoost,
     RemovedChatBoost,
-    ManagedBot
+    ManagedBot,
+    Subscription,
+    StoppedMessageGeneration
 }

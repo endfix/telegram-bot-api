@@ -9,13 +9,11 @@ public sealed class SendVideoNoteParameters : ApiRequestParameters
 
     public required ChatIdSource ChatId { get; init; }
 
-    public int? MessageThreadId { get; init; }
+    public long? MessageThreadId { get; init; }
 
-    public int? DirectMessagesTopicId { get; init; }
+    public long? DirectMessagesTopicId { get; init; }
 
-    public long? ReceiverUserId { get; init; }
-
-    public string? CallbackQueryId { get; init; }
+    public EphemeralMessageParameters? EphemeralMessageParameters { get; init; }
 
     public required VideoNoteSource VideoNote { get; init; }
 

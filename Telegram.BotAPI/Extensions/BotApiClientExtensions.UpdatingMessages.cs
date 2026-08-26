@@ -166,7 +166,7 @@ public static partial class BotApiClientExtensions
         this IBotApiClient client,
         string businessConnectionId,
         long chatId,
-        int messageId,
+        long messageId,
         InputChecklist checklist,
         InlineKeyboardMarkup? replyMarkup = null,
         CancellationToken cancellationToken = default)
@@ -223,13 +223,13 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<Poll> EditEphemeralMessageTextAsync(
+    internal static async Task<bool> EditEphemeralMessageTextAsync(
         this IBotApiClient client, 
         EditEphemeralMessageTextParameters parameters, 
         CancellationToken cancellationToken = default)
-        => await client.ExecuteAsync<Poll>(new ApiRequest("editEphemeralMessageText", parameters), cancellationToken);
+        => await client.ExecuteAsync<bool>(new ApiRequest("editEphemeralMessageText", parameters), cancellationToken);
 
-    public static async Task<Poll> EditEphemeralMessageTextAsync(
+    public static async Task<bool> EditEphemeralMessageTextAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
         long receiverUserId,
@@ -252,13 +252,13 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<Poll> EditEphemeralMessageMediaAsync(
+    internal static async Task<bool> EditEphemeralMessageMediaAsync(
         this IBotApiClient client, 
         EditEphemeralMessageMediaParameters parameters, 
         CancellationToken cancellationToken = default)
-        => await client.ExecuteAsync<Poll>(new ApiRequest("editEphemeralMessageMedia", parameters), cancellationToken);
+        => await client.ExecuteAsync<bool>(new ApiRequest("editEphemeralMessageMedia", parameters), cancellationToken);
 
-    public static async Task<Poll> EditEphemeralMessageMediaAsync(
+    public static async Task<bool> EditEphemeralMessageMediaAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
         long receiverUserId,
@@ -275,13 +275,13 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<Poll> EditEphemeralMessageCaptionAsync(
+    internal static async Task<bool> EditEphemeralMessageCaptionAsync(
         this IBotApiClient client, 
         EditEphemeralMessageCaptionParameters parameters, 
         CancellationToken cancellationToken = default)
-        => await client.ExecuteAsync<Poll>(new ApiRequest("editEphemeralMessageCaption", parameters), cancellationToken);
+        => await client.ExecuteAsync<bool>(new ApiRequest("editEphemeralMessageCaption", parameters), cancellationToken);
 
-    public static async Task<Poll> EditEphemeralMessageCaptionAsync(
+    public static async Task<bool> EditEphemeralMessageCaptionAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
         long receiverUserId,
@@ -289,6 +289,7 @@ public static partial class BotApiClientExtensions
         string? caption = null,
         string? parseMode = null,
         IReadOnlyList<MessageEntity>? captionEntities = null,
+        bool? showCaptionAboveMedia = null,
         InlineKeyboardMarkup? replyMarkup = null,
         CancellationToken cancellationToken = default)
         => await client.EditEphemeralMessageCaptionAsync(new EditEphemeralMessageCaptionParameters
@@ -299,16 +300,17 @@ public static partial class BotApiClientExtensions
             Caption = caption,
             ParseMode = parseMode,
             CaptionEntities = captionEntities,
+            ShowCaptionAboveMedia = showCaptionAboveMedia,
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<Poll> EditEphemeralMessageReplyMarkupAsync(
+    internal static async Task<bool> EditEphemeralMessageReplyMarkupAsync(
         this IBotApiClient client, 
         EditEphemeralMessageReplyMarkupParameters parameters, 
         CancellationToken cancellationToken = default)
-        => await client.ExecuteAsync<Poll>(new ApiRequest("editEphemeralMessageReplyMarkup", parameters), cancellationToken);
+        => await client.ExecuteAsync<bool>(new ApiRequest("editEphemeralMessageReplyMarkup", parameters), cancellationToken);
 
-    public static async Task<Poll> EditEphemeralMessageReplyMarkupAsync(
+    public static async Task<bool> EditEphemeralMessageReplyMarkupAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
         long receiverUserId,

@@ -49,6 +49,8 @@ public sealed class ChatMemberAdministrator : ChatMember
 
     public bool? CanManageTags { get; init; }
 
+    public bool? CanSendWelcomeMessages { get; init; }
+
     public string? CustomTitle { get; init; }
 }
 

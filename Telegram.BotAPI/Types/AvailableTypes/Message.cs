@@ -182,6 +182,8 @@ public sealed class Message : MaybeInaccessibleMessage
 
     public CommunityChatAdded? CommunityChatAdded { get; init; }
 
+    public CommunityChatJoined? CommunityChatJoined { get; init; }
+
     public CommunityChatRemoved? CommunityChatRemoved { get; init; }
 
     public DirectMessagePriceChanged? DirectMessagePriceChanged { get; init; }

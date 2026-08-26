@@ -42,6 +42,7 @@ internal sealed class RichTextConverter : JsonConverter<RichText>
             RichTextType.Hashtag => root.Deserialize<RichTextHashtag>(options),
             RichTextType.Cashtag => root.Deserialize<RichTextCashtag>(options),
             RichTextType.BotCommand => root.Deserialize<RichTextBotCommand>(options),
+            RichTextType.Button => root.Deserialize<RichTextButton>(options),
             RichTextType.Anchor => root.Deserialize<RichTextAnchor>(options),
             RichTextType.AnchorLink => root.Deserialize<RichTextAnchorLink>(options),
             RichTextType.Reference => root.Deserialize<RichTextReference>(options),

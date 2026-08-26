@@ -9,7 +9,7 @@ public sealed class EditMessageChecklistParameters : ApiRequestParameters
 
     public required long ChatId { get; init; }
 
-    public required int MessageId { get; init; }
+    public required long MessageId { get; init; }
 
     public required InputChecklist Checklist { get; init; }
 

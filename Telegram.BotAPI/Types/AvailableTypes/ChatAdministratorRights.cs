@@ -35,4 +35,6 @@ public sealed class ChatAdministratorRights
     public bool? CanManageDirectMessages { get; init; }
 
     public bool? CanManageTags { get; init; }
+
+    public bool? CanSendWelcomeMessages { get; init; }
 }

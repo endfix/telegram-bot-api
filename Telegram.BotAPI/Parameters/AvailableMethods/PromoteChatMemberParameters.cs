@@ -5,41 +5,43 @@ namespace Telegram.BotAPI.Parameters;
 
 public sealed class PromoteChatMemberParameters : ApiRequestParameters
 {
-    public required ChatIdSource ChatId { get; set; }
+    public required ChatIdSource ChatId { get; init; }
 
-    public required long UserId { get; set; }
+    public required long UserId { get; init; }
 
-    public bool? IsAnonymous { get; set; }
+    public bool? IsAnonymous { get; init; }
 
-    public bool? CanManageChat { get; set; }
+    public bool? CanManageChat { get; init; }
 
-    public bool? CanDeleteMessages { get; set; }
+    public bool? CanDeleteMessages { get; init; }
 
-    public bool? CanManageVideoChats { get; set; }
+    public bool? CanManageVideoChats { get; init; }
 
-    public bool? CanRestrictMembers { get; set; }
+    public bool? CanRestrictMembers { get; init; }
 
-    public bool? CanPromoteMembers { get; set; }
+    public bool? CanPromoteMembers { get; init; }
 
-    public bool? CanChangeInfo { get; set; }
+    public bool? CanChangeInfo { get; init; }
 
-    public bool? CanInviteUsers { get; set; }
+    public bool? CanInviteUsers { get; init; }
 
-    public bool? CanPostStories { get; set; }
+    public bool? CanPostStories { get; init; }
 
-    public bool? CanEditStories { get; set; }
+    public bool? CanEditStories { get; init; }
 
-    public bool? CanDeleteStories { get; set; }
+    public bool? CanDeleteStories { get; init; }
 
-    public bool? CanPostMessages { get; set; }
+    public bool? CanPostMessages { get; init; }
 
-    public bool? CanEditMessages { get; set; }
+    public bool? CanEditMessages { get; init; }
 
-    public bool? CanPinMessages { get; set; }
+    public bool? CanPinMessages { get; init; }
 
-    public bool? CanManageTopics { get; set; }
+    public bool? CanManageTopics { get; init; }
 
-    public bool? CanManageDirectMessages { get; set; }
+    public bool? CanManageDirectMessages { get; init; }
 
-    public bool? CanManageTags { get; set; }
+    public bool? CanManageTags { get; init; }
+
+    public bool? CanSendWelcomeMessages { get; init; }
 }

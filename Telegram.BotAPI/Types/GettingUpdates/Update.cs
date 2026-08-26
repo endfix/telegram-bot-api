@@ -59,6 +59,8 @@ public sealed class Update
 
     public BotSubscriptionUpdated? Subscription { get; init; }
 
+    public MessageGenerationStopped? StoppedMessageGeneration { get; init; }
+
     [JsonIgnore]
     public UpdateType Type => this switch
     {
@@ -86,6 +88,8 @@ public sealed class Update
         { ChatBoost: not null } => UpdateType.ChatBoost,
         { RemovedChatBoost: not null } => UpdateType.RemovedChatBoost,
         { ManagedBot: not null } => UpdateType.ManagedBot,
+        { Subscription: not null } => UpdateType.Subscription,
+        { StoppedMessageGeneration: not null } => UpdateType.StoppedMessageGeneration,
         _ => UpdateType.Unknown
     };
 }

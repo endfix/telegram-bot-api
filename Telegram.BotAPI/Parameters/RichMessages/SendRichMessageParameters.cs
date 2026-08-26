@@ -13,6 +13,8 @@ public sealed class SendRichMessageParameters : ApiRequestParameters
 
     public long? DirectMessagesTopicId { get; init; }
 
+    public EphemeralMessageParameters? EphemeralMessageParameters { get; init; }
+
     public required InputRichMessage RichMessage { get; init; }
 
     public bool? DisableNotification { get; init; }

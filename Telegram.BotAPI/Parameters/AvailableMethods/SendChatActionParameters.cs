@@ -9,7 +9,7 @@ public sealed class SendChatActionParameters : ApiRequestParameters
 
     public required ChatIdSource ChatId { get; init; }
 
-    public int? MessageThreadId { get; init; }
+    public long? MessageThreadId { get; init; }
 
     public required string Action { get; init; }
 }

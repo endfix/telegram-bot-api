@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Telegram.BotAPI.Enums;
 
 namespace Telegram.BotAPI.Types;
@@ -75,6 +76,15 @@ public sealed class RichBlockBlockQuotation : RichBlock
     public RichTextSource? Credit { get; init; }
 }
 
+public sealed class RichBlockExpandableBlockQuotation : RichBlock
+{
+    public override RichBlockType Type => RichBlockType.ExpandableBlockquote;
+
+    public required RichText Text { get; init; }
+
+    public RichText? Credit { get; init; }
+}
+
 public sealed class RichBlockPullQuotation : RichBlock
 {
     public override RichBlockType Type => RichBlockType.Pullquote;
@@ -112,6 +122,8 @@ public sealed class RichBlockTable : RichBlock
 
     public bool? IsStriped { get; init; }
 
+    public bool? IsCompact { get; init; }
+
     public RichTextSource? Caption { get; init; }
 }
 
@@ -141,6 +153,15 @@ public sealed class RichBlockMap : RichBlock
     public RichBlockCaption? Caption { get; init; }
 }
 
+public sealed class RichBlockButtons : RichBlock
+{
+    public override RichBlockType Type => RichBlockType.Buttons;
+
+    public required IReadOnlyList<RichMessageButton> Buttons { get; init; }
+
+    public RichBlockButtonsAlign? Align { get; init; }
+}
+
 public sealed class RichBlockAnimation : RichBlock
 {
     public override RichBlockType Type => RichBlockType.Animation;
@@ -157,6 +178,15 @@ public sealed class RichBlockAudio : RichBlock
     public override RichBlockType Type => RichBlockType.Audio;
 
     public required Audio Audio { get; init; }
+
+    public RichBlockCaption? Caption { get; init; }
+}
+
+public sealed class RichBlockDocument : RichBlock
+{
+    public override RichBlockType Type => RichBlockType.Document;
+
+    public required Document Document { get; init; }
 
     public RichBlockCaption? Caption { get; init; }
 }

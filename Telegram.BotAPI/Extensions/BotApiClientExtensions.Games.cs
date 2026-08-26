@@ -20,7 +20,7 @@ public static partial class BotApiClientExtensions
         long chatId,
         string gameShortName,
         string? businessConnectionId = null,
-        int? messageThreadId = null,
+        long? messageThreadId = null,
         bool? disableNotification = null,
         bool? protectContent = null,
         bool? allowPaidBroadcast = null,

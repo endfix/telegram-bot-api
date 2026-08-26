@@ -18,5 +18,7 @@ public sealed class EditEphemeralMessageCaptionParameters : ApiRequestParameters
 
     public IReadOnlyList<MessageEntity>? CaptionEntities { get; init; }
 
+    public bool? ShowCaptionAboveMedia { get; init; }
+
     public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 }

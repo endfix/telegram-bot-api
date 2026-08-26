@@ -15,4 +15,6 @@ public sealed class ReplyKeyboardMarkup : ReplyMarkup
     public string? InputFieldPlaceholder { get; init; }
 
     public bool? Selective { get; init; }
+
+    public bool? ForceReply { get; init; }
 }

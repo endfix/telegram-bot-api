@@ -21,6 +21,7 @@ public static partial class BotApiClientExtensions
         string? businessConnectionId = null,
         long? messageThreadId = null,
         long? directMessagesTopicId = null,
+        EphemeralMessageParameters? ephemeralMessageParameters = null,
         bool? disableNotification = null,
         bool? protectContent = null,
         bool? allowPaidBroadcast = null,
@@ -35,6 +36,7 @@ public static partial class BotApiClientExtensions
             ChatId = chatId,
             MessageThreadId = messageThreadId,
             DirectMessagesTopicId = directMessagesTopicId,
+            EphemeralMessageParameters = ephemeralMessageParameters,
             RichMessage = richMessage,
             DisableNotification = disableNotification,
             ProtectContent = protectContent,
@@ -54,15 +56,19 @@ public static partial class BotApiClientExtensions
     public static async Task<bool> SendRichMessageDraftAsync(
         this IBotApiClient client,
         long chatId,
-        int draftId,
+        long draftId,
         InputRichMessage richMessage,
         long? messageThreadId = null,
+        bool? canStop = null,
+        bool? keepOnStop = null,
         CancellationToken cancellationToken = default)
         => await client.SendRichMessageDraftAsync(new SendRichMessageDraftParameters
         {
             ChatId = chatId,
             MessageThreadId = messageThreadId,
             DraftId = draftId,
-            RichMessage = richMessage
+            RichMessage = richMessage,
+            CanStop = canStop,
+            KeepOnStop = keepOnStop
         }, cancellationToken);
 }

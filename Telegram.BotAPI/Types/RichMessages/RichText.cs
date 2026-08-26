@@ -1,4 +1,5 @@
-﻿using Telegram.BotAPI.Enums;
+﻿using System;
+using Telegram.BotAPI.Enums;
 
 namespace Telegram.BotAPI.Types;
 
@@ -176,6 +177,13 @@ public sealed class RichTextBotCommand : RichText
     public required RichTextSource Text { get; init; }
 
     public required string BotCommand { get; init; }
+}
+
+public sealed class RichTextButton : RichText
+{
+    public override RichTextType Type => RichTextType.Button;
+
+    public required RichMessageButton Button { get; init; }
 }
 
 public sealed class RichTextAnchor : RichText

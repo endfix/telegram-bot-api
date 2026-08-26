@@ -150,6 +150,50 @@ public sealed class TransportSerializationTests
     }
 
     [Fact]
+    public async Task EditEphemeralMessageMedia_WithLocalVideo_SendsObjectAndNestedAttachments()
+    {
+        var videoFile = await TemporaryFile.CreateAsync([0x41]);
+        await using var _ = videoFile;
+        var thumbnailFile = await TemporaryFile.CreateAsync([0x42]);
+        await using var __ = thumbnailFile;
+        var coverFile = await TemporaryFile.CreateAsync([0x43]);
+        await using var ___ = coverFile;
+        using var context = new ClientContext();
+
+        await context.Client.RequestAsync<bool>(new ApiRequest(
+            "editEphemeralMessageMedia",
+            new EditEphemeralMessageMediaParameters
+            {
+                ChatId = 123456789L,
+                ReceiverUserId = 987654321L,
+                EphemeralMessageId = 12,
+                Media = new InputMediaVideo
+                {
+                    Media = new InputVideoFile(videoFile.Path),
+                    Thumbnail = new InputThumbnailFile(thumbnailFile.Path),
+                    Cover = new InputCoverFile(coverFile.Path)
+                }
+            }));
+
+        context.Handler.LastRequest.Should().NotBeNull();
+        var request = context.Handler.LastRequest!;
+        for (var index = 0; index < 3; index++)
+        {
+            request.Parts.Should().ContainSingle(part => part.Name == $"attach_{index}")
+                .Which.Content.Should().Equal((byte)(0x41 + index));
+        }
+
+        var mediaJson = request.Parts.Should().ContainSingle(part => part.Name == "media").Which.Text;
+        using var document = JsonDocument.Parse(mediaJson);
+        var media = document.RootElement;
+
+        media.ValueKind.Should().Be(JsonValueKind.Object);
+        media.GetProperty("media").GetString().Should().Be("attach://attach_0");
+        media.GetProperty("thumbnail").GetString().Should().Be("attach://attach_1");
+        media.GetProperty("cover").GetString().Should().Be("attach://attach_2");
+    }
+
+    [Fact]
     public async Task SendMessage_PreservesConcreteReplyMarkupFields()
     {
         using var context = new ClientContext();

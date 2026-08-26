@@ -271,6 +271,12 @@ public sealed class BotApiClient : IBotApiClient
                         _fieldNamesCache.GetOrAdd(property.Name, name => name.ToSnake()),
                         inputFile.FileName);
                 }
+                else if (value is InputMedia media)
+                {
+                    var fileIdx = 0;
+                    var jsonObject = PrepareMedia(media, httpContent, ref fileIdx);
+                    httpContent.Add(new StringContent(jsonObject.ToJsonString(), Encoding.UTF8), _fieldNamesCache.GetOrAdd(property.Name, name => name.ToSnake()));
+                }
                 else if (value is IEnumerable<InputMedia> mediaList)
                 {
                     var jsonArray = PrepareMediaGroup(mediaList, httpContent);
@@ -334,34 +340,42 @@ public sealed class BotApiClient : IBotApiClient
 
         foreach (var inputMedia in mediaList)
         {
-            var node = JsonSerializer.SerializeToNode(inputMedia, JsonSerializerExtensions.Options)!.AsObject();
-
-            AttachInputFile(node, "media", inputMedia.Media.Value, content, ref fileIdx);
-
-            switch (inputMedia)
-            {
-                case InputMediaAnimation animation:
-                    AttachInputFile(node, "thumbnail", animation.Thumbnail, content, ref fileIdx);
-                    break;
-                case InputMediaAudio audio:
-                    AttachInputFile(node, "thumbnail", audio.Thumbnail, content, ref fileIdx);
-                    break;
-                case InputMediaDocument document:
-                    AttachInputFile(node, "thumbnail", document.Thumbnail, content, ref fileIdx);
-                    break;
-                case InputMediaLivePhoto livePhoto:
-                    AttachInputFile(node, "photo", livePhoto.Photo.Value, content, ref fileIdx);
-                    break;
-                case InputMediaVideo video:
-                    AttachInputFile(node, "thumbnail", video.Thumbnail, content, ref fileIdx);
-                    AttachInputFile(node, "cover", video.Cover, content, ref fileIdx);
-                    break;
-            }
-
-            jsonArray.Add(node);
+            jsonArray.Add(PrepareMedia(inputMedia, content, ref fileIdx));
         }
 
         return jsonArray.ToJsonString();
+    }
+
+    private static JsonObject PrepareMedia(
+        InputMedia inputMedia,
+        MultipartFormDataContent content,
+        ref int fileIdx)
+    {
+        var node = JsonSerializer.SerializeToNode(inputMedia, JsonSerializerExtensions.Options)!.AsObject();
+
+        AttachInputFile(node, "media", inputMedia.Media.Value, content, ref fileIdx);
+
+        switch (inputMedia)
+        {
+            case InputMediaAnimation animation:
+                AttachInputFile(node, "thumbnail", animation.Thumbnail, content, ref fileIdx);
+                break;
+            case InputMediaAudio audio:
+                AttachInputFile(node, "thumbnail", audio.Thumbnail, content, ref fileIdx);
+                break;
+            case InputMediaDocument document:
+                AttachInputFile(node, "thumbnail", document.Thumbnail, content, ref fileIdx);
+                break;
+            case InputMediaLivePhoto livePhoto:
+                AttachInputFile(node, "photo", livePhoto.Photo.Value, content, ref fileIdx);
+                break;
+            case InputMediaVideo video:
+                AttachInputFile(node, "thumbnail", video.Thumbnail, content, ref fileIdx);
+                AttachInputFile(node, "cover", video.Cover, content, ref fileIdx);
+                break;
+        }
+
+        return node;
     }
 
     private string PreparePaidMedia(IEnumerable<InputPaidMedia> mediaList, MultipartFormDataContent content)

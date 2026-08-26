@@ -240,6 +240,8 @@ public sealed class TelegramFileIntegrationTests : IDisposable
     {
         var videoPath = Environment.GetEnvironmentVariable(TelegramIntegrationFactAttribute.VideoPathVariable)!;
         var imagePath = Environment.GetEnvironmentVariable(TelegramIntegrationFactAttribute.ImagePathVariable)!;
+        var thumbnailPath = Environment.GetEnvironmentVariable(TelegramIntegrationFactAttribute.ThumbnailPathVariable)!;
+        var coverPath = Environment.GetEnvironmentVariable(TelegramIntegrationFactAttribute.CoverPathVariable)!;
         var sentMessageIds = new List<long>();
 
         try
@@ -254,9 +256,9 @@ public sealed class TelegramFileIntegrationTests : IDisposable
                         new InputMediaVideo
                         {
                             Media = new InputVideoFile(videoPath),
-                            Thumbnail = new InputThumbnailFile(imagePath),
-                            Cover = new InputCoverFile(imagePath),
-                            Caption = "[Telegram.BotAPI integration] InputMediaVideo: thumbnail + cover"
+                            Thumbnail = new InputThumbnailFile(thumbnailPath),
+                            Cover = new InputCoverFile(coverPath),
+                            Caption = "[Telegram.BotAPI integration] video: THUMBNAIL vs COVER"
                         },
                         new InputMediaPhoto
                         {

@@ -9,6 +9,8 @@ internal sealed class TelegramIntegrationFactAttribute : FactAttribute
     public const string KeepMessagesVariable = "TELEGRAM_BOT_KEEP_MESSAGES";
     public const string VideoPathVariable = "TELEGRAM_BOT_TEST_VIDEO_PATH";
     public const string ImagePathVariable = "TELEGRAM_BOT_TEST_IMAGE_PATH";
+    public const string ThumbnailPathVariable = "TELEGRAM_BOT_TEST_THUMBNAIL_PATH";
+    public const string CoverPathVariable = "TELEGRAM_BOT_TEST_COVER_PATH";
 
     public TelegramIntegrationFactAttribute()
     {
@@ -29,7 +31,9 @@ internal sealed class TelegramMediaIntegrationFactAttribute : FactAttribute
             TelegramIntegrationFactAttribute.TokenVariable,
             TelegramIntegrationFactAttribute.ChatIdVariable,
             TelegramIntegrationFactAttribute.VideoPathVariable,
-            TelegramIntegrationFactAttribute.ImagePathVariable
+            TelegramIntegrationFactAttribute.ImagePathVariable,
+            TelegramIntegrationFactAttribute.ThumbnailPathVariable,
+            TelegramIntegrationFactAttribute.CoverPathVariable
         };
 
         if (requiredVariables.Any(variable =>

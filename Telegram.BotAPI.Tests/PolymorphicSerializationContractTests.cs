@@ -1,8 +1,8 @@
 using FluentAssertions;
-using Telegram.BotAPI.Types;
+using Endfix.Telegram.BotAPI.Types;
 using Xunit;
 
-namespace Telegram.BotAPI.Tests;
+namespace Endfix.Telegram.BotAPI.Tests;
 
 public class PolymorphicSerializationContractTests
 {
@@ -318,7 +318,7 @@ public class PolymorphicSerializationContractTests
         JsonContract.AssertRoundtrip(new InputSticker
         {
             Sticker = "sticker-file-id",
-            Format = Telegram.BotAPI.Enums.InputStickerFormat.Static,
+            Format = Endfix.Telegram.BotAPI.Enums.InputStickerFormat.Static,
             EmojiList = ["test"]
         });
     }
@@ -398,7 +398,7 @@ public class PolymorphicSerializationContractTests
         public static Chat Chat() => new()
         {
             Id = -1001234567890,
-            Type = Telegram.BotAPI.Enums.ChatTypes.Supergroup,
+            Type = Endfix.Telegram.BotAPI.Enums.ChatTypes.Supergroup,
             Title = "Contract Test Chat",
             Username = "contract_test_chat"
         };

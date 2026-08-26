@@ -1,12 +1,12 @@
 using FluentAssertions;
 using System.Text.Json;
-using Telegram.BotAPI.Parameters;
-using Telegram.BotAPI.Protocol;
-using Telegram.BotAPI.Tests.Infrastructure;
-using Telegram.BotAPI.Types;
+using Endfix.Telegram.BotAPI.Parameters;
+using Endfix.Telegram.BotAPI.Protocol;
+using Endfix.Telegram.BotAPI.Tests.Infrastructure;
+using Endfix.Telegram.BotAPI.Types;
 using Xunit;
 
-namespace Telegram.BotAPI.Tests;
+namespace Endfix.Telegram.BotAPI.Tests;
 
 public sealed class TransportSerializationTests
 {

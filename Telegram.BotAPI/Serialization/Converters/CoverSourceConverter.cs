@@ -1,9 +1,9 @@
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Telegram.BotAPI.Types;
+using Endfix.Telegram.BotAPI.Types;
 
-namespace Telegram.BotAPI.Serialization.Converters;
+namespace Endfix.Telegram.BotAPI.Serialization.Converters;
 
 internal sealed class CoverSourceConverter : JsonConverter<CoverSource>
 {

@@ -1,7 +1,7 @@
-﻿using System;
-using Telegram.BotAPI.Enums;
+using System;
+using Endfix.Telegram.BotAPI.Enums;
 
-namespace Telegram.BotAPI.Types;
+namespace Endfix.Telegram.BotAPI.Types;
 
 public abstract class RichText
 {

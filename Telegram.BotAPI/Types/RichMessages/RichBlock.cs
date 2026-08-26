@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using Telegram.BotAPI.Enums;
+using Endfix.Telegram.BotAPI.Enums;
 
-namespace Telegram.BotAPI.Types;
+namespace Endfix.Telegram.BotAPI.Types;
 
 public abstract class RichBlock
 {

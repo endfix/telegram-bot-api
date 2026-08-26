@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Telegram.BotAPI.Types;
+namespace Endfix.Telegram.BotAPI.Types;
 
 public sealed class InputRichMessage
 {

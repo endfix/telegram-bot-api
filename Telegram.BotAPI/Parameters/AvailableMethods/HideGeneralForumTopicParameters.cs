@@ -1,7 +1,7 @@
-﻿using Telegram.BotAPI.Protocol;
-using Telegram.BotAPI.Types;
+using Endfix.Telegram.BotAPI.Protocol;
+using Endfix.Telegram.BotAPI.Types;
 
-namespace Telegram.BotAPI.Parameters;
+namespace Endfix.Telegram.BotAPI.Parameters;
 
 public sealed class HideGeneralForumTopicParameters : ApiRequestParameters
 {

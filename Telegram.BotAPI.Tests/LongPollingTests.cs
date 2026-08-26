@@ -1,8 +1,8 @@
-﻿using Xunit;
-using Telegram.BotAPI.Extensions;
-using Telegram.BotAPI.Enums;
+using Xunit;
+using Endfix.Telegram.BotAPI.Extensions;
+using Endfix.Telegram.BotAPI.Enums;
 
-namespace Telegram.BotAPI.Tests;
+namespace Endfix.Telegram.BotAPI.Tests;
 
 public class LongPollingTests
 {

@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using Telegram.BotAPI.Enums;
-using Telegram.BotAPI.Protocol;
-using Telegram.BotAPI.Types;
+using System.Collections.Generic;
+using Endfix.Telegram.BotAPI.Enums;
+using Endfix.Telegram.BotAPI.Protocol;
+using Endfix.Telegram.BotAPI.Types;
 
-namespace Telegram.BotAPI.Parameters;
+namespace Endfix.Telegram.BotAPI.Parameters;
 
 public sealed class SendPollParameters : ApiRequestParameters
 {

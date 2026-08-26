@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace Telegram.BotAPI.Tests.Integration;
+namespace Endfix.Telegram.BotAPI.Tests.Integration;
 
 internal sealed class TelegramIntegrationFactAttribute : FactAttribute
 {

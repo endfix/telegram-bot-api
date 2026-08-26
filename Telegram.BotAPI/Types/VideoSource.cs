@@ -1,4 +1,4 @@
-﻿namespace Telegram.BotAPI.Types;
+namespace Endfix.Telegram.BotAPI.Types;
 
 public readonly struct VideoSource : IFileSource
 {

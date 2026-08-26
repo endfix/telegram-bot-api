@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text;
 
-namespace Telegram.BotAPI.Tests.Infrastructure;
+namespace Endfix.Telegram.BotAPI.Tests.Infrastructure;
 
 internal sealed class RecordingHttpMessageHandler : HttpMessageHandler
 {

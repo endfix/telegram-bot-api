@@ -1,10 +1,10 @@
 using System.Text.Json;
 using FluentAssertions;
-using Telegram.BotAPI.Extensions;
-using Telegram.BotAPI.Types;
+using Endfix.Telegram.BotAPI.Extensions;
+using Endfix.Telegram.BotAPI.Types;
 using Xunit;
 
-namespace Telegram.BotAPI.Tests;
+namespace Endfix.Telegram.BotAPI.Tests;
 
 public class InputMessageContentSerializationTests
 {

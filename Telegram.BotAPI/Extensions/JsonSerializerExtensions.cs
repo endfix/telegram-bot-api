@@ -1,9 +1,9 @@
-﻿using System.Text.Encodings.Web;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Telegram.BotAPI.Serialization.Converters;
+using Endfix.Telegram.BotAPI.Serialization.Converters;
 
-namespace Telegram.BotAPI.Extensions;
+namespace Endfix.Telegram.BotAPI.Extensions;
 
 public static class JsonSerializerExtensions
 {

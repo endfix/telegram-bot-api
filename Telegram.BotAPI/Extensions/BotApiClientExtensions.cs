@@ -1,4 +1,4 @@
-namespace Telegram.BotAPI.Extensions;
+namespace Endfix.Telegram.BotAPI.Extensions;
 
 public static partial class BotApiClientExtensions
 {

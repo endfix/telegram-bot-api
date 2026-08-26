@@ -1,8 +1,8 @@
 using System.Net;
-using Telegram.BotAPI.Extensions;
-using Telegram.BotAPI.Types;
+using Endfix.Telegram.BotAPI.Extensions;
+using Endfix.Telegram.BotAPI.Types;
 
-namespace Telegram.BotAPI.Example.Webhook;
+namespace Endfix.Telegram.BotAPI.Example.Webhook;
 
 public class Program
 {

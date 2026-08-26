@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using Telegram.BotAPI.Enums;
-using Telegram.BotAPI.Protocol;
+using System.Collections.Generic;
+using Endfix.Telegram.BotAPI.Enums;
+using Endfix.Telegram.BotAPI.Protocol;
 
-namespace Telegram.BotAPI.Parameters;
+namespace Endfix.Telegram.BotAPI.Parameters;
 
 public sealed class GetUpdatesParameters : ApiRequestParameters
 {

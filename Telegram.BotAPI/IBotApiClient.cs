@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Telegram.BotAPI.Enums;
-using Telegram.BotAPI.Protocol;
+using Endfix.Telegram.BotAPI.Enums;
+using Endfix.Telegram.BotAPI.Protocol;
 
-namespace Telegram.BotAPI;
+namespace Endfix.Telegram.BotAPI;
 
 public interface IBotApiClient
 {

@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore Telegram.BotAPI.sln
+
+      - name: Build
+        run: dotnet build Telegram.BotAPI.sln --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test Telegram.BotAPI.sln --configuration Release --no-build

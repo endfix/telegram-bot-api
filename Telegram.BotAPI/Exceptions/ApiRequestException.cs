@@ -1,7 +1,7 @@
-﻿using System;
-using Telegram.BotAPI.Protocol;
+using System;
+using Endfix.Telegram.BotAPI.Protocol;
 
-namespace Telegram.BotAPI.Exceptions;
+namespace Endfix.Telegram.BotAPI.Exceptions;
 
 public sealed class ApiRequestException(int errorCode, string? description, ApiResponseParameters? parameters = null) 
     : Exception(description ?? $"API Error {errorCode}")

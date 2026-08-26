@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Telegram.BotAPI.Enums;
-using Telegram.BotAPI.Extensions;
-using Telegram.BotAPI.Types;
+using Endfix.Telegram.BotAPI.Enums;
+using Endfix.Telegram.BotAPI.Extensions;
+using Endfix.Telegram.BotAPI.Types;
 
-namespace Telegram.BotAPI.Serialization.Converters;
+namespace Endfix.Telegram.BotAPI.Serialization.Converters;
 
 internal sealed class OwnedGiftConverter : JsonConverter<OwnedGift>
 {

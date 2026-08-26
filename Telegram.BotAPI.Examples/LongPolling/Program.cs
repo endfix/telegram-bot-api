@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
-using Telegram.BotAPI.Enums;
-using Telegram.BotAPI.Extensions;
+using Microsoft.Extensions.Configuration;
+using Endfix.Telegram.BotAPI.Enums;
+using Endfix.Telegram.BotAPI.Extensions;
 
-namespace Telegram.BotAPI.Example.LongPolling;
+namespace Endfix.Telegram.BotAPI.Example.LongPolling;
 
 internal class Program
 {

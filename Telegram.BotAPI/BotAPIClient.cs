@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Concurrent;
@@ -11,14 +11,14 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
-using Telegram.BotAPI.Enums;
-using Telegram.BotAPI.Exceptions;
-using Telegram.BotAPI.Extensions;
-using Telegram.BotAPI.Parameters;
-using Telegram.BotAPI.Protocol;
-using Telegram.BotAPI.Types;
+using Endfix.Telegram.BotAPI.Enums;
+using Endfix.Telegram.BotAPI.Exceptions;
+using Endfix.Telegram.BotAPI.Extensions;
+using Endfix.Telegram.BotAPI.Parameters;
+using Endfix.Telegram.BotAPI.Protocol;
+using Endfix.Telegram.BotAPI.Types;
 
-namespace Telegram.BotAPI;
+namespace Endfix.Telegram.BotAPI;
 
 public sealed class BotApiClient : IBotApiClient
 {

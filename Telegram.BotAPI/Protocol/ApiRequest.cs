@@ -1,4 +1,4 @@
-﻿namespace Telegram.BotAPI.Protocol;
+namespace Endfix.Telegram.BotAPI.Protocol;
 
 public sealed class ApiRequest(string methodName, ApiRequestParameters? parameters)
 {

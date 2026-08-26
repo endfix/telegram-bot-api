@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Text.Json;
 
-namespace Telegram.BotAPI.Extensions;
+namespace Endfix.Telegram.BotAPI.Extensions;
 
 public static class JsonElementExtensions
 {

@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using Telegram.BotAPI.Protocol;
+using System.Collections.Generic;
+using Endfix.Telegram.BotAPI.Protocol;
 
-namespace Telegram.BotAPI.Parameters;
+namespace Endfix.Telegram.BotAPI.Parameters;
 
 public sealed class SetStickerKeywordsParameters : ApiRequestParameters
 {

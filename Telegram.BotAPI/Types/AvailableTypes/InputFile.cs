@@ -1,7 +1,7 @@
-﻿using System.IO;
-using Telegram.BotAPI.Enums;
+using System.IO;
+using Endfix.Telegram.BotAPI.Enums;
 
-namespace Telegram.BotAPI.Types;
+namespace Endfix.Telegram.BotAPI.Types;
 
 public abstract class InputFile(string path)
 {

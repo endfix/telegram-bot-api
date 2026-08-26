@@ -1,10 +1,10 @@
-using Telegram.BotAPI.Extensions;
-using Telegram.BotAPI.Parameters;
-using Telegram.BotAPI.Protocol;
-using Telegram.BotAPI.Types;
+using Endfix.Telegram.BotAPI.Extensions;
+using Endfix.Telegram.BotAPI.Parameters;
+using Endfix.Telegram.BotAPI.Protocol;
+using Endfix.Telegram.BotAPI.Types;
 using Xunit;
 
-namespace Telegram.BotAPI.Tests.Integration;
+namespace Endfix.Telegram.BotAPI.Tests.Integration;
 
 [Trait("Category", "Integration")]
 public sealed class TelegramFileIntegrationTests : IDisposable
@@ -38,7 +38,7 @@ public sealed class TelegramFileIntegrationTests : IDisposable
             {
                 ChatId = _chatId,
                 Photo = new InputPhotoFile(file.Path),
-                Caption = "[Telegram.BotAPI integration] sendPhoto: InputPhotoFile"
+                Caption = "[Endfix.Telegram.BotAPI integration] sendPhoto: InputPhotoFile"
             });
             sentMessageIds.Add(upload.MessageId);
 
@@ -47,7 +47,7 @@ public sealed class TelegramFileIntegrationTests : IDisposable
             {
                 ChatId = _chatId,
                 Photo = fileId,
-                Caption = "[Telegram.BotAPI integration] sendPhoto: file_id"
+                Caption = "[Endfix.Telegram.BotAPI integration] sendPhoto: file_id"
             });
             sentMessageIds.Add(resend.MessageId);
         }
@@ -62,7 +62,7 @@ public sealed class TelegramFileIntegrationTests : IDisposable
     {
         await using var file = await TemporaryFile.CreateAsync(
             ".txt",
-            "Telegram.BotAPI integration document"u8.ToArray());
+            "Endfix.Telegram.BotAPI integration document"u8.ToArray());
         var sentMessageIds = new List<long>();
 
         try
@@ -71,7 +71,7 @@ public sealed class TelegramFileIntegrationTests : IDisposable
             {
                 ChatId = _chatId,
                 Document = new InputDocumentFile(file.Path),
-                Caption = "[Telegram.BotAPI integration] sendDocument: InputDocumentFile"
+                Caption = "[Endfix.Telegram.BotAPI integration] sendDocument: InputDocumentFile"
             });
             sentMessageIds.Add(upload.MessageId);
 
@@ -79,7 +79,7 @@ public sealed class TelegramFileIntegrationTests : IDisposable
             {
                 ChatId = _chatId,
                 Document = upload.Document!.FileId,
-                Caption = "[Telegram.BotAPI integration] sendDocument: file_id"
+                Caption = "[Endfix.Telegram.BotAPI integration] sendDocument: file_id"
             });
             sentMessageIds.Add(resend.MessageId);
         }
@@ -108,12 +108,12 @@ public sealed class TelegramFileIntegrationTests : IDisposable
                         new InputMediaPhoto
                         {
                             Media = new InputPhotoFile(firstFile.Path),
-                            Caption = "[Telegram.BotAPI integration] sendMediaGroup: attach://attach_0"
+                            Caption = "[Endfix.Telegram.BotAPI integration] sendMediaGroup: attach://attach_0"
                         },
                         new InputMediaPhoto
                         {
                             Media = new InputPhotoFile(secondFile.Path),
-                            Caption = "[Telegram.BotAPI integration] sendMediaGroup: attach://attach_1"
+                            Caption = "[Endfix.Telegram.BotAPI integration] sendMediaGroup: attach://attach_1"
                         }
                     ]
                 });
@@ -146,7 +146,7 @@ public sealed class TelegramFileIntegrationTests : IDisposable
                         Media = new InputPhotoFile(file.Path)
                     }
                 ],
-                Caption = "[Telegram.BotAPI integration] sendPaidMedia: InputPhotoFile"
+                Caption = "[Endfix.Telegram.BotAPI integration] sendPaidMedia: InputPhotoFile"
             });
             sentMessageIds.Add(upload.MessageId);
 
@@ -166,7 +166,7 @@ public sealed class TelegramFileIntegrationTests : IDisposable
                         Media = fileId
                     }
                 ],
-                Caption = "[Telegram.BotAPI integration] sendPaidMedia: file_id"
+                Caption = "[Endfix.Telegram.BotAPI integration] sendPaidMedia: file_id"
             });
             sentMessageIds.Add(resend.MessageId);
 
@@ -190,7 +190,7 @@ public sealed class TelegramFileIntegrationTests : IDisposable
             var message = await RequestAsync<Message>("sendMessage", new SendMessageParameters
             {
                 ChatId = _chatId,
-                Text = "[Telegram.BotAPI integration] editMessageReplyMarkup",
+                Text = "[Endfix.Telegram.BotAPI integration] editMessageReplyMarkup",
                 ReplyMarkup = new InlineKeyboardMarkup
                 {
                     InlineKeyboard =
@@ -258,12 +258,12 @@ public sealed class TelegramFileIntegrationTests : IDisposable
                             Media = new InputVideoFile(videoPath),
                             Thumbnail = new InputThumbnailFile(thumbnailPath),
                             Cover = new InputCoverFile(coverPath),
-                            Caption = "[Telegram.BotAPI integration] video: THUMBNAIL vs COVER"
+                            Caption = "[Endfix.Telegram.BotAPI integration] video: THUMBNAIL vs COVER"
                         },
                         new InputMediaPhoto
                         {
                             Media = new InputPhotoFile(imagePath),
-                            Caption = "[Telegram.BotAPI integration] media group companion"
+                            Caption = "[Endfix.Telegram.BotAPI integration] media group companion"
                         }
                     ]
                 });

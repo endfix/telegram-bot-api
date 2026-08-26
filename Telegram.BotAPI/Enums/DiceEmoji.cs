@@ -1,4 +1,4 @@
-﻿namespace Telegram.BotAPI.Enums;
+namespace Endfix.Telegram.BotAPI.Enums;
 
 public static class DiceEmoji
 {

@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Telegram.BotAPI.Enums;
-using Telegram.BotAPI.Parameters;
-using Telegram.BotAPI.Protocol;
-using Telegram.BotAPI.Types;
+using Endfix.Telegram.BotAPI.Enums;
+using Endfix.Telegram.BotAPI.Parameters;
+using Endfix.Telegram.BotAPI.Protocol;
+using Endfix.Telegram.BotAPI.Types;
 
-namespace Telegram.BotAPI.Extensions;
+namespace Endfix.Telegram.BotAPI.Extensions;
 
 public static partial class BotApiClientExtensions
 {

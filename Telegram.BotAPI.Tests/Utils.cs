@@ -1,7 +1,7 @@
 using FluentAssertions;
-using Telegram.BotAPI.Extensions;
+using Endfix.Telegram.BotAPI.Extensions;
 
-namespace Telegram.BotAPI.Tests;
+namespace Endfix.Telegram.BotAPI.Tests;
 
 public static class Utils
 {

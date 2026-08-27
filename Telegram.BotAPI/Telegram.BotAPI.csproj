@@ -4,9 +4,12 @@
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<LangVersion>latest</LangVersion>
 		<PackageId>Endfix.Telegram.BotAPI</PackageId>
+		<Version>0.1.0</Version>
 		<AssemblyName>Endfix.Telegram.BotAPI</AssemblyName>
 		<RootNamespace>Endfix.Telegram.BotAPI</RootNamespace>
 		<Authors>endfix</Authors>
+		<Description>Typed .NET client for the Telegram Bot API.</Description>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<RepositoryUrl>https://github.com/endfix/telegram-bot-api</RepositoryUrl>
 		<PackageTags>telegram;bot;api</PackageTags>
 

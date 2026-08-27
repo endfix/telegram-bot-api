@@ -1,3 +1,9 @@
+using Endfix.Telegram.BotAPI.Enums;
+using Endfix.Telegram.BotAPI.Exceptions;
+using Endfix.Telegram.BotAPI.Extensions;
+using Endfix.Telegram.BotAPI.Parameters;
+using Endfix.Telegram.BotAPI.Protocol;
+using Endfix.Telegram.BotAPI.Types;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System;
@@ -11,12 +17,6 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
-using Endfix.Telegram.BotAPI.Enums;
-using Endfix.Telegram.BotAPI.Exceptions;
-using Endfix.Telegram.BotAPI.Extensions;
-using Endfix.Telegram.BotAPI.Parameters;
-using Endfix.Telegram.BotAPI.Protocol;
-using Endfix.Telegram.BotAPI.Types;
 
 namespace Endfix.Telegram.BotAPI;
 
@@ -53,9 +53,9 @@ public sealed class BotApiClient : IBotApiClient
         {
             _httpClient.BaseAddress = new Uri(url);
         }
-        else if (_httpClient.BaseAddress is null)
+        else
         {
-            _httpClient.BaseAddress = new Uri("https://api.telegram.org");
+            _httpClient.BaseAddress ??= new Uri("https://api.telegram.org");
         }
 
         _retryDelays = retryDelays ?? [5, 10, 25, 30, 60, 120];
@@ -63,7 +63,12 @@ public sealed class BotApiClient : IBotApiClient
         _logger = logger ?? NullLogger<IBotApiClient>.Instance;
     }
 
-    public async Task StartPollingAsync(int limit = 1, int timeout = 20, IReadOnlyList<UpdateType>? allowedUpdates = null, int maxParallel = 10, CancellationToken cancellationToken = default)
+    public async Task StartPollingAsync(
+        int limit = 1,
+        int timeout = 20,
+        IReadOnlyList<UpdateType>? allowedUpdates = null,
+        int maxParallel = 1,
+        CancellationToken cancellationToken = default)
     {
         if (maxParallel < 1)
         {
@@ -71,14 +76,34 @@ public sealed class BotApiClient : IBotApiClient
         }
 
         using var throttling = new SemaphoreSlim(maxParallel, maxParallel);
+
+        async Task ProcessUpdateAsync(Update update)
+        {
+            await throttling.WaitAsync(cancellationToken);
+
+            try
+            {
+                if (OnUpdate is not null)
+                {
+                    await OnUpdate.Invoke(this, update);
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error processing update {Id}", update.UpdateId);
+            }
+            finally
+            {
+                throttling.Release();
+            }
+        }
+
         var lastUpdateId = 0L;
 
         while (!cancellationToken.IsCancellationRequested)
         {
             try
             {
-                var tasks = new List<Task>();
-
                 var updates = await this.GetUpdatesAsync(
                     offset: lastUpdateId,
                     limit: limit,
@@ -88,32 +113,26 @@ public sealed class BotApiClient : IBotApiClient
 
                 if (updates is { Count: > 0 })
                 {
+                    var tasks = new List<Task>();
+
                     foreach (var update in updates)
                     {
-                        tasks.Add(Task.Run(async () =>
+                        if (maxParallel == 1)
                         {
-                            await throttling.WaitAsync(cancellationToken);
-                            try
-                            {
-                                if (OnUpdate is not null)
-                                {
-                                    await OnUpdate.Invoke(this, update);
-                                }
-                            }
-                            catch (Exception e)
-                            {
-                                _logger.LogError(e, "Error processing update {Id}", update.UpdateId);
-                            }
-                            finally
-                            {
-                                throttling.Release();
-                            }
-                        }, cancellationToken));
+                            await ProcessUpdateAsync(update);
+                        }
+                        else
+                        {
+                            tasks.Add(ProcessUpdateAsync(update));
+                        }
 
                         lastUpdateId = update.UpdateId + 1;
                     }
 
-                    await Task.WhenAll(tasks).ConfigureAwait(false);
+                    if (maxParallel > 1)
+                    {
+                        await Task.WhenAll(tasks).ConfigureAwait(false);
+                    }
                 }
             }
             catch (ApiRequestException e)

@@ -33,6 +33,8 @@ var api = new BotApiClient(
  * [**Long polling**: Sequential (FIFO) or parallel update processing.](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/LongPolling)
  * [**Webhook**: Built-in exponential backoff and retry policy.](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/Webhook)
 
+Long polling processes updates sequentially in FIFO order by default (`maxParallel = 1`). Set `maxParallel` to a value greater than `1` to enable concurrent processing. FIFO ordering is not guaranteed in parallel mode, including the order in which handlers start or complete. Use sequential processing for stateful workflows that depend on update ordering.
+
 The example projects include placeholder configuration files. Replace the placeholders locally or use User Secrets before running them.
 
 ## Download file

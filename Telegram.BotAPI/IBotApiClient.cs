@@ -13,9 +13,9 @@ public interface IBotApiClient
     Task<T> ExecuteAsync<T>(ApiRequest request, CancellationToken cancellationToken = default);
 
     Task StartPollingAsync(
-        int limit = 1, 
-        int timeout = 20, 
-        IReadOnlyList<UpdateType>? allowedUpdates = null, 
-        int maxParallel = 10, 
+        int limit = 1,
+        int timeout = 20,
+        IReadOnlyList<UpdateType>? allowedUpdates = null,
+        int maxParallel = 1,
         CancellationToken cancellationToken = default);
 }

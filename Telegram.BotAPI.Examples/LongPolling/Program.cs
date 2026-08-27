@@ -71,7 +71,7 @@ internal class Program
                 }
             };
 
-            await api.StartPollingAsync(limit: 10, cancellationToken: cts.Token);
+            await api.StartPollingAsync(limit: 10, maxParallel: 1, cancellationToken: cts.Token);
         }
         catch (Exception e)
         {

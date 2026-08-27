@@ -74,6 +74,28 @@ public sealed class ClientBehaviorTests
     }
 
     [Fact]
+    public async Task Constructor_PreservesExistingHttpClientBaseAddress()
+    {
+        using var context = new ClientContext(baseAddress: "https://custom.example");
+
+        await context.Client.RequestAsync<User>(new ApiRequest("getMe", parameters: null));
+
+        context.Handler.LastRequestUri.Should().Be("https://custom.example/bottest-token/getMe");
+    }
+
+    [Fact]
+    public async Task Constructor_UsesExplicitUrlOverHttpClientBaseAddress()
+    {
+        using var context = new ClientContext(
+            baseAddress: "https://custom.example",
+            url: "https://explicit.example");
+
+        await context.Client.RequestAsync<User>(new ApiRequest("getMe", parameters: null));
+
+        context.Handler.LastRequestUri.Should().Be("https://explicit.example/bottest-token/getMe");
+    }
+
+    [Fact]
     public void Parameters_UseSnakeCaseNames()
     {
         var parameters = new SendMessageParameters
@@ -96,11 +118,20 @@ public sealed class ClientBehaviorTests
     {
         private readonly HttpClient _httpClient;
 
-        public ClientContext(string responseJson = "{\"ok\":true,\"result\":true}", IReadOnlyList<int>? retryDelays = null)
+        public ClientContext(
+            string responseJson = "{\"ok\":true,\"result\":{\"id\":1,\"is_bot\":true,\"first_name\":\"Test\"}}",
+            IReadOnlyList<int>? retryDelays = null,
+            string? baseAddress = null,
+            string? url = null)
         {
             Handler = new ResponseHandler(responseJson);
             _httpClient = new HttpClient(Handler);
-            Client = new BotApiClient("test-token", _httpClient, retryDelays: retryDelays);
+            if (baseAddress is not null)
+            {
+                _httpClient.BaseAddress = new Uri(baseAddress);
+            }
+
+            Client = new BotApiClient("test-token", _httpClient, url, retryDelays);
         }
 
         public ResponseHandler Handler { get; }
@@ -114,12 +145,15 @@ public sealed class ClientBehaviorTests
     {
         public int RequestCount { get; private set; }
 
+        public string? LastRequestUri { get; private set; }
+
         protected override Task<HttpResponseMessage> SendAsync(
             HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             RequestCount++;
+            LastRequestUri = request.RequestUri?.ToString();
 
             return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
             {

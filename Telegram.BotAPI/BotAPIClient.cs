@@ -38,12 +38,25 @@ public sealed class BotApiClient : IBotApiClient
 
     private readonly ILogger<IBotApiClient> _logger;
 
-    public BotApiClient(string token, HttpClient? httpClient = null, string? url = null, IReadOnlyList<int>? retryDelays = null, ILogger<IBotApiClient>? logger = null)
+    public BotApiClient(
+        string token, 
+        HttpClient? httpClient = null, 
+        string? url = null, 
+        IReadOnlyList<int>? retryDelays = null, 
+        ILogger<IBotApiClient>? logger = null)
     {
         _token = token ?? throw new ArgumentNullException(nameof(token));
 
         _httpClient = httpClient ?? new HttpClient();
-        _httpClient.BaseAddress = new Uri(url ?? "https://api.telegram.org");
+
+        if (url is not null)
+        {
+            _httpClient.BaseAddress = new Uri(url);
+        }
+        else if (_httpClient.BaseAddress is null)
+        {
+            _httpClient.BaseAddress = new Uri("https://api.telegram.org");
+        }
 
         _retryDelays = retryDelays ?? [5, 10, 25, 30, 60, 120];
 

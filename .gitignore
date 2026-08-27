@@ -57,7 +57,7 @@ nunit-*.xml
 dlldata.c
 
 # Benchmark Results
-BenchmarkDotNet.Artifacts/
+Telegram.BotAPI.Benchmarks/results/
 
 # .NET Core
 project.lock.json

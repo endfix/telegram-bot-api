@@ -1,0 +1,23 @@
+{
+  "profiles": {
+    "Benchmarks / all": {
+      "commandName": "Project"
+    },
+    "Benchmarks / serialization": {
+      "commandName": "Project",
+      "commandLineArgs": "--filter *SerializationBenchmarks*"
+    },
+    "Benchmarks / transport": {
+      "commandName": "Project",
+      "commandLineArgs": "--filter *TransportBenchmarks*"
+    },
+    "Benchmarks / stress": {
+      "commandName": "Project",
+      "commandLineArgs": "--stress"
+    },
+    "Benchmarks / quick": {
+      "commandName": "Project",
+      "commandLineArgs": "--filter *SerializationBenchmarks* --job Dry"
+    }
+  }
+}

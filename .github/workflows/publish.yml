@@ -4,7 +4,6 @@ on:
   push:
     tags:
       - 'v*'
-  workflow_dispatch:
 
 permissions:
   contents: read
@@ -27,7 +26,18 @@ jobs:
         run: dotnet build Telegram.BotAPI/Telegram.BotAPI.csproj --configuration Release
 
       - name: Pack
-        run: dotnet pack Telegram.BotAPI/Telegram.BotAPI.csproj --configuration Release --no-build --output ./artifacts
+        shell: bash
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z.-]+)?$ ]]; then
+            echo "Invalid release tag: $GITHUB_REF_NAME"
+            exit 1
+          fi
+          dotnet pack Telegram.BotAPI/Telegram.BotAPI.csproj \
+            --configuration Release \
+            --no-build \
+            --output ./artifacts \
+            -p:PackageVersion="$VERSION"
 
       - name: NuGet login
         uses: NuGet/login@v1

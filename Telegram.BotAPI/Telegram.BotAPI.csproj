@@ -4,7 +4,6 @@
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<LangVersion>latest</LangVersion>
 		<PackageId>Endfix.Telegram.BotAPI</PackageId>
-		<Version>0.1.0</Version>
 		<AssemblyName>Endfix.Telegram.BotAPI</AssemblyName>
 		<RootNamespace>Endfix.Telegram.BotAPI</RootNamespace>
 		<Authors>endfix</Authors>
@@ -13,7 +12,7 @@
 		<RepositoryUrl>https://github.com/endfix/telegram-bot-api</RepositoryUrl>
 		<PackageTags>telegram;bot;api</PackageTags>
 
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>		
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<IsPackable>true</IsPackable>
 		<ImplicitUsings>disable</ImplicitUsings>

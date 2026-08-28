@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
+using System.Net.Sockets;
 using FluentAssertions;
 using Endfix.Telegram.BotAPI;
 using Endfix.Telegram.BotAPI.Exceptions;
@@ -59,6 +60,21 @@ public sealed class ClientBehaviorTests
     }
 
     [Fact]
+    public async Task RequestAsync_StopsRetrying429AfterConfiguredAttempts()
+    {
+        using var context = new ClientContext(
+            "{\"ok\":false,\"error_code\":429,\"description\":\"Too Many Requests\",\"parameters\":{\"retry_after\":0}}",
+            retryDelays: [0]);
+
+        var response = await context.Client.RequestAsync<User>(
+            new ApiRequest("getMe", parameters: null));
+
+        response.Ok.Should().BeFalse();
+        response.ErrorCode.Should().Be(429);
+        context.Handler.RequestCount.Should().Be(2);
+    }
+
+    [Fact]
     public async Task RequestAsync_ObservesCancellation()
     {
         using var context = new ClientContext();
@@ -71,6 +87,97 @@ public sealed class ClientBehaviorTests
 
         await action.Should().ThrowAsync<OperationCanceledException>();
         context.Handler.RequestCount.Should().Be(0);
+    }
+
+    [Fact]
+    public async Task RequestAsync_DoesNotRetryHttpClientTimeout()
+    {
+        using var context = new ClientContext(
+            responses: [
+                new TaskCanceledException("request timed out"),
+                new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(
+                        "{\"ok\":true,\"result\":{\"id\":1,\"is_bot\":true,\"first_name\":\"Test\"}}",
+                        Encoding.UTF8,
+                        "application/json")
+                }
+            ],
+            retryDelays: [0]);
+
+        var action = () => context.Client.RequestAsync<User>(
+            new ApiRequest("getMe", parameters: null));
+
+        await action.Should().ThrowAsync<TaskCanceledException>();
+        context.Handler.RequestCount.Should().Be(1);
+    }
+
+    [Theory]
+    [InlineData("getMe")]
+    [InlineData("sendMessage")]
+    public async Task RequestAsync_Retries429RegardlessOfMethod(string methodName)
+    {
+        using var context = new ClientContext(
+            responses: [
+                new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(
+                        "{\"ok\":false,\"error_code\":429,\"description\":\"Too Many Requests\",\"parameters\":{\"retry_after\":0}}",
+                        Encoding.UTF8,
+                        "application/json")
+                },
+                new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(
+                        "{\"ok\":true,\"result\":{\"id\":1,\"is_bot\":true,\"first_name\":\"Test\"}}",
+                        Encoding.UTF8,
+                        "application/json")
+                }
+            ],
+            retryDelays: [0]);
+
+        var response = await context.Client.RequestAsync<User>(
+            new ApiRequest(methodName, parameters: null));
+
+        response.Ok.Should().BeTrue();
+        context.Handler.RequestCount.Should().Be(2);
+    }
+
+    [Fact]
+    public async Task RequestAsync_DoesNotRetrySerializationFailure()
+    {
+        using var context = new ClientContext("not-json", retryDelays: [0]);
+
+        var response = await context.Client.RequestAsync<User>(
+            new ApiRequest("getMe", parameters: null));
+
+        response.Ok.Should().BeFalse();
+        response.ErrorCode.Should().Be(500);
+        context.Handler.RequestCount.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task RequestAsync_DoesNotRetrySocketFailure()
+    {
+        using var context = new ClientContext(
+            responses: [
+                new HttpRequestException("connection reset", new SocketException()),
+                new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(
+                        "{\"ok\":true,\"result\":{\"id\":1,\"is_bot\":true,\"first_name\":\"Test\"}}",
+                        Encoding.UTF8,
+                        "application/json")
+                }
+            ],
+            retryDelays: [0]);
+
+        var response = await context.Client.RequestAsync<User>(
+            new ApiRequest("getMe", parameters: null));
+
+        response.Ok.Should().BeFalse();
+        response.ErrorCode.Should().Be(500);
+        context.Handler.RequestCount.Should().Be(1);
     }
 
     [Fact]
@@ -122,9 +229,10 @@ public sealed class ClientBehaviorTests
             string responseJson = "{\"ok\":true,\"result\":{\"id\":1,\"is_bot\":true,\"first_name\":\"Test\"}}",
             IReadOnlyList<int>? retryDelays = null,
             string? baseAddress = null,
-            string? url = null)
+            string? url = null,
+            IReadOnlyList<object>? responses = null)
         {
-            Handler = new ResponseHandler(responseJson);
+            Handler = new ResponseHandler(responseJson, responses);
             _httpClient = new HttpClient(Handler);
             if (baseAddress is not null)
             {
@@ -143,6 +251,14 @@ public sealed class ClientBehaviorTests
 
     private sealed class ResponseHandler(string responseJson) : HttpMessageHandler
     {
+        private readonly IReadOnlyList<object>? _responses;
+
+        public ResponseHandler(string responseJson, IReadOnlyList<object>? responses = null)
+            : this(responseJson)
+        {
+            _responses = responses;
+        }
+
         public int RequestCount { get; private set; }
 
         public string? LastRequestUri { get; private set; }
@@ -155,10 +271,25 @@ public sealed class ClientBehaviorTests
             RequestCount++;
             LastRequestUri = request.RequestUri?.ToString();
 
-            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+            if (_responses is not null && RequestCount <= _responses.Count)
             {
-                Content = new StringContent(responseJson, Encoding.UTF8, "application/json")
-            });
+                var response = _responses[RequestCount - 1];
+                if (response is Exception exception)
+                {
+                    return Task.FromException<HttpResponseMessage>(exception);
+                }
+
+                return Task.FromResult((HttpResponseMessage)response);
+            }
+
+            return Task.FromResult(ResponseMessage(responseJson));
         }
+
+        private static HttpResponseMessage ResponseMessage(string json)
+            => new(HttpStatusCode.OK)
+            {
+                Content = new StringContent(json, Encoding.UTF8, "application/json")
+            };
     }
+
 }

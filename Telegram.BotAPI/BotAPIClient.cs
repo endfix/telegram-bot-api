@@ -10,7 +10,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
@@ -20,10 +19,8 @@ using System.Threading.Tasks;
 
 namespace Endfix.Telegram.BotAPI;
 
-public sealed class BotApiClient : IBotApiClient
+public sealed partial class BotApiClient : IBotApiClient
 {
-    public delegate Task UpdateHandler(IBotApiClient client, Update update);
-
     public event UpdateHandler? OnUpdate;
 
     private static readonly ConcurrentDictionary<Type, PropertyInfo[]> _parametersCache = new();
@@ -35,7 +32,7 @@ public sealed class BotApiClient : IBotApiClient
     private readonly HttpClient _httpClient;
 
     private IReadOnlyList<int> _retryDelays;
-
+    
     private readonly ILogger<IBotApiClient> _logger;
 
     public BotApiClient(
@@ -62,96 +59,7 @@ public sealed class BotApiClient : IBotApiClient
 
         _logger = logger ?? NullLogger<IBotApiClient>.Instance;
     }
-
-    public async Task StartPollingAsync(
-        int limit = 1,
-        int timeout = 20,
-        IReadOnlyList<UpdateType>? allowedUpdates = null,
-        int maxParallel = 1,
-        CancellationToken cancellationToken = default)
-    {
-        if (maxParallel < 1)
-        {
-            throw new ArgumentOutOfRangeException(nameof(maxParallel));
-        }
-
-        using var throttling = new SemaphoreSlim(maxParallel, maxParallel);
-
-        async Task ProcessUpdateAsync(Update update)
-        {
-            await throttling.WaitAsync(cancellationToken);
-
-            try
-            {
-                if (OnUpdate is not null)
-                {
-                    await OnUpdate.Invoke(this, update);
-                }
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Error processing update {Id}", update.UpdateId);
-            }
-            finally
-            {
-                throttling.Release();
-            }
-        }
-
-        var lastUpdateId = 0L;
-
-        while (!cancellationToken.IsCancellationRequested)
-        {
-            try
-            {
-                var updates = await this.GetUpdatesAsync(
-                    offset: lastUpdateId,
-                    limit: limit,
-                    timeout: timeout,
-                    AllowedUpdates: allowedUpdates,
-                    cancellationToken).ConfigureAwait(false);
-
-                if (updates is { Count: > 0 })
-                {
-                    var tasks = new List<Task>();
-
-                    foreach (var update in updates)
-                    {
-                        if (maxParallel == 1)
-                        {
-                            await ProcessUpdateAsync(update);
-                        }
-                        else
-                        {
-                            tasks.Add(ProcessUpdateAsync(update));
-                        }
-
-                        lastUpdateId = update.UpdateId + 1;
-                    }
-
-                    if (maxParallel > 1)
-                    {
-                        await Task.WhenAll(tasks).ConfigureAwait(false);
-                    }
-                }
-            }
-            catch (ApiRequestException e)
-            {
-                _logger.LogWarning("Long Polling: {Message}", e.Message);
-                await Task.Delay(5000, cancellationToken).ConfigureAwait(false);
-            } 
-            catch (OperationCanceledException)
-            {
-                break;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Critical error loop of Long Polling");
-                await Task.Delay(5000, cancellationToken).ConfigureAwait(false);
-            }
-        }
-    }
-
+    
     public async Task<ApiResponse<T>> RequestAsync<T>(ApiRequest request, CancellationToken cancellation = default, int retryCount = 0)
     {
         try
@@ -194,31 +102,16 @@ public sealed class BotApiClient : IBotApiClient
         }
         catch (OperationCanceledException e)
         {
-            if (e is TaskCanceledException && !cancellation.IsCancellationRequested && retryCount < _retryDelays.Count)
-            {
-                return await RequestAsync<T>(request, cancellation, ++retryCount);
-            }
-
             if (!cancellation.IsCancellationRequested)
             {
-                _logger.LogWarning("RequestAsync: {Message}", e.Message);
+                _logger.LogWarning("RequestAsync {Method}: {Message}", request.MethodName, e.Message);
             }
 
             throw;
         }
         catch (Exception e)
         {
-            if (e is HttpRequestException requestException && requestException.InnerException is SocketException)
-            {
-                if (retryCount < _retryDelays.Count)
-                {
-                    await Task.Delay(TimeSpan.FromSeconds(_retryDelays[retryCount]), cancellation);
-
-                    return await RequestAsync<T>(request, cancellation, ++retryCount);
-                }
-            }
-
-            _logger.LogError("RequestAsync: {Message}", e.Message);
+            _logger.LogError("RequestAsync {Method}: {Message}", request.MethodName, e.Message);
 
             var response = new ApiResponse<T>
             {
@@ -262,7 +155,6 @@ public sealed class BotApiClient : IBotApiClient
             throw new ApiRequestException(500, e.Message);
         }
     }
-
 
     private async Task<HttpResponseMessage> GetResponse(ApiRequest request, CancellationToken cancellation)
     {

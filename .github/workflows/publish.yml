@@ -22,8 +22,14 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
+      - name: Restore
+        run: dotnet restore Telegram.BotAPI.sln
+
       - name: Build
-        run: dotnet build Telegram.BotAPI/Telegram.BotAPI.csproj --configuration Release
+        run: dotnet build Telegram.BotAPI.sln --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test Telegram.BotAPI.sln --configuration Release --no-build
 
       - name: Pack
         shell: bash

@@ -13,8 +13,13 @@ internal static class StressRunner
 {
     private const int Iterations = 1_000_000;
 
-    public static async Task RunAsync()
+    public static async Task RunAsync(int maxParallel)
     {
+        if (maxParallel < 1)
+        {
+            throw new ArgumentOutOfRangeException(nameof(maxParallel));
+        }
+
         using var httpClient = new HttpClient(new StressHandler());
         var client = new BotApiClient("benchmark-token", httpClient);
         var request = new ApiRequest("sendMessage", new SendMessageParameters
@@ -30,15 +35,31 @@ internal static class StressRunner
         var managedBefore = GC.GetTotalMemory(forceFullCollection: true);
         var workingSetBefore = process.WorkingSet64;
         var cpuBefore = process.TotalProcessorTime;
+        var collectionsBefore = new[]
+        {
+            GC.CollectionCount(0),
+            GC.CollectionCount(1),
+            GC.CollectionCount(2)
+        };
         var stopwatch = Stopwatch.StartNew();
 
-        for (var i = 0; i < Iterations; i++)
+        if (maxParallel == 1)
         {
-            var response = await client.RequestAsync<Message>(request).ConfigureAwait(false);
-            if (!response.Ok || response.Result is null)
+            await RunWorkerAsync(Iterations).ConfigureAwait(false);
+        }
+        else
+        {
+            var iterationsPerWorker = Iterations / maxParallel;
+            var remainder = Iterations % maxParallel;
+            var workers = new Task[maxParallel];
+
+            for (var workerIndex = 0; workerIndex < maxParallel; workerIndex++)
             {
-                throw new InvalidOperationException("The fake API response was not successful.");
+                var workerIterations = iterationsPerWorker + (workerIndex < remainder ? 1 : 0);
+                workers[workerIndex] = Task.Run(() => RunWorkerAsync(workerIterations));
             }
+
+            await Task.WhenAll(workers).ConfigureAwait(false);
         }
 
         stopwatch.Stop();
@@ -48,15 +69,40 @@ internal static class StressRunner
         var cpuAfter = process.TotalProcessorTime;
 
         Console.WriteLine($"Iterations:       {Iterations:N0}");
+        Console.WriteLine($"Max parallel:     {maxParallel:N0}");
         Console.WriteLine($"Elapsed:          {stopwatch.Elapsed}");
         Console.WriteLine($"Average:          {stopwatch.Elapsed.TotalMilliseconds * 1_000 / Iterations:N2} us/op");
         Console.WriteLine($"CPU time:         {cpuAfter - cpuBefore}");
-        Console.WriteLine($"Managed before:   {managedBefore / 1024.0:N1} KB");
-        Console.WriteLine($"Managed after:    {managedAfter / 1024.0:N1} KB");
-        Console.WriteLine($"Managed delta:    {(managedAfter - managedBefore) / 1024.0:N1} KB");
+        Console.WriteLine($"Retained managed before: {managedBefore / 1024.0:N1} KB");
+        Console.WriteLine($"Retained managed after:  {managedAfter / 1024.0:N1} KB");
+        Console.WriteLine($"Retained managed delta:  {(managedAfter - managedBefore) / 1024.0:N1} KB");
         Console.WriteLine($"Working set before: {workingSetBefore / 1024.0 / 1024.0:N1} MB");
         Console.WriteLine($"Working set after:  {workingSetAfter / 1024.0 / 1024.0:N1} MB");
         Console.WriteLine($"Working set delta:  {(workingSetAfter - workingSetBefore) / 1024.0 / 1024.0:N1} MB");
+        Console.WriteLine($"GC collections:     Gen0 {GC.CollectionCount(0) - collectionsBefore[0]:N0}, " +
+                          $"Gen1 {GC.CollectionCount(1) - collectionsBefore[1]:N0}, " +
+                          $"Gen2 {GC.CollectionCount(2) - collectionsBefore[2]:N0}");
+
+        async Task RunWorkerAsync(int iterations)
+        {
+            for (var i = 0; i < iterations; i++)
+            {
+                var response = await client.RequestAsync<Message>(request).ConfigureAwait(false);
+                ValidateResponse(response);
+            }
+        }
+    }
+
+    private static void ValidateResponse(ApiResponse<Message> response)
+    {
+        if (!response.Ok ||
+            response.Result is null ||
+            response.Result.MessageId != 1001 ||
+            response.Result.Chat.Id != 989722390L ||
+            response.Result.Text != "Stress response")
+        {
+            throw new InvalidOperationException("The fake API response did not match the expected message.");
+        }
     }
 
     private static void ForceCollection()

@@ -15,6 +15,10 @@
       "commandName": "Project",
       "commandLineArgs": "--stress"
     },
+    "Benchmarks / stress parallel": {
+      "commandName": "Project",
+      "commandLineArgs": "--stress-parallel 10"
+    },
     "Benchmarks / quick": {
       "commandName": "Project",
       "commandLineArgs": "--filter *SerializationBenchmarks* --job Dry"

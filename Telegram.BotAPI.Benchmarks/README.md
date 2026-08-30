@@ -20,7 +20,14 @@ Run the long local stress test:
 
 ```powershell
 dotnet run --project Telegram.BotAPI.Benchmarks\Telegram.BotAPI.Benchmarks.csproj -c Release -- --stress
+dotnet run --project Telegram.BotAPI.Benchmarks\Telegram.BotAPI.Benchmarks.csproj -c Release -- --stress-parallel 10
 ```
+
+The stress test reports elapsed and CPU time, retained managed memory after a full GC,
+Working Set, and GC collection counts across 1,000,000 complete local client calls. It
+is intended to reveal throughput or long-running memory-retention problems. It does not
+measure total managed allocations: use `Benchmarks / transport` and its BenchmarkDotNet
+`Allocated` result for allocations per operation.
 
 The same scenarios are available as Visual Studio launch profiles:
 
@@ -28,6 +35,7 @@ The same scenarios are available as Visual Studio launch profiles:
 - `Benchmarks / serialization` runs JSON benchmarks;
 - `Benchmarks / transport` runs local transport benchmarks;
 - `Benchmarks / stress` runs the 1,000,000-call stress test;
+- `Benchmarks / stress parallel` runs the same test with 10 bounded workers;
 - `Benchmarks / quick` runs a short serialization smoke test.
 
-The benchmark project targets .NET 9 to match the current AuctionArena runtime. Results are written to `results` in this project directory and should be compared on the same machine and runtime configuration.
+The benchmark project targets .NET 9. Results are written to `results` in this project directory and should be compared on the same machine and runtime configuration.

@@ -76,10 +76,7 @@ public sealed partial class BotApiClient : IBotApiClient
 
             using var responseMessage = await GetResponse(request, cancellation);
             using var responseStream = await responseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
-            var apiResponse = await JsonSerializer.DeserializeAsync<ApiResponse<T>>(
-                responseStream,
-                JsonSerializerExtensions.Options,
-                cancellation);
+            var apiResponse = await responseStream.DeserializeAsync<ApiResponse<T>>(cancellation);
 
             if (apiResponse is null)
             {
@@ -239,10 +236,7 @@ public sealed partial class BotApiClient : IBotApiClient
             response.EnsureSuccessStatusCode();
 
             using var stream = await response.Content.ReadAsStreamAsync();
-            var result = await JsonSerializer.DeserializeAsync<Dictionary<string, Currency>>(
-                stream,
-                JsonSerializerExtensions.Options,
-                cancellation);
+            var result = await stream.DeserializeAsync<Dictionary<string, Currency>>(cancellation);
 
             return result ?? throw new InvalidOperationException("Failed to deserialize currencies: response was empty or wrong syntax.");
         }

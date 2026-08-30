@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Xunit;
 
 namespace Endfix.Telegram.BotAPI.Tests.Integration;
@@ -14,8 +15,8 @@ internal sealed class TelegramIntegrationFactAttribute : FactAttribute
 
     public TelegramIntegrationFactAttribute()
     {
-        if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(TokenVariable)) ||
-            string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(ChatIdVariable)))
+        if (string.IsNullOrWhiteSpace(TelegramIntegrationSettings.Get(TokenVariable)) ||
+            string.IsNullOrWhiteSpace(TelegramIntegrationSettings.Get(ChatIdVariable)))
         {
             Skip = $"Set {TokenVariable} and {ChatIdVariable} to run Telegram integration tests.";
         }
@@ -37,9 +38,19 @@ internal sealed class TelegramMediaIntegrationFactAttribute : FactAttribute
         };
 
         if (requiredVariables.Any(variable =>
-            string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(variable))))
+            string.IsNullOrWhiteSpace(TelegramIntegrationSettings.Get(variable))))
         {
             Skip = $"Set {string.Join(", ", requiredVariables)} to run Telegram media integration tests.";
         }
     }
+}
+
+internal static class TelegramIntegrationSettings
+{
+    private static readonly IConfigurationRoot Secrets = new ConfigurationBuilder()
+        .AddUserSecrets<TelegramIntegrationFactAttribute>(optional: true)
+        .Build();
+
+    public static string? Get(string name)
+        => Environment.GetEnvironmentVariable(name) ?? Secrets[name];
 }

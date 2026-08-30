@@ -18,10 +18,10 @@ public sealed class TelegramFileIntegrationTests : IDisposable
 
     public TelegramFileIntegrationTests()
     {
-        var token = Environment.GetEnvironmentVariable(TelegramIntegrationFactAttribute.TokenVariable)
+        var token = TelegramIntegrationSettings.Get(TelegramIntegrationFactAttribute.TokenVariable)
             ?? throw new InvalidOperationException("Telegram bot token is not configured.");
         _chatId = long.Parse(
-            Environment.GetEnvironmentVariable(TelegramIntegrationFactAttribute.ChatIdVariable)
+            TelegramIntegrationSettings.Get(TelegramIntegrationFactAttribute.ChatIdVariable)
                 ?? throw new InvalidOperationException("Telegram chat id is not configured."));
         _client = new BotApiClient(token, _httpClient);
     }
@@ -238,10 +238,10 @@ public sealed class TelegramFileIntegrationTests : IDisposable
     [TelegramMediaIntegrationFact]
     public async Task SendMediaGroup_UploadsTypedVideoThumbnailAndCover()
     {
-        var videoPath = Environment.GetEnvironmentVariable(TelegramIntegrationFactAttribute.VideoPathVariable)!;
-        var imagePath = Environment.GetEnvironmentVariable(TelegramIntegrationFactAttribute.ImagePathVariable)!;
-        var thumbnailPath = Environment.GetEnvironmentVariable(TelegramIntegrationFactAttribute.ThumbnailPathVariable)!;
-        var coverPath = Environment.GetEnvironmentVariable(TelegramIntegrationFactAttribute.CoverPathVariable)!;
+        var videoPath = TelegramIntegrationSettings.Get(TelegramIntegrationFactAttribute.VideoPathVariable)!;
+        var imagePath = TelegramIntegrationSettings.Get(TelegramIntegrationFactAttribute.ImagePathVariable)!;
+        var thumbnailPath = TelegramIntegrationSettings.Get(TelegramIntegrationFactAttribute.ThumbnailPathVariable)!;
+        var coverPath = TelegramIntegrationSettings.Get(TelegramIntegrationFactAttribute.CoverPathVariable)!;
         var sentMessageIds = new List<long>();
 
         try
@@ -290,7 +290,7 @@ public sealed class TelegramFileIntegrationTests : IDisposable
     private async Task DeleteMessagesAsync(IEnumerable<long> messageIds)
     {
         if (bool.TryParse(
-            Environment.GetEnvironmentVariable(TelegramIntegrationFactAttribute.KeepMessagesVariable),
+            TelegramIntegrationSettings.Get(TelegramIntegrationFactAttribute.KeepMessagesVariable),
             out var keepMessages) && keepMessages)
         {
             return;

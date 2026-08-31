@@ -1,0 +1,1 @@
+Endfix.Telegram.BotAPI integration document fixture.

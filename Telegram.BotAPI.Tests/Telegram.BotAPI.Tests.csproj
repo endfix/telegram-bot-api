@@ -24,4 +24,8 @@
 	  <ProjectReference Include="..\Telegram.BotAPI\Telegram.BotAPI.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Update="Fixtures\Media\**\*" CopyToOutputDirectory="PreserveNewest" />
+	</ItemGroup>
+
 </Project>

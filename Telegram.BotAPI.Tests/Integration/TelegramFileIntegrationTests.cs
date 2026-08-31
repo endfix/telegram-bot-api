@@ -1,4 +1,5 @@
 using Endfix.Telegram.BotAPI.Extensions;
+using Endfix.Telegram.BotAPI.Enums;
 using Endfix.Telegram.BotAPI.Parameters;
 using Endfix.Telegram.BotAPI.Protocol;
 using Endfix.Telegram.BotAPI.Types;
@@ -7,6 +8,7 @@ using Xunit;
 namespace Endfix.Telegram.BotAPI.Tests.Integration;
 
 [Trait("Category", "Integration")]
+[Collection(TelegramIntegrationCollection.Name)]
 public sealed class TelegramFileIntegrationTests : IDisposable
 {
     private static readonly byte[] PngBytes = Convert.FromBase64String(
@@ -181,6 +183,177 @@ public sealed class TelegramFileIntegrationTests : IDisposable
     }
 
     [TelegramIntegrationFact]
+    public async Task SendAdditionalStandaloneMedia_UploadsLocalFiles()
+    {
+        var sentMessageIds = new List<long>();
+
+        try
+        {
+            var audio = await RequestAsync<Message>("sendAudio", new SendAudioParameters
+            {
+                ChatId = _chatId,
+                Audio = new InputAudioFile(FixturePath("audio.mp3")),
+                Thumbnail = new InputThumbnailFile(FixturePath("thumbnail.jpg")),
+                Caption = "[Endfix.Telegram.BotAPI integration] sendAudio"
+            });
+            sentMessageIds.Add(audio.MessageId);
+            Assert.NotNull(audio.Audio);
+
+            var animation = await RequestAsync<Message>("sendAnimation", new SendAnimationParameters
+            {
+                ChatId = _chatId,
+                Animation = new InputAnimationFile(FixturePath("animation.gif")),
+                Thumbnail = new InputThumbnailFile(FixturePath("thumbnail.jpg")),
+                Caption = "[Endfix.Telegram.BotAPI integration] sendAnimation"
+            });
+            sentMessageIds.Add(animation.MessageId);
+            Assert.NotNull(animation.Animation);
+
+            var video = await RequestAsync<Message>("sendVideo", new SendVideoParameters
+            {
+                ChatId = _chatId,
+                Video = new InputVideoFile(FixturePath("video.mp4")),
+                Thumbnail = new InputThumbnailFile(FixturePath("thumbnail.jpg")),
+                Cover = new InputCoverFile(FixturePath("cover.jpg")),
+                Caption = "[Endfix.Telegram.BotAPI integration] sendVideo"
+            });
+            sentMessageIds.Add(video.MessageId);
+            Assert.NotNull(video.Video);
+
+            var voice = await RequestAsync<Message>("sendVoice", new SendVoiceParameters
+            {
+                ChatId = _chatId,
+                Voice = new InputVoiceFile(FixturePath("voice.ogg")),
+                Caption = "[Endfix.Telegram.BotAPI integration] sendVoice"
+            });
+            sentMessageIds.Add(voice.MessageId);
+            Assert.NotNull(voice.Voice);
+
+            var videoNote = await RequestAsync<Message>("sendVideoNote", new SendVideoNoteParameters
+            {
+                ChatId = _chatId,
+                VideoNote = new InputVideoNoteFile(FixturePath("video-note.mp4")),
+                Thumbnail = new InputThumbnailFile(FixturePath("thumbnail.jpg"))
+            });
+            sentMessageIds.Add(videoNote.MessageId);
+            Assert.NotNull(videoNote.VideoNote);
+
+            var sticker = await RequestAsync<Message>("sendSticker", new SendStickerParameters
+            {
+                ChatId = _chatId,
+                Sticker = new InputStickerFile(FixturePath("sticker-one.webp")),
+                Emoji = "\u2600\uFE0F"
+            });
+            sentMessageIds.Add(sticker.MessageId);
+            Assert.NotNull(sticker.Sticker);
+        }
+        finally
+        {
+            await DeleteMessagesAsync(sentMessageIds);
+        }
+    }
+
+    [TelegramIntegrationFact]
+    public async Task SendRichMessage_UploadsPhotoFromNestedBlock()
+    {
+        await using var file = await TemporaryFile.CreateAsync(".png", PngBytes);
+        var sentMessageIds = new List<long>();
+
+        try
+        {
+            var message = await _client.SendRichMessageAsync(
+                chatId: _chatId,
+                richMessage: new InputRichMessage
+                {
+                    Blocks =
+                    [
+                        new InputRichBlockParagraph
+                        {
+                            Text = new RichTextBold
+                            {
+                                Text = "Endfix.Telegram.BotAPI nested multipart test"
+                            }
+                        },
+                        new InputRichBlockPhoto
+                        {
+                            Photo = new InputMediaPhoto
+                            {
+                                Media = new InputPhotoFile(file.Path)
+                            },
+                            Caption = new RichBlockCaption
+                            {
+                                Text = "InputRichBlockPhoto via attach://"
+                            }
+                        }
+                    ]
+                });
+
+            sentMessageIds.Add(message.MessageId);
+            Assert.NotNull(message.RichMessage);
+        }
+        finally
+        {
+            await DeleteMessagesAsync(sentMessageIds);
+        }
+    }
+
+    [TelegramIntegrationFact]
+    public async Task SetMyProfilePhoto_UploadsNestedPhoto_ThenRestoresPreviousPhoto()
+    {
+        var bot = await _client.GetMeAsync();
+        var profilePhotos = await _client.GetUserProfilePhotosAsync(bot.Id, limit: 1);
+        var previousPhoto = profilePhotos.Photos.FirstOrDefault()?.LastOrDefault();
+        TemporaryFile? previousPhotoFile = null;
+
+        if (previousPhoto is not null)
+        {
+            var file = await _client.GetFileAsync(previousPhoto.FileId);
+            Assert.False(string.IsNullOrWhiteSpace(file.FilePath));
+            previousPhotoFile = await TemporaryFile.CreateAsync(
+                ".jpg",
+                await _client.GetFileBytesAsync(file.FilePath!));
+        }
+
+        var profilePhotoSet = false;
+        try
+        {
+            profilePhotoSet = await _client.SetMyProfilePhotoAsync(new InputProfilePhotoStatic
+            {
+                Photo = new InputPhotoFile(FixturePath("album-photo.jpg"))
+            });
+
+            Assert.True(profilePhotoSet);
+        }
+        finally
+        {
+            try
+            {
+                if (profilePhotoSet)
+                {
+                    Assert.True(await _client.RemoveMyProfilePhotoAsync());
+                }
+            }
+            finally
+            {
+                if (previousPhotoFile is not null)
+                {
+                    try
+                    {
+                        Assert.True(await _client.SetMyProfilePhotoAsync(new InputProfilePhotoStatic
+                        {
+                            Photo = new InputPhotoFile(previousPhotoFile.Path)
+                        }));
+                    }
+                    finally
+                    {
+                        await previousPhotoFile.DisposeAsync();
+                    }
+                }
+            }
+        }
+    }
+
+    [TelegramIntegrationFact]
     public async Task UpdatingMethods_ForwardChatAndReplyMarkupParameters()
     {
         var sentMessageIds = new List<long>();
@@ -235,13 +408,9 @@ public sealed class TelegramFileIntegrationTests : IDisposable
         }
     }
 
-    [TelegramMediaIntegrationFact]
+    [TelegramIntegrationFact]
     public async Task SendMediaGroup_UploadsTypedVideoThumbnailAndCover()
     {
-        var videoPath = TelegramIntegrationSettings.Get(TelegramIntegrationFactAttribute.VideoPathVariable)!;
-        var imagePath = TelegramIntegrationSettings.Get(TelegramIntegrationFactAttribute.ImagePathVariable)!;
-        var thumbnailPath = TelegramIntegrationSettings.Get(TelegramIntegrationFactAttribute.ThumbnailPathVariable)!;
-        var coverPath = TelegramIntegrationSettings.Get(TelegramIntegrationFactAttribute.CoverPathVariable)!;
         var sentMessageIds = new List<long>();
 
         try
@@ -255,14 +424,14 @@ public sealed class TelegramFileIntegrationTests : IDisposable
                     [
                         new InputMediaVideo
                         {
-                            Media = new InputVideoFile(videoPath),
-                            Thumbnail = new InputThumbnailFile(thumbnailPath),
-                            Cover = new InputCoverFile(coverPath),
+                            Media = new InputVideoFile(FixturePath("video.mp4")),
+                            Thumbnail = new InputThumbnailFile(FixturePath("thumbnail.jpg")),
+                            Cover = new InputCoverFile(FixturePath("cover.jpg")),
                             Caption = "[Endfix.Telegram.BotAPI integration] video: THUMBNAIL vs COVER"
                         },
                         new InputMediaPhoto
                         {
-                            Media = new InputPhotoFile(imagePath),
+                            Media = new InputPhotoFile(FixturePath("album-photo.jpg")),
                             Caption = "[Endfix.Telegram.BotAPI integration] media group companion"
                         }
                     ]
@@ -278,6 +447,62 @@ public sealed class TelegramFileIntegrationTests : IDisposable
         }
     }
 
+    [TelegramIntegrationFact]
+    public async Task StickerSetMethods_UploadNestedFiles()
+    {
+        var bot = await _client.GetMeAsync();
+        Assert.False(string.IsNullOrWhiteSpace(bot.Username));
+
+        var setName = $"endfix_it_{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}_by_{bot.Username}"
+            .ToLowerInvariant();
+        var created = false;
+
+        try
+        {
+            var uploaded = await _client.UploadStickerFileAsync(
+                _chatId,
+                new InputStickerFile(FixturePath("sticker-one.webp")),
+                StickerFormat.Static);
+            Assert.False(string.IsNullOrWhiteSpace(uploaded.FileId));
+
+            created = await _client.CreateNewStickerSetAsync(
+                _chatId,
+                setName,
+                "Endfix integration test",
+                [CreateSticker("sticker-one.webp", "\u2600\uFE0F")]);
+            Assert.True(created);
+
+            var stickerSet = await _client.GetStickerSetAsync(setName);
+            Assert.Single(stickerSet.Stickers);
+
+            Assert.True(await _client.AddStickerToSetAsync(
+                _chatId,
+                setName,
+                CreateSticker("sticker-two.webp", "\u26A1")));
+
+            stickerSet = await _client.GetStickerSetAsync(setName);
+            Assert.Equal(2, stickerSet.Stickers.Count);
+            var replacedFileId = stickerSet.Stickers[0].FileId;
+
+            Assert.True(await _client.ReplaceStickerInSetAsync(
+                _chatId,
+                setName,
+                replacedFileId,
+                CreateSticker("sticker-three.webp", "\u2705")));
+
+            stickerSet = await _client.GetStickerSetAsync(setName);
+            Assert.Equal(2, stickerSet.Stickers.Count);
+            Assert.DoesNotContain(stickerSet.Stickers, sticker => sticker.FileId == replacedFileId);
+        }
+        finally
+        {
+            if (created)
+            {
+                Assert.True(await _client.DeleteStickerSetAsync(setName));
+            }
+        }
+    }
+
     public void Dispose() => _httpClient.Dispose();
 
     private async Task<T> RequestAsync<T>(string methodName, ApiRequestParameters parameters)
@@ -286,6 +511,21 @@ public sealed class TelegramFileIntegrationTests : IDisposable
         Assert.True(response.Ok, $"Telegram API {methodName} failed ({response.ErrorCode}): {response.Description}");
         return response.Result;
     }
+
+    private static string FixturePath(string fileName)
+    {
+        var path = Path.Combine(AppContext.BaseDirectory, "Fixtures", "Media", fileName);
+        Assert.True(File.Exists(path), $"Media fixture not found: {path}");
+        return path;
+    }
+
+    private static InputSticker CreateSticker(string fileName, string emoji)
+        => new()
+        {
+            Sticker = new InputStickerFile(FixturePath(fileName)),
+            Format = InputStickerFormat.Static,
+            EmojiList = [emoji]
+        };
 
     private async Task DeleteMessagesAsync(IEnumerable<long> messageIds)
     {

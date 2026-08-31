@@ -48,6 +48,13 @@ var message = await api.SendMessageAsync(
 - [**Long polling**: sequential (FIFO) or parallel update processing.](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/LongPolling)
 - [**Webhook**: ASP.NET Core endpoint with secret-token validation.](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/Webhook)
 
+Both examples accept `TELEGRAM_BOT_TOKEN` from an environment variable or .NET User Secrets while retaining their existing `appsettings.json` keys as a fallback:
+
+```bash
+dotnet user-secrets set "TELEGRAM_BOT_TOKEN" "<token>" --project Telegram.BotAPI.Examples/LongPolling/Telegram.BotAPI.Example.LongPolling.csproj
+dotnet user-secrets set "TELEGRAM_BOT_TOKEN" "<token>" --project Telegram.BotAPI.Examples/Webhook/Telegram.BotAPI.Example.Webhook.csproj
+```
+
 Long polling processes updates sequentially in FIFO order by default (`maxParallel = 1`). Set `maxParallel` to a value greater than `1` to enable concurrent processing. FIFO ordering is not guaranteed in parallel mode, including the order in which handlers start or complete. Use sequential processing for stateful workflows that depend on update ordering.
 
 The example projects include placeholder configuration files. Replace the placeholders locally or use User Secrets before running them.
@@ -73,7 +80,7 @@ await File.WriteAllBytesAsync("downloaded-report.pdf", fileBytes);
 
 ## Tests
 
-Run the local test suite with:
+Run the solution test suite (live integration tests are skipped when their secrets are not configured):
 
 ```bash
 dotnet test Telegram.BotAPI.sln
@@ -81,15 +88,13 @@ dotnet test Telegram.BotAPI.sln
 
 Telegram integration tests are disabled unless their credentials are configured. They can send real messages and are intended for a dedicated test bot and chat.
 
-For local runs, configure the required values with .NET User Secrets:
+Run local tests without contacting Telegram:
 
 ```bash
-dotnet user-secrets set "TELEGRAM_BOT_TOKEN" "<token>" --project Telegram.BotAPI.Tests/Telegram.BotAPI.Tests.csproj
-dotnet user-secrets set "TELEGRAM_BOT_CHAT_ID" "<chat-id>" --project Telegram.BotAPI.Tests/Telegram.BotAPI.Tests.csproj
-dotnet test Telegram.BotAPI.Tests/Telegram.BotAPI.Tests.csproj --filter "Category=Integration"
+dotnet test Telegram.BotAPI.Tests/Telegram.BotAPI.Tests.csproj --filter "Category!=Integration"
 ```
 
-The same keys can be supplied as environment variables, which take precedence over User Secrets. Integration tests delete their messages after each run by default; set `TELEGRAM_BOT_KEEP_MESSAGES=true` to keep them. The typed video, thumbnail and cover scenario additionally uses the `TELEGRAM_BOT_TEST_VIDEO_PATH`, `TELEGRAM_BOT_TEST_IMAGE_PATH`, `TELEGRAM_BOT_TEST_THUMBNAIL_PATH` and `TELEGRAM_BOT_TEST_COVER_PATH` keys.
+See the [test project guide](Telegram.BotAPI.Tests/README.md) for the live test topology, BotFather settings, administrator rights, secrets, rollback behavior and focused run commands.
 
 ## Benchmarks
 

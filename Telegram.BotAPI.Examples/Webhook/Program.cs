@@ -9,11 +9,12 @@ public class Program
     public static async Task Main(string[] args)
     {
         var builder     = WebApplication.CreateBuilder(args);
+        builder.Configuration.AddUserSecrets<Program>(optional: true);
         var app         = builder.Build();
 
-        var token       = builder.Configuration.GetSection("Telegram:Token").Value!;
-        var webhookUrl  = builder.Configuration.GetSection("Telegram:WebhookUrl").Value!;
-        var serverSecretToken = builder.Configuration.GetSection("Telegram:SecretToken").Value!;
+        var token       = GetToken(builder.Configuration);
+        var webhookUrl  = builder.Configuration.GetSection("TelegramBotApi:WebhookUrl").Value!;
+        var serverSecretToken = builder.Configuration.GetSection("TelegramBotApi:SecretToken").Value!;
 
         var handler = new SocketsHttpHandler
         {
@@ -77,5 +78,16 @@ public class Program
         });
 
         app.Run();
+    }
+
+    private static string GetToken(IConfiguration config)
+    {
+        var token = Environment.GetEnvironmentVariable("TELEGRAM_BOT_TOKEN")
+            ?? config["TELEGRAM_BOT_TOKEN"]
+            ?? config["TelegramBotApi:Token"];
+
+        return string.IsNullOrWhiteSpace(token) || token == "<bot-token>"
+            ? throw new InvalidOperationException("Set TELEGRAM_BOT_TOKEN using environment variables or .NET User Secrets.")
+            : token;
     }
 }

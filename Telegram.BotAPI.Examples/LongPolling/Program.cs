@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Endfix.Telegram.BotAPI.Enums;
+using Endfix.Telegram.BotAPI.Exceptions;
 using Endfix.Telegram.BotAPI.Extensions;
 
 namespace Endfix.Telegram.BotAPI.Example.LongPolling;
@@ -11,10 +12,10 @@ internal class Program
         var config = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddUserSecrets<Program>(optional: true)
             .Build();
 
-        var token = config.GetSection("TelegramBotApi:Token").Value 
-            ?? throw new InvalidOperationException("Telegram bot token is not configured.");
+        var token = GetToken(config);
 
         using var cts = new CancellationTokenSource();
 
@@ -43,10 +44,8 @@ internal class Program
 
                     switch (update.Type)
                     {
-                        case UpdateType.Message:
+                        case UpdateType.Message when update.Message?.Text is { Length: > 0 } text:
                             {
-                                var text = update.Message?.Text ?? "No text";
-
                                 if (text.Equals("bye", StringComparison.InvariantCultureIgnoreCase))
                                 {
                                     cts.Cancel();
@@ -59,11 +58,19 @@ internal class Program
                                 break;
                             }
 
+                        case UpdateType.MyChatMember:
+                            Console.WriteLine("The bot's membership status changed.");
+                            break;
+
                         default:
                             {
                                 break;
-                            }
+                        }
                     }
+                }
+                catch (ApiRequestException e)
+                {
+                    Console.WriteLine($"Telegram API rejected update {update.UpdateId}: {e.ErrorCode} {e.Message}");
                 }
                 catch (Exception e)
                 {
@@ -77,5 +84,16 @@ internal class Program
         {
             Console.WriteLine(e.ToString());
         }
+    }
+
+    private static string GetToken(IConfiguration config)
+    {
+        var token = Environment.GetEnvironmentVariable("TELEGRAM_BOT_TOKEN")
+            ?? config["TELEGRAM_BOT_TOKEN"]
+            ?? config["TelegramBotApi:Token"];
+
+        return string.IsNullOrWhiteSpace(token) || token == "<bot-token>"
+            ? throw new InvalidOperationException("Set TELEGRAM_BOT_TOKEN using environment variables or .NET User Secrets.")
+            : token;
     }
 }

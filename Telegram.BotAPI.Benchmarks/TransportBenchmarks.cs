@@ -14,6 +14,7 @@ public class TransportBenchmarks
 {
     private BotApiClient _client = null!;
     private ApiRequest _request = null!;
+    private ApiRequest _requestWithoutParameters = null!;
 
     [GlobalSetup]
     public void Setup()
@@ -25,11 +26,16 @@ public class TransportBenchmarks
             ChatId = 989722390L,
             Text = "Benchmark message"
         });
+        _requestWithoutParameters = new ApiRequest("getMe", null);
     }
 
     [Benchmark]
     public async Task<Message> RequestAndDeserialize() =>
         (await _client.RequestAsync<Message>(_request)).Result;
+
+    [Benchmark]
+    public async Task<Message> RequestWithoutParametersAndDeserialize() =>
+        (await _client.RequestAsync<Message>(_requestWithoutParameters)).Result;
 
     private sealed class BenchmarkHandler : HttpMessageHandler
     {

@@ -272,6 +272,29 @@ public sealed class TransportSerializationTests
     }
 
     [Fact]
+    public async Task SendMessage_SerializesScalarMultipartFieldsWithoutJsonQuotes()
+    {
+        using var context = new ClientContext();
+
+        await context.Client.RequestAsync<bool>(new ApiRequest("sendMessage", new SendMessageParameters
+        {
+            ChatId = 123456789L,
+            MessageThreadId = 42,
+            Text = "Scalars",
+            DisableNotification = true
+        }));
+
+        context.Handler.LastRequest.Should().NotBeNull();
+        var parts = context.Handler.LastRequest!.Parts;
+        parts.Should().ContainSingle(part => part.Name == "chat_id")
+            .Which.Text.Should().Be("123456789");
+        parts.Should().ContainSingle(part => part.Name == "message_thread_id")
+            .Which.Text.Should().Be("42");
+        parts.Should().ContainSingle(part => part.Name == "disable_notification")
+            .Which.Text.Should().Be("true");
+    }
+
+    [Fact]
     public async Task SetWebhook_WithCertificate_UsesUnquotedMultipartFieldName()
     {
         var file = await TemporaryFile.CreateAsync([0xCA, 0xFE]);

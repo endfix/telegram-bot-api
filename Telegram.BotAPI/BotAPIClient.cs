@@ -292,6 +292,20 @@ public sealed partial class BotApiClient : IBotApiClient
             return text;
         }
 
+        if (value is ChatIdSource chatId)
+        {
+            return SerializeMultipartValue(chatId.Value, content, ref fileIdx);
+        }
+
+        var valueType = value.GetType();
+        if ((valueType.IsPrimitive && value is not char) || value is decimal)
+        {
+            return JsonSerializer.Serialize(
+                value,
+                valueType,
+                JsonSerializerExtensions.Options);
+        }
+
         var node = PrepareJsonValue(value, content, ref fileIdx);
         return node is JsonValue jsonValue && jsonValue.TryGetValue<string>(out var stringValue)
             ? stringValue

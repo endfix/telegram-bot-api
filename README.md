@@ -18,7 +18,7 @@ Typed .NET client for the Telegram Bot API. The library targets .NET Standard 2.
 ## Installation
 
 ```bash
-dotnet add package Endfix.Telegram.BotAPI --version 0.3.0
+dotnet add package Endfix.Telegram.BotAPI --version 0.3.1
 ```
 
 ## Quick start

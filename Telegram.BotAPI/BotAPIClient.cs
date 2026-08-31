@@ -37,15 +37,23 @@ public sealed partial class BotApiClient : IBotApiClient
 
     private readonly HttpClient _httpClient;
 
-    private IReadOnlyList<int> _retryDelays;
+    private readonly int _maxRetryAttempts;
     
     private readonly ILogger<IBotApiClient> _logger;
 
+    /// <summary>
+    /// Creates a Telegram Bot API client.
+    /// </summary>
+    /// <param name="token">The bot token issued by BotFather.</param>
+    /// <param name="httpClient">The HTTP client used for API requests.</param>
+    /// <param name="url">An optional Bot API base URL.</param>
+    /// <param name="maxRetryAttempts">The maximum number of automatic retries for Telegram rate-limit responses.</param>
+    /// <param name="logger">An optional client logger.</param>
     public BotApiClient(
         string token, 
         HttpClient? httpClient = null, 
         string? url = null, 
-        IReadOnlyList<int>? retryDelays = null, 
+        int maxRetryAttempts = 6,
         ILogger<IBotApiClient>? logger = null)
     {
         _token = token ?? throw new ArgumentNullException(nameof(token));
@@ -61,73 +69,85 @@ public sealed partial class BotApiClient : IBotApiClient
             _httpClient.BaseAddress ??= new Uri("https://api.telegram.org");
         }
 
-        _retryDelays = retryDelays ?? [5, 10, 25, 30, 60, 120];
+        if (maxRetryAttempts < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(maxRetryAttempts));
+        }
+
+        _maxRetryAttempts = maxRetryAttempts;
 
         _logger = logger ?? NullLogger<IBotApiClient>.Instance;
     }
     
-    public async Task<ApiResponse<T>> RequestAsync<T>(ApiRequest request, CancellationToken cancellation = default, int retryCount = 0)
+    /// <summary>
+    /// Sends a request and returns the Telegram API response envelope.
+    /// </summary>
+    /// <remarks>
+    /// Telegram errors are returned with <c>Ok = false</c>. Argument, cancellation,
+    /// transport, HTTP, and JSON failures retain their standard .NET exception types.
+    /// Only Telegram rate-limit responses are retried automatically.
+    /// </remarks>
+    public async Task<ApiResponse<T>> RequestAsync<T>(ApiRequest request, CancellationToken cancellation = default)
     {
-        try
+        if (request is null)
         {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            throw new ArgumentNullException(nameof(request));
+        }
 
-            if (string.IsNullOrEmpty(request.MethodName))
-            {
-                throw new ArgumentNullException("methodName");
-            }
+        for (var retryCount = 0; ; retryCount++)
+        {
+            using var responseMessage = await GetResponse(request, cancellation).ConfigureAwait(false);
 
-            using var responseMessage = await GetResponse(request, cancellation);
-            using var responseStream = await responseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
-            var apiResponse = await responseStream.DeserializeAsync<ApiResponse<T>>(cancellation);
+            ApiResponse<T>? apiResponse;
+            try
+            {
+                using var responseStream = await responseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                apiResponse = await responseStream.DeserializeAsync<ApiResponse<T>>(cancellation).ConfigureAwait(false);
+            }
+            catch (JsonException) when (!responseMessage.IsSuccessStatusCode)
+            {
+                responseMessage.EnsureSuccessStatusCode();
+                throw;
+            }
 
             if (apiResponse is null)
             {
-                _logger.LogWarning($"RequestAsync: Failed to {request.MethodName}: response was empty.");
-                throw new ApiRequestException(500, $"Failed to {request.MethodName}: response was empty.");
+                responseMessage.EnsureSuccessStatusCode();
+                throw new JsonException($"Failed to deserialize the response from {request.MethodName}: response was empty.");
             }
 
-            if (apiResponse.ErrorCode == 429)
+            if (!apiResponse.Ok && apiResponse.ErrorCode <= 0)
             {
-                if (retryCount < _retryDelays.Count)
-                {
-                    var secondsDelay = (apiResponse.Parameters?.RetryAfter ?? 0) + 1;
-                    await Task.Delay(TimeSpan.FromSeconds(secondsDelay), cancellation);
-
-                    return await RequestAsync<T>(request, cancellation, ++retryCount);
-                }
+                responseMessage.EnsureSuccessStatusCode();
+                throw new JsonException($"The response from {request.MethodName} does not contain a valid Telegram error code.");
             }
 
-            return apiResponse;
-        }
-        catch (OperationCanceledException e)
-        {
-            if (!cancellation.IsCancellationRequested)
+            if (apiResponse.Ok && !responseMessage.IsSuccessStatusCode)
             {
-                _logger.LogWarning("RequestAsync {Method}: {Message}", request.MethodName, e.Message);
+                responseMessage.EnsureSuccessStatusCode();
             }
 
-            throw;
-        }
-        catch (Exception e)
-        {
-            _logger.LogError("RequestAsync {Method}: {Message}", request.MethodName, e.Message);
-
-            var response = new ApiResponse<T>
+            if (apiResponse.Ok || apiResponse.ErrorCode != 429 || retryCount >= _maxRetryAttempts)
             {
-                Ok = false,
-                ErrorCode = 500,
-                Description = e.Message,
-                Result = default!
-            };
+                return apiResponse;
+            }
 
-            return response;
+            var retryAfter = Math.Max(apiResponse.Parameters?.RetryAfter ?? 1, 0);
+            _logger.LogWarning(
+                "RequestAsync {Method}: Telegram rate limit, retrying after {RetryAfter} seconds ({Attempt}/{MaxAttempts}).",
+                request.MethodName,
+                retryAfter,
+                retryCount + 1,
+                _maxRetryAttempts);
+
+            await Task.Delay(TimeSpan.FromSeconds(retryAfter), cancellation).ConfigureAwait(false);
         }
     }
 
+    /// <summary>
+    /// Sends a request and returns its result, throwing <see cref="ApiRequestException"/>
+    /// when Telegram returns an unsuccessful API response.
+    /// </summary>
     public async Task<TResult> ExecuteAsync<TResult>(ApiRequest request, CancellationToken cancellationToken)
     {
         var response = await RequestAsync<TResult>(request, cancellationToken);
@@ -139,24 +159,22 @@ public sealed partial class BotApiClient : IBotApiClient
         return response.Result;
     }
 
+    /// <summary>
+    /// Downloads a Telegram file and rejects unsuccessful HTTP responses.
+    /// </summary>
     public async Task<byte[]> GetFileBytesAsync(string filePath, CancellationToken cancellation = default)
     {
-        try
+        if (string.IsNullOrWhiteSpace(filePath))
         {
-            if (string.IsNullOrEmpty(_token))
-            {
-                throw new ArgumentNullException(nameof(_token));
-            }
-
-            using var response = await _httpClient.GetAsync($"/file/bot{_token}/{filePath}", cancellation);
-            var bytes = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
-
-            return bytes;
+            throw new ArgumentException("The file path cannot be null or empty.", nameof(filePath));
         }
-        catch (Exception e)
-        {
-            throw new ApiRequestException(500, e.Message);
-        }
+
+        using var response = await _httpClient
+            .GetAsync($"/file/bot{_token}/{filePath}", cancellation)
+            .ConfigureAwait(false);
+
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
     }
 
     private async Task<HttpResponseMessage> GetResponse(ApiRequest request, CancellationToken cancellation)

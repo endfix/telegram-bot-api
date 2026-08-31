@@ -130,7 +130,7 @@ public sealed class LongPollingBehaviorTests
         public PollingContext(HttpMessageHandler handler, ILogger<IBotApiClient>? logger = null)
         {
             _httpClient = new HttpClient(handler);
-            Client = new BotApiClient("test-token", _httpClient, retryDelays: [], logger: logger);
+            Client = new BotApiClient("test-token", _httpClient, maxRetryAttempts: 0, logger: logger);
         }
 
         public BotApiClient Client { get; }

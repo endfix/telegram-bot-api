@@ -59,6 +59,6 @@ public class LongPollingTests
         return new BotApiClient(
             token: token,
             httpClient: client,
-            retryDelays: [ 10, 30, 60 ]);
+            maxRetryAttempts: 3);
     }
 }

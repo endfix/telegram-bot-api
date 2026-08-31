@@ -1,7 +1,10 @@
+using System.Text.Json.Serialization;
+
 namespace Endfix.Telegram.BotAPI.Protocol;
 
 public sealed class ApiResponse<T>
 {
+    [JsonRequired]
     public bool Ok { get; set; }
 
     public int ErrorCode { get; set; }

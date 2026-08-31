@@ -35,7 +35,12 @@ public sealed class ClientBehaviorTests
     [Fact]
     public async Task ExecuteAsync_ThrowsForApiError()
     {
-        using var context = new ClientContext("{\"ok\":false,\"error_code\":400,\"description\":\"Bad request\"}");
+        using var context = new ClientContext(responses:
+        [
+            ResponseHandler.ResponseMessage(
+                "{\"ok\":false,\"error_code\":400,\"description\":\"Bad request\"}",
+                HttpStatusCode.BadRequest)
+        ]);
 
         var action = () => context.Client.ExecuteAsync<User>(
             new ApiRequest("getMe", parameters: null),
@@ -47,9 +52,11 @@ public sealed class ClientBehaviorTests
     }
 
     [Fact]
-    public async Task RequestAsync_DoesNotRetry429_WhenRetryDelaysAreEmpty()
+    public async Task RequestAsync_DoesNotRetry429_WhenMaxRetryAttemptsIsZero()
     {
-        using var context = new ClientContext("{\"ok\":false,\"error_code\":429,\"description\":\"Too Many Requests\",\"parameters\":{\"retry_after\":0}}", retryDelays: []);
+        using var context = new ClientContext(
+            "{\"ok\":false,\"error_code\":429,\"description\":\"Too Many Requests\",\"parameters\":{\"retry_after\":0}}",
+            maxRetryAttempts: 0);
 
         var response = await context.Client.RequestAsync<User>(
             new ApiRequest("getMe", parameters: null));
@@ -64,7 +71,7 @@ public sealed class ClientBehaviorTests
     {
         using var context = new ClientContext(
             "{\"ok\":false,\"error_code\":429,\"description\":\"Too Many Requests\",\"parameters\":{\"retry_after\":0}}",
-            retryDelays: [0]);
+            maxRetryAttempts: 1);
 
         var response = await context.Client.RequestAsync<User>(
             new ApiRequest("getMe", parameters: null));
@@ -72,6 +79,22 @@ public sealed class ClientBehaviorTests
         response.Ok.Should().BeFalse();
         response.ErrorCode.Should().Be(429);
         context.Handler.RequestCount.Should().Be(2);
+    }
+
+    [Fact]
+    public async Task RequestAsync_ObservesCancellationDuringRetryAfterDelay()
+    {
+        using var context = new ClientContext(
+            "{\"ok\":false,\"error_code\":429,\"description\":\"Too Many Requests\",\"parameters\":{\"retry_after\":30}}",
+            maxRetryAttempts: 1);
+        using var cancellation = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
+
+        var action = () => context.Client.RequestAsync<User>(
+            new ApiRequest("getMe", parameters: null),
+            cancellation.Token);
+
+        await action.Should().ThrowAsync<OperationCanceledException>();
+        context.Handler.RequestCount.Should().Be(1);
     }
 
     [Fact]
@@ -103,7 +126,7 @@ public sealed class ClientBehaviorTests
                         "application/json")
                 }
             ],
-            retryDelays: [0]);
+            maxRetryAttempts: 1);
 
         var action = () => context.Client.RequestAsync<User>(
             new ApiRequest("getMe", parameters: null));
@@ -134,7 +157,7 @@ public sealed class ClientBehaviorTests
                         "application/json")
                 }
             ],
-            retryDelays: [0]);
+            maxRetryAttempts: 1);
 
         var response = await context.Client.RequestAsync<User>(
             new ApiRequest(methodName, parameters: null));
@@ -146,14 +169,35 @@ public sealed class ClientBehaviorTests
     [Fact]
     public async Task RequestAsync_DoesNotRetrySerializationFailure()
     {
-        using var context = new ClientContext("not-json", retryDelays: [0]);
+        using var context = new ClientContext("not-json", maxRetryAttempts: 1);
 
-        var response = await context.Client.RequestAsync<User>(
+        var action = () => context.Client.RequestAsync<User>(
             new ApiRequest("getMe", parameters: null));
 
-        response.Ok.Should().BeFalse();
-        response.ErrorCode.Should().Be(500);
+        await action.Should().ThrowAsync<JsonException>();
         context.Handler.RequestCount.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task RequestAsync_RejectsJsonWithoutTelegramEnvelope()
+    {
+        using var context = new ClientContext("{}");
+
+        var action = () => context.Client.RequestAsync<User>(
+            new ApiRequest("getMe", parameters: null));
+
+        await action.Should().ThrowAsync<JsonException>();
+    }
+
+    [Fact]
+    public async Task RequestAsync_RejectsTelegramErrorWithoutErrorCode()
+    {
+        using var context = new ClientContext("{\"ok\":false,\"description\":\"Broken envelope\"}");
+
+        var action = () => context.Client.RequestAsync<User>(
+            new ApiRequest("getMe", parameters: null));
+
+        await action.Should().ThrowAsync<JsonException>();
     }
 
     [Fact]
@@ -170,14 +214,149 @@ public sealed class ClientBehaviorTests
                         "application/json")
                 }
             ],
-            retryDelays: [0]);
+            maxRetryAttempts: 1);
 
-        var response = await context.Client.RequestAsync<User>(
+        var action = () => context.Client.RequestAsync<User>(
             new ApiRequest("getMe", parameters: null));
 
-        response.Ok.Should().BeFalse();
-        response.ErrorCode.Should().Be(500);
+        await action.Should().ThrowAsync<HttpRequestException>();
         context.Handler.RequestCount.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task ExecuteAsync_PreservesTransportFailure()
+    {
+        using var context = new ClientContext(responses:
+        [
+            new HttpRequestException("connection reset", new SocketException())
+        ]);
+
+        var action = () => context.Client.ExecuteAsync<User>(
+            new ApiRequest("getMe", parameters: null),
+            CancellationToken.None);
+
+        await action.Should().ThrowAsync<HttpRequestException>();
+    }
+
+    [Fact]
+    public async Task ExecuteAsync_PreservesJsonFailure()
+    {
+        using var context = new ClientContext("not-json");
+
+        var action = () => context.Client.ExecuteAsync<User>(
+            new ApiRequest("getMe", parameters: null),
+            CancellationToken.None);
+
+        await action.Should().ThrowAsync<JsonException>();
+    }
+
+    [Fact]
+    public async Task ExecuteAsync_PreservesCallerCancellation()
+    {
+        using var context = new ClientContext();
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+
+        var action = () => context.Client.ExecuteAsync<User>(
+            new ApiRequest("getMe", parameters: null),
+            cancellation.Token);
+
+        await action.Should().ThrowAsync<OperationCanceledException>();
+        context.Handler.RequestCount.Should().Be(0);
+    }
+
+    [Fact]
+    public void ApiRequest_RejectsEmptyMethodName()
+    {
+        var action = () => new ApiRequest(string.Empty, parameters: null);
+
+        action.Should().Throw<ArgumentException>()
+            .WithParameterName("methodName");
+    }
+
+    [Fact]
+    public async Task RequestAsync_RejectsNonTelegramHttpError()
+    {
+        using var context = new ClientContext(responses:
+        [
+            ResponseHandler.ResponseMessage("gateway error", HttpStatusCode.BadGateway)
+        ]);
+
+        var action = () => context.Client.RequestAsync<User>(
+            new ApiRequest("getMe", parameters: null));
+
+        var exception = await action.Should().ThrowAsync<HttpRequestException>();
+        exception.Which.StatusCode.Should().Be(HttpStatusCode.BadGateway);
+    }
+
+    [Fact]
+    public async Task GetFileBytesAsync_ReturnsSuccessfulResponseBody()
+    {
+        var expected = new byte[] { 1, 2, 3, 4 };
+        using var context = new ClientContext(responses:
+        [
+            new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new ByteArrayContent(expected)
+            }
+        ]);
+
+        var bytes = await context.Client.GetFileBytesAsync("documents/file.bin");
+
+        bytes.Should().Equal(expected);
+        context.Handler.LastRequestUri.Should().Be(
+            "https://api.telegram.org/file/bottest-token/documents/file.bin");
+    }
+
+    [Fact]
+    public async Task GetFileBytesAsync_RejectsHttpErrorBody()
+    {
+        using var context = new ClientContext(responses:
+        [
+            ResponseHandler.ResponseMessage("not found", HttpStatusCode.NotFound)
+        ]);
+
+        var action = () => context.Client.GetFileBytesAsync("missing.bin");
+
+        var exception = await action.Should().ThrowAsync<HttpRequestException>();
+        exception.Which.StatusCode.Should().Be(HttpStatusCode.NotFound);
+    }
+
+    [Fact]
+    public async Task GetFileBytesAsync_PreservesCallerCancellation()
+    {
+        using var context = new ClientContext();
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+
+        var action = () => context.Client.GetFileBytesAsync("file.bin", cancellation.Token);
+
+        await action.Should().ThrowAsync<OperationCanceledException>();
+        context.Handler.RequestCount.Should().Be(0);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public async Task GetFileBytesAsync_RejectsEmptyPath(string? filePath)
+    {
+        using var context = new ClientContext();
+
+        var action = () => context.Client.GetFileBytesAsync(filePath!);
+
+        await action.Should().ThrowAsync<ArgumentException>()
+            .WithParameterName("filePath");
+        context.Handler.RequestCount.Should().Be(0);
+    }
+
+    [Fact]
+    public void Constructor_RejectsNegativeRetryCount()
+    {
+        var action = () => new BotApiClient("test-token", maxRetryAttempts: -1);
+
+        action.Should().Throw<ArgumentOutOfRangeException>()
+            .WithParameterName("maxRetryAttempts");
     }
 
     [Fact]
@@ -238,7 +417,7 @@ public sealed class ClientBehaviorTests
 
         public ClientContext(
             string responseJson = "{\"ok\":true,\"result\":{\"id\":1,\"is_bot\":true,\"first_name\":\"Test\"}}",
-            IReadOnlyList<int>? retryDelays = null,
+            int maxRetryAttempts = 6,
             string? baseAddress = null,
             string? url = null,
             IReadOnlyList<object>? responses = null)
@@ -250,7 +429,7 @@ public sealed class ClientBehaviorTests
                 _httpClient.BaseAddress = new Uri(baseAddress);
             }
 
-            Client = new BotApiClient("test-token", _httpClient, url, retryDelays);
+            Client = new BotApiClient("test-token", _httpClient, url, maxRetryAttempts);
         }
 
         public ResponseHandler Handler { get; }
@@ -296,8 +475,10 @@ public sealed class ClientBehaviorTests
             return Task.FromResult(ResponseMessage(responseJson));
         }
 
-        private static HttpResponseMessage ResponseMessage(string json)
-            => new(HttpStatusCode.OK)
+        public static HttpResponseMessage ResponseMessage(
+            string json,
+            HttpStatusCode statusCode = HttpStatusCode.OK)
+            => new(statusCode)
             {
                 Content = new StringContent(json, Encoding.UTF8, "application/json")
             };

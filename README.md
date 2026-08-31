@@ -18,7 +18,7 @@ Typed .NET client for the Telegram Bot API. The library targets .NET Standard 2.
 ## Installation
 
 ```bash
-dotnet add package Endfix.Telegram.BotAPI
+dotnet add package Endfix.Telegram.BotAPI --version 0.3.0
 ```
 
 ## Quick start
@@ -65,7 +65,9 @@ The example projects include placeholder configuration files. Replace the placeh
 
 ## Retry behavior
 
-The client automatically retries Telegram responses with error code `429`, waiting for the server-provided `retry_after` interval before the next attempt. Timeouts, cancellations and other transport failures are not retried automatically because the client cannot know whether Telegram processed the original request.
+The client automatically retries Telegram responses with error code `429`, waiting for the server-provided `retry_after` interval before the next attempt. It makes at most six retries by default; configure `maxRetryAttempts` in the constructor or set it to `0` to disable automatic retries. Timeouts, cancellations and other transport failures are not retried automatically because the client cannot know whether Telegram processed the original request.
+
+`RequestAsync` returns Telegram API responses, while `ExecuteAsync` throws `ApiRequestException` when Telegram returns `ok = false`. Argument errors, caller cancellation, timeouts, HTTP and network failures, and malformed JSON responses retain their standard .NET exception types.
 
 ## Downloading files
 
@@ -112,7 +114,11 @@ dotnet run --project Telegram.BotAPI.Benchmarks/Telegram.BotAPI.Benchmarks.cspro
 
 ## Status
 
-The project follows the Telegram Bot API release it targets. The public API may change when Telegram adds or revises API methods and types.
+The project follows the Telegram Bot API release it targets. While the package remains below `1.0`, public contracts may still change to correct modeling issues or complete the file-source API. After `1.0`, incompatible public API changes will require a major version.
+
+## Releases
+
+Push the intended release commit to `main` and wait for CI to pass before creating a `vX.Y.Z` tag. Pushing the tag starts the publish workflow, which independently restores, builds, tests, packs with the version derived from the tag, and publishes the package to NuGet.
 
 ## License
 

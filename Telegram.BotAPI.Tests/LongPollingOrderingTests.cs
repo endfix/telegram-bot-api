@@ -117,7 +117,7 @@ public sealed class LongPollingOrderingTests
         public PollingContext(IReadOnlyList<long> updateIds)
         {
             _httpClient = new HttpClient(new UpdatesResponseHandler(updateIds));
-            Client = new BotApiClient("test-token", _httpClient, retryDelays: []);
+            Client = new BotApiClient("test-token", _httpClient, maxRetryAttempts: 0);
         }
 
         public BotApiClient Client { get; }

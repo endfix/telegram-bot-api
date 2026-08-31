@@ -6,9 +6,15 @@ namespace Endfix.Telegram.BotAPI.Types;
 public abstract class InputMedia
 {
     public abstract InputMediaType Type { get; }
+}
 
+public abstract class InputMediaFile : InputMedia
+{
     public required virtual MediaSource Media { get; init; }
+}
 
+public abstract class InputMediaCaptionedFile : InputMediaFile
+{
     public virtual string? Caption { get; init; }
 
     public virtual string? ParseMode { get; init; }
@@ -16,7 +22,7 @@ public abstract class InputMedia
     public virtual IReadOnlyList<MessageEntity>? CaptionEntities { get; init; }
 }
 
-public sealed class InputMediaAnimation : InputMedia
+public sealed class InputMediaAnimation : InputMediaCaptionedFile, IInputPollMedia, IInputPollOptionMedia
 {
     public override InputMediaType Type => InputMediaType.Animation;
 
@@ -33,7 +39,7 @@ public sealed class InputMediaAnimation : InputMedia
     public bool? HasSpoiler { get; init; }
 }
 
-public sealed class InputMediaDocument : InputMedia
+public sealed class InputMediaDocument : InputMediaCaptionedFile, IInputPollMedia
 {
     public override InputMediaType Type => InputMediaType.Document;
 
@@ -42,7 +48,7 @@ public sealed class InputMediaDocument : InputMedia
     public bool? DisableContentTypeDetection { get; init; }
 }
 
-public sealed class InputMediaAudio : InputMedia
+public sealed class InputMediaAudio : InputMediaCaptionedFile, IInputPollMedia
 {
     public override InputMediaType Type => InputMediaType.Audio;
 
@@ -55,14 +61,14 @@ public sealed class InputMediaAudio : InputMedia
     public string? Title { get; init; }
 }
 
-public sealed class InputMediaLink : InputMedia
+public sealed class InputMediaLink : InputMedia, IInputPollOptionMedia
 {
     public override InputMediaType Type => InputMediaType.Link;
 
     public required string Url { get; init; }
 }
 
-public sealed class InputMediaLivePhoto : InputMedia
+public sealed class InputMediaLivePhoto : InputMediaCaptionedFile, IInputPollMedia, IInputPollOptionMedia
 {
     public override InputMediaType Type => InputMediaType.LivePhoto;
 
@@ -73,7 +79,7 @@ public sealed class InputMediaLivePhoto : InputMedia
     public bool? HasSpoiler { get; init; }
 }
 
-public sealed class InputMediaLocation : InputMedia
+public sealed class InputMediaLocation : InputMedia, IInputPollMedia, IInputPollOptionMedia
 {
     public override InputMediaType Type => InputMediaType.Location;
 
@@ -84,7 +90,7 @@ public sealed class InputMediaLocation : InputMedia
     public double? HorizontalAccuracy { get; init; }
 }
 
-public sealed class InputMediaPhoto : InputMedia
+public sealed class InputMediaPhoto : InputMediaCaptionedFile, IInputPollMedia, IInputPollOptionMedia
 {
     public override InputMediaType Type => InputMediaType.Photo;
 
@@ -93,14 +99,14 @@ public sealed class InputMediaPhoto : InputMedia
     public bool? HasSpoiler { get; init; }
 }
 
-public sealed class InputMediaSticker : InputMedia
+public sealed class InputMediaSticker : InputMediaFile, IInputPollOptionMedia
 {
     public override InputMediaType Type => InputMediaType.Sticker;
 
     public string? Emoji { get; init; }
 }
 
-public sealed class InputMediaVenue : InputMedia
+public sealed class InputMediaVenue : InputMedia, IInputPollMedia, IInputPollOptionMedia
 {
     public override InputMediaType Type => InputMediaType.Venue;
 
@@ -121,7 +127,7 @@ public sealed class InputMediaVenue : InputMedia
     public string? GooglePlaceType { get; init; }
 }
 
-public sealed class InputMediaVideo : InputMedia
+public sealed class InputMediaVideo : InputMediaCaptionedFile, IInputPollMedia, IInputPollOptionMedia
 {
     public override InputMediaType Type => InputMediaType.Video;
 
@@ -144,7 +150,7 @@ public sealed class InputMediaVideo : InputMedia
     public bool? HasSpoiler { get; init; }
 }
 
-public sealed class InputMediaVoiceNote : InputMedia
+public sealed class InputMediaVoiceNote : InputMediaFile
 {
     public override InputMediaType Type =>  InputMediaType.VoiceNote;
 

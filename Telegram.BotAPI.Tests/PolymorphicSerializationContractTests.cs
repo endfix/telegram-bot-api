@@ -99,7 +99,7 @@ public class PolymorphicSerializationContractTests
         { new InputMediaAnimation { Media = "animation-id" }, "animation" },
         { new InputMediaAudio { Media = "audio-id" }, "audio" },
         { new InputMediaDocument { Media = "document-id" }, "document" },
-        { new InputMediaLink { Media = "link-id", Url = "https://example.com/media" }, "link" },
+        { new InputMediaLink { Url = "https://example.com/media" }, "link" },
         {
             new InputMediaLivePhoto
             {
@@ -108,13 +108,12 @@ public class PolymorphicSerializationContractTests
             },
             "live_photo"
         },
-        { new InputMediaLocation { Media = "location-id", Latitude = 55.75, Longitude = 37.62 }, "location" },
+        { new InputMediaLocation { Latitude = 55.75, Longitude = 37.62 }, "location" },
         { new InputMediaPhoto { Media = "photo-id" }, "photo" },
         { new InputMediaSticker { Media = "sticker-id", Emoji = "test" }, "sticker" },
         {
             new InputMediaVenue
             {
-                Media = "venue-id",
                 Latitude = 55.75,
                 Longitude = 37.62,
                 Title = "Venue",

@@ -47,7 +47,7 @@ public sealed class SendPollParameters : ApiRequestParameters
 
     public IReadOnlyList<MessageEntity>? ExplanationEntities { get; init; }
 
-    public InputPollMedia? ExplanationMedia { get; init; }
+    public IInputPollMedia? ExplanationMedia { get; init; }
 
     public int? OpenPeriod { get; init; }
 
@@ -61,7 +61,7 @@ public sealed class SendPollParameters : ApiRequestParameters
 
     public IReadOnlyList<MessageEntity>? DescriptionEntities { get; init; }
 
-    public InputPollMedia? Media { get; init; }
+    public IInputPollMedia? Media { get; init; }
 
     public bool? DisableNotification { get; init; }
 

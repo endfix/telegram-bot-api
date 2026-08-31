@@ -10,5 +10,5 @@ public sealed class InputPollOption
 
     public IReadOnlyList<MessageEntity>? TextEntities { get; init; }
 
-    public InputPollOptionMedia? Media { get; init; }
+    public IInputPollOptionMedia? Media { get; init; }
 }

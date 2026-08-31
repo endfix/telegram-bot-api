@@ -110,6 +110,54 @@ public sealed class TransportSerializationTests
     }
 
     [Fact]
+    public async Task SendPoll_WithNestedLocalFiles_SendsAttachReferencesAndBinaryParts()
+    {
+        var optionFile = await TemporaryFile.CreateAsync([0x31, 0x32]);
+        await using var _ = optionFile;
+        var pollFile = await TemporaryFile.CreateAsync([0x41, 0x42]);
+        await using var __ = pollFile;
+        using var context = new ClientContext();
+
+        await context.Client.RequestAsync<bool>(new ApiRequest("sendPoll", new SendPollParameters
+        {
+            ChatId = 123456789L,
+            Question = "Question",
+            Options =
+            [
+                new InputPollOption
+                {
+                    Text = "Option",
+                    Media = new InputMediaPhoto
+                    {
+                        Media = new InputPhotoFile(optionFile.Path)
+                    }
+                }
+            ],
+            Media = new InputMediaPhoto
+            {
+                Media = new InputPhotoFile(pollFile.Path)
+            }
+        }));
+
+        context.Handler.LastRequest.Should().NotBeNull();
+        var request = context.Handler.LastRequest!;
+        request.Parts.Should().ContainSingle(part => part.Name == "attach_0")
+            .Which.Content.Should().Equal(0x31, 0x32);
+        request.Parts.Should().ContainSingle(part => part.Name == "attach_1")
+            .Which.Content.Should().Equal(0x41, 0x42);
+
+        using var options = JsonDocument.Parse(
+            request.Parts.Should().ContainSingle(part => part.Name == "options").Which.Text);
+        options.RootElement[0].GetProperty("media").GetProperty("media")
+            .GetString().Should().Be("attach://attach_0");
+
+        using var media = JsonDocument.Parse(
+            request.Parts.Should().ContainSingle(part => part.Name == "media").Which.Text);
+        media.RootElement.GetProperty("media")
+            .GetString().Should().Be("attach://attach_1");
+    }
+
+    [Fact]
     public async Task SendMediaGroup_WithVideo_SendsThumbnailAndCoverAttachments()
     {
         var videoFile = await TemporaryFile.CreateAsync([0x31]);

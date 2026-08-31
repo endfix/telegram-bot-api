@@ -183,6 +183,50 @@ public sealed class TelegramFileIntegrationTests : IDisposable
     }
 
     [TelegramIntegrationFact]
+    public async Task SendPoll_UploadsNestedOptionAndDescriptionMedia()
+    {
+        await using var optionPhoto = await TemporaryFile.CreateAsync(".png", PngBytes);
+        await using var descriptionPhoto = await TemporaryFile.CreateAsync(".png", PngBytes);
+        var sentMessageIds = new List<long>();
+
+        try
+        {
+            var message = await RequestAsync<Message>("sendPoll", new SendPollParameters
+            {
+                ChatId = _chatId,
+                Question = "Endfix integration poll",
+                Options =
+                [
+                    new InputPollOption
+                    {
+                        Text = "Option with media",
+                        Media = new InputMediaPhoto
+                        {
+                            Media = new InputPhotoFile(optionPhoto.Path)
+                        }
+                    },
+                    new InputPollOption { Text = "Plain option" }
+                ],
+                Description = "Nested multipart poll media",
+                Media = new InputMediaPhoto
+                {
+                    Media = new InputPhotoFile(descriptionPhoto.Path)
+                },
+                IsClosed = true
+            });
+            sentMessageIds.Add(message.MessageId);
+
+            Assert.True(message.Poll!.IsClosed);
+            Assert.NotNull(message.Poll.Media?.Photo);
+            Assert.NotNull(message.Poll.Options[0].Media?.Photo);
+        }
+        finally
+        {
+            await DeleteMessagesAsync(sentMessageIds);
+        }
+    }
+
+    [TelegramIntegrationFact]
     public async Task SendAdditionalStandaloneMedia_UploadsLocalFiles()
     {
         var sentMessageIds = new List<long>();

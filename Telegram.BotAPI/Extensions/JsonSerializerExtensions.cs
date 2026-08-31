@@ -47,7 +47,9 @@ public static class JsonSerializerExtensions
             new InputProfilePhotoConverter(),
             new InputStoryContentConverter(),
             new InputPaidMediaConverter(),
-            new InputRichBlockConverter()
+            new InputRichBlockConverter(),
+            new InputPollMediaConverter(),
+            new InputPollOptionMediaConverter()
         }
     };
 

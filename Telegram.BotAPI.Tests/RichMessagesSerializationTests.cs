@@ -1,3 +1,4 @@
+using Endfix.Telegram.BotAPI.Extensions;
 using Endfix.Telegram.BotAPI.Types;
 using Xunit;
 
@@ -73,7 +74,7 @@ public class RichMessagesSerializationTests
                 },
                 new RichBlockPhoto
                 {
-                    Photos = [ new PhotoSize { FileId = "photo-file-id", FileUniqueId = "photo-unique-id", Width = 100, Height = 100 }],
+                    Photo = [ new PhotoSize { FileId = "photo-file-id", FileUniqueId = "photo-unique-id", Width = 100, Height = 100 }],
                     HasSpoiler = true,
                     Caption = GetRichBlockCaption()
                 },
@@ -106,6 +107,27 @@ public class RichMessagesSerializationTests
             ],
             IsRtl = true
         });
+    }
+
+    [Fact]
+    public void RichBlockPhoto_DeserializesOfficialPhotoField()
+    {
+        const string json = """
+            {
+              "type": "photo",
+              "photo": [
+                {
+                  "file_id": "photo-file-id",
+                  "file_unique_id": "photo-unique-id",
+                  "width": 100,
+                  "height": 100
+                }
+              ]
+            }
+            """;
+
+        var block = Assert.IsType<RichBlockPhoto>(json.Deserialize<RichBlock>());
+        Assert.Equal("photo-file-id", Assert.Single(block.Photo).FileId);
     }
 
     private static RichBlockCaption GetRichBlockCaption()

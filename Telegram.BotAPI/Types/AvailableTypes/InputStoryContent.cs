@@ -11,14 +11,14 @@ public sealed class InputStoryContentPhoto : InputStoryContent
 {
     public override InputStoryContentType Type => InputStoryContentType.Photo;
 
-    public required string Photo { get; init; }
+    public required InputPhotoFile Photo { get; init; }
 }
 
 public sealed class InputStoryContentVideo : InputStoryContent
 {
     public override InputStoryContentType Type => InputStoryContentType.Video;
 
-    public required string Video { get; init; }
+    public required InputVideoFile Video { get; init; }
 
     public float? Duration { get; init; }
 

@@ -195,7 +195,7 @@ public sealed class RichBlockPhoto : RichBlock
 {
     public override RichBlockType Type => RichBlockType.Photo;
 
-    public required IReadOnlyList<PhotoSize> Photos { get; init; }
+    public required IReadOnlyList<PhotoSize> Photo { get; init; }
 
     public bool? HasSpoiler { get; init; }
 

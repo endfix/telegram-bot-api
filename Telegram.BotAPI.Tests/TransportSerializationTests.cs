@@ -213,6 +213,8 @@ public sealed class TransportSerializationTests
 
         context.Handler.LastRequest.Should().NotBeNull();
         var request = context.Handler.LastRequest!;
+        request.Parts.Should().ContainSingle(part => part.Name == "chat_id")
+            .Which.Text.Should().Be("@contract_test");
         var replyMarkup = request.Parts.Should()
             .ContainSingle(part => part.Name == "reply_markup")
             .Which.Text;
@@ -326,6 +328,229 @@ public sealed class TransportSerializationTests
                 await file.DisposeAsync();
             }
         }
+    }
+
+    [Fact]
+    public async Task SendPoll_SendsTopLevelEnumWithoutJsonQuotes()
+    {
+        using var context = new ClientContext();
+
+        await context.Client.RequestAsync<bool>(new ApiRequest("sendPoll", new SendPollParameters
+        {
+            ChatId = 123456789L,
+            Question = "Choose",
+            Options = [new InputPollOption { Text = "One" }],
+            Type = Endfix.Telegram.BotAPI.Enums.PollType.Quiz
+        }));
+
+        context.Handler.LastRequest.Should().NotBeNull();
+        context.Handler.LastRequest!.Parts.Should().ContainSingle(part => part.Name == "type")
+            .Which.Text.Should().Be("quiz");
+    }
+
+    [Fact]
+    public async Task PostStory_WithLocalPhoto_AttachesNestedFile()
+    {
+        var file = await TemporaryFile.CreateAsync([0x51, 0x52]);
+        await using var _ = file;
+        using var context = new ClientContext();
+
+        await context.Client.RequestAsync<bool>(new ApiRequest("postStory", new PostStoryParameters
+        {
+            BusinessConnectionId = "business-connection",
+            Content = new InputStoryContentPhoto
+            {
+                Photo = new InputPhotoFile(file.Path)
+            },
+            ActivePeriod = 3600
+        }));
+
+        context.Handler.LastRequest.Should().NotBeNull();
+        var request = context.Handler.LastRequest!;
+        request.Parts.Should().ContainSingle(part => part.Name == "attach_0")
+            .Which.Content.Should().Equal(0x51, 0x52);
+
+        using var document = JsonDocument.Parse(
+            request.Parts.Should().ContainSingle(part => part.Name == "content").Which.Text);
+        document.RootElement.GetProperty("photo").GetString().Should().Be("attach://attach_0");
+    }
+
+    [Fact]
+    public async Task SetMyProfilePhoto_WithLocalAnimation_AttachesNestedFile()
+    {
+        var file = await TemporaryFile.CreateAsync([0x61, 0x62]);
+        await using var _ = file;
+        using var context = new ClientContext();
+
+        await context.Client.RequestAsync<bool>(new ApiRequest("setMyProfilePhoto", new SetMyProfilePhotoParameters
+        {
+            Photo = new InputProfilePhotoAnimated
+            {
+                Animation = new InputAnimationFile(file.Path),
+                MainFrameTimestamp = 0.5f
+            }
+        }));
+
+        context.Handler.LastRequest.Should().NotBeNull();
+        var request = context.Handler.LastRequest!;
+        request.Parts.Should().ContainSingle(part => part.Name == "attach_0")
+            .Which.Content.Should().Equal(0x61, 0x62);
+
+        using var document = JsonDocument.Parse(
+            request.Parts.Should().ContainSingle(part => part.Name == "photo").Which.Text);
+        document.RootElement.GetProperty("animation").GetString().Should().Be("attach://attach_0");
+    }
+
+    [Fact]
+    public async Task UploadStickerFile_UsesTopLevelMultipartFieldName()
+    {
+        var file = await TemporaryFile.CreateAsync([0x71]);
+        await using var _ = file;
+        using var context = new ClientContext();
+
+        await context.Client.RequestAsync<bool>(new ApiRequest("uploadStickerFile", new UploadStickerFileParameters
+        {
+            UserId = 123456789L,
+            Sticker = new InputStickerFile(file.Path),
+            StickerFormat = Endfix.Telegram.BotAPI.Enums.StickerFormat.Static
+        }));
+
+        context.Handler.LastRequest.Should().NotBeNull();
+        var request = context.Handler.LastRequest!;
+        request.Parts.Should().ContainSingle(part => part.Name == "sticker")
+            .Which.Content.Should().Equal(0x71);
+        request.Parts.Should().ContainSingle(part => part.Name == "sticker_format")
+            .Which.Text.Should().Be("static");
+        request.Parts.Should().NotContain(part => part.Name == "attach_0");
+    }
+
+    [Fact]
+    public async Task CreateNewStickerSet_WithLocalStickers_AttachesFilesFromList()
+    {
+        var first = await TemporaryFile.CreateAsync([0x72]);
+        await using var _ = first;
+        var second = await TemporaryFile.CreateAsync([0x73]);
+        await using var __ = second;
+        using var context = new ClientContext();
+
+        await context.Client.RequestAsync<bool>(new ApiRequest("createNewStickerSet", new CreateNewStickerSetParameters
+        {
+            UserId = 123456789L,
+            Name = "contract_by_test_bot",
+            Title = "Contract",
+            StickerType = Endfix.Telegram.BotAPI.Enums.StickerType.Regular,
+            Stickers =
+            [
+                new InputSticker
+                {
+                    Sticker = new InputStickerFile(first.Path),
+                    Format = Endfix.Telegram.BotAPI.Enums.InputStickerFormat.Static,
+                    EmojiList = ["one"]
+                },
+                new InputSticker
+                {
+                    Sticker = new InputStickerFile(second.Path),
+                    Format = Endfix.Telegram.BotAPI.Enums.InputStickerFormat.Static,
+                    EmojiList = ["two"]
+                }
+            ]
+        }));
+
+        context.Handler.LastRequest.Should().NotBeNull();
+        var request = context.Handler.LastRequest!;
+        request.Parts.Should().ContainSingle(part => part.Name == "attach_0")
+            .Which.Content.Should().Equal(0x72);
+        request.Parts.Should().ContainSingle(part => part.Name == "attach_1")
+            .Which.Content.Should().Equal(0x73);
+        request.Parts.Should().ContainSingle(part => part.Name == "sticker_type")
+            .Which.Text.Should().Be("regular");
+
+        using var document = JsonDocument.Parse(
+            request.Parts.Should().ContainSingle(part => part.Name == "stickers").Which.Text);
+        document.RootElement[0].GetProperty("sticker").GetString().Should().Be("attach://attach_0");
+        document.RootElement[1].GetProperty("sticker").GetString().Should().Be("attach://attach_1");
+    }
+
+    [Fact]
+    public async Task AddStickerToSet_WithLocalSticker_AttachesFileFromObject()
+    {
+        var file = await TemporaryFile.CreateAsync([0x74]);
+        await using var _ = file;
+        using var context = new ClientContext();
+
+        await context.Client.RequestAsync<bool>(new ApiRequest("addStickerToSet", new AddStickerToSetParameters
+        {
+            UserId = 123456789L,
+            Name = "contract_by_test_bot",
+            Sticker = new InputSticker
+            {
+                Sticker = new InputStickerFile(file.Path),
+                Format = Endfix.Telegram.BotAPI.Enums.InputStickerFormat.Static,
+                EmojiList = ["one"]
+            }
+        }));
+
+        context.Handler.LastRequest.Should().NotBeNull();
+        var request = context.Handler.LastRequest!;
+        request.Parts.Should().ContainSingle(part => part.Name == "attach_0")
+            .Which.Content.Should().Equal(0x74);
+
+        using var document = JsonDocument.Parse(
+            request.Parts.Should().ContainSingle(part => part.Name == "sticker").Which.Text);
+        document.RootElement.GetProperty("sticker").GetString().Should().Be("attach://attach_0");
+    }
+
+    [Fact]
+    public async Task SendRichMessage_WithLocalMedia_AttachesFilesAcrossNestedGraph()
+    {
+        var explicitMedia = await TemporaryFile.CreateAsync([0x81]);
+        await using var _ = explicitMedia;
+        var blockMedia = await TemporaryFile.CreateAsync([0x82]);
+        await using var __ = blockMedia;
+        using var context = new ClientContext();
+
+        await context.Client.RequestAsync<bool>(new ApiRequest("sendRichMessage", new SendRichMessageParameters
+        {
+            ChatId = 123456789L,
+            RichMessage = new InputRichMessage
+            {
+                Blocks =
+                [
+                    new InputRichBlockPhoto
+                    {
+                        Photo = new InputMediaPhoto
+                        {
+                            Media = new InputPhotoFile(blockMedia.Path)
+                        }
+                    }
+                ],
+                Media =
+                [
+                    new InputRichMessageMedia
+                    {
+                        Id = "photo",
+                        Media = new InputMediaPhoto
+                        {
+                            Media = new InputPhotoFile(explicitMedia.Path)
+                        }
+                    }
+                ]
+            }
+        }));
+
+        context.Handler.LastRequest.Should().NotBeNull();
+        var request = context.Handler.LastRequest!;
+        request.Parts.Should().ContainSingle(part => part.Name == "attach_0")
+            .Which.Content.Should().Equal(0x81);
+        request.Parts.Should().ContainSingle(part => part.Name == "attach_1")
+            .Which.Content.Should().Equal(0x82);
+
+        using var document = JsonDocument.Parse(
+            request.Parts.Should().ContainSingle(part => part.Name == "rich_message").Which.Text);
+        document.RootElement.GetProperty("blocks")[0].GetProperty("photo").GetProperty("media")
+            .GetString().Should().Be("attach://attach_1");
+        document.RootElement.GetProperty("media")[0].GetProperty("media").GetProperty("media")
+            .GetString().Should().Be("attach://attach_0");
     }
 
     private sealed class ClientContext : IDisposable

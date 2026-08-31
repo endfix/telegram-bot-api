@@ -2313,13 +2313,13 @@ public static partial class BotApiClientExtensions
             Photo = photo
         }, cancellationToken);
 
-    internal static async Task<BotShortDescription> RemoveMyProfilePhotoAsync(
+    internal static async Task<bool> RemoveMyProfilePhotoAsync(
         this IBotApiClient client,
         RemoveMyProfilePhotoParameters? parameters = null,
         CancellationToken cancellationToken = default)
-        => await client.ExecuteAsync<BotShortDescription>(new ApiRequest("removeMyProfilePhoto", parameters), cancellationToken);
+        => await client.ExecuteAsync<bool>(new ApiRequest("removeMyProfilePhoto", parameters), cancellationToken);
 
-    public static async Task<BotShortDescription> RemoveMyProfilePhotoAsync(
+    public static async Task<bool> RemoveMyProfilePhotoAsync(
         this IBotApiClient client,
         CancellationToken cancellationToken = default)
         => await client.RemoveMyProfilePhotoAsync(new RemoveMyProfilePhotoParameters

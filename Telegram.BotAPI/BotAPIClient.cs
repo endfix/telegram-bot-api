@@ -8,9 +8,11 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Concurrent;
+using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Reflection;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -166,6 +168,7 @@ public sealed partial class BotApiClient : IBotApiClient
 
         var properties = _parametersCache.GetOrAdd(parameters.GetType(), type => type.GetProperties());
         var hasParameters = false;
+        var fileIdx = 0;
         var httpContent = new MultipartFormDataContent();
 
         try
@@ -192,25 +195,16 @@ public sealed partial class BotApiClient : IBotApiClient
                         _fieldNamesCache.GetOrAdd(property.Name, name => name.ToSnake()),
                         inputFile.FileName);
                 }
-                else if (value is InputMedia media)
-                {
-                    var fileIdx = 0;
-                    var jsonObject = PrepareMedia(media, httpContent, ref fileIdx);
-                    httpContent.Add(new StringContent(jsonObject.ToJsonString(), Encoding.UTF8), _fieldNamesCache.GetOrAdd(property.Name, name => name.ToSnake()));
-                }
-                else if (value is IEnumerable<InputMedia> mediaList)
-                {
-                    var jsonArray = PrepareMediaGroup(mediaList, httpContent);
-                    httpContent.Add(new StringContent(jsonArray, Encoding.UTF8), _fieldNamesCache.GetOrAdd(property.Name, name => name.ToSnake()));
-                }
-                else if (value is IEnumerable<InputPaidMedia> paidMediaList)
-                {
-                    var jsonArray = PreparePaidMedia(paidMediaList, httpContent);
-                    httpContent.Add(new StringContent(jsonArray, Encoding.UTF8), _fieldNamesCache.GetOrAdd(property.Name, name => name.ToSnake()));
-                }
                 else
                 {
-                    httpContent.Add(new StringContent(value is string s ? s : value.Serialize(), Encoding.UTF8), _fieldNamesCache.GetOrAdd(property.Name, name => name.ToSnake()));
+                    var serializedValue = SerializeMultipartValue(
+                        value,
+                        httpContent,
+                        ref fileIdx);
+
+                    httpContent.Add(
+                        new StringContent(serializedValue, Encoding.UTF8),
+                        _fieldNamesCache.GetOrAdd(property.Name, name => name.ToSnake()));
                 }
             }
 
@@ -251,100 +245,121 @@ public sealed partial class BotApiClient : IBotApiClient
         }
     }
 
-    private string PrepareMediaGroup(IEnumerable<InputMedia> mediaList, MultipartFormDataContent content)
-    {
-        var jsonArray = new JsonArray();
-        var fileIdx = 0;
-
-        foreach (var inputMedia in mediaList)
-        {
-            jsonArray.Add(PrepareMedia(inputMedia, content, ref fileIdx));
-        }
-
-        return jsonArray.ToJsonString();
-    }
-
-    private static JsonObject PrepareMedia(
-        InputMedia inputMedia,
+    private static JsonNode PrepareJsonValue(
+        object value,
         MultipartFormDataContent content,
         ref int fileIdx)
     {
-        var node = JsonSerializer.SerializeToNode(inputMedia, JsonSerializerExtensions.Options)!.AsObject();
+        var node = JsonSerializer.SerializeToNode(
+            value,
+            value.GetType(),
+            JsonSerializerExtensions.Options)
+            ?? throw new JsonException($"Failed to serialize {value.GetType().Name}.");
 
-        AttachInputFile(node, "media", inputMedia.Media.Value, content, ref fileIdx);
+        return ReplaceNestedFiles(value, node, content, ref fileIdx)
+            ?? throw new JsonException($"Failed to prepare {value.GetType().Name}.");
+    }
 
-        switch (inputMedia)
+    private static string SerializeMultipartValue(
+        object value,
+        MultipartFormDataContent content,
+        ref int fileIdx)
+    {
+        if (value is string text)
         {
-            case InputMediaAnimation animation:
-                AttachInputFile(node, "thumbnail", animation.Thumbnail, content, ref fileIdx);
-                break;
-            case InputMediaAudio audio:
-                AttachInputFile(node, "thumbnail", audio.Thumbnail, content, ref fileIdx);
-                break;
-            case InputMediaDocument document:
-                AttachInputFile(node, "thumbnail", document.Thumbnail, content, ref fileIdx);
-                break;
-            case InputMediaLivePhoto livePhoto:
-                AttachInputFile(node, "photo", livePhoto.Photo.Value, content, ref fileIdx);
-                break;
-            case InputMediaVideo video:
-                AttachInputFile(node, "thumbnail", video.Thumbnail, content, ref fileIdx);
-                AttachInputFile(node, "cover", video.Cover, content, ref fileIdx);
-                break;
+            return text;
+        }
+
+        var node = PrepareJsonValue(value, content, ref fileIdx);
+        return node is JsonValue jsonValue && jsonValue.TryGetValue<string>(out var stringValue)
+            ? stringValue
+            : node.ToJsonString();
+    }
+
+    private static JsonNode? ReplaceNestedFiles(
+        object value,
+        JsonNode? node,
+        MultipartFormDataContent content,
+        ref int fileIdx)
+    {
+        if (value is IFileSource source)
+        {
+            value = source.Value;
+        }
+
+        if (value is InputFile file)
+        {
+            var attachName = $"attach_{fileIdx++}";
+            content.Add(new StreamContent(file.GetStream()), attachName, file.FileName);
+            return JsonValue.Create($"attach://{attachName}");
+        }
+
+        if (value is IEnumerable values and not string && node is JsonArray array)
+        {
+            var index = 0;
+            foreach (var item in values)
+            {
+                if (item is not null && index < array.Count)
+                {
+                    var itemNode = array[index];
+                    var preparedNode = ReplaceNestedFiles(item, itemNode, content, ref fileIdx);
+                    if (!ReferenceEquals(itemNode, preparedNode))
+                    {
+                        array[index] = preparedNode;
+                    }
+                }
+
+                index++;
+            }
+
+            return array;
+        }
+
+        if (node is JsonObject jsonObject)
+        {
+            var properties = _parametersCache
+                .GetOrAdd(value.GetType(), type => type.GetProperties())
+                .OrderBy(property => GetFilePropertyPriority(property.Name));
+
+            foreach (var property in properties)
+            {
+                var propertyValue = property.GetValue(value);
+                if (propertyValue is null)
+                {
+                    continue;
+                }
+
+                var propertyName = JsonSerializerExtensions.Options.PropertyNamingPolicy?.ConvertName(property.Name)
+                    ?? property.Name;
+                if (jsonObject.TryGetPropertyValue(propertyName, out var propertyNode))
+                {
+                    var preparedNode = ReplaceNestedFiles(
+                        propertyValue,
+                        propertyNode,
+                        content,
+                        ref fileIdx);
+
+                    if (!ReferenceEquals(propertyNode, preparedNode))
+                    {
+                        jsonObject[propertyName] = preparedNode;
+                    }
+                }
+            }
         }
 
         return node;
     }
 
-    private string PreparePaidMedia(IEnumerable<InputPaidMedia> mediaList, MultipartFormDataContent content)
-    {
-        var jsonArray = new JsonArray();
-        var fileIdx = 0;
-
-        foreach (var inputMedia in mediaList)
+    private static int GetFilePropertyPriority(string propertyName)
+        => propertyName switch
         {
-            var node = JsonSerializer.SerializeToNode(inputMedia, JsonSerializerExtensions.Options)!.AsObject();
-
-            AttachInputFile(node, "media", inputMedia.Media.Value, content, ref fileIdx);
-
-            switch (inputMedia)
-            {
-                case InputPaidMediaLivePhoto livePhoto:
-                    AttachInputFile(node, "photo", livePhoto.Photo.Value, content, ref fileIdx);
-                    break;
-                case InputPaidMediaVideo video:
-                    AttachInputFile(node, "thumbnail", video.Thumbnail, content, ref fileIdx);
-                    AttachInputFile(node, "cover", video.Cover, content, ref fileIdx);
-                    break;
-            }
-
-            jsonArray.Add(node);
-        }
-
-        return jsonArray.ToJsonString();
-    }
-
-    private static void AttachInputFile(
-        JsonObject node,
-        string propertyName,
-        object? value,
-        MultipartFormDataContent content,
-        ref int fileIdx)
-    {
-        var file = value switch
-        {
-            InputFile inputFile => inputFile,
-            IFileSource source => source.Value as InputFile,
-            _ => null
+            "Media" => 0,
+            "Photo" => 1,
+            "Video" => 2,
+            "Animation" => 3,
+            "Sticker" => 4,
+            "Thumbnail" => 5,
+            "Cover" => 6,
+            _ => 7
         };
-
-        if (file is null)
-        {
-            return;
-        }
-
-        var attachName = $"attach_{fileIdx++}";
-        content.Add(new StreamContent(file.GetStream()), attachName, file.FileName);
-        node[propertyName] = $"attach://{attachName}";
-    }
 }

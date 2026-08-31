@@ -203,6 +203,17 @@ public sealed class ClientBehaviorTests
     }
 
     [Fact]
+    public async Task RemoveMyProfilePhoto_ReturnsTelegramBooleanResult()
+    {
+        using var context = new ClientContext("{\"ok\":true,\"result\":true}");
+
+        var result = await context.Client.RemoveMyProfilePhotoAsync();
+
+        result.Should().BeTrue();
+        context.Handler.LastRequestUri.Should().Be("https://api.telegram.org/bottest-token/removeMyProfilePhoto");
+    }
+
+    [Fact]
     public void Parameters_UseSnakeCaseNames()
     {
         var parameters = new SendMessageParameters

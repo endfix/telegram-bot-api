@@ -57,6 +57,10 @@ dotnet user-secrets set "TELEGRAM_BOT_TOKEN" "<token>" --project Telegram.BotAPI
 
 Long polling processes updates sequentially in FIFO order by default (`maxParallel = 1`). Set `maxParallel` to a value greater than `1` to enable concurrent processing. FIFO ordering is not guaranteed in parallel mode, including the order in which handlers start or complete. Use sequential processing for stateful workflows that depend on update ordering.
 
+All `OnUpdate` subscribers are invoked in registration order and each returned task is awaited before processing for that update completes. A failing subscriber is logged without preventing later subscribers from running.
+
+`StartPollingAsync` uses best-effort, at-most-once delivery semantics. Handler failures do not trigger automatic redelivery: an update is acknowledged when the next `getUpdates` request advances the offset, and no checkpoint is persisted by the client. Applications that require durable processing or at-least-once delivery should own the `GetUpdatesAsync` loop and persist their checkpoint explicitly.
+
 The example projects include placeholder configuration files. Replace the placeholders locally or use User Secrets before running them.
 
 ## Retry behavior

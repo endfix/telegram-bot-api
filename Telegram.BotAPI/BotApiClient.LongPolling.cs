@@ -5,6 +5,7 @@ using Endfix.Telegram.BotAPI.Types;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,6 +15,12 @@ public sealed partial class BotApiClient
 {
     public delegate Task UpdateHandler(IBotApiClient client, Update update);
 
+    /// <summary>
+    /// Starts best-effort long polling until cancellation is requested.
+    /// Handler failures are logged and do not cause automatic redelivery; the
+    /// update is acknowledged when the next <c>getUpdates</c> request advances
+    /// the offset. No checkpoint is persisted across polling sessions.
+    /// </summary>
     public async Task StartPollingAsync(
         int limit = 1,
         int timeout = 20,
@@ -34,10 +41,7 @@ public sealed partial class BotApiClient
 
             try
             {
-                if (OnUpdate is not null)
-                {
-                    await OnUpdate.Invoke(this, update);
-                }
+                await InvokeUpdateHandlersAsync(update).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -89,7 +93,10 @@ public sealed partial class BotApiClient
             catch (ApiRequestException e)
             {
                 _logger.LogWarning("Long Polling: {Message}", e.Message);
-                await Task.Delay(5000, cancellationToken).ConfigureAwait(false);
+                if (!await WaitBeforePollingRetryAsync(cancellationToken).ConfigureAwait(false))
+                {
+                    break;
+                }
             }
             catch (OperationCanceledException)
             {
@@ -98,8 +105,58 @@ public sealed partial class BotApiClient
             catch (Exception e)
             {
                 _logger.LogError(e, "Critical error loop of Long Polling");
-                await Task.Delay(5000, cancellationToken).ConfigureAwait(false);
+                if (!await WaitBeforePollingRetryAsync(cancellationToken).ConfigureAwait(false))
+                {
+                    break;
+                }
             }
+        }
+    }
+
+    private async Task InvokeUpdateHandlersAsync(Update update)
+    {
+        var handlers = OnUpdate?.GetInvocationList();
+        if (handlers is null)
+        {
+            return;
+        }
+
+        List<Exception>? failures = null;
+
+        foreach (UpdateHandler handler in handlers)
+        {
+            try
+            {
+                await handler(this, update).ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                failures ??= [];
+                failures.Add(exception);
+            }
+        }
+
+        if (failures is { Count: 1 })
+        {
+            ExceptionDispatchInfo.Capture(failures[0]).Throw();
+        }
+
+        if (failures is { Count: > 1 })
+        {
+            throw new AggregateException("Multiple update handlers failed.", failures);
+        }
+    }
+
+    private static async Task<bool> WaitBeforePollingRetryAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            await Task.Delay(5000, cancellationToken).ConfigureAwait(false);
+            return true;
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            return false;
         }
     }
 }

@@ -23,6 +23,10 @@ namespace Endfix.Telegram.BotAPI;
 
 public sealed partial class BotApiClient : IBotApiClient
 {
+    /// <summary>
+    /// Raised for each update received by long polling. Subscribers are invoked
+    /// in registration order and each returned task is awaited.
+    /// </summary>
     public event UpdateHandler? OnUpdate;
 
     private static readonly ConcurrentDictionary<Type, PropertyInfo[]> _parametersCache = new();

@@ -81,6 +81,79 @@ public sealed class LongPollingBehaviorTests
     }
 
     [Fact]
+    public async Task ParallelUpdates_AreCompletedBeforeNextOffsetIsSent()
+    {
+        using var cancellation = new CancellationTokenSource();
+        var handler = new ParallelAcknowledgementHandler(cancellation);
+        using var context = new PollingContext(handler);
+        var allUpdatesStarted = new TaskCompletionSource(
+            TaskCreationOptions.RunContinuationsAsynchronously);
+        var releaseUpdates = new TaskCompletionSource(
+            TaskCreationOptions.RunContinuationsAsynchronously);
+        var startedCount = 0;
+
+        context.Client.OnUpdate += async (_, _, _) =>
+        {
+            if (Interlocked.Increment(ref startedCount) == 2)
+            {
+                allUpdatesStarted.TrySetResult();
+            }
+
+            await releaseUpdates.Task;
+        };
+
+        var polling = context.Client.StartPollingAsync(
+            maxParallel: 2,
+            cancellationToken: cancellation.Token);
+        await allUpdatesStarted.Task.WaitAsync(TimeSpan.FromSeconds(2));
+
+        Assert.False(handler.SecondRequestStarted.Task.IsCompleted);
+
+        releaseUpdates.TrySetResult();
+        await handler.SecondRequestStarted.Task.WaitAsync(TimeSpan.FromSeconds(2));
+        await polling.WaitAsync(TimeSpan.FromSeconds(2));
+
+        Assert.Equal(2, handler.Requests.Count);
+        var offset = Assert.Single(handler.Requests[1].Parts, part => part.Name == "offset");
+        Assert.Equal("3", offset.Text);
+    }
+
+    [Fact]
+    public async Task CancellationWhileParallelUpdatesWaitForCapacity_CompletesNormally()
+    {
+        using var cancellation = new CancellationTokenSource();
+        var logger = new RecordingLogger();
+        var handler = new BatchUpdateHandler(updateCount: 20);
+        using var context = new PollingContext(handler, logger);
+        var activeHandlersStarted = new TaskCompletionSource(
+            TaskCreationOptions.RunContinuationsAsynchronously);
+        var startedCount = 0;
+
+        context.Client.OnUpdate += async (_, _, cancellationToken) =>
+        {
+            if (Interlocked.Increment(ref startedCount) == 2)
+            {
+                activeHandlersStarted.TrySetResult();
+            }
+
+            await Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
+        };
+
+        var polling = context.Client.StartPollingAsync(
+            maxParallel: 2,
+            cancellationToken: cancellation.Token);
+        await activeHandlersStarted.Task.WaitAsync(TimeSpan.FromSeconds(2));
+
+        cancellation.Cancel();
+        await polling.WaitAsync(TimeSpan.FromSeconds(2));
+
+        Assert.True(polling.IsCompletedSuccessfully);
+        Assert.Equal(2, startedCount);
+        Assert.Equal(1, handler.RequestCount);
+        Assert.DoesNotContain(logger.Entries, entry => entry.Level == LogLevel.Error);
+    }
+
+    [Fact]
     public async Task CancellationDuringErrorBackoff_CompletesNormally()
     {
         using var cancellation = new CancellationTokenSource();
@@ -214,6 +287,51 @@ public sealed class LongPollingBehaviorTests
 
             cancellation.Cancel();
             return JsonResponse("""{"ok":true,"result":[]}""");
+        }
+    }
+
+    private sealed class ParallelAcknowledgementHandler(CancellationTokenSource cancellation)
+        : HttpMessageHandler
+    {
+        public List<RecordedRequest> Requests { get; } = [];
+
+        public TaskCompletionSource SecondRequestStarted { get; } = new(
+            TaskCreationOptions.RunContinuationsAsynchronously);
+
+        protected override async Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken)
+        {
+            Requests.Add(await RecordedRequest.CreateAsync(request, CancellationToken.None));
+            if (Requests.Count == 1)
+            {
+                return JsonResponse("""{"ok":true,"result":[{"update_id":1},{"update_id":2}]}""");
+            }
+
+            SecondRequestStarted.TrySetResult();
+            cancellation.Cancel();
+            return JsonResponse("""{"ok":true,"result":[]}""");
+        }
+    }
+
+    private sealed class BatchUpdateHandler : HttpMessageHandler
+    {
+        private readonly string _responseJson;
+
+        public BatchUpdateHandler(int updateCount)
+        {
+            _responseJson = $"{{\"ok\":true,\"result\":[{string.Join(',', Enumerable.Range(1, updateCount).Select(static id => $"{{\"update_id\":{id}}}"))}]}}";
+        }
+
+        public int RequestCount { get; private set; }
+
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            RequestCount++;
+            return Task.FromResult(JsonResponse(_responseJson));
         }
     }
 

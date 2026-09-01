@@ -15,7 +15,10 @@ public sealed partial class BotApiClient
 {
     private int _pollingStarted;
 
-    public delegate Task UpdateHandler(IBotApiClient client, Update update);
+    public delegate Task UpdateHandler(
+        IBotApiClient client,
+        Update update,
+        CancellationToken cancellationToken);
 
     /// <summary>
     /// Starts best-effort long polling until cancellation is requested.
@@ -71,7 +74,7 @@ public sealed partial class BotApiClient
 
             try
             {
-                await InvokeUpdateHandlersAsync(update).ConfigureAwait(false);
+                await InvokeUpdateHandlersAsync(update, cancellationToken).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -143,7 +146,9 @@ public sealed partial class BotApiClient
         }
     }
 
-    private async Task InvokeUpdateHandlersAsync(Update update)
+    private async Task InvokeUpdateHandlersAsync(
+        Update update,
+        CancellationToken cancellationToken)
     {
         var handlers = OnUpdate?.GetInvocationList();
         if (handlers is null)
@@ -155,9 +160,18 @@ public sealed partial class BotApiClient
 
         foreach (UpdateHandler handler in handlers)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                break;
+            }
+
             try
             {
-                await handler(this, update).ConfigureAwait(false);
+                await handler(this, update, cancellationToken).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                break;
             }
             catch (Exception exception)
             {

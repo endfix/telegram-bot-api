@@ -28,7 +28,7 @@ public sealed class LongPollingOrderingTests
         var completed = new List<long>();
         var sync = new object();
 
-        context.Client.OnUpdate += async (_, update) =>
+        context.Client.OnUpdate += async (_, update, _) =>
         {
             lock (sync)
             {
@@ -68,7 +68,7 @@ public sealed class LongPollingOrderingTests
         var active = 0;
         var maximumActive = 0;
 
-        context.Client.OnUpdate += async (_, update) =>
+        context.Client.OnUpdate += async (_, update, _) =>
         {
             started.Enqueue(update.UpdateId);
             var currentActive = Interlocked.Increment(ref active);

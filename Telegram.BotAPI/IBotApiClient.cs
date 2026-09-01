@@ -10,7 +10,8 @@ public interface IBotApiClient
 {
     /// <summary>
     /// Raised for each update received by long polling. Subscribers are invoked
-    /// in registration order and each returned task is awaited.
+    /// in registration order and each returned task is awaited. The cancellation
+    /// token signals that the active polling session is stopping.
     /// </summary>
     event BotApiClient.UpdateHandler? OnUpdate;
 

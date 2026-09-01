@@ -36,7 +36,7 @@ internal class Program
 
             await api.DeleteWebhookAsync(dropPendingUpdates: true);
 
-            api.OnUpdate += async (client, update) =>
+            api.OnUpdate += async (client, update, cancellationToken) =>
             {
                 try
                 {
@@ -53,7 +53,10 @@ internal class Program
                                 }
                                 
                                 // echo (ping - pong)
-                                var result = await api.SendMessageAsync(chatId: update.Message!.Chat.Id, text: text);
+                                var result = await api.SendMessageAsync(
+                                    chatId: update.Message!.Chat.Id,
+                                    text: text,
+                                    cancellationToken: cancellationToken);
 
                                 break;
                             }
@@ -67,6 +70,9 @@ internal class Program
                                 break;
                         }
                     }
+                }
+                catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+                {
                 }
                 catch (ApiRequestException e)
                 {

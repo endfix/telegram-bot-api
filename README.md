@@ -59,7 +59,7 @@ Long polling processes updates sequentially in FIFO order by default (`maxParall
 
 Only one `StartPollingAsync` session can run on a client instance at a time. A concurrent start fails with `InvalidOperationException`; after the active session stops, the same client can be started again.
 
-All `OnUpdate` subscribers are invoked in registration order and each returned task is awaited before processing for that update completes. A failing subscriber is logged without preventing later subscribers from running.
+All `OnUpdate` subscribers are invoked in registration order and each returned task is awaited before processing for that update completes. Handlers receive the polling session's cancellation token so long-running work can stop cooperatively. A failing subscriber is logged without preventing later subscribers from running; cancellation caused by the polling token is treated as a normal shutdown.
 
 `StartPollingAsync` uses best-effort, at-most-once delivery semantics. Handler failures do not trigger automatic redelivery: an update is acknowledged when the next `getUpdates` request advances the offset, and no checkpoint is persisted by the client. Applications that require durable processing or at-least-once delivery should own the `GetUpdatesAsync` loop and persist their checkpoint explicitly.
 

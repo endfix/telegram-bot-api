@@ -20,7 +20,7 @@ public class LongPollingTests
 
         await api.DeleteWebhookAsync(dropPendingUpdates: true, cancellationToken: cts.Token);
 
-        api.OnUpdate += async (client, update) =>
+        api.OnUpdate += async (client, update, cancellationToken) =>
         {
             try
             {
@@ -29,10 +29,14 @@ public class LongPollingTests
                     // echo (ping - pong)
                     var result = await api.SendMessageAsync(
                         chatId: update.Message!.Chat.Id,
-                        text: update.Message?.Text ?? "No text");
+                        text: update.Message?.Text ?? "No text",
+                        cancellationToken: cancellationToken);
 
                     cts.Cancel();
                 }
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
             }
             catch (Exception e)
             {

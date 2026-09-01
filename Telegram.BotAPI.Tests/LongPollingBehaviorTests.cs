@@ -16,13 +16,13 @@ public sealed class LongPollingBehaviorTests
         using var context = new PollingContext(new RepeatingUpdateHandler());
         var calls = new List<string>();
 
-        context.Client.OnUpdate += async (_, _) =>
+        context.Client.OnUpdate += async (_, _, _) =>
         {
             calls.Add("first-started");
             await Task.Delay(100);
             calls.Add("first-completed");
         };
-        context.Client.OnUpdate += (_, _) =>
+        context.Client.OnUpdate += (_, _, _) =>
         {
             calls.Add("second");
             cancellation.Cancel();
@@ -42,12 +42,12 @@ public sealed class LongPollingBehaviorTests
         using var context = new PollingContext(new RepeatingUpdateHandler(), logger);
         var laterSubscriberCalled = false;
 
-        context.Client.OnUpdate += async (_, _) =>
+        context.Client.OnUpdate += async (_, _, _) =>
         {
             await Task.Yield();
             throw new InvalidOperationException("first subscriber failed");
         };
-        context.Client.OnUpdate += (_, _) =>
+        context.Client.OnUpdate += (_, _, _) =>
         {
             laterSubscriberCalled = true;
             cancellation.Cancel();
@@ -70,7 +70,7 @@ public sealed class LongPollingBehaviorTests
         var handler = new AcknowledgementHandler(cancellation);
         using var context = new PollingContext(handler);
 
-        context.Client.OnUpdate += (_, _) =>
+        context.Client.OnUpdate += (_, _, _) =>
             Task.FromException(new InvalidOperationException("handler failed"));
 
         await context.Client.StartPollingAsync(cancellationToken: cancellation.Token);
@@ -93,6 +93,32 @@ public sealed class LongPollingBehaviorTests
 
         await polling.WaitAsync(TimeSpan.FromSeconds(2));
         Assert.True(polling.IsCompletedSuccessfully);
+    }
+
+    [Fact]
+    public async Task PollingCancellation_IsForwardedToSubscriberWithoutErrorLog()
+    {
+        using var cancellation = new CancellationTokenSource();
+        var logger = new RecordingLogger();
+        using var context = new PollingContext(new RepeatingUpdateHandler(), logger);
+        var tokenReceived = new TaskCompletionSource<CancellationToken>(
+            TaskCreationOptions.RunContinuationsAsynchronously);
+
+        context.Client.OnUpdate += async (_, _, cancellationToken) =>
+        {
+            tokenReceived.TrySetResult(cancellationToken);
+            await Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
+        };
+
+        var polling = context.Client.StartPollingAsync(cancellationToken: cancellation.Token);
+        var handlerToken = await tokenReceived.Task.WaitAsync(TimeSpan.FromSeconds(2));
+        cancellation.Cancel();
+
+        await polling.WaitAsync(TimeSpan.FromSeconds(2));
+
+        Assert.Equal(cancellation.Token, handlerToken);
+        Assert.True(polling.IsCompletedSuccessfully);
+        Assert.DoesNotContain(logger.Entries, entry => entry.Level == LogLevel.Error);
     }
 
     [Fact]
@@ -124,7 +150,7 @@ public sealed class LongPollingBehaviorTests
         for (var session = 0; session < 2; session++)
         {
             using var cancellation = new CancellationTokenSource();
-            BotApiClient.UpdateHandler stopSession = (_, _) =>
+            BotApiClient.UpdateHandler stopSession = (_, _, _) =>
             {
                 cancellation.Cancel();
                 return Task.CompletedTask;

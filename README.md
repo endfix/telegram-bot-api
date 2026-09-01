@@ -89,6 +89,10 @@ var fileBytes = await api.GetFileBytesAsync(file.FilePath!);
 await File.WriteAllBytesAsync("downloaded-report.pdf", fileBytes);
 ```
 
+## Development
+
+Repository builds are pinned to .NET SDK `9.0.317` through `global.json`. The complete solution also runs `net8.0` tests and examples, so install the .NET 8 SDK or runtime alongside SDK 9 when working locally. CI installs both SDK versions explicitly.
+
 ## Tests
 
 Run the solution test suite (live integration tests are skipped when their secrets are not configured):

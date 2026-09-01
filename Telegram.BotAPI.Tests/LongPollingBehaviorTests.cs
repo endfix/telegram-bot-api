@@ -64,6 +64,59 @@ public sealed class LongPollingBehaviorTests
     }
 
     [Fact]
+    public async Task SecondSubscriberFailure_IsLoggedAfterFirstSubscriberCompletes()
+    {
+        using var cancellation = new CancellationTokenSource();
+        var logger = new RecordingLogger();
+        using var context = new PollingContext(new RepeatingUpdateHandler(), logger);
+        var firstSubscriberCalled = false;
+
+        context.Client.OnUpdate += (_, _, _) =>
+        {
+            firstSubscriberCalled = true;
+            return Task.CompletedTask;
+        };
+        context.Client.OnUpdate += (_, _, _) =>
+        {
+            cancellation.Cancel();
+            return Task.FromException(new InvalidOperationException("second subscriber failed"));
+        };
+
+        await context.Client.StartPollingAsync(cancellationToken: cancellation.Token);
+
+        Assert.True(firstSubscriberCalled);
+        Assert.Contains(logger.Entries, entry =>
+            entry.Level == LogLevel.Error &&
+            entry.Exception is InvalidOperationException exception &&
+            exception.Message == "second subscriber failed");
+    }
+
+    [Fact]
+    public async Task MultipleSubscriberFailures_AreLoggedAsAggregateException()
+    {
+        using var cancellation = new CancellationTokenSource();
+        var logger = new RecordingLogger();
+        using var context = new PollingContext(new RepeatingUpdateHandler(), logger);
+
+        context.Client.OnUpdate += (_, _, _) =>
+            Task.FromException(new InvalidOperationException("first subscriber failed"));
+        context.Client.OnUpdate += (_, _, _) =>
+        {
+            cancellation.Cancel();
+            return Task.FromException(new ArgumentException("second subscriber failed"));
+        };
+
+        await context.Client.StartPollingAsync(cancellationToken: cancellation.Token);
+
+        var aggregate = Assert.IsType<AggregateException>(
+            Assert.Single(logger.Entries, entry => entry.Level == LogLevel.Error).Exception);
+        Assert.Collection(
+            aggregate.InnerExceptions,
+            exception => Assert.Equal("first subscriber failed", exception.Message),
+            exception => Assert.Equal("second subscriber failed", exception.Message));
+    }
+
+    [Fact]
     public async Task SubscriberFailure_IsAcknowledgedByTheNextOffset()
     {
         using var cancellation = new CancellationTokenSource();

@@ -98,6 +98,59 @@ public sealed class LongPollingOrderingTests
         _output.WriteLine($"maxParallel={maxParallel}; started=[{string.Join(", ", started)}]; completed=[{string.Join(", ", completed)}]; maximumActive={maximumActive}");
     }
 
+    [Fact]
+    public async Task MaxParallelOneHundred_DoesNotExceedConfiguredConcurrency()
+    {
+        const int maxParallel = 100;
+        const int updateCount = 200;
+        var updateIds = Enumerable.Range(1, updateCount).Select(static value => (long)value).ToArray();
+        using var context = new PollingContext(updateIds);
+        using var cancellation = new CancellationTokenSource();
+        var capacityReached = new TaskCompletionSource(
+            TaskCreationOptions.RunContinuationsAsynchronously);
+        var releaseHandlers = new TaskCompletionSource(
+            TaskCreationOptions.RunContinuationsAsynchronously);
+        var active = 0;
+        var maximumActive = 0;
+        var completed = 0;
+
+        context.Client.OnUpdate += async (_, _, _) =>
+        {
+            var currentActive = Interlocked.Increment(ref active);
+            UpdateMaximum(ref maximumActive, currentActive);
+            if (currentActive == maxParallel)
+            {
+                capacityReached.TrySetResult();
+            }
+
+            try
+            {
+                await releaseHandlers.Task;
+            }
+            finally
+            {
+                Interlocked.Decrement(ref active);
+                if (Interlocked.Increment(ref completed) == updateCount)
+                {
+                    cancellation.Cancel();
+                }
+            }
+        };
+
+        var polling = context.Client.StartPollingAsync(
+            maxParallel: maxParallel,
+            cancellationToken: cancellation.Token);
+        await capacityReached.Task.WaitAsync(TimeSpan.FromSeconds(5));
+
+        maximumActive.Should().Be(maxParallel);
+
+        releaseHandlers.TrySetResult();
+        await polling.WaitAsync(TimeSpan.FromSeconds(5));
+
+        completed.Should().Be(updateCount);
+        maximumActive.Should().Be(maxParallel);
+    }
+
     private static void UpdateMaximum(ref int maximum, int value)
     {
         while (true)

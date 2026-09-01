@@ -290,6 +290,26 @@ public sealed class ClientBehaviorTests
     }
 
     [Fact]
+    public async Task RequestAsync_DoesNotRetryHttp429WithMalformedBody()
+    {
+        using var context = new ClientContext(
+            maxRetryAttempts: 1,
+            responses:
+            [
+                ResponseHandler.ResponseMessage("gateway rate limit", HttpStatusCode.TooManyRequests),
+                ResponseHandler.ResponseMessage(
+                    "{\"ok\":true,\"result\":{\"id\":1,\"is_bot\":true,\"first_name\":\"Test\"}}")
+            ]);
+
+        var action = () => context.Client.RequestAsync<User>(
+            new ApiRequest("getMe", parameters: null));
+
+        var exception = await action.Should().ThrowAsync<HttpRequestException>();
+        exception.Which.StatusCode.Should().Be(HttpStatusCode.TooManyRequests);
+        context.Handler.RequestCount.Should().Be(1);
+    }
+
+    [Fact]
     public async Task GetFileBytesAsync_ReturnsSuccessfulResponseBody()
     {
         var expected = new byte[] { 1, 2, 3, 4 };

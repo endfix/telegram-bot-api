@@ -262,10 +262,6 @@ public sealed partial class BotApiClient : IBotApiClient
             _logger.LogError("JSON Error: {Message} at {Path}", ex.Message, ex.Path);
             throw;
         }
-        catch
-        {
-            throw;
-        }
     }
 
     private static JsonNode PrepareJsonValue(

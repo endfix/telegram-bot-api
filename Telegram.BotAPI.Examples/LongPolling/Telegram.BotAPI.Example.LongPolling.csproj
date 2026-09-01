@@ -5,7 +5,7 @@
 		<TargetFramework>net8.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<LangVersion>latest</LangVersion>
+		<LangVersion>12.0</LangVersion>
 		<UserSecretsId>4ec1e571-1d79-438f-9e2f-53cbb4c66a0e</UserSecretsId>
 	</PropertyGroup>
 

@@ -77,7 +77,7 @@ public class Program
             Results.Ok();
         });
 
-        app.Run();
+        await app.RunAsync();
     }
 
     private static string GetToken(IConfiguration config)

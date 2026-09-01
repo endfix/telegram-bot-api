@@ -61,7 +61,7 @@ Only one `StartPollingAsync` session can run on a client instance at a time. A c
 
 All `OnUpdate` subscribers are invoked in registration order and each returned task is awaited before processing for that update completes. Handlers receive the polling session's cancellation token so long-running work can stop cooperatively. A failing subscriber is logged without preventing later subscribers from running; cancellation caused by the polling token is treated as a normal shutdown.
 
-`StartPollingAsync` uses best-effort, at-most-once delivery semantics. Handler failures do not trigger automatic redelivery: an update is acknowledged when the next `getUpdates` request advances the offset, and no checkpoint is persisted by the client. Applications that require durable processing or at-least-once delivery should own the `GetUpdatesAsync` loop and persist their checkpoint explicitly.
+`StartPollingAsync` uses best-effort delivery. Handler failures are logged and are not retried; a failed update is confirmed if the polling loop later sends a higher offset. Because the offset is neither sent until the next `getUpdates` request nor persisted by the client, an interrupted polling session may receive an update again even after its handler ran. Applications that require durable processing or explicit delivery guarantees should own the `GetUpdatesAsync` loop and persist their checkpoint explicitly.
 
 The example projects include placeholder configuration files. Replace the placeholders locally or use User Secrets before running them.
 

@@ -22,10 +22,11 @@ public sealed partial class BotApiClient
 
     /// <summary>
     /// Starts best-effort long polling until cancellation is requested.
-    /// Handler failures are logged and do not cause automatic redelivery; the
-    /// update is acknowledged when the next <c>getUpdates</c> request advances
-    /// the offset. No checkpoint is persisted across polling sessions. Only one
-    /// polling session can run on a client instance at a time.
+    /// Handler failures are logged and are not retried. Updates are confirmed
+    /// only when a later <c>getUpdates</c> request advances the offset, so stopping
+    /// before that request may cause an update to be delivered again. No checkpoint
+    /// is persisted across polling sessions. Only one polling session can run on
+    /// a client instance at a time.
     /// </summary>
     public async Task StartPollingAsync(
         int limit = 1,

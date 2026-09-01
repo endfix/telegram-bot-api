@@ -18,9 +18,10 @@ public interface IBotApiClient
     Task<T> ExecuteAsync<T>(ApiRequest request, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Starts best-effort long polling until cancellation is requested.
-    /// Handler failures are logged and do not cause automatic redelivery. Only
-    /// one polling session can run on a client instance at a time.
+    /// Starts best-effort long polling until cancellation is requested. Handler
+    /// failures are logged and are not retried. An update may be delivered again
+    /// if polling stops before a later request advances the offset. Only one polling
+    /// session can run on a client instance at a time.
     /// </summary>
     Task StartPollingAsync(
         int limit = 1,

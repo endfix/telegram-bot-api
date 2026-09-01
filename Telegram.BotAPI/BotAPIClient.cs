@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 
 namespace Endfix.Telegram.BotAPI;
 
-public sealed partial class BotApiClient : IBotApiClient
+public sealed partial class BotApiClient : IBotApiClient, IDisposable
 {
     /// <summary>
     /// Raised for each update received by long polling. Subscribers are invoked
@@ -34,9 +34,15 @@ public sealed partial class BotApiClient : IBotApiClient
 
     private static readonly ConcurrentDictionary<string, string> _fieldNamesCache = new();
 
+    private static readonly Uri _defaultBaseAddress = new("https://api.telegram.org");
+
     private readonly string _token;
 
     private readonly HttpClient _httpClient;
+
+    private readonly bool _ownsHttpClient;
+
+    private readonly Uri _baseAddress;
 
     private readonly int _maxRetryAttempts;
     
@@ -46,7 +52,9 @@ public sealed partial class BotApiClient : IBotApiClient
     /// Creates a Telegram Bot API client.
     /// </summary>
     /// <param name="token">The bot token issued by BotFather.</param>
-    /// <param name="httpClient">The HTTP client used for API requests.</param>
+    /// <param name="httpClient">
+    /// The HTTP client used for API requests. The caller retains ownership of a supplied instance.
+    /// </param>
     /// <param name="url">An optional Bot API base URL.</param>
     /// <param name="maxRetryAttempts">The maximum number of automatic retries for Telegram rate-limit responses.</param>
     /// <param name="logger">An optional client logger.</param>
@@ -59,25 +67,33 @@ public sealed partial class BotApiClient : IBotApiClient
     {
         _token = token ?? throw new ArgumentNullException(nameof(token));
 
-        _httpClient = httpClient ?? new HttpClient();
-
-        if (url is not null)
-        {
-            _httpClient.BaseAddress = new Uri(url);
-        }
-        else
-        {
-            _httpClient.BaseAddress ??= new Uri("https://api.telegram.org");
-        }
-
         if (maxRetryAttempts < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(maxRetryAttempts));
         }
 
+        var explicitBaseAddress = url is null ? null : new Uri(url, UriKind.Absolute);
+
+        _ownsHttpClient = httpClient is null;
+        _httpClient = httpClient ?? new HttpClient();
+
+        _baseAddress = explicitBaseAddress ?? _httpClient.BaseAddress ?? _defaultBaseAddress;
+
         _maxRetryAttempts = maxRetryAttempts;
 
         _logger = logger ?? NullLogger<IBotApiClient>.Instance;
+    }
+
+    /// <summary>
+    /// Releases the HTTP client created internally by this instance.
+    /// A client supplied to the constructor is not disposed.
+    /// </summary>
+    public void Dispose()
+    {
+        if (_ownsHttpClient)
+        {
+            _httpClient.Dispose();
+        }
     }
     
     /// <summary>
@@ -171,7 +187,7 @@ public sealed partial class BotApiClient : IBotApiClient
         }
 
         using var response = await _httpClient
-            .GetAsync($"/file/bot{_token}/{filePath}", cancellation)
+            .GetAsync(new Uri(_baseAddress, $"/file/bot{_token}/{filePath}"), cancellation)
             .ConfigureAwait(false);
 
         response.EnsureSuccessStatusCode();
@@ -180,7 +196,7 @@ public sealed partial class BotApiClient : IBotApiClient
 
     private async Task<HttpResponseMessage> GetResponse(ApiRequest request, CancellationToken cancellation)
     {
-        var requestUri = $"/bot{_token}/{request.MethodName}";
+        var requestUri = new Uri(_baseAddress, $"/bot{_token}/{request.MethodName}");
         var parameters = request.Parameters;
         
 

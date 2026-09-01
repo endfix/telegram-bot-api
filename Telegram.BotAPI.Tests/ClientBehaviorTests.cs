@@ -379,6 +379,54 @@ public sealed class ClientBehaviorTests
         await context.Client.RequestAsync<User>(new ApiRequest("getMe", parameters: null));
 
         context.Handler.LastRequestUri.Should().Be("https://explicit.example/bottest-token/getMe");
+        context.HttpClientBaseAddress.Should().Be(new Uri("https://custom.example"));
+    }
+
+    [Fact]
+    public async Task Constructor_DoesNotReconfigurePreviouslyUsedHttpClient()
+    {
+        var handler = new ResponseHandler(
+            "{\"ok\":true,\"result\":{\"id\":1,\"is_bot\":true,\"first_name\":\"Test\"}}");
+        using var httpClient = new HttpClient(handler)
+        {
+            BaseAddress = new Uri("https://custom.example")
+        };
+        await httpClient.GetAsync("warmup");
+        using var client = new BotApiClient(
+            "test-token",
+            httpClient,
+            url: "https://explicit.example");
+
+        await client.RequestAsync<User>(new ApiRequest("getMe", parameters: null));
+
+        httpClient.BaseAddress.Should().Be(new Uri("https://custom.example"));
+        handler.LastRequestUri.Should().Be("https://explicit.example/bottest-token/getMe");
+    }
+
+    [Fact]
+    public async Task Dispose_DisposesInternallyCreatedHttpClient()
+    {
+        var client = new BotApiClient("test-token");
+
+        client.Dispose();
+
+        var action = () => client.RequestAsync<User>(new ApiRequest("getMe", parameters: null));
+        await action.Should().ThrowAsync<ObjectDisposedException>();
+    }
+
+    [Fact]
+    public async Task Dispose_DoesNotDisposeSuppliedHttpClient()
+    {
+        var handler = new ResponseHandler(
+            "{\"ok\":true,\"result\":{\"id\":1,\"is_bot\":true,\"first_name\":\"Test\"}}");
+        using var httpClient = new HttpClient(handler);
+        var client = new BotApiClient("test-token", httpClient);
+
+        client.Dispose();
+
+        var response = await httpClient.GetAsync("https://api.telegram.org/getMe");
+        response.IsSuccessStatusCode.Should().BeTrue();
+        handler.RequestCount.Should().Be(1);
     }
 
     [Fact]
@@ -436,7 +484,13 @@ public sealed class ClientBehaviorTests
 
         public BotApiClient Client { get; }
 
-        public void Dispose() => _httpClient.Dispose();
+        public Uri? HttpClientBaseAddress => _httpClient.BaseAddress;
+
+        public void Dispose()
+        {
+            Client.Dispose();
+            _httpClient.Dispose();
+        }
     }
 
     private sealed class ResponseHandler(string responseJson) : HttpMessageHandler

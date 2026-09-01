@@ -26,22 +26,25 @@ dotnet add package Endfix.Telegram.BotAPI --version 0.3.1
 Each bot is given a unique authentication token [when it is created](https://core.telegram.org/bots/features#botfather). Store the token in User Secrets or an environment variable; do not put it in `appsettings.json` or source control. You can learn about obtaining tokens and generating new ones in [this document](https://core.telegram.org/bots/features#botfather).
 
 ```cs
-var api = new BotApiClient(
+using var httpClient = new HttpClient(new SocketsHttpHandler
+{
+    PooledConnectionLifetime = TimeSpan.FromSeconds(5),
+    MaxConnectionsPerServer = 10
+})
+{
+    Timeout = TimeSpan.FromMinutes(5)
+};
+
+using var api = new BotApiClient(
     "<token>",
-    new HttpClient(new SocketsHttpHandler
-    {
-        PooledConnectionLifetime = TimeSpan.FromSeconds(5),
-        MaxConnectionsPerServer = 10
-    })
-    {
-        Timeout = TimeSpan.FromMinutes(5)
-    }
-);
+    httpClient);
 
 var message = await api.SendMessageAsync(
     chatId: 1234567890,
     text: "Hello from Endfix.Telegram.BotAPI");
 ```
+
+`BotApiClient` disposes the `HttpClient` it creates when none is supplied. A supplied `HttpClient` remains owned by the caller and should normally be reused for the application's lifetime.
 
 ## Examples
 

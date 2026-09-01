@@ -15,11 +15,6 @@ public sealed partial class BotApiClient
 {
     private int _pollingStarted;
 
-    public delegate Task UpdateHandler(
-        IBotApiClient client,
-        Update update,
-        CancellationToken cancellationToken);
-
     /// <summary>
     /// Starts best-effort long polling until cancellation is requested.
     /// Handler failures are logged and are not retried. Updates are confirmed

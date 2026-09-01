@@ -260,26 +260,6 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
         }
     }
 
-    public async Task<IReadOnlyDictionary<string, Currency>> GetCurrencies(CancellationToken cancellation = default)
-    {
-        try
-        {
-            using var response = await _httpClient.GetAsync("https://core.telegram.org/bots/payments/currencies.json", cancellation);
-
-            response.EnsureSuccessStatusCode();
-
-            using var stream = await response.Content.ReadAsStreamAsync();
-            var result = await stream.DeserializeAsync<Dictionary<string, Currency>>(cancellation);
-
-            return result ?? throw new InvalidOperationException("Failed to deserialize currencies: response was empty or wrong syntax.");
-        }
-        catch (JsonException ex)
-        {
-            _logger.LogError("JSON Error: {Message} at {Path}", ex.Message, ex.Path);
-            throw;
-        }
-    }
-
     private static JsonNode PrepareJsonValue(
         object value,
         MultipartFormDataContent content,

@@ -223,7 +223,7 @@ public sealed class LongPollingBehaviorTests
         for (var session = 0; session < 2; session++)
         {
             using var cancellation = new CancellationTokenSource();
-            BotApiClient.UpdateHandler stopSession = (_, _, _) =>
+            UpdateHandler stopSession = (_, _, _) =>
             {
                 cancellation.Cancel();
                 return Task.CompletedTask;

@@ -320,8 +320,9 @@ public sealed class ClientBehaviorTests
                 Content = new ByteArrayContent(expected)
             }
         ]);
+        IBotApiClient client = context.Client;
 
-        var bytes = await context.Client.GetFileBytesAsync("documents/file.bin");
+        var bytes = await client.GetFileBytesAsync("documents/file.bin");
 
         bytes.Should().Equal(expected);
         context.Handler.LastRequestUri.Should().Be(
@@ -368,6 +369,36 @@ public sealed class ClientBehaviorTests
         await action.Should().ThrowAsync<ArgumentException>()
             .WithParameterName("filePath");
         context.Handler.RequestCount.Should().Be(0);
+    }
+
+    [Fact]
+    public async Task GetCurrenciesAsync_IsAvailableThroughInterface()
+    {
+        using var context = new ClientContext("""
+            {
+              "USD": {
+                "code": "USD",
+                "title": "US Dollar",
+                "symbol": "$",
+                "native": "$",
+                "thousands_sep": ",",
+                "decimal_sep": ".",
+                "symbol_left": true,
+                "space_between": false,
+                "drop_zeros": false,
+                "exp": 2,
+                "min_amount": 1,
+                "max_amount": 100000
+              }
+            }
+            """);
+        IBotApiClient client = context.Client;
+
+        var currencies = await client.GetCurrenciesAsync();
+
+        currencies["USD"].Code.Should().Be("USD");
+        context.Handler.LastRequestUri.Should().Be(
+            "https://core.telegram.org/bots/payments/currencies.json");
     }
 
     [Fact]

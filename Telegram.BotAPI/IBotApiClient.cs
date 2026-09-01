@@ -18,7 +18,8 @@ public interface IBotApiClient
 
     /// <summary>
     /// Starts best-effort long polling until cancellation is requested.
-    /// Handler failures are logged and do not cause automatic redelivery.
+    /// Handler failures are logged and do not cause automatic redelivery. Only
+    /// one polling session can run on a client instance at a time.
     /// </summary>
     Task StartPollingAsync(
         int limit = 1,

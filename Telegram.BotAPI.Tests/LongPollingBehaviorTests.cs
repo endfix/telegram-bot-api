@@ -96,6 +96,26 @@ public sealed class LongPollingBehaviorTests
     }
 
     [Fact]
+    public async Task ConcurrentPollingSession_IsRejectedForTheSameClient()
+    {
+        using var cancellation = new CancellationTokenSource();
+        var handler = new BlockingPollingHandler();
+        using var context = new PollingContext(handler);
+
+        var firstPolling = context.Client.StartPollingAsync(cancellationToken: cancellation.Token);
+        await handler.RequestStarted.Task.WaitAsync(TimeSpan.FromSeconds(2));
+
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            context.Client.StartPollingAsync(cancellationToken: cancellation.Token));
+
+        Assert.Equal("Long polling is already running for this client.", exception.Message);
+        Assert.Equal(1, handler.RequestCount);
+
+        cancellation.Cancel();
+        await firstPolling.WaitAsync(TimeSpan.FromSeconds(2));
+    }
+
+    [Fact]
     public async Task NewPollingSession_StartsWithoutPersistedCheckpoint()
     {
         var handler = new RepeatingUpdateHandler();
@@ -178,6 +198,26 @@ public sealed class LongPollingBehaviorTests
             CancellationToken cancellationToken)
             => Task.FromResult(JsonResponse(
                 """{"ok":false,"error_code":500,"description":"test failure"}"""));
+    }
+
+    private sealed class BlockingPollingHandler : HttpMessageHandler
+    {
+        private int _requestCount;
+
+        public int RequestCount => Volatile.Read(ref _requestCount);
+
+        public TaskCompletionSource RequestStarted { get; } = new(
+            TaskCreationOptions.RunContinuationsAsynchronously);
+
+        protected override async Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken)
+        {
+            Interlocked.Increment(ref _requestCount);
+            RequestStarted.TrySetResult();
+            await Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
+            throw new InvalidOperationException("The polling request should end through cancellation.");
+        }
     }
 
     private sealed class RecordingLogger : ILogger<IBotApiClient>

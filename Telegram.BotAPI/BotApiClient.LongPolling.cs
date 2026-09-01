@@ -13,13 +13,16 @@ namespace Endfix.Telegram.BotAPI;
 
 public sealed partial class BotApiClient
 {
+    private int _pollingStarted;
+
     public delegate Task UpdateHandler(IBotApiClient client, Update update);
 
     /// <summary>
     /// Starts best-effort long polling until cancellation is requested.
     /// Handler failures are logged and do not cause automatic redelivery; the
     /// update is acknowledged when the next <c>getUpdates</c> request advances
-    /// the offset. No checkpoint is persisted across polling sessions.
+    /// the offset. No checkpoint is persisted across polling sessions. Only one
+    /// polling session can run on a client instance at a time.
     /// </summary>
     public async Task StartPollingAsync(
         int limit = 1,
@@ -33,6 +36,33 @@ public sealed partial class BotApiClient
             throw new ArgumentOutOfRangeException(nameof(maxParallel));
         }
 
+        if (Interlocked.CompareExchange(ref _pollingStarted, 1, 0) != 0)
+        {
+            throw new InvalidOperationException("Long polling is already running for this client.");
+        }
+
+        try
+        {
+            await RunPollingAsync(
+                limit,
+                timeout,
+                allowedUpdates,
+                maxParallel,
+                cancellationToken).ConfigureAwait(false);
+        }
+        finally
+        {
+            Volatile.Write(ref _pollingStarted, 0);
+        }
+    }
+
+    private async Task RunPollingAsync(
+        int limit,
+        int timeout,
+        IReadOnlyList<UpdateType>? allowedUpdates,
+        int maxParallel,
+        CancellationToken cancellationToken)
+    {
         using var throttling = new SemaphoreSlim(maxParallel, maxParallel);
 
         async Task ProcessUpdateAsync(Update update)

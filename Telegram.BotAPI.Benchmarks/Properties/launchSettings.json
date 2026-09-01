@@ -11,6 +11,10 @@
       "commandName": "Project",
       "commandLineArgs": "--filter *TransportBenchmarks*"
     },
+    "Benchmarks / multipart": {
+      "commandName": "Project",
+      "commandLineArgs": "--filter *MultipartBenchmarks*"
+    },
     "Benchmarks / stress": {
       "commandName": "Project",
       "commandLineArgs": "--stress"

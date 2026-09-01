@@ -14,7 +14,14 @@ Run one group:
 dotnet run --project Telegram.BotAPI.Benchmarks\Telegram.BotAPI.Benchmarks.csproj -c Release -- --filter *SerializationBenchmarks*
 dotnet run --project Telegram.BotAPI.Benchmarks\Telegram.BotAPI.Benchmarks.csproj -c Release -- --filter *Rich*
 dotnet run --project Telegram.BotAPI.Benchmarks\Telegram.BotAPI.Benchmarks.csproj -c Release -- --filter *TransportBenchmarks*
+dotnet run --project Telegram.BotAPI.Benchmarks\Telegram.BotAPI.Benchmarks.csproj -c Release -- --filter *MultipartBenchmarks*
 ```
+
+The multipart group compares scalar fields, top-level file sources, media groups
+at Telegram's practical 10-item size, and deeply nested poll/rich media. Its fake
+HTTP handler does not read the request body, so the results isolate multipart object
+construction, JSON preparation, nested-file traversal, and local file opening rather
+than network transfer.
 
 Run the long local stress test:
 
@@ -34,6 +41,7 @@ The same scenarios are available as Visual Studio launch profiles:
 - `Benchmarks / all` runs the interactive BenchmarkDotNet selector;
 - `Benchmarks / serialization` runs JSON benchmarks;
 - `Benchmarks / transport` runs local transport benchmarks;
+- `Benchmarks / multipart` compares flat and nested multipart request preparation;
 - `Benchmarks / stress` runs the 1,000,000-call stress test;
 - `Benchmarks / stress parallel` runs the same test with 10 bounded workers;
 - `Benchmarks / quick` runs a short serialization smoke test.

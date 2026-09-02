@@ -15,6 +15,10 @@
       "commandName": "Project",
       "commandLineArgs": "--filter *MultipartBenchmarks*"
     },
+    "Benchmarks / multipart diagnostics": {
+      "commandName": "Project",
+      "commandLineArgs": "--filter *MultipartDiagnostic*"
+    },
     "Benchmarks / stress": {
       "commandName": "Project",
       "commandLineArgs": "--stress"

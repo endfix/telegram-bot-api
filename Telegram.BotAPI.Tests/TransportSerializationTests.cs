@@ -48,6 +48,63 @@ public sealed class TransportSerializationTests
     }
 
     [Fact]
+    public async Task SendPhoto_WithMemorySource_SendsSnapshotWithoutOpeningAFile()
+    {
+        var content = new byte[] { 0x11, 0x22, 0x33 };
+        var source = InputFileSource.FromMemory(content, "memory-photo.jpg");
+        content[0] = 0xFF;
+        using var context = new ClientContext();
+
+        await context.Client.RequestAsync<bool>(new ApiRequest("sendPhoto", new SendPhotoParameters
+        {
+            ChatId = 123456789L,
+            Photo = new InputPhotoFile(source)
+        }));
+
+        var photo = context.Handler.LastRequest!.Parts
+            .Should().ContainSingle(part => part.Name == "photo").Which;
+        photo.FileName.Should().Be("memory-photo.jpg");
+        photo.Content.Should().Equal(0x11, 0x22, 0x33);
+    }
+
+    [Fact]
+    public async Task SendMediaGroup_WithStreamFactory_ReopensAndDisposesStreamForRetry()
+    {
+        var streamsCreated = 0;
+        var streamsDisposed = 0;
+        var source = InputFileSource.FromStream(
+            () =>
+            {
+                streamsCreated++;
+                return new TrackingMemoryStream(
+                    new byte[] { 0x41, 0x42, 0x43 },
+                    () => streamsDisposed++);
+            },
+            "factory-photo.jpg");
+        using var handler = new RetryRecordingHandler();
+        using var httpClient = new HttpClient(handler);
+        using var client = new BotApiClient("test-token", httpClient, maxRetryAttempts: 1);
+
+        var response = await client.RequestAsync<bool>(new ApiRequest("sendMediaGroup", new SendMediaGroupParameters
+        {
+            ChatId = 123456789L,
+            Media =
+            [
+                new InputMediaPhoto
+                {
+                    Media = new InputPhotoFile(source)
+                }
+            ]
+        }));
+
+        response.Ok.Should().BeTrue();
+        handler.Attachments.Should().HaveCount(2)
+            .And.OnlyContain(content => content.SequenceEqual(new byte[] { 0x41, 0x42, 0x43 }));
+        streamsCreated.Should().Be(2);
+        streamsDisposed.Should().Be(2);
+    }
+
+    [Fact]
     public async Task SendMediaGroup_WithLocalFile_SendsAttachReferenceAndBinaryPart()
     {
         var file = await TemporaryFile.CreateAsync([0x10, 0x20, 0x30]);
@@ -640,6 +697,48 @@ public sealed class TransportSerializationTests
         public BotApiClient Client { get; }
 
         public void Dispose() => _httpClient.Dispose();
+    }
+
+    private sealed class RetryRecordingHandler : HttpMessageHandler
+    {
+        private int _requestCount;
+
+        public List<byte[]> Attachments { get; } = [];
+
+        protected override async Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken)
+        {
+            var multipart = request.Content.Should().BeOfType<MultipartFormDataContent>().Subject;
+            var attachment = multipart.Single(content =>
+                content.Headers.ContentDisposition?.Name?.Contains("attach_0") == true);
+            Attachments.Add(await attachment.ReadAsByteArrayAsync(cancellationToken));
+
+            var responseJson = _requestCount++ == 0
+                ? "{\"ok\":false,\"error_code\":429,\"description\":\"Too Many Requests\",\"parameters\":{\"retry_after\":0}}"
+                : "{\"ok\":true,\"result\":true}";
+
+            return new HttpResponseMessage(System.Net.HttpStatusCode.OK)
+            {
+                Content = new StringContent(responseJson)
+            };
+        }
+    }
+
+    private sealed class TrackingMemoryStream(byte[] content, Action onDispose)
+        : MemoryStream(content, writable: false)
+    {
+        private bool _disposed;
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (disposing && !_disposed)
+            {
+                _disposed = true;
+                onDispose();
+            }
+        }
     }
 
     private sealed class TemporaryFile(string path) : IAsyncDisposable

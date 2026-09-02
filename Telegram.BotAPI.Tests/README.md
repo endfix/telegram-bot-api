@@ -14,7 +14,8 @@ dotnet test Telegram.BotAPI.Tests/Telegram.BotAPI.Tests.csproj --filter "Categor
 ```
 
 The local suite covers JSON contracts, polymorphic serialization, multipart
-transport, retry and error behavior, and long-polling ordering.
+transport for path, memory and stream-factory file sources, stream disposal and
+retry behavior, error behavior, and long-polling ordering.
 
 ## Live test topology
 

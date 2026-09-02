@@ -10,7 +10,7 @@ Typed .NET client for the Telegram Bot API. The library targets .NET Standard 2.
 - strongly typed Bot API methods, parameters and response models;
 - polymorphic JSON serialization for Telegram union types;
 - JSON and multipart/form-data requests;
-- local file uploads, Telegram file IDs and `attach://` references;
+- local, in-memory and stream-backed uploads, Telegram file IDs and `attach://` references;
 - sequential or parallel long polling and an ASP.NET Core webhook example;
 - contract, transport and live Telegram integration tests;
 - BenchmarkDotNet suites and million-request stress profiles.
@@ -88,6 +88,35 @@ var fileBytes = await api.GetFileBytesAsync(file.FilePath!);
 
 await File.WriteAllBytesAsync("downloaded-report.pdf", fileBytes);
 ```
+
+## Uploading files
+
+Typed input files accept a local path or a repeatable `InputFileSource`. Use an
+in-memory source when the content is already available without touching the
+filesystem:
+
+```cs
+var document = new InputDocumentFile(
+    InputFileSource.FromMemory(reportBytes, "report.pdf"));
+
+await api.SendDocumentAsync(chatId, document);
+```
+
+For databases, object storage, generated content and other stream-backed data,
+provide a factory that returns a new readable stream for each request attempt.
+In this example, `objectStorage` represents an application-owned storage client,
+such as an Amazon S3, Azure Blob Storage or MinIO client:
+
+```cs
+var photo = new InputPhotoFile(
+    InputFileSource.FromStream(
+        () => objectStorage.OpenRead("photos/current.jpg"),
+        "current.jpg"));
+```
+
+The library owns and disposes every stream returned by the factory. The factory
+can be called again when Telegram asks the client to retry a rate-limited request;
+do not return the same open stream instance from multiple calls.
 
 ## Development
 

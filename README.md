@@ -126,9 +126,15 @@ var photo = new InputPhotoFile(
         "current.jpg"));
 ```
 
-The library owns and disposes every stream returned by the factory. The factory
-can be called again when Telegram asks the client to retry a rate-limited request;
-do not return the same open stream instance from multiple calls.
+During an API request, the library owns and disposes every stream returned by the
+factory. The factory may be called repeatedly for retries or repeated requests, and
+concurrently when the same source is used by parallel requests. Every call must
+return an independent readable stream. The library reads from its current position
+without seeking or rewinding, then disposes it. Do not return the same stream instance
+from multiple calls. Streams opened while retrying the same request must expose
+equivalent upload content. An exception thrown by the factory propagates to the
+caller and stops that request, including an automatic retry. Code that calls
+`InputFile.GetStream()` directly owns and must dispose the returned stream itself.
 
 ## Development
 

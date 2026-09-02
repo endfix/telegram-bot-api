@@ -68,6 +68,44 @@ public sealed class TransportSerializationTests
     }
 
     [Fact]
+    public async Task SendPhoto_WithNonSeekableStream_SendsBinaryPart()
+    {
+        var source = InputFileSource.FromStream(
+            () => new NonSeekableMemoryStream([0x31, 0x32, 0x33]),
+            "stream-photo.jpg");
+        using var context = new ClientContext();
+
+        await context.Client.RequestAsync<bool>(new ApiRequest("sendPhoto", new SendPhotoParameters
+        {
+            ChatId = 123456789L,
+            Photo = new InputPhotoFile(source)
+        }));
+
+        var photo = context.Handler.LastRequest!.Parts
+            .Should().ContainSingle(part => part.Name == "photo").Which;
+        photo.Content.Should().Equal(0x31, 0x32, 0x33);
+    }
+
+    [Fact]
+    public async Task SendPhoto_WithPositionedStream_SendsFromCurrentPosition()
+    {
+        var source = InputFileSource.FromStream(
+            () => new MemoryStream([0x41, 0x42, 0x43, 0x44], index: 2, count: 2),
+            "stream-photo.jpg");
+        using var context = new ClientContext();
+
+        await context.Client.RequestAsync<bool>(new ApiRequest("sendPhoto", new SendPhotoParameters
+        {
+            ChatId = 123456789L,
+            Photo = new InputPhotoFile(source)
+        }));
+
+        var photo = context.Handler.LastRequest!.Parts
+            .Should().ContainSingle(part => part.Name == "photo").Which;
+        photo.Content.Should().Equal(0x43, 0x44);
+    }
+
+    [Fact]
     public async Task SendMediaGroup_WithStreamFactory_ReopensAndDisposesStreamForRetry()
     {
         var streamsCreated = 0;
@@ -102,6 +140,71 @@ public sealed class TransportSerializationTests
             .And.OnlyContain(content => content.SequenceEqual(new byte[] { 0x41, 0x42, 0x43 }));
         streamsCreated.Should().Be(2);
         streamsDisposed.Should().Be(2);
+    }
+
+    [Fact]
+    public async Task SendMediaGroup_WhenRetryStreamFactoryThrows_StopsAndPropagates()
+    {
+        var factoryCalls = 0;
+        var streamsDisposed = 0;
+        var source = InputFileSource.FromStream(
+            () => ++factoryCalls == 1
+                ? new TrackingMemoryStream(
+                    [0x41, 0x42, 0x43],
+                    () => streamsDisposed++)
+                : throw new FileNotFoundException("The retry source is unavailable."),
+            "factory-photo.jpg");
+        using var handler = new RetryRecordingHandler();
+        using var httpClient = new HttpClient(handler);
+        using var client = new BotApiClient("test-token", httpClient, maxRetryAttempts: 1);
+
+        var action = () => client.RequestAsync<bool>(new ApiRequest(
+            "sendMediaGroup",
+            new SendMediaGroupParameters
+            {
+                ChatId = 123456789L,
+                Media =
+                [
+                    new InputMediaPhoto
+                    {
+                        Media = new InputPhotoFile(source)
+                    }
+                ]
+            }));
+
+        await action.Should().ThrowExactlyAsync<FileNotFoundException>()
+            .WithMessage("The retry source is unavailable.");
+        factoryCalls.Should().Be(2);
+        streamsDisposed.Should().Be(1);
+        handler.Attachments.Should().ContainSingle();
+    }
+
+    [Fact]
+    public void InputFile_WithNullStreamFactoryResult_ThrowsClearException()
+    {
+        var file = new InputPhotoFile(InputFileSource.FromStream(
+            () => null!,
+            "photo.jpg"));
+
+        var action = () => file.GetStream();
+
+        action.Should().Throw<InvalidOperationException>()
+            .WithMessage("The input file stream factory returned null.");
+    }
+
+    [Fact]
+    public void InputFile_WithUnreadableStream_DisposesItAndThrowsClearException()
+    {
+        var disposeCount = 0;
+        var file = new InputPhotoFile(InputFileSource.FromStream(
+            () => new UnreadableStream(() => disposeCount++),
+            "photo.jpg"));
+
+        var action = () => file.GetStream();
+
+        action.Should().Throw<InvalidOperationException>()
+            .WithMessage("The input file stream factory returned an unreadable stream.");
+        disposeCount.Should().Be(1);
     }
 
     [Fact]
@@ -729,6 +832,57 @@ public sealed class TransportSerializationTests
         : MemoryStream(content, writable: false)
     {
         private bool _disposed;
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            if (disposing && !_disposed)
+            {
+                _disposed = true;
+                onDispose();
+            }
+        }
+    }
+
+    private sealed class NonSeekableMemoryStream(byte[] content)
+        : MemoryStream(content, writable: false)
+    {
+        public override bool CanSeek => false;
+
+        public override long Seek(long offset, SeekOrigin loc) =>
+            throw new NotSupportedException();
+    }
+
+    private sealed class UnreadableStream(Action onDispose) : Stream
+    {
+        private bool _disposed;
+
+        public override bool CanRead => false;
+
+        public override bool CanSeek => false;
+
+        public override bool CanWrite => false;
+
+        public override long Length => throw new NotSupportedException();
+
+        public override long Position
+        {
+            get => throw new NotSupportedException();
+            set => throw new NotSupportedException();
+        }
+
+        public override void Flush() => throw new NotSupportedException();
+
+        public override int Read(byte[] buffer, int offset, int count) =>
+            throw new NotSupportedException();
+
+        public override long Seek(long offset, SeekOrigin origin) =>
+            throw new NotSupportedException();
+
+        public override void SetLength(long value) => throw new NotSupportedException();
+
+        public override void Write(byte[] buffer, int offset, int count) =>
+            throw new NotSupportedException();
 
         protected override void Dispose(bool disposing)
         {

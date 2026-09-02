@@ -25,7 +25,10 @@ public abstract class InputFile
     public string FileName => _source.FileName;
 
     /// <summary>
-    /// Opens a new readable stream. The caller owns the returned stream.
+    /// Opens a new, independent readable stream. Reading begins at the stream's
+    /// current position; the library does not seek or rewind it. The caller owns
+    /// and must dispose the returned stream. Each call remains valid independently
+    /// of streams returned by earlier or concurrent calls.
     /// </summary>
     public Stream GetStream() => _source.OpenRead();
 }

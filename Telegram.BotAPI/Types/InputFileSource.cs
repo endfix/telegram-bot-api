@@ -48,7 +48,11 @@ public abstract class InputFileSource
 
     /// <summary>
     /// Creates a source that obtains a new readable stream for every request attempt.
-    /// The library disposes each stream returned by the factory.
+    /// The factory may be invoked repeatedly or concurrently and must return an
+    /// independent readable stream on every call. The consumer reads from the current
+    /// position without seeking or rewinding and owns the returned stream.
+    /// Calls made while retrying the same request must expose equivalent content.
+    /// Exceptions thrown by the factory propagate to the caller and stop the request.
     /// </summary>
     public static InputFileSource FromStream(Func<Stream> streamFactory, string fileName)
     {

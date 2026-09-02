@@ -91,9 +91,17 @@ await File.WriteAllBytesAsync("downloaded-report.pdf", fileBytes);
 
 ## Uploading files
 
-Typed input files accept a local path or a repeatable `InputFileSource`. Use an
-in-memory source when the content is already available without touching the
-filesystem:
+Typed input files accept a local path or a repeatable `InputFileSource`. Local
+files can use the explicit path source:
+
+```cs
+var document = new InputDocumentFile(
+    InputFileSource.FromPath("report.pdf"));
+```
+
+Passing the path directly as `new InputDocumentFile("report.pdf")` remains a
+short equivalent. Use an in-memory source when the content is already available
+without touching the filesystem:
 
 ```cs
 var document = new InputDocumentFile(

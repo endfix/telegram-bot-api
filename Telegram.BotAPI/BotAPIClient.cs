@@ -55,7 +55,7 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
     /// <param name="httpClient">
     /// The HTTP client used for API requests. The caller retains ownership of a supplied instance.
     /// </param>
-    /// <param name="url">An optional Bot API base URL.</param>
+    /// <param name="url">An optional Bot API base URL. Any path prefix is preserved.</param>
     /// <param name="maxRetryAttempts">The maximum number of automatic retries for Telegram rate-limit responses.</param>
     /// <param name="logger">An optional client logger.</param>
     public BotApiClient(
@@ -77,7 +77,8 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
         _ownsHttpClient = httpClient is null;
         _httpClient = httpClient ?? new HttpClient();
 
-        _baseAddress = explicitBaseAddress ?? _httpClient.BaseAddress ?? _defaultBaseAddress;
+        _baseAddress = EnsureTrailingSlash(
+            explicitBaseAddress ?? _httpClient.BaseAddress ?? _defaultBaseAddress);
 
         _maxRetryAttempts = maxRetryAttempts;
 
@@ -94,6 +95,21 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
         {
             _httpClient.Dispose();
         }
+    }
+
+    private static Uri EnsureTrailingSlash(Uri baseAddress)
+    {
+        if (baseAddress.AbsolutePath.EndsWith("/", StringComparison.Ordinal))
+        {
+            return baseAddress;
+        }
+
+        var builder = new UriBuilder(baseAddress)
+        {
+            Path = baseAddress.AbsolutePath + "/"
+        };
+
+        return builder.Uri;
     }
     
     /// <summary>
@@ -187,7 +203,7 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
         }
 
         using var response = await _httpClient
-            .GetAsync(new Uri(_baseAddress, $"/file/bot{_token}/{filePath}"), cancellation)
+            .GetAsync(new Uri(_baseAddress, $"./file/bot{_token}/{filePath}"), cancellation)
             .ConfigureAwait(false);
 
         response.EnsureSuccessStatusCode();
@@ -196,7 +212,7 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
 
     private async Task<HttpResponseMessage> GetResponse(ApiRequest request, CancellationToken cancellation)
     {
-        var requestUri = new Uri(_baseAddress, $"/bot{_token}/{request.MethodName}");
+        var requestUri = new Uri(_baseAddress, $"./bot{_token}/{request.MethodName}");
         var parameters = request.Parameters;
         
 

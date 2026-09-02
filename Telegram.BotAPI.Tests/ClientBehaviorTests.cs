@@ -330,6 +330,25 @@ public sealed class ClientBehaviorTests
     }
 
     [Fact]
+    public async Task GetFileBytesAsync_PreservesConfiguredPathPrefix()
+    {
+        using var context = new ClientContext(
+            url: "https://custom.example/telegram",
+            responses:
+            [
+                new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new ByteArrayContent([1, 2, 3, 4])
+                }
+            ]);
+
+        await context.Client.GetFileBytesAsync("documents/file.bin");
+
+        context.Handler.LastRequestUri.Should().Be(
+            "https://custom.example/telegram/file/bottest-token/documents/file.bin");
+    }
+
+    [Fact]
     public async Task GetFileBytesAsync_RejectsHttpErrorBody()
     {
         using var context = new ClientContext(responses:
@@ -418,6 +437,43 @@ public sealed class ClientBehaviorTests
         await context.Client.RequestAsync<User>(new ApiRequest("getMe", parameters: null));
 
         context.Handler.LastRequestUri.Should().Be("https://custom.example/bottest-token/getMe");
+    }
+
+    [Theory]
+    [InlineData("https://custom.example/telegram")]
+    [InlineData("https://custom.example/telegram/")]
+    public async Task Constructor_PreservesPathPrefixFromExplicitUrl(string url)
+    {
+        using var context = new ClientContext(url: url);
+
+        await context.Client.RequestAsync<User>(new ApiRequest("getMe", parameters: null));
+
+        context.Handler.LastRequestUri.Should().Be(
+            "https://custom.example/telegram/bottest-token/getMe");
+    }
+
+    [Fact]
+    public async Task Constructor_PreservesPathPrefixFromHttpClientBaseAddress()
+    {
+        using var context = new ClientContext(baseAddress: "https://custom.example/telegram");
+
+        await context.Client.RequestAsync<User>(new ApiRequest("getMe", parameters: null));
+
+        context.Handler.LastRequestUri.Should().Be(
+            "https://custom.example/telegram/bottest-token/getMe");
+    }
+
+    [Fact]
+    public async Task Constructor_BuildsRelativeRouteForTelegramToken()
+    {
+        using var context = new ClientContext(
+            url: "https://custom.example/telegram",
+            token: "123456:test-token");
+
+        await context.Client.RequestAsync<User>(new ApiRequest("getMe", parameters: null));
+
+        context.Handler.LastRequestUri.Should().Be(
+            "https://custom.example/telegram/bot123456:test-token/getMe");
     }
 
     [Fact]
@@ -519,7 +575,8 @@ public sealed class ClientBehaviorTests
             int maxRetryAttempts = 6,
             string? baseAddress = null,
             string? url = null,
-            IReadOnlyList<object>? responses = null)
+            IReadOnlyList<object>? responses = null,
+            string token = "test-token")
         {
             Handler = new ResponseHandler(responseJson, responses);
             _httpClient = new HttpClient(Handler);
@@ -528,7 +585,7 @@ public sealed class ClientBehaviorTests
                 _httpClient.BaseAddress = new Uri(baseAddress);
             }
 
-            Client = new BotApiClient("test-token", _httpClient, url, maxRetryAttempts);
+            Client = new BotApiClient(token, _httpClient, url, maxRetryAttempts);
         }
 
         public ResponseHandler Handler { get; }

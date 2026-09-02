@@ -46,6 +46,10 @@ var message = await api.SendMessageAsync(
 
 `BotApiClient` disposes the `HttpClient` it creates when none is supplied. A supplied `HttpClient` remains owned by the caller and should normally be reused for the application's lifetime.
 
+Custom Bot API base URLs may include a path prefix. For example, passing
+`https://example.com/telegram/` as `url` sends API requests below that path;
+the trailing slash is optional.
+
 ## Examples
 
 - [**Long polling**: sequential (FIFO) or parallel update processing.](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/LongPolling)

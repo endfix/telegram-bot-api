@@ -181,12 +181,21 @@ public static partial class BotApiClientExtensions
             ErrorMessage = errorMessage
         }, cancellationToken);
 
+    /// <summary>Gets the bot's current Telegram Stars balance.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">The request has no parameters in the current Bot API version.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The bot's current Telegram Stars balance.</returns>
     public static async Task<StarAmount> GetMyStarBalanceAsync(
         this IBotApiClient client, 
         GetMyStarBalanceParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<StarAmount>(new ApiRequest("getMyStarBalance", parameters), cancellationToken);
 
+    /// <summary>Gets the bot's current Telegram Stars balance.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The bot's current Telegram Stars balance.</returns>
     public static async Task<StarAmount> GetMyStarBalanceAsync(
         this IBotApiClient client, 
         CancellationToken cancellationToken = default)
@@ -195,12 +204,23 @@ public static partial class BotApiClientExtensions
             // No parameters required for this method
         }, cancellationToken);
 
+    /// <summary>Gets the bot's Telegram Stars transactions in chronological order.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Pagination options.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The bot's Telegram Stars transactions.</returns>
     public static async Task<StarTransactions> GetStarTransactionsAsync(
         this IBotApiClient client, 
         GetStarTransactionsParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<StarTransactions>(new ApiRequest("getStarTransactions", parameters), cancellationToken);
 
+    /// <summary>Gets the bot's Telegram Stars transactions in chronological order.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="offset">Number of transactions to skip.</param>
+    /// <param name="limit">Maximum number of transactions to retrieve, from 1 to 100. The default is 100.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The bot's Telegram Stars transactions.</returns>
     public static async Task<StarTransactions> GetStarTransactionsAsync(
         this IBotApiClient client,
         int? offset = null,
@@ -212,12 +232,23 @@ public static partial class BotApiClientExtensions
             Limit = limit
         }, cancellationToken);
 
+    /// <summary>Refunds a successful payment made with Telegram Stars.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">User and Telegram payment identifiers.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> RefundStarPaymentAsync(
         this IBotApiClient client, 
         RefundStarPaymentParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("refundStarPayment", parameters), cancellationToken);
 
+    /// <summary>Refunds a successful payment made with Telegram Stars.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="userId">Identifier of the user whose payment is refunded.</param>
+    /// <param name="telegramPaymentChargeId">Telegram payment identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> RefundStarPaymentAsync(
         this IBotApiClient client,
         long userId,
@@ -229,12 +260,24 @@ public static partial class BotApiClientExtensions
             TelegramPaymentChargeId = telegramPaymentChargeId
         }, cancellationToken);
 
+    /// <summary>Changes whether a Telegram Stars subscription will be extended.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">User, payment and cancellation state.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> EditUserStarSubscriptionAsync(
         this IBotApiClient client, 
         EditUserStarSubscriptionParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("editUserStarSubscription", parameters), cancellationToken);
 
+    /// <summary>Changes whether a Telegram Stars subscription will be extended.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="userId">Identifier of the user whose subscription is edited.</param>
+    /// <param name="telegramPaymentChargeId">Telegram payment identifier for the subscription.</param>
+    /// <param name="isCanceled">Whether to cancel extension. Set to <see langword="false"/> to re-enable a subscription previously canceled by the bot.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> EditUserStarSubscriptionAsync(
         this IBotApiClient client,
         long userId,

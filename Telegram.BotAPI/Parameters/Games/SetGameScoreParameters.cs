@@ -2,6 +2,9 @@ using Endfix.Telegram.BotAPI.Protocol;
 
 namespace Endfix.Telegram.BotAPI.Parameters;
 
+/// <summary>
+/// Parameters for the <c>setGameScore</c> method.
+/// </summary>
 public sealed class SetGameScoreParameters : ApiRequestParameters
 {
     public required long UserId { get; init; }

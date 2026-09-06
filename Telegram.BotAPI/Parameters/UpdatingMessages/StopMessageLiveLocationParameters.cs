@@ -3,6 +3,9 @@ using Endfix.Telegram.BotAPI.Types;
 
 namespace Endfix.Telegram.BotAPI.Parameters;
 
+/// <summary>
+/// Parameters for the <c>stopMessageLiveLocation</c> method.
+/// </summary>
 public sealed class StopMessageLiveLocationParameters : ApiRequestParameters
 {
     public string? BusinessConnectionId { get; init; }

@@ -4,6 +4,9 @@ using Endfix.Telegram.BotAPI.Types;
 
 namespace Endfix.Telegram.BotAPI.Parameters;
 
+/// <summary>
+/// Parameters for the <c>sendPhoto</c> method.
+/// </summary>
 public sealed class SendPhotoParameters : ApiRequestParameters
 {
     public string? BusinessConnectionId { get; init; }

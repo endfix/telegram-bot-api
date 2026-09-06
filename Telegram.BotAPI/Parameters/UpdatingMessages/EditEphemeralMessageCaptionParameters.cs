@@ -4,6 +4,9 @@ using Endfix.Telegram.BotAPI.Types;
 
 namespace Endfix.Telegram.BotAPI.Parameters;
 
+/// <summary>
+/// Parameters for the <c>editEphemeralMessageCaption</c> method.
+/// </summary>
 public sealed class EditEphemeralMessageCaptionParameters : ApiRequestParameters
 {
     public required ChatIdSource ChatId { get; init; }

@@ -3,6 +3,9 @@ using Endfix.Telegram.BotAPI.Types;
 
 namespace Endfix.Telegram.BotAPI.Parameters;
 
+/// <summary>
+/// Parameters for the <c>editMessageReplyMarkup</c> method.
+/// </summary>
 public sealed class EditMessageReplyMarkupParameters : ApiRequestParameters
 {
     public string? BusinessConnectionId { get; init; }

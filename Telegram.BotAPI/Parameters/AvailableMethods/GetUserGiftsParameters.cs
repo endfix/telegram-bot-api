@@ -2,6 +2,9 @@ using Endfix.Telegram.BotAPI.Protocol;
 
 namespace Endfix.Telegram.BotAPI.Parameters;
 
+/// <summary>
+/// Parameters for the <c>getUserGifts</c> method.
+/// </summary>
 public sealed class GetUserGiftsParameters : ApiRequestParameters
 {
     public required long UserId { get; init; }

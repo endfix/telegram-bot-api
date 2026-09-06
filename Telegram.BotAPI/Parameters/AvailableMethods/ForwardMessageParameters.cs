@@ -3,6 +3,9 @@ using Endfix.Telegram.BotAPI.Types;
 
 namespace Endfix.Telegram.BotAPI.Parameters;
 
+/// <summary>
+/// Parameters for the <c>forwardMessage</c> method.
+/// </summary>
 public sealed class ForwardMessageParameters : ApiRequestParameters
 {
     public required ChatIdSource ChatId { get; init; }

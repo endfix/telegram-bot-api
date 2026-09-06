@@ -4,6 +4,9 @@ using Endfix.Telegram.BotAPI.Types;
 
 namespace Endfix.Telegram.BotAPI.Parameters;
 
+/// <summary>
+/// Parameters for the <c>setPassportDataErrors</c> method.
+/// </summary>
 public sealed class SetPassportDataErrorsParameters : ApiRequestParameters
 {
     public required long UserId { get; init; }

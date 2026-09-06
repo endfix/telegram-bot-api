@@ -3,6 +3,9 @@ using Endfix.Telegram.BotAPI.Types;
 
 namespace Endfix.Telegram.BotAPI.Parameters;
 
+/// <summary>
+/// Parameters for the <c>deleteForumTopic</c> method.
+/// </summary>
 public sealed class DeleteForumTopicParameters : ApiRequestParameters
 {
     public required ChatIdSource ChatId { get; init; }

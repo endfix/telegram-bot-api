@@ -2,6 +2,9 @@ using Endfix.Telegram.BotAPI.Protocol;
 
 namespace Endfix.Telegram.BotAPI.Parameters;
 
+/// <summary>
+/// Parameters for the <c>answerPreCheckoutQuery</c> method.
+/// </summary>
 public sealed class AnswerPreCheckoutQueryParameters : ApiRequestParameters
 {
     public required string PreCheckoutQueryId { get; init; }

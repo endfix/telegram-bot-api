@@ -2,6 +2,9 @@ using Endfix.Telegram.BotAPI.Protocol;
 
 namespace Endfix.Telegram.BotAPI.Parameters;
 
+/// <summary>
+/// Parameters for the <c>transferBusinessAccountStars</c> method.
+/// </summary>
 public sealed class TransferBusinessAccountStarsParameters : ApiRequestParameters
 {
     public required string BusinessConnectionId { get; init; }

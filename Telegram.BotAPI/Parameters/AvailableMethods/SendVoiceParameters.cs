@@ -4,6 +4,9 @@ using Endfix.Telegram.BotAPI.Types;
 
 namespace Endfix.Telegram.BotAPI.Parameters;
 
+/// <summary>
+/// Parameters for the <c>sendVoice</c> method.
+/// </summary>
 public sealed class SendVoiceParameters : ApiRequestParameters
 {
     public string? BusinessConnectionId { get; init; }

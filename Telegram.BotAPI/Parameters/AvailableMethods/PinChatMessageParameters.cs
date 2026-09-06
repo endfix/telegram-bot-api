@@ -3,6 +3,9 @@ using Endfix.Telegram.BotAPI.Types;
 
 namespace Endfix.Telegram.BotAPI.Parameters;
 
+/// <summary>
+/// Parameters for the <c>pinChatMessage</c> method.
+/// </summary>
 public sealed class PinChatMessageParameters : ApiRequestParameters
 {
     public string? BusinessConnectionId { get; init; }

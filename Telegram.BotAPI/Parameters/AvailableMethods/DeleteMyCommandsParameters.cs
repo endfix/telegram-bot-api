@@ -3,6 +3,9 @@ using Endfix.Telegram.BotAPI.Types;
 
 namespace Endfix.Telegram.BotAPI.Parameters;
 
+/// <summary>
+/// Parameters for the <c>deleteMyCommands</c> method.
+/// </summary>
 public sealed class DeleteMyCommandsParameters : ApiRequestParameters
 {
     public BotCommandScope? Scope { get; init; }

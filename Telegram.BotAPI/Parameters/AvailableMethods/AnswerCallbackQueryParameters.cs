@@ -2,6 +2,9 @@ using Endfix.Telegram.BotAPI.Protocol;
 
 namespace Endfix.Telegram.BotAPI.Parameters;
 
+/// <summary>
+/// Parameters for the <c>answerCallbackQuery</c> method.
+/// </summary>
 public sealed class AnswerCallbackQueryParameters : ApiRequestParameters
 {
     public required string CallbackQueryId { get; init; }

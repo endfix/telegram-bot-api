@@ -5,6 +5,9 @@ using Endfix.Telegram.BotAPI.Types;
 
 namespace Endfix.Telegram.BotAPI.Parameters;
 
+/// <summary>
+/// Parameters for the <c>setWebhook</c> method.
+/// </summary>
 public class SetWebhookParameters : ApiRequestParameters
 {
     public required string Url { get; init; }

@@ -4,6 +4,9 @@ using Endfix.Telegram.BotAPI.Types;
 
 namespace Endfix.Telegram.BotAPI.Parameters;
 
+/// <summary>
+/// Parameters for the <c>answerInlineQuery</c> method.
+/// </summary>
 public sealed class AnswerInlineQueryParameters : ApiRequestParameters
 {
     public required string InlineQueryId { get; init; }

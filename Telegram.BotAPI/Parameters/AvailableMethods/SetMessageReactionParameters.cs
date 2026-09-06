@@ -4,6 +4,9 @@ using Endfix.Telegram.BotAPI.Types;
 
 namespace Endfix.Telegram.BotAPI.Parameters;
 
+/// <summary>
+/// Parameters for the <c>setMessageReaction</c> method.
+/// </summary>
 public sealed class SetMessageReactionParameters : ApiRequestParameters
 {
     public required ChatIdSource ChatId { get; init; }

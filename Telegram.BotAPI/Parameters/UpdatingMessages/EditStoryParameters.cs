@@ -4,6 +4,9 @@ using Endfix.Telegram.BotAPI.Types;
 
 namespace Endfix.Telegram.BotAPI.Parameters;
 
+/// <summary>
+/// Parameters for the <c>editStory</c> method.
+/// </summary>
 public sealed class EditStoryParameters : ApiRequestParameters
 {
     public required string BusinessConnectionId { get; init; }

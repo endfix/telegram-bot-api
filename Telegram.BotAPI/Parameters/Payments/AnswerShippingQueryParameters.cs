@@ -4,6 +4,9 @@ using Endfix.Telegram.BotAPI.Types;
 
 namespace Endfix.Telegram.BotAPI.Parameters;
 
+/// <summary>
+/// Parameters for the <c>answerShippingQuery</c> method.
+/// </summary>
 public sealed class AnswerShippingQueryParameters : ApiRequestParameters
 {
     public required string ShippingQueryId { get; init; }

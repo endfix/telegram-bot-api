@@ -3,6 +3,9 @@ using Endfix.Telegram.BotAPI.Types;
 
 namespace Endfix.Telegram.BotAPI.Parameters;
 
+/// <summary>
+/// Parameters for the <c>sendDice</c> method.
+/// </summary>
 public sealed class SendDiceParameters : ApiRequestParameters
 {
     public string? BusinessConnectionId { get; init; }

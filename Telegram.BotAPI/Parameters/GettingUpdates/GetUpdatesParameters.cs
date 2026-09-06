@@ -4,6 +4,9 @@ using Endfix.Telegram.BotAPI.Protocol;
 
 namespace Endfix.Telegram.BotAPI.Parameters;
 
+/// <summary>
+/// Parameters for the <c>getUpdates</c> method.
+/// </summary>
 public sealed class GetUpdatesParameters : ApiRequestParameters
 {
     public long? Offset { get; init; }

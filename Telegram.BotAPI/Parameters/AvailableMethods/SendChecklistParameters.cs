@@ -3,6 +3,9 @@ using Endfix.Telegram.BotAPI.Types;
 
 namespace Endfix.Telegram.BotAPI.Parameters;
 
+/// <summary>
+/// Parameters for the <c>sendChecklist</c> method.
+/// </summary>
 public sealed class SendChecklistParameters : ApiRequestParameters
 {
     public required string BusinessConnectionId { get; init; }

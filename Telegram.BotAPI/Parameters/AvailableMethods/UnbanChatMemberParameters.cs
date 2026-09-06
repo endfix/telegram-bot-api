@@ -3,6 +3,9 @@ using Endfix.Telegram.BotAPI.Types;
 
 namespace Endfix.Telegram.BotAPI.Parameters;
 
+/// <summary>
+/// Parameters for the <c>unbanChatMember</c> method.
+/// </summary>
 public sealed class UnbanChatMemberParameters : ApiRequestParameters
 {
     public required ChatIdSource ChatId { get; init; }

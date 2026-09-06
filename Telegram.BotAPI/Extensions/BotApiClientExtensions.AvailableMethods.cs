@@ -357,12 +357,39 @@ public static partial class BotApiClientExtensions
             RemoveCaption = removeCaption
         }, cancellationToken);
 
+    /// <summary>Sends a photo.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Target chat, photo and optional caption.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendPhotoAsync(
         this IBotApiClient client,
         SendPhotoParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("sendPhoto", parameters), cancellationToken);
 
+    /// <summary>Sends a photo.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat.</param>
+    /// <param name="photo">Photo to send.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
+    /// <param name="messageThreadId">Target message thread.</param>
+    /// <param name="directMessagesTopicId">Topic identifier in a direct messages chat.</param>
+    /// <param name="ephemeralMessageParameters">Options for an ephemeral message.</param>
+    /// <param name="caption">Photo caption.</param>
+    /// <param name="parseMode">Mode for parsing entities in the caption.</param>
+    /// <param name="CaptionEntities">Explicit entities in the caption.</param>
+    /// <param name="showCaptionAboveMedia">Whether to show the caption above the photo.</param>
+    /// <param name="hasSpoiler">Whether to cover the photo with a spoiler animation.</param>
+    /// <param name="disableNotification">Sends the message silently when <see langword="true"/>.</param>
+    /// <param name="protectContent">Protects the message from forwarding and saving when <see langword="true"/>.</param>
+    /// <param name="allowPaidBroadcast">Allows paid broadcasts using Telegram Stars.</param>
+    /// <param name="messageEffectId">Unique identifier of a message effect.</param>
+    /// <param name="suggestedPostParameters">Parameters for a suggested post.</param>
+    /// <param name="replyParameters">Description of the message to reply to.</param>
+    /// <param name="replyMarkup">Inline or reply keyboard attached to the message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendPhotoAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -406,12 +433,39 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Sends a live photo.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Live photo, still photo and optional caption.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendLivePhotoAsync(
         this IBotApiClient client, 
         SendLivePhotoParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("sendLivePhoto", parameters), cancellationToken);
 
+    /// <summary>Sends a live photo.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat.</param>
+    /// <param name="livePhoto">Live photo media.</param>
+    /// <param name="photo">Still photo media.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
+    /// <param name="messageThreadId">Target message thread.</param>
+    /// <param name="directMessagesTopicId">Topic identifier in a direct messages chat.</param>
+    /// <param name="caption">Photo caption.</param>
+    /// <param name="parseMode">Mode for parsing entities in the caption.</param>
+    /// <param name="captionEntities">Explicit entities in the caption.</param>
+    /// <param name="showCaptionAboveMedia">Whether to show the caption above the media.</param>
+    /// <param name="hasSpoiler">Whether to cover the photo with a spoiler animation.</param>
+    /// <param name="disableNotification">Sends the message silently when <see langword="true"/>.</param>
+    /// <param name="protectContent">Protects the message from forwarding and saving when <see langword="true"/>.</param>
+    /// <param name="allowPaidBroadcast">Allows paid broadcasts using Telegram Stars.</param>
+    /// <param name="messageEffectId">Unique identifier of a message effect.</param>
+    /// <param name="suggestedPostParameters">Parameters for a suggested post.</param>
+    /// <param name="replyParameters">Description of the message to reply to.</param>
+    /// <param name="replyMarkup">Inline or reply keyboard attached to the message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendLivePhotoAsync(
         this IBotApiClient client,    
         ChatIdSource chatId,
@@ -455,12 +509,41 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Sends an audio file.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Audio file and optional metadata.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendAudioAsync(
         this IBotApiClient client, 
         SendAudioParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("sendAudio", parameters), cancellationToken);
 
+    /// <summary>Sends an audio file.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat.</param>
+    /// <param name="audio">Audio file to send.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
+    /// <param name="messageThreadId">Target message thread.</param>
+    /// <param name="directMessagesTopicId">Topic identifier in a direct messages chat.</param>
+    /// <param name="ephemeralMessageParameters">Options for an ephemeral message.</param>
+    /// <param name="caption">Audio caption.</param>
+    /// <param name="parseMode">Mode for parsing entities in the caption.</param>
+    /// <param name="captionEntities">Explicit entities in the caption.</param>
+    /// <param name="duration">Audio duration in seconds.</param>
+    /// <param name="performer">Performer name.</param>
+    /// <param name="title">Audio title.</param>
+    /// <param name="thumbnail">Audio thumbnail.</param>
+    /// <param name="disableNotification">Sends the message silently when <see langword="true"/>.</param>
+    /// <param name="protectContent">Protects the message from forwarding and saving when <see langword="true"/>.</param>
+    /// <param name="allowPaidBroadcast">Allows paid broadcasts using Telegram Stars.</param>
+    /// <param name="messageEffectId">Unique identifier of a message effect.</param>
+    /// <param name="suggestedPostParameters">Parameters for a suggested post.</param>
+    /// <param name="replyParameters">Description of the message to reply to.</param>
+    /// <param name="replyMarkup">Inline or reply keyboard attached to the message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendAudioAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -508,12 +591,39 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Sends a general file.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Document and optional metadata.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendDocumentAsync(
         this IBotApiClient client, 
         SendDocumentParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("sendDocument", parameters), cancellationToken);
 
+    /// <summary>Sends a general file.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat.</param>
+    /// <param name="document">Document to send.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
+    /// <param name="messageThreadId">Target message thread.</param>
+    /// <param name="directMessagesTopicId">Topic identifier in a direct messages chat.</param>
+    /// <param name="ephemeralMessageParameters">Options for an ephemeral message.</param>
+    /// <param name="thumbnail">Document thumbnail.</param>
+    /// <param name="caption">Document caption.</param>
+    /// <param name="parseMode">Mode for parsing entities in the caption.</param>
+    /// <param name="captionEntities">Explicit entities in the caption.</param>
+    /// <param name="disableContentTypeDetection">Disables automatic content type detection.</param>
+    /// <param name="disableNotification">Sends the message silently when <see langword="true"/>.</param>
+    /// <param name="protectContent">Protects the message from forwarding and saving when <see langword="true"/>.</param>
+    /// <param name="allowPaidBroadcast">Allows paid broadcasts using Telegram Stars.</param>
+    /// <param name="messageEffectId">Unique identifier of a message effect.</param>
+    /// <param name="suggestedPostParameters">Parameters for a suggested post.</param>
+    /// <param name="replyParameters">Description of the message to reply to.</param>
+    /// <param name="replyMarkup">Inline or reply keyboard attached to the message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendDocumentAsync(
         this IBotApiClient client,
         ChatIdSource chatId,

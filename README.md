@@ -172,6 +172,40 @@ dotnet run --project Telegram.BotAPI.Benchmarks/Telegram.BotAPI.Benchmarks.cspro
 
 The project follows the Telegram Bot API release it targets. While the package remains below `1.0`, public contracts may still change to correct modeling issues or complete the file-source API. After `1.0`, incompatible public API changes will require a major version.
 
+## Runtime compatibility
+
+The library targets `netstandard2.0`. This is a library target, not a
+requirement to install a particular .NET SDK in the consuming application.
+Modern .NET runtimes implement .NET Standard 2.0 directly; older runtimes use
+the compatible NuGet assets supplied by the package dependencies.
+
+| Consumer target | Status | Guidance |
+| --- | --- | --- |
+| `.NET 10`, `.NET 9`, `.NET 8` | Supported | Recommended targets for new applications. |
+| `.NET 7`, `.NET 6` | Compatible via `netstandard2.0` | NuGet selects the `netstandard2.0` assets. The library can be consumed normally; use these targets where the application is intentionally pinned to that runtime. |
+| `.NET 5`, `.NET Core 3.1` | Compatible, legacy | Should be treated as migration targets because these runtimes are out of support. |
+| `.NET Core 2.0` through `2.2` | Compatible in principle | NuGet compatibility is possible through `netstandard2.0`, but this is not a current CI target. |
+| `.NET Framework 4.7.2` through `4.8.1` | Compatible | Practical choice for maintained classic Windows applications. |
+| `.NET Framework 4.6.2` through `4.7.1` | Package-dependent | May resolve the package graph, but is not a recommended baseline for new builds. |
+| `.NET Framework 4.6.1` | Not a recommended baseline | Although .NET Standard compatibility tables list it, Microsoft documents compatibility issues for consuming higher .NET Standard libraries from this framework version. |
+
+The compatibility column describes framework and NuGet asset compatibility;
+it is not a claim that every listed runtime is actively tested by this
+repository. The test and example projects currently exercise modern .NET
+targets, while the published library remains `netstandard2.0` to support
+older consumers. The `System.Text.Json` dependency also provides a
+`netstandard2.0` asset and a `.NET Framework 4.6.2` asset, so dependency
+resolution still matters for classic Framework applications.
+
+NuGet does not need a dedicated `net6.0` or `net7.0` asset for this package.
+Applications targeting those frameworks fall back to the compatible
+`netstandard2.0` asset; its absence from a package manager's specialized asset
+list does not mean that .NET 6 or .NET 7 consumers are unsupported.
+
+This library does not require Native AOT, a particular CPU architecture, or a
+specific operating system. The consuming runtime must still support the
+selected .NET target and the package dependency graph.
+
 ## Releases
 
 Push the intended release commit to `main` and wait for CI to pass before creating a `vX.Y.Z` tag. Pushing the tag starts the publish workflow, which independently restores, builds, tests, packs with the version derived from the tag, and publishes the package to NuGet.

@@ -58,3 +58,22 @@ The same scenarios are available as Visual Studio launch profiles:
 - `Benchmarks / quick` runs a short serialization smoke test.
 
 The benchmark project targets .NET 9. Results are written to `results` in this project directory and should be compared on the same machine and runtime configuration.
+
+## ARM stress run
+
+For a repeatable local-runtime check on a Linux ARM device, run the repository
+script from the project root:
+
+```bash
+bash scripts/run-arm-stress.sh
+```
+
+The script records the host and .NET runtime information, builds the solution,
+runs the non-integration tests, and executes the one-million-call stress test
+with 1, 2, 4 and 10 workers. The complete output is stored under
+`artifacts/arm-stress/<timestamp>/run.log`.
+
+These results compare runtime behavior, retained memory and GC activity on the
+ARM device. They must not be presented as Telegram throughput: the stress
+transport is local and deliberately contains no network or API rate-limit
+effects.

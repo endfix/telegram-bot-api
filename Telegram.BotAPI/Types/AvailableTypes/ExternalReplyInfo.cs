@@ -15,7 +15,7 @@ public sealed class ExternalReplyInfo
     public long? MessageId { get; init; }
 
     /// <summary>Link preview options used by the original message, if available.</summary>
-    public LinkPreviewOptions? LinkRreviewOptions { get; init; }
+    public LinkPreviewOptions? LinkPreviewOptions { get; init; }
 
     public Animation? Animation { get; init; }
 

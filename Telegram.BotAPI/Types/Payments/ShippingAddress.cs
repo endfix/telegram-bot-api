@@ -15,7 +15,7 @@ public sealed class ShippingAddress
     /// <summary>First line of the street address.</summary>
     public required string StreetLine1 { get; init; }
 
-    /// <summary>Second line of the street address, if applicable.</summary>
+    /// <summary>Second line of the street address.</summary>
     public required string StreetLine2 { get; init; }
 
     /// <summary>Post code.</summary>

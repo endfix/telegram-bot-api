@@ -39,5 +39,5 @@ public sealed class Video
     public string? MimeType { get; init; }
 
     /// <summary>File size in bytes.</summary>
-    public int FileSize { get; init; }
+    public int? FileSize { get; init; }
 }

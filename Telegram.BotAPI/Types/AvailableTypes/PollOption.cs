@@ -24,7 +24,7 @@ public sealed class PollOption
     public User? AddedByUser { get; init; }
 
     /// <summary>Chat that added the option, if available.</summary>
-    public User? AddedByChat { get; init; }
+    public Chat? AddedByChat { get; init; }
 
     /// <summary>Date when the option was added, in Unix time, if available.</summary>
     public long? AdditionDate { get; init; }

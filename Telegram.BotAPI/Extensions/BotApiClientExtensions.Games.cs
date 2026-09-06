@@ -65,30 +65,80 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    public static async Task<Message> SetGameScoreAsync(
+    /// <summary>Sets the score of a user in an ordinary game message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">User, score and ordinary message identifiers.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The edited game message.</returns>
+    public static async Task<Message> SetGameScoreForMessageAsync(
         this IBotApiClient client, 
         SetGameScoreParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("setGameScore", parameters), cancellationToken);
 
-    public static async Task<Message> SetGameScoreAsync(
+    /// <summary>Sets the score of a user in an ordinary game message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="userId">User whose score should be set.</param>
+    /// <param name="chatId">Chat containing the game message.</param>
+    /// <param name="messageId">Identifier of the game message.</param>
+    /// <param name="score">New non-negative score.</param>
+    /// <param name="force">Whether to allow decreasing the user's high score.</param>
+    /// <param name="disableEditMessage">Whether to prevent automatic scoreboard updates.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The edited game message.</returns>
+    public static async Task<Message> SetGameScoreForMessageAsync(
         this IBotApiClient client,
         long userId,
+        long chatId,
+        long messageId,
         int score,
         bool? force = null,
         bool? disableEditMessage = null,
-        long? chatId = null,
-        long? messageId = null,
-        string? inlineMessageId = null,
         CancellationToken cancellationToken = default)
-        => await client.SetGameScoreAsync(new SetGameScoreParameters
+        => await client.SetGameScoreForMessageAsync(new SetGameScoreParameters
+        {
+            UserId = userId,
+            ChatId = chatId,
+            Score = score,
+            Force = force,
+            DisableEditMessage = disableEditMessage,
+            MessageId = messageId
+        }, cancellationToken);
+
+    /// <summary>Sets the score of a user in an inline game message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">User, score and inline message identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
+    public static async Task<bool> SetGameScoreInlineAsync(
+        this IBotApiClient client,
+        SetGameScoreParameters parameters,
+        CancellationToken cancellationToken = default)
+        => await client.ExecuteAsync<bool>(new ApiRequest("setGameScore", parameters), cancellationToken);
+
+    /// <summary>Sets the score of a user in an inline game message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="userId">User whose score should be set.</param>
+    /// <param name="inlineMessageId">Identifier of the inline game message.</param>
+    /// <param name="score">New non-negative score.</param>
+    /// <param name="force">Whether to allow decreasing the user's high score.</param>
+    /// <param name="disableEditMessage">Whether to prevent automatic scoreboard updates.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
+    public static async Task<bool> SetGameScoreInlineAsync(
+        this IBotApiClient client,
+        long userId,
+        string inlineMessageId,
+        int score,
+        bool? force = null,
+        bool? disableEditMessage = null,
+        CancellationToken cancellationToken = default)
+        => await client.SetGameScoreInlineAsync(new SetGameScoreParameters
         {
             UserId = userId,
             Score = score,
             Force = force,
             DisableEditMessage = disableEditMessage,
-            ChatId = chatId,
-            MessageId = messageId,
             InlineMessageId = inlineMessageId
         }, cancellationToken);
 

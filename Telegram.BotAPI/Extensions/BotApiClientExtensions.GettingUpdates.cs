@@ -10,9 +10,9 @@ namespace Endfix.Telegram.BotAPI.Extensions;
 
 public static partial class BotApiClientExtensions
 {
-    internal static async Task<IReadOnlyList<Update>?> GetUpdatesAsync(
+    public static async Task<IReadOnlyList<Update>?> GetUpdatesAsync(
         this IBotApiClient client, 
-        GetUpdatesParameters? parameters = null, 
+        GetUpdatesParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<IReadOnlyList<Update>>(new ApiRequest("getUpdates", parameters), cancellationToken);
 
@@ -40,7 +40,7 @@ public static partial class BotApiClientExtensions
             AllowedUpdates = AllowedUpdates
         }, cancellationToken);
 
-    internal static async Task<bool> SetWebhookAsync(
+    public static async Task<bool> SetWebhookAsync(
         this IBotApiClient client, 
         SetWebhookParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -79,9 +79,9 @@ public static partial class BotApiClientExtensions
             SecretToken = secretToken
         }, cancellationToken);
 
-    internal static async Task<bool> DeleteWebhookAsync(
+    public static async Task<bool> DeleteWebhookAsync(
         this IBotApiClient client, 
-        DeleteWebhookParameters? parameters = null, 
+        DeleteWebhookParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("deleteWebhook", parameters), cancellationToken);
 
@@ -100,9 +100,9 @@ public static partial class BotApiClientExtensions
             DropPendingUpdates = dropPendingUpdates
         }, cancellationToken);
 
-    internal static async Task<WebhookInfo> GetWebhookInfoAsync(
+    public static async Task<WebhookInfo> GetWebhookInfoAsync(
         this IBotApiClient client, 
-        GetWebhookInfoParameters? parameters = null, 
+        GetWebhookInfoParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<WebhookInfo>(new ApiRequest("getWebhookInfo", parameters), cancellationToken);
 

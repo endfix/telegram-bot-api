@@ -9,7 +9,7 @@ namespace Endfix.Telegram.BotAPI.Extensions;
 
 public static partial class BotApiClientExtensions
 {
-    internal static async Task<bool> AnswerInlineQueryAsync(
+    public static async Task<bool> AnswerInlineQueryAsync(
         this IBotApiClient client, 
         AnswerInlineQueryParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -34,7 +34,7 @@ public static partial class BotApiClientExtensions
             Button = button
         }, cancellationToken);
 
-    internal static async Task<SentWebAppMessage> AnswerWebAppQueryAsync(
+    public static async Task<SentWebAppMessage> AnswerWebAppQueryAsync(
         this IBotApiClient client, 
         AnswerWebAppQueryParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -51,7 +51,7 @@ public static partial class BotApiClientExtensions
             Result = result
         }, cancellationToken);
 
-    internal static async Task<PreparedInlineMessage> SavePreparedInlineMessageAsync(
+    public static async Task<PreparedInlineMessage> SavePreparedInlineMessageAsync(
         this IBotApiClient client, 
         SavePreparedInlineMessageParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -76,7 +76,7 @@ public static partial class BotApiClientExtensions
             AllowChannelChats = allowChannelChats
         }, cancellationToken);
 
-    internal static async Task<PreparedKeyboardButton> SavePreparedKeyboardButtonAsync(
+    public static async Task<PreparedKeyboardButton> SavePreparedKeyboardButtonAsync(
         this IBotApiClient client, 
         SavePreparedKeyboardButtonParameters parameters, 
         CancellationToken cancellationToken = default)

@@ -9,7 +9,7 @@ namespace Endfix.Telegram.BotAPI.Extensions;
 
 public static partial class BotApiClientExtensions
 {
-    internal static async Task<bool> SetPassportDataErrorsAsync(
+    public static async Task<bool> SetPassportDataErrorsAsync(
         this IBotApiClient client, 
         SetPassportDataErrorsParameters parameters, 
         CancellationToken cancellationToken = default)

@@ -10,9 +10,9 @@ namespace Endfix.Telegram.BotAPI.Extensions;
 
 public static partial class BotApiClientExtensions
 {
-    internal static async Task<User> GetMeAsync(
+    public static async Task<User> GetMeAsync(
         this IBotApiClient client,
-        GetMeParameters? parameters = null,
+        GetMeParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<User>(new ApiRequest("getMe", parameters), cancellationToken);
 
@@ -24,9 +24,9 @@ public static partial class BotApiClientExtensions
             // No parameters required for this method
         }, cancellationToken);
 
-    internal static async Task<bool> LogOutAsync(
+    public static async Task<bool> LogOutAsync(
         this IBotApiClient client,
-        LogOutParameters? parameters = null,
+        LogOutParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("logOut", parameters), cancellationToken);
 
@@ -38,9 +38,9 @@ public static partial class BotApiClientExtensions
             // No parameters required for this method
         }, cancellationToken);
 
-    internal static async Task<bool> CloseAsync(
+    public static async Task<bool> CloseAsync(
         this IBotApiClient client,
-        CloseParameters? parameters = null,
+        CloseParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("close", parameters), cancellationToken);
 
@@ -52,7 +52,7 @@ public static partial class BotApiClientExtensions
             // No parameters required for this method
         }, cancellationToken);
 
-    internal static async Task<Message> SendMessageAsync(
+    public static async Task<Message> SendMessageAsync(
         this IBotApiClient client,
         SendMessageParameters parameters,
         CancellationToken cancellationToken = default)
@@ -97,7 +97,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<Message> ForwardMessageAsync(
+    public static async Task<Message> ForwardMessageAsync(
         this IBotApiClient client,
         ForwardMessageParameters parameters,
         CancellationToken cancellationToken = default)
@@ -128,7 +128,7 @@ public static partial class BotApiClientExtensions
             SuggestedPostParameters = suggestedPostParameters
         }, cancellationToken);
 
-    internal static async Task<IReadOnlyList<MessageIdStruct>> ForwardMessagesAsync(
+    public static async Task<IReadOnlyList<MessageIdStruct>> ForwardMessagesAsync(
         this IBotApiClient client,
         ForwardMessagesParameters parameters,
         CancellationToken cancellationToken = default)
@@ -155,7 +155,7 @@ public static partial class BotApiClientExtensions
             ProtectContent = protectContent
         }, cancellationToken);
 
-    internal static async Task<MessageIdStruct> CopyMessageAsync(
+    public static async Task<MessageIdStruct> CopyMessageAsync(
         this IBotApiClient client,
         CopyMessageParameters parameters,
         CancellationToken cancellationToken = default)
@@ -200,7 +200,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<IReadOnlyList<MessageIdStruct>> CopyMessagesAsync(
+    public static async Task<IReadOnlyList<MessageIdStruct>> CopyMessagesAsync(
         this IBotApiClient client,
         CopyMessagesParameters parameters,
         CancellationToken cancellationToken = default)
@@ -229,7 +229,7 @@ public static partial class BotApiClientExtensions
             RemoveCaption = removeCaption
         }, cancellationToken);
 
-    internal static async Task<Message> SendPhotoAsync(
+    public static async Task<Message> SendPhotoAsync(
         this IBotApiClient client,
         SendPhotoParameters parameters,
         CancellationToken cancellationToken = default)
@@ -278,7 +278,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<Message> SendLivePhotoAsync(
+    public static async Task<Message> SendLivePhotoAsync(
         this IBotApiClient client, 
         SendLivePhotoParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -327,7 +327,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<Message> SendAudioAsync(
+    public static async Task<Message> SendAudioAsync(
         this IBotApiClient client, 
         SendAudioParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -380,7 +380,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<Message> SendDocumentAsync(
+    public static async Task<Message> SendDocumentAsync(
         this IBotApiClient client, 
         SendDocumentParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -429,7 +429,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<Message> SendVideoAsync(
+    public static async Task<Message> SendVideoAsync(
         this IBotApiClient client, 
         SendVideoParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -490,7 +490,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<Message> SendAnimationAsync(
+    public static async Task<Message> SendAnimationAsync(
         this IBotApiClient client, 
         SendAnimationParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -547,7 +547,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<Message> SendVoiceAsync(
+    public static async Task<Message> SendVoiceAsync(
         this IBotApiClient client, 
         SendVoiceParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -594,7 +594,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<Message> SendVideoNoteAsync(
+    public static async Task<Message> SendVideoNoteAsync(
         this IBotApiClient client, 
         SendVideoNoteParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -639,7 +639,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<Message> SendPaidMediaAsync(
+    public static async Task<Message> SendPaidMediaAsync(
         this IBotApiClient client, 
         SendPaidMediaParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -686,7 +686,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<IReadOnlyList<Message>> SendMediaGroupAsync(
+    public static async Task<IReadOnlyList<Message>> SendMediaGroupAsync(
         this IBotApiClient client, 
         SendMediaGroupParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -719,7 +719,7 @@ public static partial class BotApiClientExtensions
             ReplyParameters = replyParameters
         }, cancellationToken);
 
-    internal static async Task<Message> SendLocationAsync(
+    public static async Task<Message> SendLocationAsync(
         this IBotApiClient client,
         SendLocationParameters parameters,
         CancellationToken cancellationToken = default)
@@ -768,7 +768,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<Message> SendVenueAsync(
+    public static async Task<Message> SendVenueAsync(
         this IBotApiClient client,
         SendVenueParameters parameters,
         CancellationToken cancellationToken = default)
@@ -821,7 +821,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<Message> SendContactAsync(
+    public static async Task<Message> SendContactAsync(
         this IBotApiClient client,
         SendContactParameters parameters,
         CancellationToken cancellationToken = default)
@@ -866,7 +866,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<Message> SendPollAsync(
+    public static async Task<Message> SendPollAsync(
         this IBotApiClient client,
         SendPollParameters parameters,
         CancellationToken cancellationToken = default)
@@ -947,7 +947,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<Message> SendChecklistAsync(
+    public static async Task<Message> SendChecklistAsync(
         this IBotApiClient client,
         SendChecklistParameters parameters,
         CancellationToken cancellationToken = default)
@@ -976,7 +976,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<Message> SendDiceAsync(
+    public static async Task<Message> SendDiceAsync(
         this IBotApiClient client,
         SendDiceParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1013,7 +1013,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<bool> SendMessageDraftAsync(
+    public static async Task<bool> SendMessageDraftAsync(
         this IBotApiClient client,
         SendMessageDraftParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1042,7 +1042,7 @@ public static partial class BotApiClientExtensions
             KeepOnStop = keepOnStop
         }, cancellationToken);
 
-    internal static async Task<bool> SendChatActionAsync(
+    public static async Task<bool> SendChatActionAsync(
         this IBotApiClient client,
         SendChatActionParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1063,7 +1063,7 @@ public static partial class BotApiClientExtensions
             MessageThreadId = messageThreadId
         }, cancellationToken);
 
-    internal static async Task<bool> SetMessageReactionAsync(
+    public static async Task<bool> SetMessageReactionAsync(
         this IBotApiClient client,
         SetMessageReactionParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1084,7 +1084,7 @@ public static partial class BotApiClientExtensions
             IsBig = isBig
         }, cancellationToken);
 
-    internal static async Task<UserProfilePhotos> GetUserProfilePhotosAsync(
+    public static async Task<UserProfilePhotos> GetUserProfilePhotosAsync(
         this IBotApiClient client,
         GetUserProfilePhotosParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1103,7 +1103,7 @@ public static partial class BotApiClientExtensions
             Limit = limit
         }, cancellationToken);
 
-    internal static async Task<UserProfileAudios> GetUserProfileAudiosAsync(
+    public static async Task<UserProfileAudios> GetUserProfileAudiosAsync(
         this IBotApiClient client,
         GetUserProfileAudiosParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1122,7 +1122,7 @@ public static partial class BotApiClientExtensions
             Limit = limit
         }, cancellationToken);
 
-    internal static async Task<bool> SetUserEmojiStatusAsync(
+    public static async Task<bool> SetUserEmojiStatusAsync(
         this IBotApiClient client,
         SetUserEmojiStatusParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1141,7 +1141,7 @@ public static partial class BotApiClientExtensions
             EmojiStatusExpirationDate = emojiStatusExpirationDate
         }, cancellationToken);
 
-    internal static async Task<FileStruct> GetFileAsync(
+    public static async Task<FileStruct> GetFileAsync(
         this IBotApiClient client,
         GetFileParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1156,7 +1156,7 @@ public static partial class BotApiClientExtensions
             FileId = fileId
         }, cancellationToken);
 
-    internal static async Task<bool> BanChatMemberAsync(
+    public static async Task<bool> BanChatMemberAsync(
         this IBotApiClient client,
         BanChatMemberParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1177,7 +1177,7 @@ public static partial class BotApiClientExtensions
             RevokeMessages = revokeMessages
         }, cancellationToken);
 
-    internal static async Task<bool> UnbanChatMemberAsync(
+    public static async Task<bool> UnbanChatMemberAsync(
         this IBotApiClient client,
         UnbanChatMemberParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1196,7 +1196,7 @@ public static partial class BotApiClientExtensions
             OnlyIfBanned = onlyIfBanned
         }, cancellationToken);
 
-    internal static async Task<bool> RestrictChatMemberAsync(
+    public static async Task<bool> RestrictChatMemberAsync(
         this IBotApiClient client,
         RestrictChatMemberParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1219,7 +1219,7 @@ public static partial class BotApiClientExtensions
             UntilDate = untilDate
         }, cancellationToken);
 
-    internal static async Task<bool> PromoteChatMemberAsync(this IBotApiClient client, PromoteChatMemberParameters parameters, CancellationToken cancellationToken = default)
+    public static async Task<bool> PromoteChatMemberAsync(this IBotApiClient client, PromoteChatMemberParameters parameters, CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("promoteChatMember", parameters), cancellationToken);
 
     public static async Task<bool> PromoteChatMemberAsync(
@@ -1269,7 +1269,7 @@ public static partial class BotApiClientExtensions
             CanSendWelcomeMessages = canSendWelcomeMessages
         }, cancellationToken);
 
-    internal static async Task<bool> SetChatAdministratorCustomTitleAsync(
+    public static async Task<bool> SetChatAdministratorCustomTitleAsync(
         this IBotApiClient client,
         SetChatAdministratorCustomTitleParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1288,7 +1288,7 @@ public static partial class BotApiClientExtensions
             CustomTitle = customTitle
         }, cancellationToken);
 
-    internal static async Task<bool> SetChatMemberTagAsync(
+    public static async Task<bool> SetChatMemberTagAsync(
         this IBotApiClient client,
         SetChatMemberTagParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1307,7 +1307,7 @@ public static partial class BotApiClientExtensions
             Tag = tag
         }, cancellationToken);
 
-    internal static async Task<bool> BanChatSenderChatAsync(
+    public static async Task<bool> BanChatSenderChatAsync(
         this IBotApiClient client,
         BanChatSenderChatParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1324,7 +1324,7 @@ public static partial class BotApiClientExtensions
             SenderChatId = senderChatId
         }, cancellationToken);
 
-    internal static async Task<bool> UnbanChatSenderChatAsync(
+    public static async Task<bool> UnbanChatSenderChatAsync(
         this IBotApiClient client,
         UnbanChatSenderChatParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1341,7 +1341,7 @@ public static partial class BotApiClientExtensions
             SenderChatId = senderChatId
         }, cancellationToken);
 
-    internal static async Task<bool> SetChatPermissionsAsync(
+    public static async Task<bool> SetChatPermissionsAsync(
         this IBotApiClient client,
         SetChatPermissionsParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1360,7 +1360,7 @@ public static partial class BotApiClientExtensions
             UseIndependentChatPermissions = useIndependentChatPermissions
         }, cancellationToken);
 
-    internal static async Task<string> ExportChatInviteLinkAsync(
+    public static async Task<string> ExportChatInviteLinkAsync(
         this IBotApiClient client,
         ExportChatInviteLinkParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1375,7 +1375,7 @@ public static partial class BotApiClientExtensions
             ChatId = chatId
         }, cancellationToken);
 
-    internal static async Task<ChatInviteLink> CreateChatInviteLinkAsync(
+    public static async Task<ChatInviteLink> CreateChatInviteLinkAsync(
         this IBotApiClient client,
         CreateChatInviteLinkParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1398,7 +1398,7 @@ public static partial class BotApiClientExtensions
             CreatesJoinRequest = createsJoinRequest
         }, cancellationToken);
 
-    internal static async Task<ChatInviteLink> EditChatInviteLinkAsync(
+    public static async Task<ChatInviteLink> EditChatInviteLinkAsync(
         this IBotApiClient client,
         EditChatInviteLinkParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1423,7 +1423,7 @@ public static partial class BotApiClientExtensions
             CreatesJoinRequest = createsJoinRequest
         }, cancellationToken);
 
-    internal static async Task<ChatInviteLink> CreateChatSubscriptionInviteLinkAsync(
+    public static async Task<ChatInviteLink> CreateChatSubscriptionInviteLinkAsync(
         this IBotApiClient client,
         CreateChatSubscriptionInviteLinkParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1444,7 +1444,7 @@ public static partial class BotApiClientExtensions
             Name = name
         }, cancellationToken);
 
-    internal static async Task<ChatInviteLink> EditChatSubscriptionInviteLinkAsync(
+    public static async Task<ChatInviteLink> EditChatSubscriptionInviteLinkAsync(
         this IBotApiClient client,
         EditChatSubscriptionInviteLinkParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1463,7 +1463,7 @@ public static partial class BotApiClientExtensions
             Name = name
         }, cancellationToken);
 
-    internal static async Task<ChatInviteLink> RevokeChatInviteLinkAsync(
+    public static async Task<ChatInviteLink> RevokeChatInviteLinkAsync(
         this IBotApiClient client,
         RevokeChatInviteLinkParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1480,7 +1480,7 @@ public static partial class BotApiClientExtensions
             InviteLink = inviteLink
         }, cancellationToken);
 
-    internal static async Task<bool> ApproveChatJoinRequestAsync(
+    public static async Task<bool> ApproveChatJoinRequestAsync(
         this IBotApiClient client,
         ApproveChatJoinRequestParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1497,7 +1497,7 @@ public static partial class BotApiClientExtensions
             UserId = userId
         }, cancellationToken);
 
-    internal static async Task<bool> DeclineChatJoinRequestAsync(
+    public static async Task<bool> DeclineChatJoinRequestAsync(
         this IBotApiClient client,
         DeclineChatJoinRequestParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1514,7 +1514,7 @@ public static partial class BotApiClientExtensions
             UserId = userId
         }, cancellationToken);
 
-    internal static async Task<bool> AnswerChatJoinRequestQueryAsync(
+    public static async Task<bool> AnswerChatJoinRequestQueryAsync(
         this IBotApiClient client,
         AnswerChatJoinRequestQueryParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1531,7 +1531,7 @@ public static partial class BotApiClientExtensions
             Result = result
         }, cancellationToken);
 
-    internal static async Task<bool> SendChatJoinRequestWebAppAsync(
+    public static async Task<bool> SendChatJoinRequestWebAppAsync(
         this IBotApiClient client,
         SendChatJoinRequestWebAppParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1548,7 +1548,7 @@ public static partial class BotApiClientExtensions
             WebAppUrl = webAppUrl
         }, cancellationToken);
 
-    internal static async Task<bool> SetChatPhotoAsync(
+    public static async Task<bool> SetChatPhotoAsync(
         this IBotApiClient client,
         SetChatPhotoParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1565,7 +1565,7 @@ public static partial class BotApiClientExtensions
             Photo = photo
         }, cancellationToken);
 
-    internal static async Task<bool> DeleteChatPhotoAsync(
+    public static async Task<bool> DeleteChatPhotoAsync(
         this IBotApiClient client,
         DeleteChatPhotoParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1580,7 +1580,7 @@ public static partial class BotApiClientExtensions
             ChatId = chatId
         }, cancellationToken);
 
-    internal static async Task<bool> SetChatTitleAsync(
+    public static async Task<bool> SetChatTitleAsync(
         this IBotApiClient client,
         SetChatTitleParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1597,7 +1597,7 @@ public static partial class BotApiClientExtensions
             Title = title
         }, cancellationToken);
 
-    internal static async Task<bool> SetChatDescriptionAsync(
+    public static async Task<bool> SetChatDescriptionAsync(
         this IBotApiClient client,
         SetChatDescriptionParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1614,7 +1614,7 @@ public static partial class BotApiClientExtensions
             Description = description
         }, cancellationToken);
 
-    internal static async Task<bool> PinChatMessageAsync(
+    public static async Task<bool> PinChatMessageAsync(
         this IBotApiClient client,
         PinChatMessageParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1635,7 +1635,7 @@ public static partial class BotApiClientExtensions
             DisableNotification = disableNotification
         }, cancellationToken);
 
-    internal static async Task<bool> UnpinChatMessageAsync(
+    public static async Task<bool> UnpinChatMessageAsync(
         this IBotApiClient client,
         UnpinChatMessageParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1654,7 +1654,7 @@ public static partial class BotApiClientExtensions
             MessageId = messageId
         }, cancellationToken);
 
-    internal static async Task<bool> UnpinAllChatMessagesAsync(
+    public static async Task<bool> UnpinAllChatMessagesAsync(
         this IBotApiClient client,
         UnpinAllChatMessagesParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1669,7 +1669,7 @@ public static partial class BotApiClientExtensions
             ChatId = chatId
         }, cancellationToken);
 
-    internal static async Task<bool> LeaveChatAsync(
+    public static async Task<bool> LeaveChatAsync(
         this IBotApiClient client,
         LeaveChatParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1684,7 +1684,7 @@ public static partial class BotApiClientExtensions
             ChatId = chatId
         }, cancellationToken);
 
-    internal static async Task<ChatFullInfo> GetChatAsync(
+    public static async Task<ChatFullInfo> GetChatAsync(
         this IBotApiClient client,
         GetChatParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1699,7 +1699,7 @@ public static partial class BotApiClientExtensions
             ChatId = chatId
         }, cancellationToken);
 
-    internal static async Task<IReadOnlyList<ChatMember>> GetChatAdministratorsAsync(
+    public static async Task<IReadOnlyList<ChatMember>> GetChatAdministratorsAsync(
         this IBotApiClient client,
         GetChatAdministratorsParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1716,7 +1716,7 @@ public static partial class BotApiClientExtensions
             ReturnBots = returnBots
         }, cancellationToken);
 
-    internal static async Task<int> GetChatMemberCountAsync(
+    public static async Task<int> GetChatMemberCountAsync(
         this IBotApiClient client,
         GetChatMemberCountParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1731,7 +1731,7 @@ public static partial class BotApiClientExtensions
             ChatId = chatId
         }, cancellationToken);
 
-    internal static async Task<ChatMember> GetChatMemberAsync(
+    public static async Task<ChatMember> GetChatMemberAsync(
         this IBotApiClient client,
         GetChatMemberParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1748,7 +1748,7 @@ public static partial class BotApiClientExtensions
             UserId = userId
         }, cancellationToken);
 
-    internal static async Task<IReadOnlyList<Message>> GetUserPersonalChatMessagesAsync(
+    public static async Task<IReadOnlyList<Message>> GetUserPersonalChatMessagesAsync(
         this IBotApiClient client,
         GetUserPersonalChatMessagesParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1765,7 +1765,7 @@ public static partial class BotApiClientExtensions
             Limit = limit
         }, cancellationToken);
 
-    internal static async Task<bool> SetChatStickerSetAsync(
+    public static async Task<bool> SetChatStickerSetAsync(
         this IBotApiClient client,
         SetChatStickerSetParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1782,7 +1782,7 @@ public static partial class BotApiClientExtensions
             StickerSetName = stickerSetName
         }, cancellationToken);
 
-    internal static async Task<bool> DeleteChatStickerSetAsync(
+    public static async Task<bool> DeleteChatStickerSetAsync(
         this IBotApiClient client,
         DeleteChatStickerSetParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1797,7 +1797,7 @@ public static partial class BotApiClientExtensions
             ChatId = chatId
         }, cancellationToken);
 
-    internal static async Task<IReadOnlyList<Sticker>> GetForumTopicIconStickersAsync(
+    public static async Task<IReadOnlyList<Sticker>> GetForumTopicIconStickersAsync(
         this IBotApiClient client,
         GetForumTopicIconStickersParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1811,7 +1811,7 @@ public static partial class BotApiClientExtensions
             // No parameters to set for this method
         }, cancellationToken);
 
-    internal static async Task<ForumTopic> CreateForumTopicAsync(
+    public static async Task<ForumTopic> CreateForumTopicAsync(
         this IBotApiClient client,
         CreateForumTopicParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1832,7 +1832,7 @@ public static partial class BotApiClientExtensions
             IconCustomEmojiId = iconCustomEmojiId
         }, cancellationToken);
 
-    internal static async Task<bool> EditForumTopicAsync(
+    public static async Task<bool> EditForumTopicAsync(
         this IBotApiClient client,
         EditForumTopicParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1853,7 +1853,7 @@ public static partial class BotApiClientExtensions
             IconCustomEmojiId = iconCustomEmojiId
         }, cancellationToken);
 
-    internal static async Task<bool> CloseForumTopicAsync(
+    public static async Task<bool> CloseForumTopicAsync(
         this IBotApiClient client,
         CloseForumTopicParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1870,7 +1870,7 @@ public static partial class BotApiClientExtensions
             MessageThreadId = messageThreadId
         }, cancellationToken);
 
-    internal static async Task<bool> ReopenForumTopicAsync(
+    public static async Task<bool> ReopenForumTopicAsync(
         this IBotApiClient client,
         ReopenForumTopicParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1887,7 +1887,7 @@ public static partial class BotApiClientExtensions
             MessageThreadId = messageThreadId
         }, cancellationToken);
 
-    internal static async Task<bool> DeleteForumTopicAsync(
+    public static async Task<bool> DeleteForumTopicAsync(
         this IBotApiClient client,
         DeleteForumTopicParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1904,7 +1904,7 @@ public static partial class BotApiClientExtensions
             MessageThreadId = messageThreadId
         }, cancellationToken);
 
-    internal static async Task<bool> UnpinAllForumTopicMessagesAsync(
+    public static async Task<bool> UnpinAllForumTopicMessagesAsync(
         this IBotApiClient client,
         UnpinAllForumTopicMessagesParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1921,7 +1921,7 @@ public static partial class BotApiClientExtensions
             MessageThreadId = messageThreadId
         }, cancellationToken);
 
-    internal static async Task<bool> EditGeneralForumTopicAsync(
+    public static async Task<bool> EditGeneralForumTopicAsync(
         this IBotApiClient client,
         EditGeneralForumTopicParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1938,7 +1938,7 @@ public static partial class BotApiClientExtensions
             Name = name
         }, cancellationToken);
 
-    internal static async Task<bool> CloseGeneralForumTopicAsync(
+    public static async Task<bool> CloseGeneralForumTopicAsync(
         this IBotApiClient client,
         CloseGeneralForumTopicParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1953,7 +1953,7 @@ public static partial class BotApiClientExtensions
             ChatId = chatId
         }, cancellationToken);
 
-    internal static async Task<bool> ReopenGeneralForumTopicAsync(
+    public static async Task<bool> ReopenGeneralForumTopicAsync(
         this IBotApiClient client,
         ReopenGeneralForumTopicParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1968,7 +1968,7 @@ public static partial class BotApiClientExtensions
             ChatId = chatId
         }, cancellationToken);
 
-    internal static async Task<bool> HideGeneralForumTopicAsync(
+    public static async Task<bool> HideGeneralForumTopicAsync(
         this IBotApiClient client,
         HideGeneralForumTopicParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1983,7 +1983,7 @@ public static partial class BotApiClientExtensions
             ChatId = chatId
         }, cancellationToken);
 
-    internal static async Task<bool> UnhideGeneralForumTopicAsync(
+    public static async Task<bool> UnhideGeneralForumTopicAsync(
         this IBotApiClient client,
         UnhideGeneralForumTopicParameters parameters,
         CancellationToken cancellationToken = default)
@@ -1998,7 +1998,7 @@ public static partial class BotApiClientExtensions
             ChatId = chatId
         }, cancellationToken);
 
-    internal static async Task<bool> UnpinAllGeneralForumTopicMessagesAsync(
+    public static async Task<bool> UnpinAllGeneralForumTopicMessagesAsync(
         this IBotApiClient client,
         UnpinAllGeneralForumTopicMessagesParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2013,7 +2013,7 @@ public static partial class BotApiClientExtensions
             ChatId = chatId
         }, cancellationToken);
 
-    internal static async Task<bool> AnswerCallbackQueryAsync(
+    public static async Task<bool> AnswerCallbackQueryAsync(
         this IBotApiClient client,
         AnswerCallbackQueryParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2036,7 +2036,7 @@ public static partial class BotApiClientExtensions
             CacheTime = cacheTime
         }, cancellationToken);
 
-    internal static async Task<SentGuestMessage> AnswerGuestQueryAsync(
+    public static async Task<SentGuestMessage> AnswerGuestQueryAsync(
         this IBotApiClient client,
         AnswerGuestQueryParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2053,7 +2053,7 @@ public static partial class BotApiClientExtensions
             Result = result
         }, cancellationToken);
 
-    internal static async Task<UserChatBoosts> GetUserChatBoostsAsync(
+    public static async Task<UserChatBoosts> GetUserChatBoostsAsync(
         this IBotApiClient client,
         GetUserChatBoostsParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2070,7 +2070,7 @@ public static partial class BotApiClientExtensions
             UserId = userId
         }, cancellationToken);
 
-    internal static async Task<BusinessConnection> GetBusinessConnectionAsync(
+    public static async Task<BusinessConnection> GetBusinessConnectionAsync(
         this IBotApiClient client,
         GetBusinessConnectionParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2085,7 +2085,7 @@ public static partial class BotApiClientExtensions
             BusinessConnectionId = businessConnectionId
         }, cancellationToken);
 
-    internal static async Task<string> GetManagedBotTokenAsync(
+    public static async Task<string> GetManagedBotTokenAsync(
         this IBotApiClient client,
         GetManagedBotTokenParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2100,7 +2100,7 @@ public static partial class BotApiClientExtensions
             UserId = userId
         }, cancellationToken);
 
-    internal static async Task<string> ReplaceManagedBotTokenAsync(
+    public static async Task<string> ReplaceManagedBotTokenAsync(
         this IBotApiClient client,
         ReplaceManagedBotTokenParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2115,7 +2115,7 @@ public static partial class BotApiClientExtensions
             UserId = userId
         }, cancellationToken);
 
-    internal static async Task<BotAccessSettings> GetManagedBotAccessSettingsAsync(
+    public static async Task<BotAccessSettings> GetManagedBotAccessSettingsAsync(
         this IBotApiClient client,
         GetManagedBotAccessSettingsParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2130,7 +2130,7 @@ public static partial class BotApiClientExtensions
             UserId = userId
         }, cancellationToken);
 
-    internal static async Task<bool> SetManagedBotAccessSettingsAsync(
+    public static async Task<bool> SetManagedBotAccessSettingsAsync(
         this IBotApiClient client,
         SetManagedBotAccessSettingsParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2149,7 +2149,7 @@ public static partial class BotApiClientExtensions
             AddedUserIds = addedUserIds
         }, cancellationToken);
 
-    internal static async Task<bool> SetMyCommandsAsync(
+    public static async Task<bool> SetMyCommandsAsync(
         this IBotApiClient client,
         SetMyCommandsParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2168,9 +2168,9 @@ public static partial class BotApiClientExtensions
             LanguageCode = languageCode
         }, cancellationToken);
 
-    internal static async Task<bool> DeleteMyCommandsAsync(
+    public static async Task<bool> DeleteMyCommandsAsync(
         this IBotApiClient client,
-        DeleteMyCommandsParameters? parameters = null,
+        DeleteMyCommandsParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("deleteMyCommands", parameters), cancellationToken);
 
@@ -2185,9 +2185,9 @@ public static partial class BotApiClientExtensions
             LanguageCode = languageCode
         }, cancellationToken);
 
-    internal static async Task<IReadOnlyList<BotCommand>> GetMyCommandsAsync(
+    public static async Task<IReadOnlyList<BotCommand>> GetMyCommandsAsync(
         this IBotApiClient client,
-        GetMyCommandsParameters? parameters = null,
+        GetMyCommandsParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<IReadOnlyList<BotCommand>>(new ApiRequest("getMyCommands", parameters), cancellationToken);
 
@@ -2202,9 +2202,9 @@ public static partial class BotApiClientExtensions
             LanguageCode = languageCode
         }, cancellationToken);
 
-    internal static async Task<bool> SetMyNameAsync(
+    public static async Task<bool> SetMyNameAsync(
         this IBotApiClient client,
-        SetMyNameParameters? parameters = null,
+        SetMyNameParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("setMyName", parameters), cancellationToken);
 
@@ -2219,7 +2219,7 @@ public static partial class BotApiClientExtensions
             LanguageCode = languageCode
         }, cancellationToken);
 
-    internal static async Task<BotName> GetMyNameAsync(
+    public static async Task<BotName> GetMyNameAsync(
         this IBotApiClient client,
         GetMyNameParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2234,7 +2234,7 @@ public static partial class BotApiClientExtensions
             LanguageCode = languageCode
         }, cancellationToken);
 
-    internal static async Task<bool> SetMyDescriptionAsync(
+    public static async Task<bool> SetMyDescriptionAsync(
         this IBotApiClient client,
         SetMyDescriptionParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2251,7 +2251,7 @@ public static partial class BotApiClientExtensions
             LanguageCode = languageCode
         }, cancellationToken);
 
-    internal static async Task<BotDescription> GetMyDescriptionAsync(
+    public static async Task<BotDescription> GetMyDescriptionAsync(
         this IBotApiClient client,
         GetMyDescriptionParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2266,7 +2266,7 @@ public static partial class BotApiClientExtensions
             LanguageCode = languageCode
         }, cancellationToken);
 
-    internal static async Task<bool> SetMyShortDescriptionAsync(
+    public static async Task<bool> SetMyShortDescriptionAsync(
         this IBotApiClient client,
         SetMyShortDescriptionParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2283,7 +2283,7 @@ public static partial class BotApiClientExtensions
             LanguageCode = languageCode
         }, cancellationToken);
 
-    internal static async Task<BotShortDescription> GetMyShortDescriptionAsync(
+    public static async Task<BotShortDescription> GetMyShortDescriptionAsync(
         this IBotApiClient client,
         GetMyShortDescriptionParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2298,7 +2298,7 @@ public static partial class BotApiClientExtensions
             LanguageCode = languageCode
         }, cancellationToken);
 
-    internal static async Task<bool> SetMyProfilePhotoAsync(
+    public static async Task<bool> SetMyProfilePhotoAsync(
         this IBotApiClient client,
         SetMyProfilePhotoParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2313,9 +2313,9 @@ public static partial class BotApiClientExtensions
             Photo = photo
         }, cancellationToken);
 
-    internal static async Task<bool> RemoveMyProfilePhotoAsync(
+    public static async Task<bool> RemoveMyProfilePhotoAsync(
         this IBotApiClient client,
-        RemoveMyProfilePhotoParameters? parameters = null,
+        RemoveMyProfilePhotoParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("removeMyProfilePhoto", parameters), cancellationToken);
 
@@ -2327,9 +2327,9 @@ public static partial class BotApiClientExtensions
             // No parameters required for this method
         }, cancellationToken);
 
-    internal static async Task<bool> SetChatMenuButtonAsync(
+    public static async Task<bool> SetChatMenuButtonAsync(
         this IBotApiClient client,
-        SetChatMenuButtonParameters? parameters = null,
+        SetChatMenuButtonParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("setChatMenuButton", parameters), cancellationToken);
 
@@ -2344,9 +2344,9 @@ public static partial class BotApiClientExtensions
             MenuButton = menuButton
         }, cancellationToken);
 
-    internal static async Task<MenuButton> GetChatMenuButtonAsync(
+    public static async Task<MenuButton> GetChatMenuButtonAsync(
         this IBotApiClient client,
-        GetChatMenuButtonParameters? parameters = null,
+        GetChatMenuButtonParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<MenuButton>(new ApiRequest("getChatMenuButton", parameters), cancellationToken);
 
@@ -2359,9 +2359,9 @@ public static partial class BotApiClientExtensions
             ChatId = chatId
         }, cancellationToken);
 
-    internal static async Task<bool> SetMyDefaultAdministratorRightsAsync(
+    public static async Task<bool> SetMyDefaultAdministratorRightsAsync(
         this IBotApiClient client,
-        SetMyDefaultAdministratorRightsParameters? parameters = null,
+        SetMyDefaultAdministratorRightsParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("setMyDefaultAdministratorRights", parameters), cancellationToken);
 
@@ -2376,9 +2376,9 @@ public static partial class BotApiClientExtensions
             ForChannels = forChannels
         }, cancellationToken);
 
-    internal static async Task<ChatAdministratorRights> GetMyDefaultAdministratorRightsAsync(
+    public static async Task<ChatAdministratorRights> GetMyDefaultAdministratorRightsAsync(
         this IBotApiClient client,
-        GetMyDefaultAdministratorRightsParameters? parameters = null,
+        GetMyDefaultAdministratorRightsParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<ChatAdministratorRights>(new ApiRequest("getMyDefaultAdministratorRights", parameters), cancellationToken);
 
@@ -2391,7 +2391,7 @@ public static partial class BotApiClientExtensions
             ForChannels = forChannels
         }, cancellationToken);
 
-    internal static async Task<GiftsStruct> GetAvailableGiftsAsync(
+    public static async Task<GiftsStruct> GetAvailableGiftsAsync(
         this IBotApiClient client,
         GetAvailableGiftsParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2405,7 +2405,7 @@ public static partial class BotApiClientExtensions
             // No parameters required for this method
         }, cancellationToken);
 
-    internal static async Task<bool> SendGiftAsync(
+    public static async Task<bool> SendGiftAsync(
         this IBotApiClient client,
         SendGiftParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2432,7 +2432,7 @@ public static partial class BotApiClientExtensions
             TextEntities = textEntities
         }, cancellationToken);
 
-    internal static async Task<bool> GiftPremiumSubscriptionAsync(
+    public static async Task<bool> GiftPremiumSubscriptionAsync(
         this IBotApiClient client,
         GiftPremiumSubscriptionParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2457,7 +2457,7 @@ public static partial class BotApiClientExtensions
             TextEntities = textEntities
         }, cancellationToken);
 
-    internal static async Task<bool> VerifyUserAsync(
+    public static async Task<bool> VerifyUserAsync(
         this IBotApiClient client,
         VerifyUserParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2474,7 +2474,7 @@ public static partial class BotApiClientExtensions
             CustomDescription = customDescription
         }, cancellationToken);
 
-    internal static async Task<bool> VerifyChatAsync(
+    public static async Task<bool> VerifyChatAsync(
         this IBotApiClient client,
         VerifyChatParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2491,7 +2491,7 @@ public static partial class BotApiClientExtensions
             CustomDescription = customDescription
         }, cancellationToken);
 
-    internal static async Task<bool> RemoveUserVerificationAsync(
+    public static async Task<bool> RemoveUserVerificationAsync(
         this IBotApiClient client,
         RemoveUserVerificationParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2506,7 +2506,7 @@ public static partial class BotApiClientExtensions
             UserId = userId
         }, cancellationToken);
 
-    internal static async Task<bool> RemoveChatVerificationAsync(
+    public static async Task<bool> RemoveChatVerificationAsync(
         this IBotApiClient client,
         RemoveChatVerificationParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2521,7 +2521,7 @@ public static partial class BotApiClientExtensions
             ChatId = chatId
         }, cancellationToken);
 
-    internal static async Task<bool> ReadBusinessMessageAsync(
+    public static async Task<bool> ReadBusinessMessageAsync(
         this IBotApiClient client,
         ReadBusinessMessageParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2540,7 +2540,7 @@ public static partial class BotApiClientExtensions
             MessageId = messageId
         }, cancellationToken);
 
-    internal static async Task<bool> DeleteBusinessMessagesAsync(
+    public static async Task<bool> DeleteBusinessMessagesAsync(
         this IBotApiClient client,
         DeleteBusinessMessagesParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2557,7 +2557,7 @@ public static partial class BotApiClientExtensions
             MessageIds = messageIds
         }, cancellationToken);
 
-    internal static async Task<bool> SetBusinessAccountNameAsync(
+    public static async Task<bool> SetBusinessAccountNameAsync(
         this IBotApiClient client,
         SetBusinessAccountNameParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2576,7 +2576,7 @@ public static partial class BotApiClientExtensions
             LastName = lastName
         }, cancellationToken);
 
-    internal static async Task<bool> SetBusinessAccountUsernameAsync(
+    public static async Task<bool> SetBusinessAccountUsernameAsync(
         this IBotApiClient client,
         SetBusinessAccountUsernameParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2593,7 +2593,7 @@ public static partial class BotApiClientExtensions
             Username = username,
         }, cancellationToken);
 
-    internal static async Task<bool> SetBusinessAccountBioAsync(
+    public static async Task<bool> SetBusinessAccountBioAsync(
         this IBotApiClient client,
         SetBusinessAccountBioParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2610,7 +2610,7 @@ public static partial class BotApiClientExtensions
             Bio = bio
         }, cancellationToken);
 
-    internal static async Task<bool> SetBusinessAccountProfilePhotoAsync(
+    public static async Task<bool> SetBusinessAccountProfilePhotoAsync(
         this IBotApiClient client,
         SetBusinessAccountProfilePhotoParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2629,7 +2629,7 @@ public static partial class BotApiClientExtensions
             IsPublic = isPublic
         }, cancellationToken);
 
-    internal static async Task<bool> RemoveBusinessAccountProfilePhotoAsync(
+    public static async Task<bool> RemoveBusinessAccountProfilePhotoAsync(
         this IBotApiClient client,
         RemoveBusinessAccountProfilePhotoParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2646,7 +2646,7 @@ public static partial class BotApiClientExtensions
             IsPublic = isPublic
         }, cancellationToken);
 
-    internal static async Task<bool> SetBusinessAccountGiftSettingsAsync(
+    public static async Task<bool> SetBusinessAccountGiftSettingsAsync(
         this IBotApiClient client,
         SetBusinessAccountGiftSettingsParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2665,7 +2665,7 @@ public static partial class BotApiClientExtensions
             AcceptedGiftTypes = acceptedGiftTypes
         }, cancellationToken);
 
-    internal static async Task<StarAmount> GetBusinessAccountStarBalanceAsync(
+    public static async Task<StarAmount> GetBusinessAccountStarBalanceAsync(
         this IBotApiClient client,
         GetBusinessAccountStarBalanceParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2680,7 +2680,7 @@ public static partial class BotApiClientExtensions
             BusinessConnectionId = businessConnectionId
         }, cancellationToken);
 
-    internal static async Task<bool> TransferBusinessAccountStarsAsync(
+    public static async Task<bool> TransferBusinessAccountStarsAsync(
         this IBotApiClient client,
         TransferBusinessAccountStarsParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2697,7 +2697,7 @@ public static partial class BotApiClientExtensions
             StarCount = starCount
         }, cancellationToken);
 
-    internal static async Task<OwnedGifts> GetBusinessAccountGiftsAsync(
+    public static async Task<OwnedGifts> GetBusinessAccountGiftsAsync(
         this IBotApiClient client,
         GetBusinessAccountGiftsParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2732,7 +2732,7 @@ public static partial class BotApiClientExtensions
             Limit = limit
         }, cancellationToken);
 
-    internal static async Task<OwnedGifts> GetUserGiftsASync(
+    public static async Task<OwnedGifts> GetUserGiftsASync(
         this IBotApiClient client,
         GetUserGiftsParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2763,7 +2763,7 @@ public static partial class BotApiClientExtensions
             Limit = limit
         }, cancellationToken);
 
-    internal static async Task<OwnedGifts> GetChatGiftsAsync(
+    public static async Task<OwnedGifts> GetChatGiftsAsync(
         this IBotApiClient client,
         GetChatGiftsParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2798,7 +2798,7 @@ public static partial class BotApiClientExtensions
             Limit = limit
         }, cancellationToken);
 
-    internal static async Task<bool> ConvertGiftToStarsAsync(
+    public static async Task<bool> ConvertGiftToStarsAsync(
         this IBotApiClient client,
         ConvertGiftToStarsParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2815,7 +2815,7 @@ public static partial class BotApiClientExtensions
             OwnedGiftId = ownedGiftId
         }, cancellationToken);
 
-    internal static async Task<bool> UpgradeGiftAsync(
+    public static async Task<bool> UpgradeGiftAsync(
         this IBotApiClient client,
         UpgradeGiftParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2836,7 +2836,7 @@ public static partial class BotApiClientExtensions
             StarCount = starCount
         }, cancellationToken);
 
-    internal static async Task<bool> TransferGiftAsync(
+    public static async Task<bool> TransferGiftAsync(
         this IBotApiClient client,
         TransferGiftParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2857,7 +2857,7 @@ public static partial class BotApiClientExtensions
             StarCount = starCount
         }, cancellationToken);
 
-    internal static async Task<Story> PostStoryAsync(
+    public static async Task<Story> PostStoryAsync(
         this IBotApiClient client,
         PostStoryParameters parameters, CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Story>(new ApiRequest("postStory", parameters), cancellationToken);
@@ -2887,7 +2887,7 @@ public static partial class BotApiClientExtensions
             ProtectContent = protectContent
         }, cancellationToken);
 
-    internal static async Task<Story> RepostStoryAsync(
+    public static async Task<Story> RepostStoryAsync(
         this IBotApiClient client,
         RepostStoryParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2912,7 +2912,7 @@ public static partial class BotApiClientExtensions
             ProtectContent = protectContent
         }, cancellationToken);
 
-    internal static async Task<Story> EditStoryAsync(
+    public static async Task<Story> EditStoryAsync(
         this IBotApiClient client,
         EditStoryParameters parameters,
         CancellationToken cancellationToken = default)
@@ -2939,7 +2939,7 @@ public static partial class BotApiClientExtensions
             Areas = areas
         }, cancellationToken);
 
-    internal static async Task<Story> DeleteStoryAsync(
+    public static async Task<Story> DeleteStoryAsync(
         this IBotApiClient client,
         DeleteStoryParameters parameters,
         CancellationToken cancellationToken = default)

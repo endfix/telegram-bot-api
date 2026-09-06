@@ -9,7 +9,7 @@ namespace Endfix.Telegram.BotAPI.Extensions;
 
 public static partial class BotApiClientExtensions
 {
-    internal static async Task<Message> SendInvoiceAsync(
+    public static async Task<Message> SendInvoiceAsync(
         this IBotApiClient client, 
         SendInvoiceParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -84,7 +84,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<string> CreateInvoiceLinkAsync(
+    public static async Task<string> CreateInvoiceLinkAsync(
         this IBotApiClient client, 
         CreateInvoiceLinkParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -141,7 +141,7 @@ public static partial class BotApiClientExtensions
             IsFlexible = isFlexible
         }, cancellationToken);
 
-    internal static async Task<bool> AnswerShippingQueryAsync(
+    public static async Task<bool> AnswerShippingQueryAsync(
         this IBotApiClient client, 
         AnswerShippingQueryParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -162,7 +162,7 @@ public static partial class BotApiClientExtensions
             ErrorMessage = errorMessage
         }, cancellationToken);
 
-    internal static async Task<bool> AnswerPreCheckoutQueryAsync(
+    public static async Task<bool> AnswerPreCheckoutQueryAsync(
         this IBotApiClient client, 
         AnswerPreCheckoutQueryParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -181,7 +181,7 @@ public static partial class BotApiClientExtensions
             ErrorMessage = errorMessage
         }, cancellationToken);
 
-    internal static async Task<StarAmount> GetMyStarBalanceAsync(
+    public static async Task<StarAmount> GetMyStarBalanceAsync(
         this IBotApiClient client, 
         GetMyStarBalanceParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -195,7 +195,7 @@ public static partial class BotApiClientExtensions
             // No parameters required for this method
         }, cancellationToken);
 
-    internal static async Task<StarTransactions> GetStarTransactionsAsync(
+    public static async Task<StarTransactions> GetStarTransactionsAsync(
         this IBotApiClient client, 
         GetStarTransactionsParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -212,7 +212,7 @@ public static partial class BotApiClientExtensions
             Limit = limit
         }, cancellationToken);
 
-    internal static async Task<bool> RefundStarPaymentAsync(
+    public static async Task<bool> RefundStarPaymentAsync(
         this IBotApiClient client, 
         RefundStarPaymentParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -229,7 +229,7 @@ public static partial class BotApiClientExtensions
             TelegramPaymentChargeId = telegramPaymentChargeId
         }, cancellationToken);
 
-    internal static async Task<bool> EditUserStarSubscriptionAsync(
+    public static async Task<bool> EditUserStarSubscriptionAsync(
         this IBotApiClient client, 
         EditUserStarSubscriptionParameters parameters, 
         CancellationToken cancellationToken = default)

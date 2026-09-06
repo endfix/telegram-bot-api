@@ -9,7 +9,7 @@ namespace Endfix.Telegram.BotAPI.Extensions;
 
 public static partial class BotApiClientExtensions
 {
-    internal static async Task<Message> EditMessageTextAsync(
+    public static async Task<Message> EditMessageTextAsync(
         this IBotApiClient client, 
         EditMessageTextParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -42,7 +42,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<Message> EditMessageCaptionAsync(
+    public static async Task<Message> EditMessageCaptionAsync(
         this IBotApiClient client, 
         EditMessageCaptionParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -73,7 +73,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<Message> EditMessageMediaAsync(
+    public static async Task<Message> EditMessageMediaAsync(
         this IBotApiClient client, 
         EditMessageMediaParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -98,7 +98,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<Message> EditMessageLiveLocationAsync(
+    public static async Task<Message> EditMessageLiveLocationAsync(
         this IBotApiClient client, 
         EditMessageLiveLocationParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -133,7 +133,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<Message> StopMessageLiveLocationAsync(
+    public static async Task<Message> StopMessageLiveLocationAsync(
         this IBotApiClient client, 
         StopMessageLiveLocationParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -156,7 +156,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<Message> EditMessageChecklistAsync(
+    public static async Task<Message> EditMessageChecklistAsync(
         this IBotApiClient client, 
         EditMessageChecklistParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -179,7 +179,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<Message> EditMessageReplyMarkupAsync(
+    public static async Task<Message> EditMessageReplyMarkupAsync(
         this IBotApiClient client, 
         EditMessageReplyMarkupParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -202,7 +202,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<Poll> StopPollAsync(
+    public static async Task<Poll> StopPollAsync(
         this IBotApiClient client, 
         StopPollParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -223,7 +223,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<bool> EditEphemeralMessageTextAsync(
+    public static async Task<bool> EditEphemeralMessageTextAsync(
         this IBotApiClient client, 
         EditEphemeralMessageTextParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -252,7 +252,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<bool> EditEphemeralMessageMediaAsync(
+    public static async Task<bool> EditEphemeralMessageMediaAsync(
         this IBotApiClient client, 
         EditEphemeralMessageMediaParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -275,7 +275,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<bool> EditEphemeralMessageCaptionAsync(
+    public static async Task<bool> EditEphemeralMessageCaptionAsync(
         this IBotApiClient client, 
         EditEphemeralMessageCaptionParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -304,7 +304,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<bool> EditEphemeralMessageReplyMarkupAsync(
+    public static async Task<bool> EditEphemeralMessageReplyMarkupAsync(
         this IBotApiClient client, 
         EditEphemeralMessageReplyMarkupParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -325,7 +325,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<bool> ApproveSuggestedPostAsync(
+    public static async Task<bool> ApproveSuggestedPostAsync(
         this IBotApiClient client, 
         ApproveSuggestedPostParameters parameters,
         CancellationToken cancellationToken = default)
@@ -344,7 +344,7 @@ public static partial class BotApiClientExtensions
             SendDate = sendDate
         }, cancellationToken);
 
-    internal static async Task<bool> DeclineSuggestedPostAsync(
+    public static async Task<bool> DeclineSuggestedPostAsync(
         this IBotApiClient client, 
         DeclineSuggestedPostParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -363,7 +363,7 @@ public static partial class BotApiClientExtensions
             Comment = comment
         }, cancellationToken);
 
-    internal static async Task<bool> DeleteMessageAsync(
+    public static async Task<bool> DeleteMessageAsync(
         this IBotApiClient client, DeleteMessageParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("deleteMessage", parameters), cancellationToken);
@@ -379,7 +379,7 @@ public static partial class BotApiClientExtensions
             MessageId = messageId
         }, cancellationToken);
 
-    internal static async Task<bool> DeleteMessagesAsync(
+    public static async Task<bool> DeleteMessagesAsync(
         this IBotApiClient client, 
         DeleteMessagesParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -396,7 +396,7 @@ public static partial class BotApiClientExtensions
             MessageIds = messageIds
         }, cancellationToken);
 
-    internal static async Task<bool> DeleteEphemeralMessageAsync(
+    public static async Task<bool> DeleteEphemeralMessageAsync(
         this IBotApiClient client, 
         DeleteEphemeralMessageParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -415,7 +415,7 @@ public static partial class BotApiClientExtensions
             EphemeralMessageId = ephemeralMessageId
         }, cancellationToken);
 
-    internal static async Task<bool> DeleteMessageReactionAsync(
+    public static async Task<bool> DeleteMessageReactionAsync(
         this IBotApiClient client, 
         DeleteMessageReactionParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -436,7 +436,7 @@ public static partial class BotApiClientExtensions
             ActorChatId = actorChatId
         }, cancellationToken);
 
-    internal static async Task<bool> DeleteAllMessageReactionsAsync(
+    public static async Task<bool> DeleteAllMessageReactionsAsync(
         this IBotApiClient client, 
         DeleteAllMessageReactionsParameters parameters, 
         CancellationToken cancellationToken = default)

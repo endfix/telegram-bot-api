@@ -9,7 +9,7 @@ namespace Endfix.Telegram.BotAPI.Extensions;
 
 public static partial class BotApiClientExtensions
 {
-    internal static async Task<Message> SendGameAsync(
+    public static async Task<Message> SendGameAsync(
         this IBotApiClient client, 
         SendGameParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -42,7 +42,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<Message> SetGameScoreAsync(
+    public static async Task<Message> SetGameScoreAsync(
         this IBotApiClient client, 
         SetGameScoreParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -69,7 +69,7 @@ public static partial class BotApiClientExtensions
             InlineMessageId = inlineMessageId
         }, cancellationToken);
 
-    internal static async Task<IReadOnlyList<GameHighScore>> GetGameHighScoresAsync(
+    public static async Task<IReadOnlyList<GameHighScore>> GetGameHighScoresAsync(
         this IBotApiClient client, 
         GetGameHighScoresParameters parameters, 
         CancellationToken cancellationToken = default)

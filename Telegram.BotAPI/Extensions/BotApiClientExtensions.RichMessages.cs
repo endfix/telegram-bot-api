@@ -8,7 +8,7 @@ namespace Endfix.Telegram.BotAPI.Extensions;
 
 public static partial class BotApiClientExtensions
 {
-    internal static async Task<Message> SendRichMessageAsync(
+    public static async Task<Message> SendRichMessageAsync(
         this IBotApiClient client,
         SendRichMessageParameters parameters,
         CancellationToken cancellationToken = default)
@@ -47,7 +47,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<bool> SendRichMessageDraftAsync(
+    public static async Task<bool> SendRichMessageDraftAsync(
         this IBotApiClient client,
         SendRichMessageDraftParameters parameters,
         CancellationToken cancellationToken = default)

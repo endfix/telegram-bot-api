@@ -10,7 +10,7 @@ namespace Endfix.Telegram.BotAPI.Extensions;
 
 public static partial class BotApiClientExtensions
 {
-    internal static async Task<Message> SendStickerAsync(
+    public static async Task<Message> SendStickerAsync(
         this IBotApiClient client, 
         SendStickerParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -51,7 +51,7 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    internal static async Task<StickerSet> GetStickerSetAsync(
+    public static async Task<StickerSet> GetStickerSetAsync(
         this IBotApiClient client, 
         GetStickerSetParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -66,7 +66,7 @@ public static partial class BotApiClientExtensions
             Name = name
         }, cancellationToken);
 
-    internal static async Task<IReadOnlyList<Sticker>> GetCustomEmojiStickersAsync(
+    public static async Task<IReadOnlyList<Sticker>> GetCustomEmojiStickersAsync(
         this IBotApiClient client, 
         GetCustomEmojiStickersParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -81,7 +81,7 @@ public static partial class BotApiClientExtensions
             CustomEmojiIds = customEmojiIds
         }, cancellationToken);
 
-    internal static async Task<FileStruct> UploadStickerFileAsync(
+    public static async Task<FileStruct> UploadStickerFileAsync(
         this IBotApiClient client, 
         UploadStickerFileParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -100,7 +100,7 @@ public static partial class BotApiClientExtensions
             StickerFormat = stickerFormat
         }, cancellationToken);
 
-    internal static async Task<bool> CreateNewStickerSetAsync(
+    public static async Task<bool> CreateNewStickerSetAsync(
         this IBotApiClient client, 
         CreateNewStickerSetParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -125,7 +125,7 @@ public static partial class BotApiClientExtensions
             NeedsRepainting = needsRepainting
         }, cancellationToken);
 
-    internal static async Task<bool> AddStickerToSetAsync(
+    public static async Task<bool> AddStickerToSetAsync(
         this IBotApiClient client, 
         AddStickerToSetParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -144,7 +144,7 @@ public static partial class BotApiClientExtensions
             Sticker = sticker
         }, cancellationToken);
 
-    internal static async Task<bool> SetStickerPositionInSetAsync(
+    public static async Task<bool> SetStickerPositionInSetAsync(
         this IBotApiClient client, 
         SetStickerPositionInSetParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -161,7 +161,7 @@ public static partial class BotApiClientExtensions
             Position = position
         }, cancellationToken);
 
-    internal static async Task<bool> DeleteStickerFromSetAsync(
+    public static async Task<bool> DeleteStickerFromSetAsync(
         this IBotApiClient client, 
         DeleteStickerFromSetParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -176,7 +176,7 @@ public static partial class BotApiClientExtensions
             Sticker = sticker
         }, cancellationToken);
 
-    internal static async Task<bool> ReplaceStickerInSetAsync(
+    public static async Task<bool> ReplaceStickerInSetAsync(
         this IBotApiClient client, 
         ReplaceStickerInSetParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -197,7 +197,7 @@ public static partial class BotApiClientExtensions
             Sticker = sticker
         }, cancellationToken);
 
-    internal static async Task<bool> SetStickerEmojiListAsync
+    public static async Task<bool> SetStickerEmojiListAsync
         (this IBotApiClient client, 
         SetStickerEmojiListParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -214,7 +214,7 @@ public static partial class BotApiClientExtensions
             EmojiList = emojiList
         }, cancellationToken);
 
-    internal static async Task<bool> SetStickerKeywordsAsync(
+    public static async Task<bool> SetStickerKeywordsAsync(
         this IBotApiClient client, 
         SetStickerKeywordsParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -231,7 +231,7 @@ public static partial class BotApiClientExtensions
             Keywords = keywords
         }, cancellationToken);
 
-    internal static async Task<bool> SetStickerMaskPositionAsync(
+    public static async Task<bool> SetStickerMaskPositionAsync(
         this IBotApiClient client, 
         SetStickerMaskPositionParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -248,7 +248,7 @@ public static partial class BotApiClientExtensions
             MaskPosition = maskPosition
         }, cancellationToken);
 
-    internal static async Task<bool> SetStickerSetTitleAsync(
+    public static async Task<bool> SetStickerSetTitleAsync(
         this IBotApiClient client, 
         SetStickerSetTitleParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -265,7 +265,7 @@ public static partial class BotApiClientExtensions
             Title = title,
         }, cancellationToken);
 
-    internal static async Task<bool> SetStickerSetThumbnailAsync(
+    public static async Task<bool> SetStickerSetThumbnailAsync(
         this IBotApiClient client, 
         SetStickerSetThumbnailParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -286,7 +286,7 @@ public static partial class BotApiClientExtensions
             Thumbnail = thumbnail
         }, cancellationToken);
 
-    internal static async Task<bool> SetCustomEmojiStickerSetThumbnailAsync(
+    public static async Task<bool> SetCustomEmojiStickerSetThumbnailAsync(
         this IBotApiClient client, 
         SetCustomEmojiStickerSetThumbnailParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -303,7 +303,7 @@ public static partial class BotApiClientExtensions
             CustomEmojiId = customEmojiId,
         }, cancellationToken);
 
-    internal static async Task<bool> DeleteStickerSetAsync(
+    public static async Task<bool> DeleteStickerSetAsync(
         this IBotApiClient client, 
         DeleteStickerSetParameters parameters, 
         CancellationToken cancellationToken = default)

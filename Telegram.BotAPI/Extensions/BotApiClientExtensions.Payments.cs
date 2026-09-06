@@ -141,12 +141,25 @@ public static partial class BotApiClientExtensions
             IsFlexible = isFlexible
         }, cancellationToken);
 
+    /// <summary>Responds to a shipping query for an invoice with a flexible price.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Shipping query result and available delivery options.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> AnswerShippingQueryAsync(
         this IBotApiClient client, 
         AnswerShippingQueryParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("answerShippingQuery", parameters), cancellationToken);
 
+    /// <summary>Responds to a shipping query for an invoice with a flexible price.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="shippingQueryId">Unique identifier of the shipping query.</param>
+    /// <param name="ok">Whether delivery to the specified address is possible.</param>
+    /// <param name="shippingOptions">Available shipping options. Required when <paramref name="ok"/> is <see langword="true"/>.</param>
+    /// <param name="errorMessage">Human-readable reason for failure. Required when <paramref name="ok"/> is <see langword="false"/>.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> AnswerShippingQueryAsync(
         this IBotApiClient client,
         string shippingQueryId,
@@ -162,12 +175,24 @@ public static partial class BotApiClientExtensions
             ErrorMessage = errorMessage
         }, cancellationToken);
 
+    /// <summary>Responds to a pre-checkout query after the user confirms payment and shipping details.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Pre-checkout result and optional failure message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> AnswerPreCheckoutQueryAsync(
         this IBotApiClient client, 
         AnswerPreCheckoutQueryParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("answerPreCheckoutQuery", parameters), cancellationToken);
 
+    /// <summary>Responds to a pre-checkout query after the user confirms payment and shipping details.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="preCheckoutQueryId">Unique identifier of the pre-checkout query.</param>
+    /// <param name="ok">Whether the order can proceed.</param>
+    /// <param name="errorMessage">Human-readable reason for failure. Required when <paramref name="ok"/> is <see langword="false"/>.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> AnswerPreCheckoutQueryAsync(
         this IBotApiClient client,
         string preCheckoutQueryId,

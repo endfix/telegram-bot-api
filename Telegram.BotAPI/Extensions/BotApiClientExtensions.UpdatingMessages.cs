@@ -9,12 +9,31 @@ namespace Endfix.Telegram.BotAPI.Extensions;
 
 public static partial class BotApiClientExtensions
 {
+    /// <summary>Edits text and optional link preview or keyboard of a message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Message identifier and replacement text.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The edited message, or <see langword="true"/> for an inline message.</returns>
     public static async Task<Message> EditMessageTextAsync(
         this IBotApiClient client, 
         EditMessageTextParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("editMessageText", parameters), cancellationToken);
 
+    /// <summary>Edits text and optional link preview or keyboard of a message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="text">New text of the message.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
+    /// <param name="chatId">Chat containing the message.</param>
+    /// <param name="messageId">Identifier of the message to edit.</param>
+    /// <param name="inlineMessageId">Identifier of the inline message to edit.</param>
+    /// <param name="parseMode">Mode for parsing entities in the message text.</param>
+    /// <param name="entities">Explicit entities in the message text.</param>
+    /// <param name="linkPreviewOptions">Options for the link preview.</param>
+    /// <param name="richMessage">Rich message content attached to the text.</param>
+    /// <param name="replyMarkup">Inline keyboard attached to the message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The edited message, or <see langword="true"/> for an inline message.</returns>
     public static async Task<Message> EditMessageTextAsync(
         this IBotApiClient client,
         string text,
@@ -42,12 +61,30 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Edits the caption of a message containing media.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Message identifier and replacement caption.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The edited message, or <see langword="true"/> for an inline message.</returns>
     public static async Task<Message> EditMessageCaptionAsync(
         this IBotApiClient client, 
         EditMessageCaptionParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("editMessageCaption", parameters), cancellationToken);
 
+    /// <summary>Edits the caption of a message containing media.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
+    /// <param name="chatId">Chat containing the message.</param>
+    /// <param name="messageId">Identifier of the message to edit.</param>
+    /// <param name="inlineMessageId">Identifier of the inline message to edit.</param>
+    /// <param name="caption">New caption of the message.</param>
+    /// <param name="parseMode">Mode for parsing entities in the caption.</param>
+    /// <param name="captionEntities">Explicit entities in the caption.</param>
+    /// <param name="showCaptionAboveMedia">Whether to show the caption above the media.</param>
+    /// <param name="replyMarkup">Inline keyboard attached to the message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The edited message, or <see langword="true"/> for an inline message.</returns>
     public static async Task<Message> EditMessageCaptionAsync(
         this IBotApiClient client,
         string? businessConnectionId = null,
@@ -73,12 +110,27 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Replaces the media content of a message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Message identifier and replacement media.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The edited message, or <see langword="true"/> for an inline message.</returns>
     public static async Task<Message> EditMessageMediaAsync(
         this IBotApiClient client, 
         EditMessageMediaParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("editMessageMedia", parameters), cancellationToken);
 
+    /// <summary>Replaces the media content of a message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="media">New media content.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
+    /// <param name="chatId">Chat containing the message.</param>
+    /// <param name="messageId">Identifier of the message to edit.</param>
+    /// <param name="inlineMessageId">Identifier of the inline message to edit.</param>
+    /// <param name="replyMarkup">Inline keyboard attached to the message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The edited message, or <see langword="true"/> for an inline message.</returns>
     public static async Task<Message> EditMessageMediaAsync(
         this IBotApiClient client,
         InputMedia media,
@@ -98,12 +150,32 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Updates the live location in a message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Message identifier and new location data.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The edited message, or <see langword="true"/> for an inline message.</returns>
     public static async Task<Message> EditMessageLiveLocationAsync(
         this IBotApiClient client, 
         EditMessageLiveLocationParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("editMessageLiveLocation", parameters), cancellationToken);
 
+    /// <summary>Updates the live location in a message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="latitude">Latitude of the new location.</param>
+    /// <param name="longitude">Longitude of the new location.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
+    /// <param name="chatId">Chat containing the message.</param>
+    /// <param name="messageId">Identifier of the message to edit.</param>
+    /// <param name="inlineMessageId">Identifier of the inline message to edit.</param>
+    /// <param name="livePeriod">New period in seconds during which the location can be updated.</param>
+    /// <param name="horizontalAccuracy">The radius of uncertainty for the location in meters.</param>
+    /// <param name="heading">Direction of travel in degrees.</param>
+    /// <param name="proximityAlertRadius">Distance in meters for proximity alerts.</param>
+    /// <param name="replyMarkup">Inline keyboard attached to the message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The edited message, or <see langword="true"/> for an inline message.</returns>
     public static async Task<Message> EditMessageLiveLocationAsync(
         this IBotApiClient client,
         double latitude,
@@ -133,12 +205,26 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Stops updating a live location in a message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Message identifier and optional replacement keyboard.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The edited message, or <see langword="true"/> for an inline message.</returns>
     public static async Task<Message> StopMessageLiveLocationAsync(
         this IBotApiClient client, 
         StopMessageLiveLocationParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("stopMessageLiveLocation", parameters), cancellationToken);
 
+    /// <summary>Stops updating a live location in a message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
+    /// <param name="chatId">Chat containing the message.</param>
+    /// <param name="messageId">Identifier of the message to edit.</param>
+    /// <param name="inlineMessageId">Identifier of the inline message to edit.</param>
+    /// <param name="replyMarkup">Inline keyboard attached to the message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The edited message, or <see langword="true"/> for an inline message.</returns>
     public static async Task<Message> StopMessageLiveLocationAsync(
         this IBotApiClient client,
         string? businessConnectionId = null,
@@ -156,12 +242,26 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Edits a checklist message in a business chat.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Business chat, message and replacement checklist.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The edited message.</returns>
     public static async Task<Message> EditMessageChecklistAsync(
         this IBotApiClient client, 
         EditMessageChecklistParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("editMessageChecklist", parameters), cancellationToken);
 
+    /// <summary>Edits a checklist message in a business chat.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
+    /// <param name="chatId">Identifier of the business chat.</param>
+    /// <param name="messageId">Identifier of the checklist message.</param>
+    /// <param name="checklist">Replacement checklist.</param>
+    /// <param name="replyMarkup">Inline keyboard attached to the message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The edited message.</returns>
     public static async Task<Message> EditMessageChecklistAsync(
         this IBotApiClient client,
         string businessConnectionId,
@@ -179,12 +279,26 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Edits the inline keyboard attached to a message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Message identifier and replacement keyboard.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The edited message, or <see langword="true"/> for an inline message.</returns>
     public static async Task<Message> EditMessageReplyMarkupAsync(
         this IBotApiClient client, 
         EditMessageReplyMarkupParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("editMessageReplyMarkup", parameters), cancellationToken);
 
+    /// <summary>Edits the inline keyboard attached to a message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
+    /// <param name="chatId">Chat containing the message.</param>
+    /// <param name="messageId">Identifier of the message to edit.</param>
+    /// <param name="inlineMessageId">Identifier of the inline message to edit.</param>
+    /// <param name="replyMarkup">Replacement inline keyboard; omit it to remove the keyboard.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The edited message, or <see langword="true"/> for an inline message.</returns>
     public static async Task<Message> EditMessageReplyMarkupAsync(
         this IBotApiClient client,
         string? businessConnectionId = null,

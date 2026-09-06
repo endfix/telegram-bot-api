@@ -7,7 +7,9 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class SetStickerPositionInSetParameters : ApiRequestParameters
 {
+    /// <summary>File identifier of the sticker.</summary>
     public required string Sticker { get; init; }
 
+    /// <summary>Zero-based destination position.</summary>
     public required int Position { get; init; }
 }

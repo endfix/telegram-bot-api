@@ -8,5 +8,6 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class GetCustomEmojiStickersParameters : ApiRequestParameters
 {
+    /// <summary>Identifiers of the custom emoji.</summary>
     public required IReadOnlyList<string> CustomEmojiIds { get; init; }
 }

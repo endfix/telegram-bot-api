@@ -10,12 +10,35 @@ namespace Endfix.Telegram.BotAPI.Extensions;
 
 public static partial class BotApiClientExtensions
 {
+    /// <summary>Sends a sticker message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Target chat, sticker and optional message settings.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendStickerAsync(
         this IBotApiClient client, 
         SendStickerParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("sendSticker", parameters), cancellationToken);
 
+    /// <summary>Sends a sticker message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat.</param>
+    /// <param name="sticker">Sticker to send.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
+    /// <param name="messageThreadId">Target message thread.</param>
+    /// <param name="directMessagesTopicId">Topic identifier in a direct messages chat.</param>
+    /// <param name="ephemeralMessageParameters">Options for an ephemeral message.</param>
+    /// <param name="emoji">Emoji associated with the sticker.</param>
+    /// <param name="disableNotification">Sends the message silently when <see langword="true"/>.</param>
+    /// <param name="protectContent">Protects the message from forwarding and saving when <see langword="true"/>.</param>
+    /// <param name="allowPaidBroadcast">Allows paid broadcasts using Telegram Stars.</param>
+    /// <param name="messageEffectId">Unique identifier of a message effect.</param>
+    /// <param name="suggestedPostParameters">Parameters for a suggested post.</param>
+    /// <param name="replyParameters">Description of the message to reply to.</param>
+    /// <param name="replyMarkup">Inline or reply keyboard attached to the message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendStickerAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -51,12 +74,22 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Returns an installed sticker set.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Sticker set name.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sticker set.</returns>
     public static async Task<StickerSet> GetStickerSetAsync(
         this IBotApiClient client, 
         GetStickerSetParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<StickerSet>(new ApiRequest("getStickerSet", parameters), cancellationToken);
 
+    /// <summary>Returns an installed sticker set.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="name">Sticker set name.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sticker set.</returns>
     public static async Task<StickerSet> GetStickerSetAsync(
         this IBotApiClient client,
         string name,
@@ -66,12 +99,22 @@ public static partial class BotApiClientExtensions
             Name = name
         }, cancellationToken);
 
+    /// <summary>Returns custom emoji stickers by their identifiers.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Custom emoji identifiers.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The matching stickers.</returns>
     public static async Task<IReadOnlyList<Sticker>> GetCustomEmojiStickersAsync(
         this IBotApiClient client, 
         GetCustomEmojiStickersParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<IReadOnlyList<Sticker>>(new ApiRequest("getCustomEmojiStickers", parameters), cancellationToken);
 
+    /// <summary>Returns custom emoji stickers by their identifiers.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="customEmojiIds">Identifiers of the custom emoji.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The matching stickers.</returns>
     public static async Task<IReadOnlyList<Sticker>> GetCustomEmojiStickersAsync(
         this IBotApiClient client,
         IReadOnlyList<string> customEmojiIds,
@@ -81,12 +124,24 @@ public static partial class BotApiClientExtensions
             CustomEmojiIds = customEmojiIds
         }, cancellationToken);
 
+    /// <summary>Uploads a sticker file for later use in a sticker set.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">User, file and sticker format.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The uploaded file descriptor.</returns>
     public static async Task<FileStruct> UploadStickerFileAsync(
         this IBotApiClient client, 
         UploadStickerFileParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<FileStruct>(new ApiRequest("uploadStickerFile", parameters), cancellationToken);
 
+    /// <summary>Uploads a sticker file for later use in a sticker set.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="userId">Identifier of the user who owns the sticker set.</param>
+    /// <param name="sticker">Sticker file to upload.</param>
+    /// <param name="stickerFormat">Sticker format.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The uploaded file descriptor.</returns>
     public static async Task<FileStruct> UploadStickerFileAsync(
         this IBotApiClient client,
         long userId,
@@ -100,12 +155,27 @@ public static partial class BotApiClientExtensions
             StickerFormat = stickerFormat
         }, cancellationToken);
 
+    /// <summary>Creates a new sticker set.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Owner, set metadata and initial stickers.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> CreateNewStickerSetAsync(
         this IBotApiClient client, 
         CreateNewStickerSetParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("createNewStickerSet", parameters), cancellationToken);
 
+    /// <summary>Creates a new sticker set.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="userId">Identifier of the user who owns the sticker set.</param>
+    /// <param name="name">Sticker set name.</param>
+    /// <param name="title">Sticker set title.</param>
+    /// <param name="stickers">Initial stickers in the set.</param>
+    /// <param name="stickerType">Type of stickers in the set.</param>
+    /// <param name="needsRepainting">Whether stickers should be recolored for dark and light themes.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> CreateNewStickerSetAsync(
         this IBotApiClient client,
         long userId,
@@ -125,12 +195,24 @@ public static partial class BotApiClientExtensions
             NeedsRepainting = needsRepainting
         }, cancellationToken);
 
+    /// <summary>Adds a sticker to an existing sticker set.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Sticker set owner, name and sticker.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> AddStickerToSetAsync(
         this IBotApiClient client, 
         AddStickerToSetParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("addStickerToSet", parameters), cancellationToken);
 
+    /// <summary>Adds a sticker to an existing sticker set.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="userId">Identifier of the user who owns the sticker set.</param>
+    /// <param name="name">Sticker set name.</param>
+    /// <param name="sticker">Sticker to add.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> AddStickerToSetAsync(
         this IBotApiClient client,
         long userId,
@@ -144,12 +226,23 @@ public static partial class BotApiClientExtensions
             Sticker = sticker
         }, cancellationToken);
 
+    /// <summary>Moves a sticker to a position in a sticker set.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Sticker file identifier and destination position.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetStickerPositionInSetAsync(
         this IBotApiClient client, 
         SetStickerPositionInSetParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("setStickerPositionInSet", parameters), cancellationToken);
 
+    /// <summary>Moves a sticker to a position in a sticker set.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="sticker">File identifier of the sticker.</param>
+    /// <param name="position">Zero-based destination position.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetStickerPositionInSetAsync(
         this IBotApiClient client,
         string sticker,
@@ -161,12 +254,22 @@ public static partial class BotApiClientExtensions
             Position = position
         }, cancellationToken);
 
+    /// <summary>Deletes a sticker from a sticker set.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Sticker file identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeleteStickerFromSetAsync(
         this IBotApiClient client, 
         DeleteStickerFromSetParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("deleteStickerFromSet", parameters), cancellationToken);
 
+    /// <summary>Deletes a sticker from a sticker set.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="sticker">File identifier of the sticker.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeleteStickerFromSetAsync(
         this IBotApiClient client,
         string sticker,

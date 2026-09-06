@@ -9,9 +9,12 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class UploadStickerFileParameters : ApiRequestParameters
 {
+    /// <summary>Identifier of the user who owns the sticker set.</summary>
     public required long UserId { get; init; }
 
+    /// <summary>Sticker file to upload.</summary>
     public required InputFile Sticker { get; init; }
 
+    /// <summary>Sticker format.</summary>
     public required StickerFormat StickerFormat { get; init; }
 }

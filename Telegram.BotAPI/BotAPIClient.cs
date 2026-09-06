@@ -21,6 +21,9 @@ using System.Threading.Tasks;
 
 namespace Endfix.Telegram.BotAPI;
 
+/// <summary>
+/// Typed Telegram Bot API client backed by <see cref="HttpClient"/>.
+/// </summary>
 public sealed partial class BotApiClient : IBotApiClient, IDisposable
 {
     /// <summary>

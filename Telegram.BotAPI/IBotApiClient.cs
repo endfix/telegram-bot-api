@@ -7,6 +7,9 @@ using Endfix.Telegram.BotAPI.Types;
 
 namespace Endfix.Telegram.BotAPI;
 
+/// <summary>
+/// Common Bot API client surface intended for dependency injection and update handlers.
+/// </summary>
 public interface IBotApiClient
 {
     /// <summary>
@@ -16,6 +19,13 @@ public interface IBotApiClient
     /// </summary>
     event UpdateHandler? OnUpdate;
 
+    /// <summary>
+    /// Sends a request and returns its result, throwing <see cref="Exceptions.ApiRequestException"/>
+    /// when Telegram returns an unsuccessful API response.
+    /// </summary>
+    /// <typeparam name="T">The expected result type.</typeparam>
+    /// <param name="request">The request to send.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     Task<T> ExecuteAsync<T>(ApiRequest request, CancellationToken cancellationToken = default);
 
     /// <summary>

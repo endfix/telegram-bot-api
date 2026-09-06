@@ -2,14 +2,19 @@ using System.Collections.Generic;
 
 namespace Endfix.Telegram.BotAPI.Types;
 
+/// <summary>Contains information about a message being replied to from another chat or forum topic.</summary>
 public sealed class ExternalReplyInfo
 {
+    /// <summary>Origin of the original message.</summary>
     public required MessageOrigin Origin { get; init; }
 
+    /// <summary>Chat to which the original message belongs, if available.</summary>
     public Chat? Chat { get; init; }
 
+    /// <summary>Unique identifier of the original message, if available.</summary>
     public long? MessageId { get; init; }
 
+    /// <summary>Link preview options used by the original message, if available.</summary>
     public LinkPreviewOptions? LinkRreviewOptions { get; init; }
 
     public Animation? Animation { get; init; }

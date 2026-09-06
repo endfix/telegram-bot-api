@@ -172,6 +172,17 @@ dotnet run --project Telegram.BotAPI.Benchmarks/Telegram.BotAPI.Benchmarks.cspro
 
 The project follows the Telegram Bot API release it targets. While the package remains below `1.0`, public contracts may still change to correct modeling issues or complete the file-source API. After `1.0`, incompatible public API changes will require a major version.
 
+## API documentation source
+
+Descriptions of Telegram objects, fields and method parameters are aligned with
+the [official Bot API documentation](https://core.telegram.org/bots/api). The
+current repository snapshot targets Bot API `10.3` (published August 24, 2026).
+Telegram may clarify or extend descriptions without changing a .NET type, so
+the source version and date should be reviewed when updating XML documentation.
+Library-specific behavior, such as stream ownership, retryability and polling
+semantics, is documented locally and is not copied from Telegram's object
+descriptions.
+
 ## Runtime compatibility
 
 The library targets `netstandard2.0`. This is a library target, not a

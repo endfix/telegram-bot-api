@@ -2,42 +2,61 @@ using System.Collections.Generic;
 
 namespace Endfix.Telegram.BotAPI.Types;
 
+/// <summary>Represents a Telegram message.</summary>
 public sealed class Message : MaybeInaccessibleMessage
 {
+    /// <summary>Unique identifier of the message thread or forum topic to which the message belongs, if available.</summary>
     public long? MessageThreadId { get; init; }
 
+    /// <summary>Information about the direct messages chat topic that contains the message, if available.</summary>
     public DirectMessagesTopic? DirectMessagesTopic { get; init; }
 
+    /// <summary>Sender of the message, if available.</summary>
     public User? From { get; init; }
 
+    /// <summary>Sender of the message when sent on behalf of a chat, if available.</summary>
     public Chat? SenderChat { get; init; }
 
+    /// <summary>Number of boosts added by the sender, if the sender boosted the chat.</summary>
     public int? SenderBoostCount { get; init; }
 
+    /// <summary>The bot that actually sent the message on behalf of a business account, if available.</summary>
     public User? SenderBusinessBot { get; init; }
 
+    /// <summary>Tag or custom title of the sender, for supergroups.</summary>
     public string? SenderTag { get; init; }
 
+    /// <summary>The user who received an ephemeral message, if applicable.</summary>
     public User? ReceiverUser { get; init; }
 
+    /// <summary>Identifier of an ephemeral message inside this chat, if applicable.</summary>
     public long? EphemeralMessageId { get; init; }
 
+    /// <summary>Unique identifier of the guest query, if applicable.</summary>
     public string? GuestQueryId { get; init; }
 
+    /// <summary>Unique identifier of the business connection from which the message was received, if applicable.</summary>
     public string? BusinessConnectionId { get; init; }
 
+    /// <summary>Information about the original message for a forwarded message, if available.</summary>
     public MessageOrigin? ForwardOrigin { get; init; }
 
+    /// <summary>Indicates whether the message was sent to a topic in a forum supergroup or a private chat with the bot.</summary>
     public bool? IsTopicMessage { get; init; }
 
+    /// <summary>Indicates whether the message is a channel post automatically forwarded to the connected discussion group.</summary>
     public bool? IsAutomaticForward { get; init; }
 
+    /// <summary>The original message for a reply in the same chat and message thread, if available.</summary>
     public Message? ReplyToMessage { get; init; }
 
+    /// <summary>Information about a message being replied to from another chat or forum topic, if available.</summary>
     public ExternalReplyInfo? ExternalReply { get; init; }
 
+    /// <summary>The quoted part of the original message, if the message is a reply that quotes it.</summary>
     public TextQuote? Quote { get; init; }
 
+    /// <summary>The original story for a reply to a story, if available.</summary>
     public Story? ReplyToStory { get; init; }
 
     public int? ReplyToChecklistTaskId { get; init; }

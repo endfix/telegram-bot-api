@@ -9,12 +9,52 @@ namespace Endfix.Telegram.BotAPI.Extensions;
 
 public static partial class BotApiClientExtensions
 {
+    /// <summary>Sends an invoice to a chat.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Invoice details, price breakdown and optional customer-data requirements.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The message containing the invoice.</returns>
     public static async Task<Message> SendInvoiceAsync(
         this IBotApiClient client, 
         SendInvoiceParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("sendInvoice", parameters), cancellationToken);
 
+    /// <summary>Sends an invoice to a chat.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="ChatId">Target chat or channel.</param>
+    /// <param name="title">Product name, 1-32 characters.</param>
+    /// <param name="description">Product description, 1-255 characters.</param>
+    /// <param name="payload">Bot-defined invoice payload, 1-128 bytes.</param>
+    /// <param name="currency">Three-letter ISO 4217 currency code.</param>
+    /// <param name="prices">Price breakdown in the smallest units of the currency.</param>
+    /// <param name="messageThreadId">Unique identifier of the target message thread.</param>
+    /// <param name="directMessagesTopicId">Topic identifier in a direct messages chat.</param>
+    /// <param name="providerToken">Payment provider token. Not required for Telegram Stars.</param>
+    /// <param name="maxTipAmount">Maximum tip amount in the smallest units of the currency.</param>
+    /// <param name="suggestedTipAmounts">Suggested tip amounts in the smallest units of the currency.</param>
+    /// <param name="startParameter">Deep-link parameter for the invoice.</param>
+    /// <param name="providerData">JSON-encoded data for the payment provider.</param>
+    /// <param name="photoUrl">Product photo URL.</param>
+    /// <param name="photoSize">Photo size in bytes.</param>
+    /// <param name="photoWidth">Photo width.</param>
+    /// <param name="photoHeight">Photo height.</param>
+    /// <param name="needName">Whether to request the user's full name.</param>
+    /// <param name="needPhoneNumber">Whether to request the user's phone number.</param>
+    /// <param name="needEmail">Whether to request the user's email address.</param>
+    /// <param name="needShippingAddress">Whether to request the user's shipping address.</param>
+    /// <param name="sendPhoneNumberToProvider">Whether to send the user's phone number to the provider.</param>
+    /// <param name="sendEmailToProvider">Whether to send the user's email address to the provider.</param>
+    /// <param name="isFlexible">Whether the final price depends on the shipping method.</param>
+    /// <param name="disableNotification">Sends the message silently if <see langword="true"/>.</param>
+    /// <param name="protectContent">Protects the invoice message from forwarding and saving if <see langword="true"/>.</param>
+    /// <param name="allowPaidBroadcast">Allows the bot to broadcast the message by paying Telegram Stars.</param>
+    /// <param name="messageEffectId">Unique identifier of a message effect.</param>
+    /// <param name="suggestedPostParameters">Parameters for a suggested post when sending to a channel chat.</param>
+    /// <param name="replyParameters">Description of the message to reply to.</param>
+    /// <param name="replyMarkup">Inline keyboard attached to the invoice.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The message containing the invoice.</returns>
     public static async Task<Message> SendInvoiceAsync(
         this IBotApiClient client,
         ChatIdSource ChatId,
@@ -84,12 +124,43 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Creates a link for an invoice.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Invoice details and optional customer-data requirements.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The created invoice link.</returns>
     public static async Task<string> CreateInvoiceLinkAsync(
         this IBotApiClient client, 
         CreateInvoiceLinkParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<string>(new ApiRequest("createInvoiceLink", parameters), cancellationToken);
 
+    /// <summary>Creates a link for an invoice.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="title">Product name, 1-32 characters.</param>
+    /// <param name="description">Product description, 1-255 characters.</param>
+    /// <param name="payload">Bot-defined invoice payload, 1-128 bytes.</param>
+    /// <param name="currency">Three-letter ISO 4217 currency code.</param>
+    /// <param name="prices">Price breakdown in the smallest units of the currency.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
+    /// <param name="providerToken">Payment provider token. Not required for Telegram Stars.</param>
+    /// <param name="subscriptionPeriod">Subscription period in seconds; currently 2592000 seconds (30 days).</param>
+    /// <param name="maxTipAmount">Maximum tip amount in the smallest units of the currency.</param>
+    /// <param name="suggestedTipAmounts">Suggested tip amounts in the smallest units of the currency.</param>
+    /// <param name="providerData">JSON-encoded data for the payment provider.</param>
+    /// <param name="photoUrl">Product photo URL.</param>
+    /// <param name="photoSize">Photo size in bytes.</param>
+    /// <param name="photoWidth">Photo width.</param>
+    /// <param name="photoHeight">Photo height.</param>
+    /// <param name="needName">Whether to request the user's full name.</param>
+    /// <param name="needPhoneNumber">Whether to request the user's phone number.</param>
+    /// <param name="needEmail">Whether to request the user's email address.</param>
+    /// <param name="needShippingAddress">Whether to request the user's shipping address.</param>
+    /// <param name="sendPhoneNumberToProvider">Whether to send the user's phone number to the provider.</param>
+    /// <param name="sendEmailToProvider">Whether to send the user's email address to the provider.</param>
+    /// <param name="isFlexible">Whether the final price depends on the shipping method.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The created invoice link.</returns>
     public static async Task<string> CreateInvoiceLinkAsync(
         this IBotApiClient client,
         string title,

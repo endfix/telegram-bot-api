@@ -9,65 +9,96 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class SendInvoiceParameters : ApiRequestParameters
 {
+    /// <summary>Target chat or channel.</summary>
     public required ChatIdSource ChatId { get; init; }
 
+    /// <summary>Unique identifier of the target message thread.</summary>
     public long? MessageThreadId { get; init; }
 
+    /// <summary>Topic identifier in a direct messages chat.</summary>
     public long? DirectMessagesTopicId { get; init; }
 
+    /// <summary>Product name, 1-32 characters.</summary>
     public required string Title { get; init; }
 
+    /// <summary>Product description, 1-255 characters.</summary>
     public required string Description { get; init; }
 
+    /// <summary>Bot-defined invoice payload, 1-128 bytes.</summary>
     public required string Payload { get; init; }
 
+    /// <summary>Payment provider token. Not required for Telegram Stars.</summary>
     public string? ProviderToken { get; init; }
 
+    /// <summary>Three-letter ISO 4217 currency code.</summary>
     public required string Currency { get; init; }
 
+    /// <summary>Price breakdown in the smallest units of the currency.</summary>
     public required IReadOnlyList<LabeledPrice> Prices { get; init; }
 
+    /// <summary>Maximum tip amount in the smallest units of the currency.</summary>
     public int? MaxTipAmount { get; init; }
 
+    /// <summary>Suggested tip amounts in the smallest units of the currency.</summary>
     public IReadOnlyList<int>? SuggestedTipAmounts { get; init; }
 
+    /// <summary>Deep-link parameter for the invoice.</summary>
     public string? StartParameter { get; init; }
 
+    /// <summary>JSON-encoded data for the payment provider.</summary>
     public string? ProviderData { get; init; }
 
+    /// <summary>Product photo URL.</summary>
     public string? PhotoUrl { get; init; }
 
+    /// <summary>Photo size in bytes.</summary>
     public int? PhotoSize { get; init; }
 
+    /// <summary>Photo width.</summary>
     public int? PhotoWidth { get; init; }
 
+    /// <summary>Photo height.</summary>
     public int? PhotoHeight { get; init; }
 
+    /// <summary>Whether to request the user's full name.</summary>
     public bool? NeedName { get; init; }
 
+    /// <summary>Whether to request the user's phone number.</summary>
     public bool? NeedPhoneNumber { get; init; }
 
+    /// <summary>Whether to request the user's email address.</summary>
     public bool? NeedEmail { get; init; }
 
+    /// <summary>Whether to request the user's shipping address.</summary>
     public bool? NeedShippingAddress { get; init; }
 
+    /// <summary>Whether to send the user's phone number to the provider.</summary>
     public bool? SendPhoneNumberToProvider { get; init; }
 
+    /// <summary>Whether to send the user's email address to the provider.</summary>
     public bool? SendEmailToProvider { get; init; }
 
+    /// <summary>Whether the final price depends on the shipping method.</summary>
     public bool? IsFlexible { get; init; }
 
+    /// <summary>Sends the message silently when <see langword="true"/>.</summary>
     public bool? DisableNotification { get; init; }
 
+    /// <summary>Protects the invoice message from forwarding and saving when <see langword="true"/>.</summary>
     public bool? ProtectContent { get; init; }
 
+    /// <summary>Allows the bot to broadcast the message by paying Telegram Stars.</summary>
     public bool? AllowPaidBroadcast { get; init; }
 
+    /// <summary>Unique identifier of a message effect.</summary>
     public string? MessageEffectId { get; init; }
 
+    /// <summary>Parameters for a suggested post when sending to a channel chat.</summary>
     public SuggestedPostParameters? SuggestedPostParameters { get; init; }
 
+    /// <summary>Description of the message to reply to.</summary>
     public ReplyParameters? ReplyParameters { get; init; }
 
+    /// <summary>Inline keyboard attached to the invoice.</summary>
     public InlineKeyboardMarkup? ReplyMarkup { get; init; }
 }

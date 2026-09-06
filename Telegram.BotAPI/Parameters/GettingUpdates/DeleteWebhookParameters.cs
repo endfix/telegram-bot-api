@@ -7,5 +7,8 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class DeleteWebhookParameters : ApiRequestParameters
 {
+    /// <summary>
+    /// Indicates whether all pending updates should be discarded.
+    /// </summary>
     public bool? DropPendingUpdates { get; init; }
 }

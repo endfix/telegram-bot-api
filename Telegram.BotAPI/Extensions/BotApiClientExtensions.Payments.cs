@@ -9,12 +9,6 @@ namespace Endfix.Telegram.BotAPI.Extensions;
 
 public static partial class BotApiClientExtensions
 {
-    /// <summary>
-    /// Invokes the <c>sendInvoice</c> method with the specified parameters.
-    /// </summary>
-    /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="parameters">Parameters for the request.</param>
-    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<Message> SendInvoiceAsync(
         this IBotApiClient client, 
         SendInvoiceParameters parameters, 
@@ -90,12 +84,6 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    /// <summary>
-    /// Invokes the <c>createInvoiceLink</c> method with the specified parameters.
-    /// </summary>
-    /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="parameters">Parameters for the request.</param>
-    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<string> CreateInvoiceLinkAsync(
         this IBotApiClient client, 
         CreateInvoiceLinkParameters parameters, 
@@ -153,12 +141,6 @@ public static partial class BotApiClientExtensions
             IsFlexible = isFlexible
         }, cancellationToken);
 
-    /// <summary>
-    /// Invokes the <c>answerShippingQuery</c> method with the specified parameters.
-    /// </summary>
-    /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="parameters">Parameters for the request.</param>
-    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<bool> AnswerShippingQueryAsync(
         this IBotApiClient client, 
         AnswerShippingQueryParameters parameters, 
@@ -180,12 +162,6 @@ public static partial class BotApiClientExtensions
             ErrorMessage = errorMessage
         }, cancellationToken);
 
-    /// <summary>
-    /// Invokes the <c>answerPreCheckoutQuery</c> method with the specified parameters.
-    /// </summary>
-    /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="parameters">Parameters for the request.</param>
-    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<bool> AnswerPreCheckoutQueryAsync(
         this IBotApiClient client, 
         AnswerPreCheckoutQueryParameters parameters, 
@@ -205,12 +181,6 @@ public static partial class BotApiClientExtensions
             ErrorMessage = errorMessage
         }, cancellationToken);
 
-    /// <summary>
-    /// Invokes the <c>getMyStarBalance</c> method with the specified parameters.
-    /// </summary>
-    /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="parameters">Parameters for the request.</param>
-    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<StarAmount> GetMyStarBalanceAsync(
         this IBotApiClient client, 
         GetMyStarBalanceParameters parameters, 
@@ -225,12 +195,6 @@ public static partial class BotApiClientExtensions
             // No parameters required for this method
         }, cancellationToken);
 
-    /// <summary>
-    /// Invokes the <c>getStarTransactions</c> method with the specified parameters.
-    /// </summary>
-    /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="parameters">Parameters for the request.</param>
-    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<StarTransactions> GetStarTransactionsAsync(
         this IBotApiClient client, 
         GetStarTransactionsParameters parameters, 
@@ -248,12 +212,6 @@ public static partial class BotApiClientExtensions
             Limit = limit
         }, cancellationToken);
 
-    /// <summary>
-    /// Invokes the <c>refundStarPayment</c> method with the specified parameters.
-    /// </summary>
-    /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="parameters">Parameters for the request.</param>
-    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<bool> RefundStarPaymentAsync(
         this IBotApiClient client, 
         RefundStarPaymentParameters parameters, 
@@ -271,12 +229,6 @@ public static partial class BotApiClientExtensions
             TelegramPaymentChargeId = telegramPaymentChargeId
         }, cancellationToken);
 
-    /// <summary>
-    /// Invokes the <c>editUserStarSubscription</c> method with the specified parameters.
-    /// </summary>
-    /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="parameters">Parameters for the request.</param>
-    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<bool> EditUserStarSubscriptionAsync(
         this IBotApiClient client, 
         EditUserStarSubscriptionParameters parameters, 

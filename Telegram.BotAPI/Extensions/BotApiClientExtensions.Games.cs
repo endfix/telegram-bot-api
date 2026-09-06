@@ -9,12 +9,6 @@ namespace Endfix.Telegram.BotAPI.Extensions;
 
 public static partial class BotApiClientExtensions
 {
-    /// <summary>
-    /// Invokes the <c>sendGame</c> method with the specified parameters.
-    /// </summary>
-    /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="parameters">Parameters for the request.</param>
-    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<Message> SendGameAsync(
         this IBotApiClient client, 
         SendGameParameters parameters, 
@@ -48,12 +42,6 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    /// <summary>
-    /// Invokes the <c>setGameScore</c> method with the specified parameters.
-    /// </summary>
-    /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="parameters">Parameters for the request.</param>
-    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<Message> SetGameScoreAsync(
         this IBotApiClient client, 
         SetGameScoreParameters parameters, 
@@ -81,12 +69,6 @@ public static partial class BotApiClientExtensions
             InlineMessageId = inlineMessageId
         }, cancellationToken);
 
-    /// <summary>
-    /// Invokes the <c>getGameHighScores</c> method with the specified parameters.
-    /// </summary>
-    /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="parameters">Parameters for the request.</param>
-    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<IReadOnlyList<GameHighScore>> GetGameHighScoresAsync(
         this IBotApiClient client, 
         GetGameHighScoresParameters parameters, 

@@ -11,11 +11,12 @@ namespace Endfix.Telegram.BotAPI.Extensions;
 public static partial class BotApiClientExtensions
 {
     /// <summary>
-    /// Invokes the <c>getUpdates</c> method with the specified parameters.
+    /// Retrieves incoming updates using long polling.
     /// </summary>
     /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="parameters">Long-polling and update-filter options.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The available updates, or an empty collection when no updates are available.</returns>
     public static async Task<IReadOnlyList<Update>?> GetUpdatesAsync(
         this IBotApiClient client, 
         GetUpdatesParameters parameters,
@@ -31,6 +32,7 @@ public static partial class BotApiClientExtensions
     /// <param name="timeout">Long-polling timeout in seconds.</param>
     /// <param name="AllowedUpdates">Optional update types to receive.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The available updates, or an empty collection when no updates are available.</returns>
     public static async Task<IReadOnlyList<Update>?> GetUpdatesAsync(
         this IBotApiClient client,
         long? offset = null,
@@ -47,11 +49,12 @@ public static partial class BotApiClientExtensions
         }, cancellationToken);
 
     /// <summary>
-    /// Invokes the <c>setWebhook</c> method with the specified parameters.
+    /// Sets an outgoing webhook and configures where Telegram should deliver incoming updates.
     /// </summary>
     /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="parameters">Webhook configuration and delivery options.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetWebhookAsync(
         this IBotApiClient client, 
         SetWebhookParameters parameters, 
@@ -70,6 +73,7 @@ public static partial class BotApiClientExtensions
     /// <param name="dropPendingUpdates">Whether to discard pending updates.</param>
     /// <param name="secretToken">Optional secret token sent in the webhook header.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetWebhookAsync(
         this IBotApiClient client,
         string url,
@@ -92,11 +96,12 @@ public static partial class BotApiClientExtensions
         }, cancellationToken);
 
     /// <summary>
-    /// Invokes the <c>deleteWebhook</c> method with the specified parameters.
+    /// Removes the current webhook and optionally discards pending updates.
     /// </summary>
     /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="parameters">Options controlling pending updates.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeleteWebhookAsync(
         this IBotApiClient client, 
         DeleteWebhookParameters parameters,
@@ -109,6 +114,7 @@ public static partial class BotApiClientExtensions
     /// <param name="client">The Bot API client.</param>
     /// <param name="dropPendingUpdates">Whether to discard pending updates.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeleteWebhookAsync(
         this IBotApiClient client,
         bool? dropPendingUpdates = null,
@@ -119,11 +125,12 @@ public static partial class BotApiClientExtensions
         }, cancellationToken);
 
     /// <summary>
-    /// Invokes the <c>getWebhookInfo</c> method with the specified parameters.
+    /// Retrieves the current webhook status.
     /// </summary>
     /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="parameters">The request has no parameters in the current Bot API version.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The current webhook status.</returns>
     public static async Task<WebhookInfo> GetWebhookInfoAsync(
         this IBotApiClient client, 
         GetWebhookInfoParameters parameters,
@@ -135,6 +142,7 @@ public static partial class BotApiClientExtensions
     /// </summary>
     /// <param name="client">The Bot API client.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The current webhook status.</returns>
     public static async Task<WebhookInfo> GetWebhookInfoAsync(
         this IBotApiClient client, 
         CancellationToken cancellationToken = default)

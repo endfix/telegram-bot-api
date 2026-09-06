@@ -9,12 +9,6 @@ namespace Endfix.Telegram.BotAPI.Extensions;
 
 public static partial class BotApiClientExtensions
 {
-    /// <summary>
-    /// Invokes the <c>answerInlineQuery</c> method with the specified parameters.
-    /// </summary>
-    /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="parameters">Parameters for the request.</param>
-    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<bool> AnswerInlineQueryAsync(
         this IBotApiClient client, 
         AnswerInlineQueryParameters parameters, 
@@ -40,12 +34,6 @@ public static partial class BotApiClientExtensions
             Button = button
         }, cancellationToken);
 
-    /// <summary>
-    /// Invokes the <c>answerWebAppQuery</c> method with the specified parameters.
-    /// </summary>
-    /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="parameters">Parameters for the request.</param>
-    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<SentWebAppMessage> AnswerWebAppQueryAsync(
         this IBotApiClient client, 
         AnswerWebAppQueryParameters parameters, 
@@ -63,12 +51,6 @@ public static partial class BotApiClientExtensions
             Result = result
         }, cancellationToken);
 
-    /// <summary>
-    /// Invokes the <c>savePreparedInlineMessage</c> method with the specified parameters.
-    /// </summary>
-    /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="parameters">Parameters for the request.</param>
-    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<PreparedInlineMessage> SavePreparedInlineMessageAsync(
         this IBotApiClient client, 
         SavePreparedInlineMessageParameters parameters, 
@@ -94,12 +76,6 @@ public static partial class BotApiClientExtensions
             AllowChannelChats = allowChannelChats
         }, cancellationToken);
 
-    /// <summary>
-    /// Invokes the <c>savePreparedKeyboardButton</c> method with the specified parameters.
-    /// </summary>
-    /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="parameters">Parameters for the request.</param>
-    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<PreparedKeyboardButton> SavePreparedKeyboardButtonAsync(
         this IBotApiClient client, 
         SavePreparedKeyboardButtonParameters parameters, 

@@ -1,20 +1,8 @@
-using System.Collections.Generic;
-
 namespace Endfix.Telegram.BotAPI.Types;
 
+/// <summary>Describes a service message about the creation of a scheduled giveaway.</summary>
 public sealed class GiveawayCreated
 {
-    public required IReadOnlyList<Chat> Chats { get; init; }
-
-    public required int WinnersSelectionDate { get; init; }
-
-    public required int WinnerCount { get; init; }
-
-    public bool? OnlyNewMembers { get; init; }
-
-    public bool? HasPublicWinners { get; init; }
-
-    public string? PrizeDescription { get; init; }
-
-    public IReadOnlyList<string>? CountryCodes { get; init; }
+    /// <summary>Optional. Number of Telegram Stars to be split between giveaway winners, for Telegram Star giveaways only.</summary>
+    public int? PrizeStarCount { get; init; }
 }

@@ -8,7 +8,9 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class SetStickerKeywordsParameters : ApiRequestParameters
 {
+    /// <summary>File identifier of the sticker.</summary>
     public required string Sticker { get; init; }
 
+    /// <summary>Search keywords; omit to remove them.</summary>
     public IReadOnlyList<string>? Keywords { get; init; }
 }

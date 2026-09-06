@@ -7,5 +7,6 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class DeleteStickerSetParameters : ApiRequestParameters
 {
+    /// <summary>Sticker set name.</summary>
     public required string Name { get; init; }
 }

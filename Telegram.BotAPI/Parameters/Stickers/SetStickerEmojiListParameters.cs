@@ -8,7 +8,9 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class SetStickerEmojiListParameters : ApiRequestParameters
 {
+    /// <summary>File identifier of the sticker.</summary>
     public required string Sticker { get; init; }
 
+    /// <summary>Emoji associated with the sticker.</summary>
     public required IReadOnlyList<string> EmojiList { get; init; }
 }

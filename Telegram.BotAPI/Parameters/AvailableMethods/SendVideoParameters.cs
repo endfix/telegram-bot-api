@@ -9,8 +9,10 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class SendVideoParameters : ApiRequestParameters
 {
+    /// <summary>Unique identifier of the business connection.</summary>
     public string? BusinessConnectionId { get; init; }
 
+    /// <summary>Target chat.</summary>
     public required ChatIdSource ChatId { get; init; }
 
     public long? MessageThreadId { get; init; }
@@ -19,28 +21,40 @@ public sealed class SendVideoParameters : ApiRequestParameters
 
     public EphemeralMessageParameters? EphemeralMessageParameters { get; init; }
 
+    /// <summary>Video to send.</summary>
     public required VideoSource Video { get; init; }
 
+    /// <summary>Video duration in seconds.</summary>
     public int? Duration { get; init; }
 
+    /// <summary>Video width.</summary>
     public int? Width { get; init; }
 
+    /// <summary>Video height.</summary>
     public int? Height { get; init; }
 
+    /// <summary>Video thumbnail.</summary>
     public ThumbnailSource? Thumbnail { get; init; }
 
+    /// <summary>Video cover.</summary>
     public CoverSource? Cover { get; init; }
 
+    /// <summary>Timestamp from which the video should start playing.</summary>
     public int? StartTimestamp { get; init; }
 
+    /// <summary>Video caption.</summary>
     public string? Caption { get; init; }
 
+    /// <summary>Mode for parsing entities in the caption.</summary>
     public string? ParseMode { get; init; }
 
+    /// <summary>Explicit entities in the caption.</summary>
     public IReadOnlyList<MessageEntity>? CaptionEntities { get; init; }
 
+    /// <summary>Whether to show the caption above the video.</summary>
     public bool? ShowCaptionAboveMedia { get; init; }
 
+    /// <summary>Whether to cover the video with a spoiler animation.</summary>
     public bool? HasSpoiler { get; init; }
 
     public bool? DisableNotification { get; init; }

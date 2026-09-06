@@ -667,12 +667,34 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Sends a video.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Video and optional playback, caption and delivery settings.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendVideoAsync(
         this IBotApiClient client, 
         SendVideoParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("sendVideo", parameters), cancellationToken);
 
+    /// <summary>Sends a video.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat.</param>
+    /// <param name="video">Video to send.</param>
+    /// <param name="duration">Video duration in seconds.</param>
+    /// <param name="width">Video width.</param>
+    /// <param name="height">Video height.</param>
+    /// <param name="thumbnail">Video thumbnail.</param>
+    /// <param name="cover">Video cover.</param>
+    /// <param name="startTimestamp">Timestamp from which the video should start playing.</param>
+    /// <param name="caption">Video caption.</param>
+    /// <param name="parseMode">Mode for parsing entities in the caption.</param>
+    /// <param name="captionEntities">Explicit entities in the caption.</param>
+    /// <param name="showCaptionAboveMedia">Whether to show the caption above the video.</param>
+    /// <param name="hasSpoiler">Whether to cover the video with a spoiler animation.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendVideoAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -728,12 +750,32 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Sends an animation.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Animation and optional metadata.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendAnimationAsync(
         this IBotApiClient client, 
         SendAnimationParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("sendAnimation", parameters), cancellationToken);
 
+    /// <summary>Sends an animation.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat.</param>
+    /// <param name="animation">Animation to send.</param>
+    /// <param name="duration">Animation duration in seconds.</param>
+    /// <param name="width">Animation width.</param>
+    /// <param name="height">Animation height.</param>
+    /// <param name="thumbnail">Animation thumbnail.</param>
+    /// <param name="caption">Animation caption.</param>
+    /// <param name="parseMode">Mode for parsing entities in the caption.</param>
+    /// <param name="captionEntities">Explicit entities in the caption.</param>
+    /// <param name="showCaptionAboveMedia">Whether to show the caption above the animation.</param>
+    /// <param name="hasSpoiler">Whether to cover the animation with a spoiler animation.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendAnimationAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -785,12 +827,27 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Sends an audio file as a voice message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Voice file and optional metadata.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendVoiceAsync(
         this IBotApiClient client, 
         SendVoiceParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("sendVoice", parameters), cancellationToken);
 
+    /// <summary>Sends an audio file as a voice message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat.</param>
+    /// <param name="voice">Voice file to send.</param>
+    /// <param name="caption">Voice message caption.</param>
+    /// <param name="parseMode">Mode for parsing entities in the caption.</param>
+    /// <param name="captionEntities">Explicit entities in the caption.</param>
+    /// <param name="duration">Voice message duration in seconds.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendVoiceAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -832,12 +889,26 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Sends a video note.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Video note and optional playback settings.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendVideoNoteAsync(
         this IBotApiClient client, 
         SendVideoNoteParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("sendVideoNote", parameters), cancellationToken);
 
+    /// <summary>Sends a video note.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat.</param>
+    /// <param name="videoNote">Video note to send.</param>
+    /// <param name="duration">Video note duration in seconds.</param>
+    /// <param name="length">Video note diameter in pixels.</param>
+    /// <param name="thumbnail">Video note thumbnail.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendVideoNoteAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -877,12 +948,29 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Sends paid media that recipients can access after paying Telegram Stars.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Star price, paid media and optional caption.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendPaidMediaAsync(
         this IBotApiClient client, 
         SendPaidMediaParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("sendPaidMedia", parameters), cancellationToken);
 
+    /// <summary>Sends paid media that recipients can access after paying Telegram Stars.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat.</param>
+    /// <param name="starCount">Price in Telegram Stars.</param>
+    /// <param name="media">Paid media to send.</param>
+    /// <param name="payload">Bot-defined payload.</param>
+    /// <param name="caption">Media caption.</param>
+    /// <param name="parseMode">Mode for parsing entities in the caption.</param>
+    /// <param name="captionEntities">Explicit entities in the caption.</param>
+    /// <param name="showCaptionAboveMedia">Whether to show the caption above the media.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendPaidMediaAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -924,12 +1012,23 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Sends a group of photos, videos, documents or audios as an album.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Target chat and media items.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The messages sent as the album.</returns>
     public static async Task<IReadOnlyList<Message>> SendMediaGroupAsync(
         this IBotApiClient client, 
         SendMediaGroupParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<IReadOnlyList<Message>>(new ApiRequest("sendMediaGroup", parameters), cancellationToken);
 
+    /// <summary>Sends a group of photos, videos, documents or audios as an album.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat.</param>
+    /// <param name="media">Media items to send as an album.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The messages sent as the album.</returns>
     public static async Task<IReadOnlyList<Message>> SendMediaGroupAsync(
         this IBotApiClient client,
         ChatIdSource chatId,

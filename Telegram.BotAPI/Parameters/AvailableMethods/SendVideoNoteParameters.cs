@@ -8,8 +8,10 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class SendVideoNoteParameters : ApiRequestParameters
 {
+    /// <summary>Unique identifier of the business connection.</summary>
     public string? BusinessConnectionId { get; init; }
 
+    /// <summary>Target chat.</summary>
     public required ChatIdSource ChatId { get; init; }
 
     public long? MessageThreadId { get; init; }
@@ -18,12 +20,16 @@ public sealed class SendVideoNoteParameters : ApiRequestParameters
 
     public EphemeralMessageParameters? EphemeralMessageParameters { get; init; }
 
+    /// <summary>Video note to send.</summary>
     public required VideoNoteSource VideoNote { get; init; }
 
+    /// <summary>Video note duration in seconds.</summary>
     public int? Duration { get; init; }
 
+    /// <summary>Video note diameter in pixels.</summary>
     public int? Length { get; init; }
 
+    /// <summary>Video note thumbnail.</summary>
     public ThumbnailSource? Thumbnail { get; init; }
 
     public bool? DisableNotification { get; init; }

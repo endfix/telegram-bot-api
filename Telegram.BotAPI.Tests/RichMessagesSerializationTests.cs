@@ -130,6 +130,25 @@ public class RichMessagesSerializationTests
         Assert.Equal("photo-file-id", Assert.Single(block.Photo).FileId);
     }
 
+    [Fact]
+    public void RichTextUrl_UsesStringUrl_AndInputMapDimensionsAreOptional()
+    {
+        Utils.AssertRoundtrip(new RichTextUrl
+        {
+            Text = "Telegram",
+            Url = "https://telegram.org"
+        });
+
+        Utils.AssertRoundtrip(new InputRichBlockMap
+        {
+            Location = new Location
+            {
+                Latitude = 55.7558,
+                Longitude = 37.6173
+            }
+        });
+    }
+
     private static RichBlockCaption GetRichBlockCaption()
         => new() { Text = "Media caption", Credit = "Author" };
 

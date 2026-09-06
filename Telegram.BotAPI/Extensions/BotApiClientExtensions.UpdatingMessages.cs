@@ -9,6 +9,12 @@ namespace Endfix.Telegram.BotAPI.Extensions;
 
 public static partial class BotApiClientExtensions
 {
+    /// <summary>
+    /// Invokes the <c>editMessageText</c> method with the specified parameters.
+    /// </summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<Message> EditMessageTextAsync(
         this IBotApiClient client, 
         EditMessageTextParameters parameters, 
@@ -42,6 +48,12 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>
+    /// Invokes the <c>editMessageCaption</c> method with the specified parameters.
+    /// </summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<Message> EditMessageCaptionAsync(
         this IBotApiClient client, 
         EditMessageCaptionParameters parameters, 
@@ -73,6 +85,12 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>
+    /// Invokes the <c>editMessageMedia</c> method with the specified parameters.
+    /// </summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<Message> EditMessageMediaAsync(
         this IBotApiClient client, 
         EditMessageMediaParameters parameters, 
@@ -98,6 +116,12 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>
+    /// Invokes the <c>editMessageLiveLocation</c> method with the specified parameters.
+    /// </summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<Message> EditMessageLiveLocationAsync(
         this IBotApiClient client, 
         EditMessageLiveLocationParameters parameters, 
@@ -133,6 +157,12 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>
+    /// Invokes the <c>stopMessageLiveLocation</c> method with the specified parameters.
+    /// </summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<Message> StopMessageLiveLocationAsync(
         this IBotApiClient client, 
         StopMessageLiveLocationParameters parameters, 
@@ -156,6 +186,12 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>
+    /// Invokes the <c>editMessageChecklist</c> method with the specified parameters.
+    /// </summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<Message> EditMessageChecklistAsync(
         this IBotApiClient client, 
         EditMessageChecklistParameters parameters, 
@@ -179,6 +215,12 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>
+    /// Invokes the <c>editMessageReplyMarkup</c> method with the specified parameters.
+    /// </summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<Message> EditMessageReplyMarkupAsync(
         this IBotApiClient client, 
         EditMessageReplyMarkupParameters parameters, 
@@ -202,6 +244,12 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>
+    /// Invokes the <c>stopPoll</c> method with the specified parameters.
+    /// </summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<Poll> StopPollAsync(
         this IBotApiClient client, 
         StopPollParameters parameters, 
@@ -223,6 +271,12 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>
+    /// Invokes the <c>editEphemeralMessageText</c> method with the specified parameters.
+    /// </summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<bool> EditEphemeralMessageTextAsync(
         this IBotApiClient client, 
         EditEphemeralMessageTextParameters parameters, 
@@ -252,6 +306,12 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>
+    /// Invokes the <c>editEphemeralMessageMedia</c> method with the specified parameters.
+    /// </summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<bool> EditEphemeralMessageMediaAsync(
         this IBotApiClient client, 
         EditEphemeralMessageMediaParameters parameters, 
@@ -275,6 +335,12 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>
+    /// Invokes the <c>editEphemeralMessageCaption</c> method with the specified parameters.
+    /// </summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<bool> EditEphemeralMessageCaptionAsync(
         this IBotApiClient client, 
         EditEphemeralMessageCaptionParameters parameters, 
@@ -304,6 +370,12 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>
+    /// Invokes the <c>editEphemeralMessageReplyMarkup</c> method with the specified parameters.
+    /// </summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<bool> EditEphemeralMessageReplyMarkupAsync(
         this IBotApiClient client, 
         EditEphemeralMessageReplyMarkupParameters parameters, 
@@ -325,6 +397,12 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>
+    /// Invokes the <c>approveSuggestedPost</c> method with the specified parameters.
+    /// </summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<bool> ApproveSuggestedPostAsync(
         this IBotApiClient client, 
         ApproveSuggestedPostParameters parameters,
@@ -344,6 +422,12 @@ public static partial class BotApiClientExtensions
             SendDate = sendDate
         }, cancellationToken);
 
+    /// <summary>
+    /// Invokes the <c>declineSuggestedPost</c> method with the specified parameters.
+    /// </summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<bool> DeclineSuggestedPostAsync(
         this IBotApiClient client, 
         DeclineSuggestedPostParameters parameters, 
@@ -363,6 +447,12 @@ public static partial class BotApiClientExtensions
             Comment = comment
         }, cancellationToken);
 
+    /// <summary>
+    /// Invokes the <c>deleteMessage</c> method with the specified parameters.
+    /// </summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<bool> DeleteMessageAsync(
         this IBotApiClient client, DeleteMessageParameters parameters, 
         CancellationToken cancellationToken = default)
@@ -379,6 +469,12 @@ public static partial class BotApiClientExtensions
             MessageId = messageId
         }, cancellationToken);
 
+    /// <summary>
+    /// Invokes the <c>deleteMessages</c> method with the specified parameters.
+    /// </summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<bool> DeleteMessagesAsync(
         this IBotApiClient client, 
         DeleteMessagesParameters parameters, 
@@ -396,6 +492,12 @@ public static partial class BotApiClientExtensions
             MessageIds = messageIds
         }, cancellationToken);
 
+    /// <summary>
+    /// Invokes the <c>deleteEphemeralMessage</c> method with the specified parameters.
+    /// </summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<bool> DeleteEphemeralMessageAsync(
         this IBotApiClient client, 
         DeleteEphemeralMessageParameters parameters, 
@@ -415,6 +517,12 @@ public static partial class BotApiClientExtensions
             EphemeralMessageId = ephemeralMessageId
         }, cancellationToken);
 
+    /// <summary>
+    /// Invokes the <c>deleteMessageReaction</c> method with the specified parameters.
+    /// </summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<bool> DeleteMessageReactionAsync(
         this IBotApiClient client, 
         DeleteMessageReactionParameters parameters, 
@@ -436,6 +544,12 @@ public static partial class BotApiClientExtensions
             ActorChatId = actorChatId
         }, cancellationToken);
 
+    /// <summary>
+    /// Invokes the <c>deleteAllMessageReactions</c> method with the specified parameters.
+    /// </summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<bool> DeleteAllMessageReactionsAsync(
         this IBotApiClient client, 
         DeleteAllMessageReactionsParameters parameters, 

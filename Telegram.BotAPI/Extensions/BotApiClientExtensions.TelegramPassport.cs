@@ -9,6 +9,12 @@ namespace Endfix.Telegram.BotAPI.Extensions;
 
 public static partial class BotApiClientExtensions
 {
+    /// <summary>
+    /// Invokes the <c>setPassportDataErrors</c> method with the specified parameters.
+    /// </summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<bool> SetPassportDataErrorsAsync(
         this IBotApiClient client, 
         SetPassportDataErrorsParameters parameters, 

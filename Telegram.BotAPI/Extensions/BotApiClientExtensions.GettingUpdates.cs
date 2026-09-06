@@ -10,6 +10,12 @@ namespace Endfix.Telegram.BotAPI.Extensions;
 
 public static partial class BotApiClientExtensions
 {
+    /// <summary>
+    /// Invokes the <c>getUpdates</c> method with the specified parameters.
+    /// </summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<IReadOnlyList<Update>?> GetUpdatesAsync(
         this IBotApiClient client, 
         GetUpdatesParameters parameters,
@@ -40,6 +46,12 @@ public static partial class BotApiClientExtensions
             AllowedUpdates = AllowedUpdates
         }, cancellationToken);
 
+    /// <summary>
+    /// Invokes the <c>setWebhook</c> method with the specified parameters.
+    /// </summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<bool> SetWebhookAsync(
         this IBotApiClient client, 
         SetWebhookParameters parameters, 
@@ -79,6 +91,12 @@ public static partial class BotApiClientExtensions
             SecretToken = secretToken
         }, cancellationToken);
 
+    /// <summary>
+    /// Invokes the <c>deleteWebhook</c> method with the specified parameters.
+    /// </summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<bool> DeleteWebhookAsync(
         this IBotApiClient client, 
         DeleteWebhookParameters parameters,
@@ -100,6 +118,12 @@ public static partial class BotApiClientExtensions
             DropPendingUpdates = dropPendingUpdates
         }, cancellationToken);
 
+    /// <summary>
+    /// Invokes the <c>getWebhookInfo</c> method with the specified parameters.
+    /// </summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<WebhookInfo> GetWebhookInfoAsync(
         this IBotApiClient client, 
         GetWebhookInfoParameters parameters,

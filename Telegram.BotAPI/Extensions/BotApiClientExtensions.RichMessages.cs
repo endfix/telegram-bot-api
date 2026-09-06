@@ -8,6 +8,12 @@ namespace Endfix.Telegram.BotAPI.Extensions;
 
 public static partial class BotApiClientExtensions
 {
+    /// <summary>
+    /// Invokes the <c>sendRichMessage</c> method with the specified parameters.
+    /// </summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<Message> SendRichMessageAsync(
         this IBotApiClient client,
         SendRichMessageParameters parameters,
@@ -47,6 +53,12 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>
+    /// Invokes the <c>sendRichMessageDraft</c> method with the specified parameters.
+    /// </summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     public static async Task<bool> SendRichMessageDraftAsync(
         this IBotApiClient client,
         SendRichMessageDraftParameters parameters,

@@ -10,12 +10,21 @@ namespace Endfix.Telegram.BotAPI.Extensions;
 
 public static partial class BotApiClientExtensions
 {
+    /// <summary>Returns basic information about the bot.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">The request has no parameters.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The bot's user information.</returns>
     public static async Task<User> GetMeAsync(
         this IBotApiClient client,
         GetMeParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<User>(new ApiRequest("getMe", parameters), cancellationToken);
 
+    /// <summary>Returns basic information about the bot.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The bot's user information.</returns>
     public static async Task<User> GetMeAsync(
         this IBotApiClient client,
         CancellationToken cancellationToken = default)
@@ -24,12 +33,21 @@ public static partial class BotApiClientExtensions
             // No parameters required for this method
         }, cancellationToken);
 
+    /// <summary>Logs out the bot before moving it to a local Bot API server.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">The request has no parameters.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> LogOutAsync(
         this IBotApiClient client,
         LogOutParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("logOut", parameters), cancellationToken);
 
+    /// <summary>Logs out the bot before moving it to a local Bot API server.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> LogOutAsync(
         this IBotApiClient client,
         CancellationToken cancellationToken = default)
@@ -38,12 +56,21 @@ public static partial class BotApiClientExtensions
             // No parameters required for this method
         }, cancellationToken);
 
+    /// <summary>Closes the bot instance before moving it to a local Bot API server.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">The request has no parameters.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> CloseAsync(
         this IBotApiClient client,
         CloseParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("close", parameters), cancellationToken);
 
+    /// <summary>Closes the bot instance before moving it to a local Bot API server.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> CloseAsync(
         this IBotApiClient client,
         CancellationToken cancellationToken = default)
@@ -52,12 +79,37 @@ public static partial class BotApiClientExtensions
             // No parameters required for this method
         }, cancellationToken);
 
+    /// <summary>Sends a text message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Target chat, message text and optional formatting settings.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendMessageAsync(
         this IBotApiClient client,
         SendMessageParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("sendMessage", parameters), cancellationToken);
 
+    /// <summary>Sends a text message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat.</param>
+    /// <param name="text">Text of the message.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
+    /// <param name="messageThreadId">Target message thread.</param>
+    /// <param name="directMessagesTopicId">Topic identifier in a direct messages chat.</param>
+    /// <param name="ephemeralMessageParameters">Options for an ephemeral message.</param>
+    /// <param name="parseMode">Mode for parsing entities in the message text.</param>
+    /// <param name="entities">Explicit entities in the message text.</param>
+    /// <param name="linkPreviewOptions">Options for the link preview.</param>
+    /// <param name="disableNotification">Sends the message silently when <see langword="true"/>.</param>
+    /// <param name="protectContent">Protects the message from forwarding and saving when <see langword="true"/>.</param>
+    /// <param name="allowPaidBroadcast">Allows paid broadcasts using Telegram Stars.</param>
+    /// <param name="messageEffectId">Unique identifier of a message effect.</param>
+    /// <param name="suggestedPostParameters">Parameters for a suggested post.</param>
+    /// <param name="replyParameters">Description of the message to reply to.</param>
+    /// <param name="replyMarkup">Inline or reply keyboard attached to the message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendMessageAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -97,12 +149,30 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Forwards a message to a chat.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Source, destination and message identifiers.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The forwarded message.</returns>
     public static async Task<Message> ForwardMessageAsync(
         this IBotApiClient client,
         ForwardMessageParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("forwardMessage", parameters), cancellationToken);
 
+    /// <summary>Forwards a message to a chat.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Destination chat.</param>
+    /// <param name="fromChatId">Source chat.</param>
+    /// <param name="messageId">Identifier of the message to forward.</param>
+    /// <param name="messageThreadId">Target message thread.</param>
+    /// <param name="directMessagesTopicId">Topic identifier in a direct messages chat.</param>
+    /// <param name="videoStartTimestamp">Start timestamp for forwarded video messages.</param>
+    /// <param name="disableNotification">Sends the message silently when <see langword="true"/>.</param>
+    /// <param name="protectContent">Protects the message from forwarding and saving when <see langword="true"/>.</param>
+    /// <param name="suggestedPostParameters">Parameters for a suggested post.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The forwarded message.</returns>
     public static async Task<Message> ForwardMessageAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -128,12 +198,28 @@ public static partial class BotApiClientExtensions
             SuggestedPostParameters = suggestedPostParameters
         }, cancellationToken);
 
+    /// <summary>Forwards multiple messages to a chat.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Source, destination and message identifiers.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>Identifiers of the forwarded messages.</returns>
     public static async Task<IReadOnlyList<MessageIdStruct>> ForwardMessagesAsync(
         this IBotApiClient client,
         ForwardMessagesParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<IReadOnlyList<MessageIdStruct>>(new ApiRequest("forwardMessages", parameters), cancellationToken);
 
+    /// <summary>Forwards multiple messages to a chat.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Destination chat.</param>
+    /// <param name="fromChatId">Source chat.</param>
+    /// <param name="messageIds">Identifiers of the messages to forward.</param>
+    /// <param name="messageThreadId">Target message thread.</param>
+    /// <param name="directMessagesTopicId">Topic identifier in a direct messages chat.</param>
+    /// <param name="disableNotification">Sends the messages silently when <see langword="true"/>.</param>
+    /// <param name="protectContent">Protects the messages from forwarding and saving when <see langword="true"/>.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>Identifiers of the forwarded messages.</returns>
     public static async Task<IReadOnlyList<MessageIdStruct>> ForwardMessagesAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -155,12 +241,37 @@ public static partial class BotApiClientExtensions
             ProtectContent = protectContent
         }, cancellationToken);
 
+    /// <summary>Copies a message to a chat without a link to the original message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Source, destination and message identifiers.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The identifier of the copied message.</returns>
     public static async Task<MessageIdStruct> CopyMessageAsync(
         this IBotApiClient client,
         CopyMessageParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<MessageIdStruct>(new ApiRequest("copyMessage", parameters), cancellationToken);
 
+    /// <summary>Copies a message to a chat without a link to the original message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Destination chat.</param>
+    /// <param name="fromChatId">Source chat.</param>
+    /// <param name="messageId">Identifier of the message to copy.</param>
+    /// <param name="messageThreadId">Target message thread.</param>
+    /// <param name="directMessagesTopicId">Topic identifier in a direct messages chat.</param>
+    /// <param name="videoStartTimestamp">Start timestamp for copied video messages.</param>
+    /// <param name="caption">New caption for the copied message.</param>
+    /// <param name="parseMode">Mode for parsing entities in the caption.</param>
+    /// <param name="captionEntities">Explicit entities in the caption.</param>
+    /// <param name="showCaptionAboveMedia">Whether to show the caption above the media.</param>
+    /// <param name="disableNotification">Sends the message silently when <see langword="true"/>.</param>
+    /// <param name="protectContent">Protects the message from forwarding and saving when <see langword="true"/>.</param>
+    /// <param name="allowPaidBroadcast">Allows paid broadcasts using Telegram Stars.</param>
+    /// <param name="suggestedPostParameters">Parameters for a suggested post.</param>
+    /// <param name="replyParameters">Description of the message to reply to.</param>
+    /// <param name="replyMarkup">Inline or reply keyboard attached to the message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The identifier of the copied message.</returns>
     public static async Task<MessageIdStruct> CopyMessageAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -200,12 +311,29 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Copies multiple messages to a chat without links to the originals.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Source, destination and message identifiers.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>Identifiers of the copied messages.</returns>
     public static async Task<IReadOnlyList<MessageIdStruct>> CopyMessagesAsync(
         this IBotApiClient client,
         CopyMessagesParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<IReadOnlyList<MessageIdStruct>>(new ApiRequest("copyMessages", parameters), cancellationToken);
 
+    /// <summary>Copies multiple messages to a chat without links to the originals.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Destination chat.</param>
+    /// <param name="fromChatId">Source chat.</param>
+    /// <param name="messageIds">Identifiers of the messages to copy.</param>
+    /// <param name="messageThreadId">Target message thread.</param>
+    /// <param name="directMessagesTopicId">Topic identifier in a direct messages chat.</param>
+    /// <param name="disableNotification">Sends the messages silently when <see langword="true"/>.</param>
+    /// <param name="protectContent">Protects the messages from forwarding and saving when <see langword="true"/>.</param>
+    /// <param name="removeCaption">Whether to remove captions from copied messages.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>Identifiers of the copied messages.</returns>
     public static async Task<IReadOnlyList<MessageIdStruct>> CopyMessagesAsync(
         this IBotApiClient client,
         ChatIdSource chatId,

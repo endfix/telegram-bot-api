@@ -8,7 +8,9 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class DeleteMessageParameters : ApiRequestParameters
 {
+    /// <summary>Chat containing the message.</summary>
     public required ChatIdSource ChatId { get; init; }
 
+    /// <summary>Identifier of the message to delete.</summary>
     public required long MessageId { get; init; }
 }

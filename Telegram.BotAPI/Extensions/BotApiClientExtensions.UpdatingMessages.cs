@@ -316,12 +316,25 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Stops a poll sent by the bot.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Poll message and optional replacement keyboard.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The stopped poll.</returns>
     public static async Task<Poll> StopPollAsync(
         this IBotApiClient client, 
         StopPollParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Poll>(new ApiRequest("stopPoll", parameters), cancellationToken);
 
+    /// <summary>Stops a poll sent by the bot.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Chat containing the poll.</param>
+    /// <param name="messageId">Identifier of the poll message.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
+    /// <param name="replyMarkup">Replacement inline keyboard.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The stopped poll.</returns>
     public static async Task<Poll> StopPollAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -337,12 +350,29 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Edits the text of an ephemeral message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Ephemeral message identifier and replacement text.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> EditEphemeralMessageTextAsync(
         this IBotApiClient client, 
         EditEphemeralMessageTextParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("editEphemeralMessageText", parameters), cancellationToken);
 
+    /// <summary>Edits the text of an ephemeral message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Chat containing the ephemeral message.</param>
+    /// <param name="receiverUserId">Identifier of the user who received the message.</param>
+    /// <param name="ephemeralMessageId">Identifier of the ephemeral message.</param>
+    /// <param name="text">New text of the message.</param>
+    /// <param name="parseMode">Mode for parsing entities in the message text.</param>
+    /// <param name="entities">Explicit entities in the message text.</param>
+    /// <param name="linkPreviewOptions">Options for the link preview.</param>
+    /// <param name="replyMarkup">Inline keyboard attached to the message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> EditEphemeralMessageTextAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -366,12 +396,26 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Replaces the media of an ephemeral message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Ephemeral message identifier and replacement media.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> EditEphemeralMessageMediaAsync(
         this IBotApiClient client, 
         EditEphemeralMessageMediaParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("editEphemeralMessageMedia", parameters), cancellationToken);
 
+    /// <summary>Replaces the media of an ephemeral message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Chat containing the ephemeral message.</param>
+    /// <param name="receiverUserId">Identifier of the user who received the message.</param>
+    /// <param name="ephemeralMessageId">Identifier of the ephemeral message.</param>
+    /// <param name="media">New media content.</param>
+    /// <param name="replyMarkup">Inline keyboard attached to the message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> EditEphemeralMessageMediaAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -389,12 +433,29 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Edits the caption of an ephemeral message containing media.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Ephemeral message identifier and replacement caption.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> EditEphemeralMessageCaptionAsync(
         this IBotApiClient client, 
         EditEphemeralMessageCaptionParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("editEphemeralMessageCaption", parameters), cancellationToken);
 
+    /// <summary>Edits the caption of an ephemeral message containing media.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Chat containing the ephemeral message.</param>
+    /// <param name="receiverUserId">Identifier of the user who received the message.</param>
+    /// <param name="ephemeralMessageId">Identifier of the ephemeral message.</param>
+    /// <param name="caption">New caption of the message.</param>
+    /// <param name="parseMode">Mode for parsing entities in the caption.</param>
+    /// <param name="captionEntities">Explicit entities in the caption.</param>
+    /// <param name="showCaptionAboveMedia">Whether to show the caption above the media.</param>
+    /// <param name="replyMarkup">Inline keyboard attached to the message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> EditEphemeralMessageCaptionAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -418,12 +479,25 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Edits the inline keyboard of an ephemeral message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Ephemeral message identifier and replacement keyboard.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> EditEphemeralMessageReplyMarkupAsync(
         this IBotApiClient client, 
         EditEphemeralMessageReplyMarkupParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("editEphemeralMessageReplyMarkup", parameters), cancellationToken);
 
+    /// <summary>Edits the inline keyboard of an ephemeral message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Chat containing the ephemeral message.</param>
+    /// <param name="receiverUserId">Identifier of the user who received the message.</param>
+    /// <param name="ephemeralMessageId">Identifier of the ephemeral message.</param>
+    /// <param name="replyMarkup">Replacement inline keyboard.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> EditEphemeralMessageReplyMarkupAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -439,12 +513,24 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Approves a suggested post.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Suggested post identifier and optional publication date.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> ApproveSuggestedPostAsync(
         this IBotApiClient client, 
         ApproveSuggestedPostParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("approveSuggestedPost", parameters), cancellationToken);
 
+    /// <summary>Approves a suggested post.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Channel chat containing the suggested post.</param>
+    /// <param name="messageId">Identifier of the suggested post message.</param>
+    /// <param name="sendDate">Unix timestamp when the post should be published.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> ApproveSuggestedPostAsync(
         this IBotApiClient client,
         long chatId,
@@ -458,12 +544,24 @@ public static partial class BotApiClientExtensions
             SendDate = sendDate
         }, cancellationToken);
 
+    /// <summary>Declines a suggested post.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Suggested post identifier and optional explanation.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeclineSuggestedPostAsync(
         this IBotApiClient client, 
         DeclineSuggestedPostParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("declineSuggestedPost", parameters), cancellationToken);
 
+    /// <summary>Declines a suggested post.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Channel chat containing the suggested post.</param>
+    /// <param name="messageId">Identifier of the suggested post message.</param>
+    /// <param name="comment">Optional comment explaining the rejection.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeclineSuggestedPostAsync(
         this IBotApiClient client,
         long chatId,
@@ -477,11 +575,22 @@ public static partial class BotApiClientExtensions
             Comment = comment
         }, cancellationToken);
 
+    /// <summary>Deletes a message from a chat.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Chat and message identifiers.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeleteMessageAsync(
         this IBotApiClient client, DeleteMessageParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("deleteMessage", parameters), cancellationToken);
 
+    /// <summary>Deletes a message from a chat.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Chat containing the message.</param>
+    /// <param name="messageId">Identifier of the message to delete.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeleteMessageAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -493,12 +602,23 @@ public static partial class BotApiClientExtensions
             MessageId = messageId
         }, cancellationToken);
 
+    /// <summary>Deletes several messages from a chat.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Chat and message identifiers.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeleteMessagesAsync(
         this IBotApiClient client, 
         DeleteMessagesParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("deleteMessages", parameters), cancellationToken);
 
+    /// <summary>Deletes several messages from a chat.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Chat containing the messages.</param>
+    /// <param name="messageIds">Identifiers of the messages to delete.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeleteMessagesAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -510,12 +630,24 @@ public static partial class BotApiClientExtensions
             MessageIds = messageIds
         }, cancellationToken);
 
+    /// <summary>Deletes an ephemeral message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Ephemeral message identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeleteEphemeralMessageAsync(
         this IBotApiClient client, 
         DeleteEphemeralMessageParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("deleteEphemeralMessage", parameters), cancellationToken);
 
+    /// <summary>Deletes an ephemeral message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Chat containing the ephemeral message.</param>
+    /// <param name="receiverUserId">Identifier of the user who received the message.</param>
+    /// <param name="ephemeralMessageId">Identifier of the ephemeral message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeleteEphemeralMessageAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -529,12 +661,25 @@ public static partial class BotApiClientExtensions
             EphemeralMessageId = ephemeralMessageId
         }, cancellationToken);
 
+    /// <summary>Deletes a reaction from a message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Message and optional actor identifiers.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeleteMessageReactionAsync(
         this IBotApiClient client, 
         DeleteMessageReactionParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("deleteMessageReaction", parameters), cancellationToken);
 
+    /// <summary>Deletes a reaction from a message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Chat containing the message.</param>
+    /// <param name="messageId">Identifier of the message.</param>
+    /// <param name="userId">Identifier of the user whose reaction should be deleted.</param>
+    /// <param name="actorChatId">Identifier of the chat whose reaction should be deleted.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeleteMessageReactionAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -550,12 +695,24 @@ public static partial class BotApiClientExtensions
             ActorChatId = actorChatId
         }, cancellationToken);
 
+    /// <summary>Deletes all reactions from a message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Message and optional actor identifiers.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeleteAllMessageReactionsAsync(
         this IBotApiClient client, 
         DeleteAllMessageReactionsParameters parameters, 
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("deleteAllMessageReactions", parameters), cancellationToken);
 
+    /// <summary>Deletes all reactions from a message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Chat containing the message.</param>
+    /// <param name="userId">Identifier of the user whose reactions should be deleted.</param>
+    /// <param name="actorChatId">Identifier of the chat whose reactions should be deleted.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeleteAllMessageReactionsAsync(
         this IBotApiClient client,
         ChatIdSource chatId,

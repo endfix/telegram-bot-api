@@ -9,7 +9,9 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class DeleteMessagesParameters : ApiRequestParameters
 {
+    /// <summary>Chat containing the messages.</summary>
     public required ChatIdSource ChatId { get; init; }
 
+    /// <summary>Identifiers of the messages to delete.</summary>
     public required IReadOnlyList<long> MessageIds { get; init; }
 }

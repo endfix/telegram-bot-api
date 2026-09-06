@@ -8,9 +8,12 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class DeleteAllMessageReactionsParameters : ApiRequestParameters
 {
+    /// <summary>Chat containing the message.</summary>
     public required ChatIdSource ChatId { get; init; }
 
+    /// <summary>Identifier of the user whose reactions should be deleted.</summary>
     public long? UserId { get; init; }
 
+    /// <summary>Identifier of the chat whose reactions should be deleted.</summary>
     public long? ActorChatId { get; init; }
 }

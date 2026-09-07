@@ -13,6 +13,7 @@ internal sealed class TelegramIntegrationFactAttribute : FactAttribute
     public const string TestUserIdVariable = "TELEGRAM_BOT_TEST_USER_ID";
     public const string KeepMessagesVariable = "TELEGRAM_BOT_KEEP_MESSAGES";
     public const string EmojiStatusAccessVariable = "TELEGRAM_BOT_EMOJI_STATUS_ACCESS";
+    public const string GroupStickerSetAccessVariable = "TELEGRAM_BOT_GROUP_STICKER_SET_ACCESS";
 
     public TelegramIntegrationFactAttribute()
     {
@@ -77,6 +78,30 @@ internal sealed class TelegramModerationIntegrationFactAttribute : FactAttribute
         if (missing.Count > 0)
         {
             Skip = $"Set {string.Join(", ", missing)} to run Telegram moderation integration tests.";
+        }
+    }
+}
+
+internal sealed class TelegramGroupStickerIntegrationFactAttribute : FactAttribute
+{
+    public TelegramGroupStickerIntegrationFactAttribute()
+    {
+        var missing = TelegramIntegrationSettings.Missing(
+            TelegramIntegrationFactAttribute.TokenVariable,
+            TelegramIntegrationFactAttribute.ChatIdVariable,
+            TelegramIntegrationFactAttribute.GroupIdVariable);
+        if (missing.Count > 0)
+        {
+            Skip = $"Set {string.Join(", ", missing)} to run Telegram group sticker integration tests.";
+            return;
+        }
+
+        if (!bool.TryParse(
+                TelegramIntegrationSettings.Get(TelegramIntegrationFactAttribute.GroupStickerSetAccessVariable),
+                out var accessGranted) || !accessGranted)
+        {
+            Skip = $"Use a group for which getChat returns can_set_sticker_set=true and set " +
+                $"{TelegramIntegrationFactAttribute.GroupStickerSetAccessVariable}=true to run this test.";
         }
     }
 }

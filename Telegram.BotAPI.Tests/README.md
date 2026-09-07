@@ -94,6 +94,7 @@ take precedence over User Secrets. Never commit tokens or real IDs.
 | `TELEGRAM_BOT_CHANNEL_ID` | Test channel linked to the discussion group |
 | `TELEGRAM_BOT_TEST_USER_ID` | Ordinary member used by membership and rollback-safe restriction tests |
 | `TELEGRAM_BOT_KEEP_MESSAGES` | Optional `true` value that keeps file-test messages for inspection |
+| `TELEGRAM_BOT_GROUP_STICKER_SET_ACCESS` | Optional `true` value enabling the group sticker-set test after `getChat` reports `can_set_sticker_set=true` |
 
 Media files used by multipart tests are versioned under `Fixtures/Media` and
 copied to the test output directory. No external media paths are required.
@@ -121,13 +122,20 @@ dotnet test Telegram.BotAPI.Tests/Telegram.BotAPI.Tests.csproj --filter "FullyQu
 Tests whose required secrets are absent are skipped. A fully configured run
 currently verifies bot capabilities, default chat permissions, rollback-safe
 member restrictions, channel/discussion linking, group/channel metadata and
-message lifecycle, group and channel invite links, pins, reactions, member
-counts, channel-photo replacement and restoration, forum topics, and cross-chat
-copy and forwarding. File scenarios
-cover buffered and streaming downloads, profile-photo restore, sticker-set lifecycle, standalone
-media, media groups with typed thumbnail/cover files, paid media, nested poll
-media, nested rich-message uploads, reply-markup editing, and stopping live
-locations.
+message lifecycle, per-chat bot settings, group and channel invite links, pins,
+reactions, member counts, channel-photo replacement and restoration, forum
+topics, member tags, administrator promotion and custom titles, and cross-chat
+copy and forwarding. File scenarios cover buffered and streaming downloads,
+profile-photo restore, sticker-set lifecycle, optional group sticker-set
+assignment, standalone media, media groups with typed thumbnail/cover files,
+paid media, nested poll media, nested rich-message uploads, reply-markup editing,
+and stopping live locations.
+
+The bot needs the **Add New Admins** and **Manage Tags** administrator rights for
+the promotion and member-tag scenarios. The group sticker-set scenario is
+disabled by default because Telegram may report `can_set_sticker_set=false` even
+when the bot can change chat information. Enable it only for an eligible
+supergroup by setting `TELEGRAM_BOT_GROUP_STICKER_SET_ACCESS=true`.
 
 Premium scenarios derive the user ID from `TELEGRAM_BOT_CHAT_ID` and verify the
 account through `getChatMember` before exercising Premium-dependent behavior.
@@ -143,8 +151,9 @@ and expiration date in its cleanup block.
 
 The suite deliberately changes live resources. It creates messages, invite
 links, forum topics and sticker sets, temporarily edits group/channel metadata,
-and replaces the bot profile photo. Stateful tests use cleanup blocks to restore
-metadata and the previous profile photo and to delete or revoke temporary
+member tags, administrator status, per-chat bot settings and an unused
+Esperanto localization, and replaces the bot profile photo. Stateful tests use
+cleanup blocks to restore the previous values and to delete or revoke temporary
 resources.
 
 `TELEGRAM_BOT_KEEP_MESSAGES=true` only preserves messages created by file tests.

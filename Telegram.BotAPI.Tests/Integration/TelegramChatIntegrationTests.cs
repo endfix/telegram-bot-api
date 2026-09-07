@@ -11,7 +11,10 @@ namespace Endfix.Telegram.BotAPI.Tests.Integration;
 [Collection(TelegramIntegrationCollection.Name)]
 public sealed class TelegramChatIntegrationTests : IDisposable
 {
-    private readonly HttpClient _httpClient = new();
+    private readonly HttpClient _httpClient = new()
+    {
+        Timeout = TimeSpan.FromSeconds(30)
+    };
     private readonly BotApiClient _client;
 
     public TelegramChatIntegrationTests()
@@ -33,6 +36,129 @@ public sealed class TelegramChatIntegrationTests : IDisposable
         Assert.True(bot.HasTopicsEnabled);
     }
 
+    [TelegramIntegrationFact]
+    public async Task BotChatSettings_RollBack()
+    {
+        var chatId = GetId(TelegramIntegrationFactAttribute.ChatIdVariable);
+        const string languageCode = "eo";
+        var commandScope = new BotCommandScopeChat { ChatId = chatId };
+        var originalMenuButton = await _client.GetChatMenuButtonAsync(chatId);
+        var originalCommands = await _client.GetMyCommandsAsync(commandScope);
+        var originalName = await _client.GetMyNameAsync(languageCode);
+        var originalDescription = await _client.GetMyDescriptionAsync(languageCode);
+        var originalShortDescription = await _client.GetMyShortDescriptionAsync(languageCode);
+        var menuChanged = false;
+        var commandsChanged = false;
+        var nameChanged = false;
+        var descriptionChanged = false;
+        var shortDescriptionChanged = false;
+        var suffix = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
+
+        try
+        {
+            Assert.True(await _client.SetChatMenuButtonAsync(
+                chatId,
+                new MenuButtonWebApp
+                {
+                    Text = "Endfix integration",
+                    WebApp = new WebAppInfo
+                    {
+                        Url = "https://endfix.github.io/telegram-bot-api/"
+                    }
+                }));
+            menuChanged = true;
+            var menuButton = Assert.IsType<MenuButtonWebApp>(await _client.GetChatMenuButtonAsync(chatId));
+            Assert.Equal("Endfix integration", menuButton.Text);
+
+            var temporaryCommands = new[]
+            {
+                new BotCommand
+                {
+                    Command = "endfix_test",
+                    Description = "Endfix integration test"
+                }
+            };
+            Assert.True(await _client.SetMyCommandsAsync(temporaryCommands, commandScope));
+            commandsChanged = true;
+            var commands = await _client.GetMyCommandsAsync(commandScope);
+            var command = Assert.Single(commands);
+            Assert.Equal("endfix_test", command.Command);
+
+            Assert.True(await _client.SetMyNameAsync($"Endfix integration {suffix}", languageCode));
+            nameChanged = true;
+            Assert.Equal($"Endfix integration {suffix}", (await _client.GetMyNameAsync(languageCode)).Name);
+
+            Assert.True(await _client.SetMyDescriptionAsync(
+                $"Endfix integration description {suffix}",
+                languageCode));
+            descriptionChanged = true;
+            Assert.Equal(
+                $"Endfix integration description {suffix}",
+                (await _client.GetMyDescriptionAsync(languageCode)).Description);
+
+            Assert.True(await _client.SetMyShortDescriptionAsync(
+                $"Endfix integration {suffix}",
+                languageCode));
+            shortDescriptionChanged = true;
+            Assert.Equal(
+                $"Endfix integration {suffix}",
+                (await _client.GetMyShortDescriptionAsync(languageCode)).ShortDescription);
+        }
+        finally
+        {
+            if (shortDescriptionChanged)
+            {
+                Assert.True(await _client.SetMyShortDescriptionAsync(
+                    originalShortDescription.ShortDescription,
+                    languageCode));
+            }
+
+            if (descriptionChanged)
+            {
+                Assert.True(await _client.SetMyDescriptionAsync(
+                    originalDescription.Description,
+                    languageCode));
+            }
+
+            if (nameChanged)
+            {
+                Assert.True(await _client.SetMyNameAsync(originalName.Name, languageCode));
+            }
+
+            if (commandsChanged)
+            {
+                if (originalCommands.Count == 0)
+                {
+                    Assert.True(await _client.DeleteMyCommandsAsync(commandScope));
+                }
+                else
+                {
+                    Assert.True(await _client.SetMyCommandsAsync(originalCommands, commandScope));
+                }
+            }
+
+            if (menuChanged)
+            {
+                Assert.True(await _client.SetChatMenuButtonAsync(chatId, originalMenuButton));
+            }
+        }
+
+        Assert.Equal(
+            originalMenuButton.Serialize(),
+            (await _client.GetChatMenuButtonAsync(chatId)).Serialize());
+        Assert.Equal(
+            originalCommands.Select(command => (command.Command, command.Description, command.IsEphemeral)),
+            (await _client.GetMyCommandsAsync(commandScope))
+                .Select(command => (command.Command, command.Description, command.IsEphemeral)));
+        Assert.Equal(originalName.Name, (await _client.GetMyNameAsync(languageCode)).Name);
+        Assert.Equal(
+            originalDescription.Description,
+            (await _client.GetMyDescriptionAsync(languageCode)).Description);
+        Assert.Equal(
+            originalShortDescription.ShortDescription,
+            (await _client.GetMyShortDescriptionAsync(languageCode)).ShortDescription);
+    }
+
     [TelegramGroupIntegrationFact]
     public async Task GroupConfiguration_IsUsable()
     {
@@ -51,6 +177,8 @@ public sealed class TelegramChatIntegrationTests : IDisposable
         Assert.True(administrator.CanInviteUsers);
         Assert.True(administrator.CanPinMessages);
         Assert.True(administrator.CanRestrictMembers);
+        Assert.True(administrator.CanPromoteMembers);
+        Assert.True(administrator.CanManageTags);
         if (chat.IsForum is true)
         {
             Assert.True(administrator.CanManageTopics);
@@ -149,6 +277,92 @@ public sealed class TelegramChatIntegrationTests : IDisposable
                 useIndependentChatPermissions: true));
 
             Assert.IsType<ChatMemberMember>(await _client.GetChatMemberAsync(groupId, userId));
+        }
+    }
+
+    [TelegramModerationIntegrationFact]
+    public async Task TestUserTag_RollBack()
+    {
+        var groupId = GetId(TelegramIntegrationFactAttribute.GroupIdVariable);
+        var userId = GetId(TelegramIntegrationFactAttribute.TestUserIdVariable);
+        var bot = await _client.GetMeAsync();
+        var botMember = Assert.IsType<ChatMemberAdministrator>(
+            await _client.GetChatMemberAsync(groupId, bot.Id));
+        Assert.True(
+            botMember.CanManageTags,
+            "Grant the bot the Manage Tags administrator right to run this test.");
+
+        var original = Assert.IsType<ChatMemberMember>(
+            await _client.GetChatMemberAsync(groupId, userId));
+        const string temporaryTag = "Member test";
+        var tagChanged = false;
+
+        try
+        {
+            Assert.True(await _client.SetChatMemberTagAsync(groupId, userId, temporaryTag));
+            tagChanged = true;
+            var changed = Assert.IsType<ChatMemberMember>(
+                await _client.GetChatMemberAsync(groupId, userId));
+            Assert.Equal(temporaryTag, changed.Tag);
+        }
+        finally
+        {
+            if (tagChanged)
+            {
+                Assert.True(await _client.SetChatMemberTagAsync(groupId, userId, original.Tag));
+                var restored = Assert.IsType<ChatMemberMember>(
+                    await _client.GetChatMemberAsync(groupId, userId));
+                Assert.Equal(original.Tag, restored.Tag);
+            }
+        }
+    }
+
+    [TelegramModerationIntegrationFact]
+    public async Task TestUserPromotionAndCustomTitle_RollBack()
+    {
+        var groupId = GetId(TelegramIntegrationFactAttribute.GroupIdVariable);
+        var userId = GetId(TelegramIntegrationFactAttribute.TestUserIdVariable);
+        var bot = await _client.GetMeAsync();
+        var botMember = Assert.IsType<ChatMemberAdministrator>(
+            await _client.GetChatMemberAsync(groupId, bot.Id));
+        Assert.True(
+            botMember.CanPromoteMembers,
+            "Grant the bot the Add New Admins administrator right to run this test.");
+
+        var original = Assert.IsType<ChatMemberMember>(
+            await _client.GetChatMemberAsync(groupId, userId));
+        var promoted = false;
+
+        try
+        {
+            Assert.True(await _client.PromoteChatMemberAsync(
+                groupId,
+                userId,
+                canDeleteMessages: true));
+            promoted = true;
+
+            var administrator = Assert.IsType<ChatMemberAdministrator>(
+                await _client.GetChatMemberAsync(groupId, userId));
+            Assert.True(administrator.CanDeleteMessages);
+
+            Assert.True(await _client.SetChatAdministratorCustomTitleAsync(
+                groupId,
+                userId,
+                "Admin test"));
+            administrator = Assert.IsType<ChatMemberAdministrator>(
+                await _client.GetChatMemberAsync(groupId, userId));
+            Assert.Equal("Admin test", administrator.CustomTitle);
+        }
+        finally
+        {
+            if (promoted)
+            {
+                Assert.True(await _client.PromoteChatMemberAsync(CreateDemotion(groupId, userId)));
+                Assert.True(await _client.SetChatMemberTagAsync(groupId, userId, original.Tag));
+                var restored = Assert.IsType<ChatMemberMember>(
+                    await _client.GetChatMemberAsync(groupId, userId));
+                Assert.Equal(original.Tag, restored.Tag);
+            }
         }
     }
 
@@ -629,6 +843,31 @@ public sealed class TelegramChatIntegrationTests : IDisposable
         Assert.NotEmpty(content);
         return content;
     }
+
+    private static PromoteChatMemberParameters CreateDemotion(long chatId, long userId)
+        => new()
+        {
+            ChatId = chatId,
+            UserId = userId,
+            IsAnonymous = false,
+            CanManageChat = false,
+            CanDeleteMessages = false,
+            CanManageVideoChats = false,
+            CanRestrictMembers = false,
+            CanPromoteMembers = false,
+            CanChangeInfo = false,
+            CanInviteUsers = false,
+            CanPostStories = false,
+            CanEditStories = false,
+            CanDeleteStories = false,
+            CanPostMessages = false,
+            CanEditMessages = false,
+            CanPinMessages = false,
+            CanManageTopics = false,
+            CanManageDirectMessages = false,
+            CanManageTags = false,
+            CanSendWelcomeMessages = false
+        };
 
     private static ChatPermissions CopyPermissions(
         ChatPermissions source,

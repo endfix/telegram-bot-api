@@ -14,7 +14,10 @@ public sealed class TelegramFileIntegrationTests : IDisposable
     private static readonly byte[] PngBytes = Convert.FromBase64String(
         "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=");
 
-    private readonly HttpClient _httpClient = new();
+    private readonly HttpClient _httpClient = new()
+    {
+        Timeout = TimeSpan.FromSeconds(30)
+    };
     private readonly BotApiClient _client;
     private readonly long _chatId;
 
@@ -574,6 +577,63 @@ public sealed class TelegramFileIntegrationTests : IDisposable
         {
             if (created)
             {
+                Assert.True(await _client.DeleteStickerSetAsync(setName));
+            }
+        }
+    }
+
+    [TelegramGroupStickerIntegrationFact]
+    public async Task ChatStickerSet_RollBack()
+    {
+        var groupId = long.Parse(TelegramIntegrationSettings.Get(
+            TelegramIntegrationFactAttribute.GroupIdVariable)!);
+        var original = await _client.GetChatAsync(groupId);
+        Assert.True(original.CanSetStickerSet);
+
+        var bot = await _client.GetMeAsync();
+        Assert.False(string.IsNullOrWhiteSpace(bot.Username));
+        var setName = $"endfix_group_it_{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}_by_{bot.Username}"
+            .ToLowerInvariant();
+        var setCreated = false;
+
+        try
+        {
+            Assert.True(await _client.CreateNewStickerSetAsync(
+                _chatId,
+                setName,
+                "Endfix group integration test",
+                [CreateSticker("sticker-one.webp", "\u2600\uFE0F")]));
+            setCreated = true;
+
+            Assert.True(await _client.SetChatStickerSetAsync(groupId, setName));
+            Assert.Equal(setName, (await _client.GetChatAsync(groupId)).StickerSetName);
+
+            Assert.True(await _client.DeleteChatStickerSetAsync(groupId));
+            Assert.Null((await _client.GetChatAsync(groupId)).StickerSetName);
+
+            if (original.StickerSetName is not null)
+            {
+                Assert.True(await _client.SetChatStickerSetAsync(groupId, original.StickerSetName));
+                Assert.Equal(
+                    original.StickerSetName,
+                    (await _client.GetChatAsync(groupId)).StickerSetName);
+            }
+        }
+        finally
+        {
+            if (setCreated)
+            {
+                var currentStickerSet = (await _client.GetChatAsync(groupId)).StickerSetName;
+                if (original.StickerSetName is null && currentStickerSet is not null)
+                {
+                    Assert.True(await _client.DeleteChatStickerSetAsync(groupId));
+                }
+                else if (original.StickerSetName is not null &&
+                    currentStickerSet != original.StickerSetName)
+                {
+                    Assert.True(await _client.SetChatStickerSetAsync(groupId, original.StickerSetName));
+                }
+
                 Assert.True(await _client.DeleteStickerSetAsync(setName));
             }
         }

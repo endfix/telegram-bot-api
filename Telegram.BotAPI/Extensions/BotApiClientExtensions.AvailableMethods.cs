@@ -3797,12 +3797,21 @@ public static partial class BotApiClientExtensions
             ForChannels = forChannels
         }, cancellationToken);
 
+    /// <summary>Returns gifts that the bot can send to users and channel chats.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The available gifts.</returns>
     public static async Task<GiftsStruct> GetAvailableGiftsAsync(
         this IBotApiClient client,
         GetAvailableGiftsParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<GiftsStruct>(new ApiRequest("getAvailableGifts", parameters), cancellationToken);
 
+    /// <summary>Returns gifts that the bot can send to users and channel chats.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The available gifts.</returns>
     public static async Task<GiftsStruct> GetAvailableGiftsAsync(
         this IBotApiClient client,
         CancellationToken cancellationToken = default)
@@ -3811,12 +3820,30 @@ public static partial class BotApiClientExtensions
             // No parameters required for this method
         }, cancellationToken);
 
+    /// <summary>Sends a gift to a user or channel chat.</summary>
+    /// <remarks>The receiver cannot convert a gift sent by the bot to Telegram Stars.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SendGiftAsync(
         this IBotApiClient client,
         SendGiftParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("sendGift", parameters), cancellationToken);
 
+    /// <summary>Sends a gift to a user or channel chat.</summary>
+    /// <remarks>The receiver cannot convert a gift sent by the bot to Telegram Stars.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="userId">Target user identifier; required when <paramref name="chatId"/> is omitted.</param>
+    /// <param name="chatId">Target channel identifier or username; required when <paramref name="userId"/> is omitted.</param>
+    /// <param name="giftId">Gift identifier. Limited gifts cannot be sent to channel chats.</param>
+    /// <param name="payForUpgrade">Whether the bot pays for the gift upgrade, making it free for the receiver.</param>
+    /// <param name="text">Text shown with the gift, from 0 through 128 characters.</param>
+    /// <param name="textParseMode">Mode for parsing entities in <paramref name="text"/>.</param>
+    /// <param name="textEntities">Special entities in the gift text; can be specified instead of <paramref name="textParseMode"/>.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SendGiftAsync(
         this IBotApiClient client,
         long? userId,
@@ -3838,12 +3865,27 @@ public static partial class BotApiClientExtensions
             TextEntities = textEntities
         }, cancellationToken);
 
+    /// <summary>Gifts a Telegram Premium subscription to a user.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> GiftPremiumSubscriptionAsync(
         this IBotApiClient client,
         GiftPremiumSubscriptionParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("giftPremiumSubscription", parameters), cancellationToken);
 
+    /// <summary>Gifts a Telegram Premium subscription to a user.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="userId">Target user identifier.</param>
+    /// <param name="monthCount">Subscription duration; must be 3, 6 or 12 months.</param>
+    /// <param name="starCount">Price in Telegram Stars: 1000 for 3 months, 1500 for 6 months or 2500 for 12 months.</param>
+    /// <param name="text">Text shown with the subscription service message, from 0 through 128 characters.</param>
+    /// <param name="textParseMode">Mode for parsing entities in <paramref name="text"/>.</param>
+    /// <param name="textEntities">Special entities in the gift text; can be specified instead of <paramref name="textParseMode"/>.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> GiftPremiumSubscriptionAsync(
         this IBotApiClient client,
         long userId,
@@ -3863,12 +3905,23 @@ public static partial class BotApiClientExtensions
             TextEntities = textEntities
         }, cancellationToken);
 
+    /// <summary>Verifies a user on behalf of the organization represented by the bot.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> VerifyUserAsync(
         this IBotApiClient client,
         VerifyUserParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("verifyUser", parameters), cancellationToken);
 
+    /// <summary>Verifies a user on behalf of the organization represented by the bot.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="userId">Target user identifier.</param>
+    /// <param name="customDescription">Verification description, from 0 through 70 characters. Must be empty unless the organization may provide one.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> VerifyUserAsync(
         this IBotApiClient client,
         long userId,
@@ -3880,12 +3933,23 @@ public static partial class BotApiClientExtensions
             CustomDescription = customDescription
         }, cancellationToken);
 
+    /// <summary>Verifies a chat on behalf of the organization represented by the bot.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> VerifyChatAsync(
         this IBotApiClient client,
         VerifyChatParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("verifyChat", parameters), cancellationToken);
 
+    /// <summary>Verifies a chat on behalf of the organization represented by the bot.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target bot, supergroup or channel identifier or username. Channel direct messages cannot be verified.</param>
+    /// <param name="customDescription">Verification description, from 0 through 70 characters. Must be empty unless the organization may provide one.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> VerifyChatAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -3897,12 +3961,22 @@ public static partial class BotApiClientExtensions
             CustomDescription = customDescription
         }, cancellationToken);
 
+    /// <summary>Removes a verification assigned to a user by the bot's organization.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> RemoveUserVerificationAsync(
         this IBotApiClient client,
         RemoveUserVerificationParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("removeUserVerification", parameters), cancellationToken);
 
+    /// <summary>Removes a verification assigned to a user by the bot's organization.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="userId">Target user identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> RemoveUserVerificationAsync(
         this IBotApiClient client,
         long userId,
@@ -3912,12 +3986,22 @@ public static partial class BotApiClientExtensions
             UserId = userId
         }, cancellationToken);
 
+    /// <summary>Removes a verification assigned to a chat by the bot's organization.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> RemoveChatVerificationAsync(
         this IBotApiClient client,
         RemoveChatVerificationParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("removeChatVerification", parameters), cancellationToken);
 
+    /// <summary>Removes a verification assigned to a chat by the bot's organization.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target bot or channel identifier or username.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> RemoveChatVerificationAsync(
         this IBotApiClient client,
         ChatIdSource chatId,

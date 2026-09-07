@@ -56,6 +56,7 @@ The bot must be an administrator in the discussion group with these rights:
 - delete messages;
 - invite users;
 - pin messages.
+- restrict members.
 
 The bot must be an administrator in the channel with these rights:
 
@@ -91,7 +92,7 @@ take precedence over User Secrets. Never commit tokens or real IDs.
 | `TELEGRAM_BOT_GROUP_ID` | Discussion supergroup linked to the test channel |
 | `TELEGRAM_BOT_FORUM_ID` | Separate forum-enabled supergroup |
 | `TELEGRAM_BOT_CHANNEL_ID` | Test channel linked to the discussion group |
-| `TELEGRAM_BOT_TEST_USER_ID` | Ordinary member used by membership and future moderation tests |
+| `TELEGRAM_BOT_TEST_USER_ID` | Ordinary member used by membership and rollback-safe restriction tests |
 | `TELEGRAM_BOT_KEEP_MESSAGES` | Optional `true` value that keeps file-test messages for inspection |
 
 Media files used by multipart tests are versioned under `Fixtures/Media` and
@@ -118,9 +119,10 @@ dotnet test Telegram.BotAPI.Tests/Telegram.BotAPI.Tests.csproj --filter "FullyQu
 ```
 
 Tests whose required secrets are absent are skipped. A fully configured run
-currently verifies bot capabilities, chat permissions, channel/discussion
-linking, group/channel metadata and message lifecycle, invite links, pins,
-reactions, forum topics, and cross-chat copy and forwarding. File scenarios
+currently verifies bot capabilities, default chat permissions, rollback-safe
+member restrictions, channel/discussion linking, group/channel metadata and
+message lifecycle, invite links, pins, reactions, forum topics, and cross-chat
+copy and forwarding. File scenarios
 cover buffered and streaming downloads, profile-photo restore, sticker-set lifecycle, standalone
 media, media groups with typed thumbnail/cover files, paid media, nested poll
 media, nested rich-message uploads, reply-markup editing, and stopping live
@@ -148,3 +150,8 @@ resources.
 Chat lifecycle tests still clean up their messages and state. A failed cleanup
 also fails the test; inspect the dedicated chats after an interrupted process or
 network failure.
+
+The regular suite does not exercise `banChatMember` followed by
+`unbanChatMember`: unbanning allows a user to rejoin but does not restore their
+membership. That lifecycle requires an explicitly destructive scenario and a
+cooperating account that rejoins the group afterward.

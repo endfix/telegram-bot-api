@@ -50,6 +50,7 @@ public sealed class TelegramChatIntegrationTests : IDisposable
         Assert.True(administrator.CanDeleteMessages);
         Assert.True(administrator.CanInviteUsers);
         Assert.True(administrator.CanPinMessages);
+        Assert.True(administrator.CanRestrictMembers);
         if (chat.IsForum is true)
         {
             Assert.True(administrator.CanManageTopics);
@@ -85,6 +86,70 @@ public sealed class TelegramChatIntegrationTests : IDisposable
         Assert.False(member.User.IsBot);
         Assert.NotEqual(ChatMemberStatus.Creator, member.Status);
         Assert.NotEqual(ChatMemberStatus.Administrator, member.Status);
+    }
+
+    [TelegramGroupIntegrationFact]
+    public async Task GroupDefaultPermissions_RollBack()
+    {
+        var groupId = GetId(TelegramIntegrationFactAttribute.GroupIdVariable);
+        var original = Assert.IsType<ChatPermissions>((await _client.GetChatAsync(groupId)).Permissions);
+        var temporary = CopyPermissions(
+            original,
+            canSendPolls: original.CanSendPolls is not true);
+
+        try
+        {
+            Assert.True(await _client.SetChatPermissionsAsync(
+                groupId,
+                temporary,
+                useIndependentChatPermissions: true));
+
+            var changed = Assert.IsType<ChatPermissions>((await _client.GetChatAsync(groupId)).Permissions);
+            Assert.Equal(temporary.CanSendPolls, changed.CanSendPolls);
+        }
+        finally
+        {
+            Assert.True(await _client.SetChatPermissionsAsync(
+                groupId,
+                original,
+                useIndependentChatPermissions: true));
+
+            var restored = Assert.IsType<ChatPermissions>((await _client.GetChatAsync(groupId)).Permissions);
+            Assert.Equal(original.Serialize(), restored.Serialize());
+        }
+    }
+
+    [TelegramModerationIntegrationFact]
+    public async Task TestUserRestriction_RollBack()
+    {
+        var groupId = GetId(TelegramIntegrationFactAttribute.GroupIdVariable);
+        var userId = GetId(TelegramIntegrationFactAttribute.TestUserIdVariable);
+        var original = await _client.GetChatMemberAsync(groupId, userId);
+        Assert.IsType<ChatMemberMember>(original);
+
+        try
+        {
+            Assert.True(await _client.RestrictChatMemberAsync(
+                groupId,
+                userId,
+                new ChatPermissions { CanSendMessages = false },
+                useIndependentChatPermissions: true));
+
+            var restricted = Assert.IsType<ChatMemberRestricted>(
+                await _client.GetChatMemberAsync(groupId, userId));
+            Assert.True(restricted.IsMember);
+            Assert.False(restricted.CanSendMessages);
+        }
+        finally
+        {
+            Assert.True(await _client.RestrictChatMemberAsync(
+                groupId,
+                userId,
+                AllChatPermissions,
+                useIndependentChatPermissions: true));
+
+            Assert.IsType<ChatMemberMember>(await _client.GetChatMemberAsync(groupId, userId));
+        }
     }
 
     [TelegramPremiumIntegrationFact]
@@ -436,6 +501,49 @@ public sealed class TelegramChatIntegrationTests : IDisposable
     }
 
     public void Dispose() => _httpClient.Dispose();
+
+    private static readonly ChatPermissions AllChatPermissions = new()
+    {
+        CanSendMessages = true,
+        CanSendAudios = true,
+        CanSendDocuments = true,
+        CanSendPhotos = true,
+        CanSendVideos = true,
+        CanSendVideoNotes = true,
+        CanSendVoiceNotes = true,
+        CanSendPolls = true,
+        CanSendOtherMessages = true,
+        CanAddWebPagePreviews = true,
+        CanReactToMessages = true,
+        CanEditTag = true,
+        CanChangeInfo = true,
+        CanInviteUsers = true,
+        CanPinMessages = true,
+        CanManageTopics = true
+    };
+
+    private static ChatPermissions CopyPermissions(
+        ChatPermissions source,
+        bool? canSendPolls = null)
+        => new()
+        {
+            CanSendMessages = source.CanSendMessages,
+            CanSendAudios = source.CanSendAudios,
+            CanSendDocuments = source.CanSendDocuments,
+            CanSendPhotos = source.CanSendPhotos,
+            CanSendVideos = source.CanSendVideos,
+            CanSendVideoNotes = source.CanSendVideoNotes,
+            CanSendVoiceNotes = source.CanSendVoiceNotes,
+            CanSendPolls = canSendPolls ?? source.CanSendPolls,
+            CanSendOtherMessages = source.CanSendOtherMessages,
+            CanAddWebPagePreviews = source.CanAddWebPagePreviews,
+            CanReactToMessages = source.CanReactToMessages,
+            CanEditTag = source.CanEditTag,
+            CanChangeInfo = source.CanChangeInfo,
+            CanInviteUsers = source.CanInviteUsers,
+            CanPinMessages = source.CanPinMessages,
+            CanManageTopics = source.CanManageTopics
+        };
 
     private async Task RequirePremiumUserAsync(long groupId, long userId)
     {

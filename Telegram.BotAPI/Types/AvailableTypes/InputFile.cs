@@ -10,11 +10,15 @@ public abstract class InputFile
 {
     private readonly InputFileSource _source;
 
+    /// <summary>Initializes an uploaded file from a local file path.</summary>
+    /// <param name="path">Path of the local file.</param>
     protected InputFile(string path)
         : this(InputFileSource.FromPath(path))
     {
     }
 
+    /// <summary>Initializes an uploaded file from a repeatable source.</summary>
+    /// <param name="source">Source used to open a fresh stream for each request attempt.</param>
     protected InputFile(InputFileSource source)
     {
         _source = source ?? throw new System.ArgumentNullException(nameof(source));

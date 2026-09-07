@@ -2754,12 +2754,23 @@ public static partial class BotApiClientExtensions
             Limit = limit
         }, cancellationToken);
 
+    /// <summary>Sets the group sticker set of a supergroup.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetChatStickerSetAsync(
         this IBotApiClient client,
         SetChatStickerSetParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("setChatStickerSet", parameters), cancellationToken);
 
+    /// <summary>Sets the group sticker set of a supergroup.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target supergroup identifier or username.</param>
+    /// <param name="stickerSetName">Name of the sticker set to assign.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetChatStickerSetAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2771,12 +2782,22 @@ public static partial class BotApiClientExtensions
             StickerSetName = stickerSetName
         }, cancellationToken);
 
+    /// <summary>Removes the group sticker set from a supergroup.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeleteChatStickerSetAsync(
         this IBotApiClient client,
         DeleteChatStickerSetParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("deleteChatStickerSet", parameters), cancellationToken);
 
+    /// <summary>Removes the group sticker set from a supergroup.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target supergroup identifier or username.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeleteChatStickerSetAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2786,12 +2807,21 @@ public static partial class BotApiClientExtensions
             ChatId = chatId
         }, cancellationToken);
 
+    /// <summary>Returns custom emoji stickers that any user can use as forum topic icons.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The stickers available as forum topic icons.</returns>
     public static async Task<IReadOnlyList<Sticker>> GetForumTopicIconStickersAsync(
         this IBotApiClient client,
         GetForumTopicIconStickersParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<IReadOnlyList<Sticker>>(new ApiRequest("getForumTopicIconStickers", parameters), cancellationToken);
 
+    /// <summary>Returns custom emoji stickers that any user can use as forum topic icons.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The stickers available as forum topic icons.</returns>
     public static async Task<IReadOnlyList<Sticker>> GetForumTopicIconStickersAsync(
         this IBotApiClient client,
         CancellationToken cancellationToken = default)
@@ -2800,12 +2830,25 @@ public static partial class BotApiClientExtensions
             // No parameters to set for this method
         }, cancellationToken);
 
+    /// <summary>Creates a topic in a forum supergroup or a private chat with a user.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>Information about the created topic.</returns>
     public static async Task<ForumTopic> CreateForumTopicAsync(
         this IBotApiClient client,
         CreateForumTopicParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<ForumTopic>(new ApiRequest("createForumTopic", parameters), cancellationToken);
 
+    /// <summary>Creates a topic in a forum supergroup or a private chat with a user.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or supergroup username.</param>
+    /// <param name="name">Topic name, from 1 through 128 characters.</param>
+    /// <param name="iconColor">Topic icon color in RGB format; must be one of the colors supported by Telegram.</param>
+    /// <param name="iconCustomEmojiId">Identifier of the custom emoji used as the topic icon.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>Information about the created topic.</returns>
     public static async Task<ForumTopic> CreateForumTopicAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2821,12 +2864,25 @@ public static partial class BotApiClientExtensions
             IconCustomEmojiId = iconCustomEmojiId
         }, cancellationToken);
 
+    /// <summary>Edits the name and icon of a forum topic.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> EditForumTopicAsync(
         this IBotApiClient client,
         EditForumTopicParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("editForumTopic", parameters), cancellationToken);
 
+    /// <summary>Edits the name and icon of a forum topic.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or supergroup username.</param>
+    /// <param name="messageThreadId">Identifier of the forum topic's message thread.</param>
+    /// <param name="name">New topic name, from 0 through 128 characters. An omitted or empty value preserves the current name.</param>
+    /// <param name="iconCustomEmojiId">New custom emoji identifier. Pass an empty string to remove the icon; omit it to preserve the current icon.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> EditForumTopicAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2842,12 +2898,23 @@ public static partial class BotApiClientExtensions
             IconCustomEmojiId = iconCustomEmojiId
         }, cancellationToken);
 
+    /// <summary>Closes an open topic in a forum supergroup.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> CloseForumTopicAsync(
         this IBotApiClient client,
         CloseForumTopicParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("closeForumTopic", parameters), cancellationToken);
 
+    /// <summary>Closes an open topic in a forum supergroup.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target supergroup identifier or username.</param>
+    /// <param name="messageThreadId">Identifier of the forum topic's message thread.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> CloseForumTopicAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2859,12 +2926,23 @@ public static partial class BotApiClientExtensions
             MessageThreadId = messageThreadId
         }, cancellationToken);
 
+    /// <summary>Reopens a closed topic in a forum supergroup.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> ReopenForumTopicAsync(
         this IBotApiClient client,
         ReopenForumTopicParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("reopenForumTopic", parameters), cancellationToken);
 
+    /// <summary>Reopens a closed topic in a forum supergroup.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target supergroup identifier or username.</param>
+    /// <param name="messageThreadId">Identifier of the forum topic's message thread.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> ReopenForumTopicAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2876,12 +2954,23 @@ public static partial class BotApiClientExtensions
             MessageThreadId = messageThreadId
         }, cancellationToken);
 
+    /// <summary>Deletes a forum topic together with all of its messages.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeleteForumTopicAsync(
         this IBotApiClient client,
         DeleteForumTopicParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("deleteForumTopic", parameters), cancellationToken);
 
+    /// <summary>Deletes a forum topic together with all of its messages.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or supergroup username.</param>
+    /// <param name="messageThreadId">Identifier of the forum topic's message thread.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeleteForumTopicAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2893,12 +2982,23 @@ public static partial class BotApiClientExtensions
             MessageThreadId = messageThreadId
         }, cancellationToken);
 
+    /// <summary>Clears the list of pinned messages in a forum topic.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> UnpinAllForumTopicMessagesAsync(
         this IBotApiClient client,
         UnpinAllForumTopicMessagesParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("unpinAllForumTopicMessages", parameters), cancellationToken);
 
+    /// <summary>Clears the list of pinned messages in a forum topic.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or supergroup username.</param>
+    /// <param name="messageThreadId">Identifier of the forum topic's message thread.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> UnpinAllForumTopicMessagesAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2910,12 +3010,23 @@ public static partial class BotApiClientExtensions
             MessageThreadId = messageThreadId
         }, cancellationToken);
 
+    /// <summary>Changes the name of the General topic in a forum supergroup.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> EditGeneralForumTopicAsync(
         this IBotApiClient client,
         EditGeneralForumTopicParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("editGeneralForumTopic", parameters), cancellationToken);
 
+    /// <summary>Changes the name of the General topic in a forum supergroup.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target forum supergroup identifier or username.</param>
+    /// <param name="name">New topic name, from 1 through 128 characters.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> EditGeneralForumTopicAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2927,12 +3038,22 @@ public static partial class BotApiClientExtensions
             Name = name
         }, cancellationToken);
 
+    /// <summary>Closes the open General topic in a forum supergroup.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> CloseGeneralForumTopicAsync(
         this IBotApiClient client,
         CloseGeneralForumTopicParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("closeGeneralForumTopic", parameters), cancellationToken);
 
+    /// <summary>Closes the open General topic in a forum supergroup.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target forum supergroup identifier or username.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> CloseGeneralForumTopicAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2942,12 +3063,24 @@ public static partial class BotApiClientExtensions
             ChatId = chatId
         }, cancellationToken);
 
+    /// <summary>Reopens the closed General topic in a forum supergroup.</summary>
+    /// <remarks>Telegram automatically unhides the topic if it is hidden.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> ReopenGeneralForumTopicAsync(
         this IBotApiClient client,
         ReopenGeneralForumTopicParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("reopenGeneralForumTopic", parameters), cancellationToken);
 
+    /// <summary>Reopens the closed General topic in a forum supergroup.</summary>
+    /// <remarks>Telegram automatically unhides the topic if it is hidden.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target forum supergroup identifier or username.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> ReopenGeneralForumTopicAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2957,12 +3090,24 @@ public static partial class BotApiClientExtensions
             ChatId = chatId
         }, cancellationToken);
 
+    /// <summary>Hides the General topic in a forum supergroup.</summary>
+    /// <remarks>Telegram automatically closes the topic if it is open.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> HideGeneralForumTopicAsync(
         this IBotApiClient client,
         HideGeneralForumTopicParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("hideGeneralForumTopic", parameters), cancellationToken);
 
+    /// <summary>Hides the General topic in a forum supergroup.</summary>
+    /// <remarks>Telegram automatically closes the topic if it is open.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target forum supergroup identifier or username.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> HideGeneralForumTopicAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2972,12 +3117,22 @@ public static partial class BotApiClientExtensions
             ChatId = chatId
         }, cancellationToken);
 
+    /// <summary>Unhides the General topic in a forum supergroup.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> UnhideGeneralForumTopicAsync(
         this IBotApiClient client,
         UnhideGeneralForumTopicParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("unhideGeneralForumTopic", parameters), cancellationToken);
 
+    /// <summary>Unhides the General topic in a forum supergroup.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target forum supergroup identifier or username.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> UnhideGeneralForumTopicAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2987,12 +3142,22 @@ public static partial class BotApiClientExtensions
             ChatId = chatId
         }, cancellationToken);
 
+    /// <summary>Clears the list of pinned messages in a General forum topic.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> UnpinAllGeneralForumTopicMessagesAsync(
         this IBotApiClient client,
         UnpinAllGeneralForumTopicMessagesParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("unpinAllGeneralForumTopicMessages", parameters), cancellationToken);
 
+    /// <summary>Clears the list of pinned messages in a General forum topic.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target forum supergroup identifier or username.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> UnpinAllGeneralForumTopicMessagesAsync(
         this IBotApiClient client,
         ChatIdSource chatId,

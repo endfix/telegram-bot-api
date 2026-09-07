@@ -2049,12 +2049,24 @@ public static partial class BotApiClientExtensions
             SenderChatId = senderChatId
         }, cancellationToken);
 
+    /// <summary>Sets the default permissions for all members of a group or supergroup.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetChatPermissionsAsync(
         this IBotApiClient client,
         SetChatPermissionsParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("setChatPermissions", parameters), cancellationToken);
 
+    /// <summary>Sets the default permissions for all members of a group or supergroup.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target group or supergroup identifier or username.</param>
+    /// <param name="permissions">New default chat permissions.</param>
+    /// <param name="useIndependentChatPermissions">Whether permissions are applied independently instead of using Telegram's implied permission relationships.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetChatPermissionsAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2068,12 +2080,22 @@ public static partial class BotApiClientExtensions
             UseIndependentChatPermissions = useIndependentChatPermissions
         }, cancellationToken);
 
+    /// <summary>Generates a new primary invite link and revokes the bot's previous primary link.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The new primary invite link.</returns>
     public static async Task<string> ExportChatInviteLinkAsync(
         this IBotApiClient client,
         ExportChatInviteLinkParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<string>(new ApiRequest("exportChatInviteLink", parameters), cancellationToken);
 
+    /// <summary>Generates a new primary invite link and revokes the bot's previous primary link.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or channel username.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The new primary invite link.</returns>
     public static async Task<string> ExportChatInviteLinkAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2083,12 +2105,26 @@ public static partial class BotApiClientExtensions
             ChatId = chatId
         }, cancellationToken);
 
+    /// <summary>Creates an additional invite link for a chat.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The created invite link.</returns>
     public static async Task<ChatInviteLink> CreateChatInviteLinkAsync(
         this IBotApiClient client,
         CreateChatInviteLinkParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<ChatInviteLink>(new ApiRequest("createChatInviteLink", parameters), cancellationToken);
 
+    /// <summary>Creates an additional invite link for a chat.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or channel username.</param>
+    /// <param name="name">Invite link name, from 0 through 32 characters.</param>
+    /// <param name="expireDate">Unix timestamp when the link expires.</param>
+    /// <param name="memberLimit">Maximum simultaneous members who joined through the link, from 1 through 99999.</param>
+    /// <param name="createsJoinRequest">Whether users joining through the link require administrator approval. Cannot be combined with <paramref name="memberLimit"/>.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The created invite link.</returns>
     public static async Task<ChatInviteLink> CreateChatInviteLinkAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2106,12 +2142,27 @@ public static partial class BotApiClientExtensions
             CreatesJoinRequest = createsJoinRequest
         }, cancellationToken);
 
+    /// <summary>Edits a non-primary invite link created by the bot.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The edited invite link.</returns>
     public static async Task<ChatInviteLink> EditChatInviteLinkAsync(
         this IBotApiClient client,
         EditChatInviteLinkParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<ChatInviteLink>(new ApiRequest("editChatInviteLink", parameters), cancellationToken);
 
+    /// <summary>Edits a non-primary invite link created by the bot.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or channel username.</param>
+    /// <param name="inviteLink">Invite link to edit.</param>
+    /// <param name="name">Invite link name, from 0 through 32 characters.</param>
+    /// <param name="expireDate">Unix timestamp when the link expires.</param>
+    /// <param name="memberLimit">Maximum simultaneous members who joined through the link, from 1 through 99999.</param>
+    /// <param name="createsJoinRequest">Whether users joining through the link require administrator approval. Cannot be combined with <paramref name="memberLimit"/>.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The edited invite link.</returns>
     public static async Task<ChatInviteLink> EditChatInviteLinkAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2131,12 +2182,25 @@ public static partial class BotApiClientExtensions
             CreatesJoinRequest = createsJoinRequest
         }, cancellationToken);
 
+    /// <summary>Creates a paid subscription invite link for a channel.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The created subscription invite link.</returns>
     public static async Task<ChatInviteLink> CreateChatSubscriptionInviteLinkAsync(
         this IBotApiClient client,
         CreateChatSubscriptionInviteLinkParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<ChatInviteLink>(new ApiRequest("createChatSubscriptionInviteLink", parameters), cancellationToken);
 
+    /// <summary>Creates a paid subscription invite link for a channel.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target channel identifier or username.</param>
+    /// <param name="subscriptionPeriod">Subscription period in seconds; currently must be 2592000 (30 days).</param>
+    /// <param name="subscriptionPrice">Telegram Stars charged for each subscription period, from 1 through 10000.</param>
+    /// <param name="name">Invite link name, from 0 through 32 characters.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The created subscription invite link.</returns>
     public static async Task<ChatInviteLink> CreateChatSubscriptionInviteLinkAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2152,12 +2216,24 @@ public static partial class BotApiClientExtensions
             Name = name
         }, cancellationToken);
 
+    /// <summary>Edits a subscription invite link created by the bot.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The edited subscription invite link.</returns>
     public static async Task<ChatInviteLink> EditChatSubscriptionInviteLinkAsync(
         this IBotApiClient client,
         EditChatSubscriptionInviteLinkParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<ChatInviteLink>(new ApiRequest("editChatSubscriptionInviteLink", parameters), cancellationToken);
 
+    /// <summary>Edits a subscription invite link created by the bot.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target channel identifier or username.</param>
+    /// <param name="inviteLink">Subscription invite link to edit.</param>
+    /// <param name="name">Invite link name, from 0 through 32 characters.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The edited subscription invite link.</returns>
     public static async Task<ChatInviteLink> EditChatSubscriptionInviteLinkAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2171,12 +2247,24 @@ public static partial class BotApiClientExtensions
             Name = name
         }, cancellationToken);
 
+    /// <summary>Revokes an invite link created by the bot.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The revoked invite link.</returns>
     public static async Task<ChatInviteLink> RevokeChatInviteLinkAsync(
         this IBotApiClient client,
         RevokeChatInviteLinkParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<ChatInviteLink>(new ApiRequest("revokeChatInviteLink", parameters), cancellationToken);
 
+    /// <summary>Revokes an invite link created by the bot.</summary>
+    /// <remarks>Revoking a primary link automatically creates a replacement.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or channel username.</param>
+    /// <param name="inviteLink">Invite link to revoke.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The revoked invite link.</returns>
     public static async Task<ChatInviteLink> RevokeChatInviteLinkAsync(
         this IBotApiClient client,
         ChatIdSource chatId,

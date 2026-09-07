@@ -4320,12 +4320,34 @@ public static partial class BotApiClientExtensions
             StarCount = starCount
         }, cancellationToken);
 
+    /// <summary>Returns gifts received and owned by a managed business account.</summary>
+    /// <remarks>Requires the <c>can_view_gifts_and_stars</c> business bot right.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The matching owned gifts and pagination state.</returns>
     public static async Task<OwnedGifts> GetBusinessAccountGiftsAsync(
         this IBotApiClient client,
         GetBusinessAccountGiftsParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<OwnedGifts>(new ApiRequest("getBusinessAccountGifts", parameters), cancellationToken);
 
+    /// <summary>Returns gifts received and owned by a managed business account.</summary>
+    /// <remarks>Requires the <c>can_view_gifts_and_stars</c> business bot right.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="businessConnectionId">Identifier of the business connection.</param>
+    /// <param name="excludeUnsaved">Whether to exclude gifts not saved to the account's profile.</param>
+    /// <param name="excludeSaved">Whether to exclude gifts saved to the account's profile.</param>
+    /// <param name="excludeUnlimited">Whether to exclude gifts with an unlimited supply.</param>
+    /// <param name="excludeLimitedUpgradable">Whether to exclude limited gifts that can be upgraded to unique gifts.</param>
+    /// <param name="excludeLimitedNonUpgradable">Whether to exclude limited gifts that cannot be upgraded to unique gifts.</param>
+    /// <param name="excludeUnique">Whether to exclude unique gifts.</param>
+    /// <param name="excludeFromBlockchain">Whether to exclude gifts assigned from TON that cannot be resold or transferred in Telegram.</param>
+    /// <param name="sortByPrice">Whether to sort by gift price instead of send date before pagination.</param>
+    /// <param name="offset">Offset returned by the previous request; use an empty string for the first page.</param>
+    /// <param name="limit">Maximum number of gifts to return, from 1 through 100. Defaults to 100.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The matching owned gifts and pagination state.</returns>
     public static async Task<OwnedGifts> GetBusinessAccountGiftsAsync(
         this IBotApiClient client,
         string businessConnectionId,
@@ -4355,12 +4377,30 @@ public static partial class BotApiClientExtensions
             Limit = limit
         }, cancellationToken);
 
+    /// <summary>Returns gifts owned and hosted by a user.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The matching owned gifts and pagination state.</returns>
     public static async Task<OwnedGifts> GetUserGiftsAsync(
         this IBotApiClient client,
         GetUserGiftsParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<OwnedGifts>(new ApiRequest("getUserGifts", parameters), cancellationToken);
 
+    /// <summary>Returns gifts owned and hosted by a user.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="userId">Target user identifier.</param>
+    /// <param name="excludeUnlimited">Whether to exclude gifts with an unlimited supply.</param>
+    /// <param name="excludeLimitedUpgradable">Whether to exclude limited gifts that can be upgraded to unique gifts.</param>
+    /// <param name="excludeLimitedNonUpgradable">Whether to exclude limited gifts that cannot be upgraded to unique gifts.</param>
+    /// <param name="excludeFromBlockchain">Whether to exclude gifts assigned from TON that cannot be resold or transferred in Telegram.</param>
+    /// <param name="excludeUnique">Whether to exclude unique gifts.</param>
+    /// <param name="sortByPrice">Whether to sort by gift price instead of send date before pagination.</param>
+    /// <param name="offset">Offset returned by the previous request; use an empty string for the first page.</param>
+    /// <param name="limit">Maximum number of gifts to return, from 1 through 100. Defaults to 100.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The matching owned gifts and pagination state.</returns>
     public static async Task<OwnedGifts> GetUserGiftsAsync(
         this IBotApiClient client,
         long userId,
@@ -4386,12 +4426,32 @@ public static partial class BotApiClientExtensions
             Limit = limit
         }, cancellationToken);
 
+    /// <summary>Returns gifts owned by a chat.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The matching owned gifts and pagination state.</returns>
     public static async Task<OwnedGifts> GetChatGiftsAsync(
         this IBotApiClient client,
         GetChatGiftsParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<OwnedGifts>(new ApiRequest("getChatGifts", parameters), cancellationToken);
 
+    /// <summary>Returns gifts owned by a chat.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or channel username.</param>
+    /// <param name="excludeUnsaved">Whether to exclude gifts not saved to the chat's profile.</param>
+    /// <param name="excludeSaved">Whether to exclude gifts saved to the chat's profile.</param>
+    /// <param name="excludeUnlimited">Whether to exclude gifts with an unlimited supply.</param>
+    /// <param name="excludeLimitedUpgradable">Whether to exclude limited gifts that can be upgraded to unique gifts.</param>
+    /// <param name="excludeLimitedNonUpgradable">Whether to exclude limited gifts that cannot be upgraded to unique gifts.</param>
+    /// <param name="excludeFromBlockchain">Whether to exclude gifts assigned from TON that cannot be resold or transferred in Telegram.</param>
+    /// <param name="excludeUnique">Whether to exclude unique gifts.</param>
+    /// <param name="sortByPrice">Whether to sort by gift price instead of send date before pagination.</param>
+    /// <param name="offset">Offset returned by the previous request; use an empty string for the first page.</param>
+    /// <param name="limit">Maximum number of gifts to return, from 1 through 100. Defaults to 100.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The matching owned gifts and pagination state.</returns>
     public static async Task<OwnedGifts> GetChatGiftsAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -4421,12 +4481,25 @@ public static partial class BotApiClientExtensions
             Limit = limit
         }, cancellationToken);
 
+    /// <summary>Converts a regular gift owned by a business account to Telegram Stars.</summary>
+    /// <remarks>Requires the <c>can_convert_gifts_to_stars</c> business bot right.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> ConvertGiftToStarsAsync(
         this IBotApiClient client,
         ConvertGiftToStarsParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("convertGiftToStars", parameters), cancellationToken);
 
+    /// <summary>Converts a regular gift owned by a business account to Telegram Stars.</summary>
+    /// <remarks>Requires the <c>can_convert_gifts_to_stars</c> business bot right.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="businessConnectionId">Identifier of the business connection.</param>
+    /// <param name="ownedGiftId">Identifier of the regular gift to convert.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> ConvertGiftToStarsAsync(
         this IBotApiClient client,
         string businessConnectionId,
@@ -4438,12 +4511,27 @@ public static partial class BotApiClientExtensions
             OwnedGiftId = ownedGiftId
         }, cancellationToken);
 
+    /// <summary>Upgrades a regular gift owned by a business account to a unique gift.</summary>
+    /// <remarks>Requires <c>can_transfer_and_upgrade_gifts</c> and, for a paid upgrade, <c>can_transfer_stars</c>.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> UpgradeGiftAsync(
         this IBotApiClient client,
         UpgradeGiftParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("upgradeGift", parameters), cancellationToken);
 
+    /// <summary>Upgrades a regular gift owned by a business account to a unique gift.</summary>
+    /// <remarks>Requires <c>can_transfer_and_upgrade_gifts</c> and, for a paid upgrade, <c>can_transfer_stars</c>.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="businessConnectionId">Identifier of the business connection.</param>
+    /// <param name="ownedGiftId">Identifier of the regular gift to upgrade.</param>
+    /// <param name="keepOriginalDetails">Whether to preserve the original text, sender and receiver.</param>
+    /// <param name="starCount">Stars paid from the business account. Pass 0 when the gift has a prepaid upgrade; otherwise pass the required upgrade price.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> UpgradeGiftAsync(
         this IBotApiClient client,
         string businessConnectionId,
@@ -4459,12 +4547,27 @@ public static partial class BotApiClientExtensions
             StarCount = starCount
         }, cancellationToken);
 
+    /// <summary>Transfers an owned unique gift to another user.</summary>
+    /// <remarks>Requires <c>can_transfer_and_upgrade_gifts</c> and, for a paid transfer, <c>can_transfer_stars</c>.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> TransferGiftAsync(
         this IBotApiClient client,
         TransferGiftParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("transferGift", parameters), cancellationToken);
 
+    /// <summary>Transfers an owned unique gift to another user.</summary>
+    /// <remarks>Requires <c>can_transfer_and_upgrade_gifts</c> and, for a paid transfer, <c>can_transfer_stars</c>.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="businessConnectionId">Identifier of the business connection.</param>
+    /// <param name="ownedGiftId">Identifier of the unique gift to transfer.</param>
+    /// <param name="newOwnerChatId">Identifier of the new owner's chat, which must have been active within the last 24 hours.</param>
+    /// <param name="starCount">Stars paid from the business account for the transfer.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> TransferGiftAsync(
         this IBotApiClient client,
         string businessConnectionId,

@@ -682,6 +682,10 @@ public static partial class BotApiClientExtensions
     /// <param name="client">Bot API client used to send the request.</param>
     /// <param name="chatId">Target chat.</param>
     /// <param name="video">Video to send.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
+    /// <param name="messageThreadId">Unique identifier of the target forum topic; for forum supergroups and private chats with forum topic mode enabled only.</param>
+    /// <param name="directMessagesTopicId">Identifier of the target direct messages topic; required when sending to a direct messages chat.</param>
+    /// <param name="ephemeralMessageParameters">Parameters of the ephemeral message to send.</param>
     /// <param name="duration">Video duration in seconds.</param>
     /// <param name="width">Video width.</param>
     /// <param name="height">Video height.</param>
@@ -693,6 +697,13 @@ public static partial class BotApiClientExtensions
     /// <param name="captionEntities">Explicit entities in the caption.</param>
     /// <param name="showCaptionAboveMedia">Whether to show the caption above the video.</param>
     /// <param name="hasSpoiler">Whether to cover the video with a spoiler animation.</param>
+    /// <param name="disableNotification">Whether to send the message silently.</param>
+    /// <param name="protectContent">Whether to protect the message from forwarding and saving.</param>
+    /// <param name="allowPaidBroadcast">Whether to allow paid broadcasting at up to 1000 messages per second for 0.1 Telegram Stars per message.</param>
+    /// <param name="messageEffectId">Unique identifier of the message effect to add; for private chats only.</param>
+    /// <param name="suggestedPostParameters">Parameters of a suggested post; for direct messages chats only.</param>
+    /// <param name="replyParameters">Description of the message to reply to.</param>
+    /// <param name="replyMarkup">Additional interface options for the message.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The sent message.</returns>
     public static async Task<Message> SendVideoAsync(
@@ -765,6 +776,10 @@ public static partial class BotApiClientExtensions
     /// <param name="client">Bot API client used to send the request.</param>
     /// <param name="chatId">Target chat.</param>
     /// <param name="animation">Animation to send.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
+    /// <param name="messageThreadId">Unique identifier of the target forum topic; for forum supergroups and private chats with forum topic mode enabled only.</param>
+    /// <param name="directMessagesTopicId">Identifier of the target direct messages topic; required when sending to a direct messages chat.</param>
+    /// <param name="ephemeralMessageParameters">Parameters of the ephemeral message to send.</param>
     /// <param name="duration">Animation duration in seconds.</param>
     /// <param name="width">Animation width.</param>
     /// <param name="height">Animation height.</param>
@@ -774,6 +789,13 @@ public static partial class BotApiClientExtensions
     /// <param name="captionEntities">Explicit entities in the caption.</param>
     /// <param name="showCaptionAboveMedia">Whether to show the caption above the animation.</param>
     /// <param name="hasSpoiler">Whether to cover the animation with a spoiler animation.</param>
+    /// <param name="disableNotification">Whether to send the message silently.</param>
+    /// <param name="protectContent">Whether to protect the message from forwarding and saving.</param>
+    /// <param name="allowPaidBroadcast">Whether to allow paid broadcasting at up to 1000 messages per second for 0.1 Telegram Stars per message.</param>
+    /// <param name="messageEffectId">Unique identifier of the message effect to add; for private chats only.</param>
+    /// <param name="suggestedPostParameters">Parameters of a suggested post; for direct messages chats only.</param>
+    /// <param name="replyParameters">Description of the message to reply to.</param>
+    /// <param name="replyMarkup">Additional interface options for the message.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The sent message.</returns>
     public static async Task<Message> SendAnimationAsync(
@@ -842,10 +864,21 @@ public static partial class BotApiClientExtensions
     /// <param name="client">Bot API client used to send the request.</param>
     /// <param name="chatId">Target chat.</param>
     /// <param name="voice">Voice file to send.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
+    /// <param name="messageThreadId">Unique identifier of the target forum topic; for forum supergroups and private chats with forum topic mode enabled only.</param>
+    /// <param name="directMessagesTopicId">Identifier of the target direct messages topic; required when sending to a direct messages chat.</param>
+    /// <param name="ephemeralMessageParameters">Parameters of the ephemeral message to send.</param>
     /// <param name="caption">Voice message caption.</param>
     /// <param name="parseMode">Mode for parsing entities in the caption.</param>
     /// <param name="captionEntities">Explicit entities in the caption.</param>
     /// <param name="duration">Voice message duration in seconds.</param>
+    /// <param name="disableNotification">Whether to send the message silently.</param>
+    /// <param name="protectContent">Whether to protect the message from forwarding and saving.</param>
+    /// <param name="allowPaidBroadcast">Whether to allow paid broadcasting at up to 1000 messages per second for 0.1 Telegram Stars per message.</param>
+    /// <param name="messageEffectId">Unique identifier of the message effect to add; for private chats only.</param>
+    /// <param name="suggestedPostParameters">Parameters of a suggested post; for direct messages chats only.</param>
+    /// <param name="replyParameters">Description of the message to reply to.</param>
+    /// <param name="replyMarkup">Additional interface options for the message.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The sent message.</returns>
     public static async Task<Message> SendVoiceAsync(
@@ -904,9 +937,20 @@ public static partial class BotApiClientExtensions
     /// <param name="client">Bot API client used to send the request.</param>
     /// <param name="chatId">Target chat.</param>
     /// <param name="videoNote">Video note to send.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
+    /// <param name="messageThreadId">Unique identifier of the target forum topic; for forum supergroups and private chats with forum topic mode enabled only.</param>
+    /// <param name="directMessagesTopicId">Identifier of the target direct messages topic; required when sending to a direct messages chat.</param>
+    /// <param name="ephemeralMessageParameters">Parameters of the ephemeral message to send.</param>
     /// <param name="duration">Video note duration in seconds.</param>
     /// <param name="length">Video note diameter in pixels.</param>
     /// <param name="thumbnail">Video note thumbnail.</param>
+    /// <param name="disableNotification">Whether to send the message silently.</param>
+    /// <param name="protectContent">Whether to protect the message from forwarding and saving.</param>
+    /// <param name="allowPaidBroadcast">Whether to allow paid broadcasting at up to 1000 messages per second for 0.1 Telegram Stars per message.</param>
+    /// <param name="messageEffectId">Unique identifier of the message effect to add; for private chats only.</param>
+    /// <param name="suggestedPostParameters">Parameters of a suggested post; for direct messages chats only.</param>
+    /// <param name="replyParameters">Description of the message to reply to.</param>
+    /// <param name="replyMarkup">Additional interface options for the message.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The sent message.</returns>
     public static async Task<Message> SendVideoNoteAsync(
@@ -964,11 +1008,20 @@ public static partial class BotApiClientExtensions
     /// <param name="chatId">Target chat.</param>
     /// <param name="starCount">Price in Telegram Stars.</param>
     /// <param name="media">Paid media to send.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
+    /// <param name="messageThreadId">Unique identifier of the target forum topic; for forum supergroups and private chats with forum topic mode enabled only.</param>
+    /// <param name="directMessagesTopicId">Identifier of the target direct messages topic; required when sending to a direct messages chat.</param>
     /// <param name="payload">Bot-defined payload.</param>
     /// <param name="caption">Media caption.</param>
     /// <param name="parseMode">Mode for parsing entities in the caption.</param>
     /// <param name="captionEntities">Explicit entities in the caption.</param>
     /// <param name="showCaptionAboveMedia">Whether to show the caption above the media.</param>
+    /// <param name="disableNotification">Whether to send the message silently.</param>
+    /// <param name="protectContent">Whether to protect the message from forwarding and saving.</param>
+    /// <param name="allowPaidBroadcast">Whether to allow paid broadcasting at up to 1000 messages per second for 0.1 Telegram Stars per message.</param>
+    /// <param name="suggestedPostParameters">Parameters of a suggested post; for direct messages chats only.</param>
+    /// <param name="replyParameters">Description of the message to reply to.</param>
+    /// <param name="replyMarkup">Additional interface options for the message.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The sent message.</returns>
     public static async Task<Message> SendPaidMediaAsync(
@@ -1027,6 +1080,14 @@ public static partial class BotApiClientExtensions
     /// <param name="client">Bot API client used to send the request.</param>
     /// <param name="chatId">Target chat.</param>
     /// <param name="media">Media items to send as an album.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
+    /// <param name="messageThreadId">Unique identifier of the target forum topic; for forum supergroups and private chats with forum topic mode enabled only.</param>
+    /// <param name="directMessagesTopicId">Identifier of the target direct messages topic; required when sending to a direct messages chat.</param>
+    /// <param name="disableNotification">Whether to send the message silently.</param>
+    /// <param name="protectContent">Whether to protect the message from forwarding and saving.</param>
+    /// <param name="allowPaidBroadcast">Whether to allow paid broadcasting at up to 1000 messages per second for 0.1 Telegram Stars per message.</param>
+    /// <param name="messageEffectId">Unique identifier of the message effect to add; for private chats only.</param>
+    /// <param name="replyParameters">Description of the message to reply to.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The messages sent as the album.</returns>
     public static async Task<IReadOnlyList<Message>> SendMediaGroupAsync(

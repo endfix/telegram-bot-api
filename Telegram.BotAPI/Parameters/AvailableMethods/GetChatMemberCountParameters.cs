@@ -8,5 +8,6 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class GetChatMemberCountParameters : ApiRequestParameters
 {
+    /// <summary>Target chat identifier or username.</summary>
     public required ChatIdSource ChatId { get; init; }
 }

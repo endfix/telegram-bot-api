@@ -8,7 +8,9 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class GetMyCommandsParameters : ApiRequestParameters
 {
+    /// <summary>Scope for which commands are returned. Defaults to the default command scope.</summary>
     public BotCommandScope? Scope { get; init; }
 
+    /// <summary>Two-letter ISO 639-1 language code or an empty string.</summary>
     public string? LanguageCode { get; init; }
 }

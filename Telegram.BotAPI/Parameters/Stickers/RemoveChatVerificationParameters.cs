@@ -8,5 +8,6 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class RemoveChatVerificationParameters : ApiRequestParameters
 {
+    /// <summary>Target bot or channel identifier or username.</summary>
     public required ChatIdSource ChatId { get; init; }
 }

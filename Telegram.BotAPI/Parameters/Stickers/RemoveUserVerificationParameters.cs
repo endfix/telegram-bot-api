@@ -7,5 +7,6 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class RemoveUserVerificationParameters : ApiRequestParameters
 {
+    /// <summary>Target user identifier.</summary>
     public required long UserId { get; init; }
 }

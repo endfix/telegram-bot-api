@@ -9,15 +9,21 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class GiftPremiumSubscriptionParameters : ApiRequestParameters
 {
+    /// <summary>Target user identifier.</summary>
     public required long UserId { get; init; }
 
+    /// <summary>Subscription duration; must be 3, 6 or 12 months.</summary>
     public required int MonthCount { get; init; }
 
+    /// <summary>Price in Telegram Stars: 1000 for 3 months, 1500 for 6 months or 2500 for 12 months.</summary>
     public required int StarCount { get; init; }
 
+    /// <summary>Text shown with the subscription service message, from 0 through 128 characters.</summary>
     public string? Text { get; init; }
 
+    /// <summary>Mode for parsing entities in <see cref="Text"/>.</summary>
     public string? TextParseMode { get; init; }
 
+    /// <summary>Special entities in the gift text; can be specified instead of <see cref="TextParseMode"/>.</summary>
     public IReadOnlyList<MessageEntity>? TextEntities { get; init; }
 }

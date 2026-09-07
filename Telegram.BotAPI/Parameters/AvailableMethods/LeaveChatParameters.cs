@@ -8,5 +8,6 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class LeaveChatParameters : ApiRequestParameters
 {
+    /// <summary>Target chat identifier or username. For channel direct messages, specify the corresponding channel.</summary>
     public required ChatIdSource ChatId { get; init; }
 }

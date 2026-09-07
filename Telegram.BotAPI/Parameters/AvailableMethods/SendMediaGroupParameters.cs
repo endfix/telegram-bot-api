@@ -15,8 +15,10 @@ public sealed class SendMediaGroupParameters : ApiRequestParameters
     /// <summary>Target chat.</summary>
     public required ChatIdSource ChatId { get; init; }
 
+    /// <summary>Unique identifier of the target forum topic; for forum supergroups and private chats with forum topic mode enabled only.</summary>
     public long? MessageThreadId { get; init; }
 
+    /// <summary>Identifier of the target direct messages topic; required when sending to a direct messages chat.</summary>
     public long? DirectMessagesTopicId { get; init; }
 
     /// <summary>Media items to send as an album.</summary>

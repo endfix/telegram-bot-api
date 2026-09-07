@@ -8,7 +8,9 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class GetUserChatBoostsParameters : ApiRequestParameters
 {
+    /// <summary>Target chat identifier or channel username.</summary>
     public required ChatIdSource ChatId { get; init; }
 
+    /// <summary>Target user identifier.</summary>
     public required long UserId { get; init; }
 }

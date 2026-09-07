@@ -7,5 +7,6 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class GetChatMenuButtonParameters : ApiRequestParameters
 {
+    /// <summary>Target private chat identifier. Omit it to return the default menu button.</summary>
     public long? ChatId { get; init; }
 }

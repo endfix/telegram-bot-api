@@ -8,7 +8,9 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class SetChatMenuButtonParameters : ApiRequestParameters
 {
+    /// <summary>Target private chat identifier. Omit it to change the default menu button.</summary>
     public long? ChatId { get; init; }
 
+    /// <summary>New menu button. Defaults to Telegram's default menu button.</summary>
     public MenuButton? MenuButton { get; init; }
 }

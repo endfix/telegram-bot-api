@@ -7,5 +7,6 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public class GetMyNameParameters : ApiRequestParameters
 {
+    /// <summary>Two-letter ISO 639-1 language code or an empty string.</summary>
     public string? LanguageCode { get; init; }
 }

@@ -7,7 +7,9 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class VerifyUserParameters : ApiRequestParameters
 {
+    /// <summary>Target user identifier.</summary>
     public required long UserId { get; init; }
 
+    /// <summary>Verification description, from 0 through 70 characters. Must be empty unless the organization may provide one.</summary>
     public string? CustomDescription { get; init; }
 }

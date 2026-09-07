@@ -15,8 +15,10 @@ public sealed class SendPaidMediaParameters : ApiRequestParameters
     /// <summary>Target chat.</summary>
     public required ChatIdSource ChatId { get; init; }
 
+    /// <summary>Unique identifier of the target forum topic; for forum supergroups and private chats with forum topic mode enabled only.</summary>
     public long? MessageThreadId { get; init; }
 
+    /// <summary>Identifier of the target direct messages topic; required when sending to a direct messages chat.</summary>
     public long? DirectMessagesTopicId { get; init; }
 
     /// <summary>Price in Telegram Stars.</summary>
@@ -40,15 +42,21 @@ public sealed class SendPaidMediaParameters : ApiRequestParameters
     /// <summary>Whether to show the caption above the media.</summary>
     public bool? ShowCaptionAboveMedia { get; init; }
 
+    /// <summary>Whether to send the message silently.</summary>
     public bool? DisableNotification { get; init; }
 
+    /// <summary>Whether to protect the message from forwarding and saving.</summary>
     public bool? ProtectContent { get; init; }
 
+    /// <summary>Whether to allow paid broadcasting at up to 1000 messages per second for 0.1 Telegram Stars per message.</summary>
     public bool? AllowPaidBroadcast { get; init; }
 
+    /// <summary>Parameters of a suggested post; for direct messages chats only.</summary>
     public SuggestedPostParameters? SuggestedPostParameters { get; init; }
 
+    /// <summary>Description of the message to reply to.</summary>
     public ReplyParameters? ReplyParameters { get; init; }
 
+    /// <summary>Additional interface options for the message.</summary>
     public ReplyMarkup? ReplyMarkup { get; init; }
 }

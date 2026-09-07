@@ -8,9 +8,12 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class SetBusinessAccountProfilePhotoParameters : ApiRequestParameters
 {
+    /// <summary>Identifier of the business connection.</summary>
     public required string BusinessConnectionId { get; init; }
 
+    /// <summary>New profile photo.</summary>
     public required InputProfilePhoto Photo { get; init; }
 
+    /// <summary>Whether to set the public photo, which remains visible when the main photo is hidden by privacy settings.</summary>
     public bool? IsPublic { get; init; }
 }

@@ -8,7 +8,9 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class UnbanChatSenderChatParameters : ApiRequestParameters
 {
+    /// <summary>Target supergroup or channel identifier or channel username.</summary>
     public required ChatIdSource ChatId { get; init; }
 
+    /// <summary>Target sender chat identifier.</summary>
     public required long SenderChatId { get; init; }
 }

@@ -8,5 +8,6 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class ExportChatInviteLinkParameters : ApiRequestParameters
 {
+    /// <summary>Target chat identifier or channel username.</summary>
     public required ChatIdSource ChatId { get; init; }
 }

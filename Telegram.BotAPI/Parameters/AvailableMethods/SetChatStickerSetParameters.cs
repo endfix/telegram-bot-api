@@ -8,7 +8,9 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class SetChatStickerSetParameters : ApiRequestParameters
 {
+    /// <summary>Target supergroup identifier or username.</summary>
     public required ChatIdSource ChatId { get; init; }
 
+    /// <summary>Name of the sticker set to assign.</summary>
     public required string StickerSetName { get; init; }
 }

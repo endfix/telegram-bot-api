@@ -8,7 +8,9 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class SetMyDefaultAdministratorRightsParameters : ApiRequestParameters
 {
+    /// <summary>New default rights. Omit them to clear the configured defaults.</summary>
     public ChatAdministratorRights? Rights { get; init; }
 
+    /// <summary>Whether to change channel rights instead of group and supergroup rights.</summary>
     public bool? ForChannels { get; init; }
 }

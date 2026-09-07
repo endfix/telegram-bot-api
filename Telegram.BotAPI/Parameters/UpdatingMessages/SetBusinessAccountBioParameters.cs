@@ -7,7 +7,9 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class SetBusinessAccountBioParameters : ApiRequestParameters
 {
+    /// <summary>Identifier of the business connection.</summary>
     public required string BusinessConnectionId { get; init; }
 
+    /// <summary>New bio, from 0 through 140 characters.</summary>
     public string? Bio { get; init; }
 }

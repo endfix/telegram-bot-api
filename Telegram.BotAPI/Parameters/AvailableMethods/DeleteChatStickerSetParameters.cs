@@ -8,5 +8,6 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class DeleteChatStickerSetParameters : ApiRequestParameters
 {
+    /// <summary>Target supergroup identifier or username.</summary>
     public required ChatIdSource ChatId { get; init; }
 }

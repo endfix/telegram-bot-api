@@ -8,7 +8,9 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class SetChatDescriptionParameters : ApiRequestParameters
 {
+    /// <summary>Target chat identifier or channel username.</summary>
     public required ChatIdSource ChatId { get; init; }
 
+    /// <summary>New chat description, from 0 through 255 characters.</summary>
     public string? Description { get; init; }
 }

@@ -8,7 +8,9 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class SetChatPhotoParameters : ApiRequestParameters
 {
+    /// <summary>Target chat identifier or channel username.</summary>
     public required ChatIdSource ChatId { get; init; }
 
+    /// <summary>New chat photo to upload.</summary>
     public required InputPhotoFile Photo { get; init; }
 }

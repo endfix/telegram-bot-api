@@ -8,5 +8,6 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class SetMyProfilePhotoParameters : ApiRequestParameters
 {
+    /// <summary>New profile photo.</summary>
     public required InputProfilePhoto Photo { get; init; }
 }

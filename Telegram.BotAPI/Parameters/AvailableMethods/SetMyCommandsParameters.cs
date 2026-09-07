@@ -9,9 +9,12 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class SetMyCommandsParameters : ApiRequestParameters
 {
+    /// <summary>Commands to set; at most 100 items.</summary>
     public required IReadOnlyList<BotCommand> Commands { get; init; }
 
+    /// <summary>Scope in which the commands apply. Defaults to the default command scope.</summary>
     public BotCommandScope? Scope { get; init; }
 
+    /// <summary>Two-letter ISO 639-1 language code. An empty value defines the fallback list for the scope.</summary>
     public string? LanguageCode { get; init; }
 }

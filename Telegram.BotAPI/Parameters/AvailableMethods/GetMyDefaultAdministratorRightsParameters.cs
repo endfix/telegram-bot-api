@@ -7,5 +7,6 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class GetMyDefaultAdministratorRightsParameters : ApiRequestParameters
 {
+    /// <summary>Whether to return channel rights instead of group and supergroup rights.</summary>
     public bool? ForChannels { get; init; }
 }

@@ -9,10 +9,10 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class SendGiftParameters : ApiRequestParameters
 {
-    /// <summary>Target user identifier; required when <see cref="ChatId"/> is omitted.</summary>
+    /// <summary>Identifier of the target user who will receive the gift; required when <see cref="ChatId"/> is omitted.</summary>
     public long? UserId { get; init; }
 
-    /// <summary>Target channel identifier or username; required when <see cref="UserId"/> is omitted.</summary>
+    /// <summary>Identifier of the target chat or username of the channel that will receive the gift; required when <see cref="UserId"/> is omitted.</summary>
     public ChatIdSource? ChatId { get; init; }
 
     /// <summary>Gift identifier. Limited gifts cannot be sent to channel chats.</summary>
@@ -24,9 +24,16 @@ public sealed class SendGiftParameters : ApiRequestParameters
     /// <summary>Text shown with the gift, from 0 through 128 characters.</summary>
     public string? Text { get; init; }
 
-    /// <summary>Mode for parsing entities in <see cref="Text"/>.</summary>
+    /// <summary>
+    /// Mode for parsing entities in <see cref="Text"/>. Entities other than bold, italic, underline,
+    /// strikethrough, spoiler, custom emoji, and date-time entities are ignored.
+    /// </summary>
     public string? TextParseMode { get; init; }
 
-    /// <summary>Special entities in the gift text; can be specified instead of <see cref="TextParseMode"/>.</summary>
+    /// <summary>
+    /// Special entities in the gift text; can be specified instead of <see cref="TextParseMode"/>.
+    /// Entities other than bold, italic, underline, strikethrough, spoiler, custom emoji, and date-time
+    /// entities are ignored.
+    /// </summary>
     public IReadOnlyList<MessageEntity>? TextEntities { get; init; }
 }

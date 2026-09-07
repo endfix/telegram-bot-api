@@ -3835,13 +3835,13 @@ public static partial class BotApiClientExtensions
     /// <summary>Sends a gift to a user or channel chat.</summary>
     /// <remarks>The receiver cannot convert a gift sent by the bot to Telegram Stars.</remarks>
     /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="userId">Target user identifier; required when <paramref name="chatId"/> is omitted.</param>
-    /// <param name="chatId">Target channel identifier or username; required when <paramref name="userId"/> is omitted.</param>
+    /// <param name="userId">Identifier of the target user who will receive the gift; required when <paramref name="chatId"/> is omitted.</param>
+    /// <param name="chatId">Identifier of the target chat or username of the channel that will receive the gift; required when <paramref name="userId"/> is omitted.</param>
     /// <param name="giftId">Gift identifier. Limited gifts cannot be sent to channel chats.</param>
     /// <param name="payForUpgrade">Whether the bot pays for the gift upgrade, making it free for the receiver.</param>
     /// <param name="text">Text shown with the gift, from 0 through 128 characters.</param>
-    /// <param name="textParseMode">Mode for parsing entities in <paramref name="text"/>.</param>
-    /// <param name="textEntities">Special entities in the gift text; can be specified instead of <paramref name="textParseMode"/>.</param>
+    /// <param name="textParseMode">Mode for parsing entities in <paramref name="text"/>. Entities other than bold, italic, underline, strikethrough, spoiler, custom emoji, and date-time entities are ignored.</param>
+    /// <param name="textEntities">Special entities in the gift text; can be specified instead of <paramref name="textParseMode"/>. Entities other than bold, italic, underline, strikethrough, spoiler, custom emoji, and date-time entities are ignored.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SendGiftAsync(
@@ -3882,8 +3882,8 @@ public static partial class BotApiClientExtensions
     /// <param name="monthCount">Subscription duration; must be 3, 6 or 12 months.</param>
     /// <param name="starCount">Price in Telegram Stars: 1000 for 3 months, 1500 for 6 months or 2500 for 12 months.</param>
     /// <param name="text">Text shown with the subscription service message, from 0 through 128 characters.</param>
-    /// <param name="textParseMode">Mode for parsing entities in <paramref name="text"/>.</param>
-    /// <param name="textEntities">Special entities in the gift text; can be specified instead of <paramref name="textParseMode"/>.</param>
+    /// <param name="textParseMode">Mode for parsing entities in <paramref name="text"/>. Entities other than bold, italic, underline, strikethrough, spoiler, custom emoji, and date-time entities are ignored.</param>
+    /// <param name="textEntities">Special entities in the gift text; can be specified instead of <paramref name="textParseMode"/>. Entities other than bold, italic, underline, strikethrough, spoiler, custom emoji, and date-time entities are ignored.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> GiftPremiumSubscriptionAsync(

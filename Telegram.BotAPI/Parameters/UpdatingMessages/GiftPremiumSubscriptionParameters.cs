@@ -21,9 +21,16 @@ public sealed class GiftPremiumSubscriptionParameters : ApiRequestParameters
     /// <summary>Text shown with the subscription service message, from 0 through 128 characters.</summary>
     public string? Text { get; init; }
 
-    /// <summary>Mode for parsing entities in <see cref="Text"/>.</summary>
+    /// <summary>
+    /// Mode for parsing entities in <see cref="Text"/>. Entities other than bold, italic, underline,
+    /// strikethrough, spoiler, custom emoji, and date-time entities are ignored.
+    /// </summary>
     public string? TextParseMode { get; init; }
 
-    /// <summary>Special entities in the gift text; can be specified instead of <see cref="TextParseMode"/>.</summary>
+    /// <summary>
+    /// Special entities in the gift text; can be specified instead of <see cref="TextParseMode"/>.
+    /// Entities other than bold, italic, underline, strikethrough, spoiler, custom emoji, and date-time
+    /// entities are ignored.
+    /// </summary>
     public IReadOnlyList<MessageEntity>? TextEntities { get; init; }
 }

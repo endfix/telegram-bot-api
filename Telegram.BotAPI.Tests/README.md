@@ -126,6 +126,11 @@ media, media groups with typed thumbnail/cover files, paid media, nested poll
 media, nested rich-message uploads, reply-markup editing, and stopping live
 locations.
 
+Premium scenarios derive the user ID from `TELEGRAM_BOT_CHAT_ID` and verify the
+account through `getChatMember` before exercising Premium-dependent behavior.
+When Telegram does not report `is_premium`, only those scenarios are skipped;
+the rest of the live suite remains unaffected.
+
 ## Side effects and rollback
 
 The suite deliberately changes live resources. It creates messages, invite

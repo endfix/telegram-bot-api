@@ -1,7 +1,9 @@
 using Endfix.Telegram.BotAPI.Enums;
 using Endfix.Telegram.BotAPI.Extensions;
+using Endfix.Telegram.BotAPI.Parameters;
 using Endfix.Telegram.BotAPI.Types;
 using Xunit;
+using Xunit.Sdk;
 
 namespace Endfix.Telegram.BotAPI.Tests.Integration;
 
@@ -83,6 +85,72 @@ public sealed class TelegramChatIntegrationTests : IDisposable
         Assert.False(member.User.IsBot);
         Assert.NotEqual(ChatMemberStatus.Creator, member.Status);
         Assert.NotEqual(ChatMemberStatus.Administrator, member.Status);
+    }
+
+    [TelegramPremiumIntegrationFact]
+    public async Task PremiumOwner_CustomEmojiButton_RoundTrips()
+    {
+        var userId = GetId(TelegramIntegrationFactAttribute.ChatIdVariable);
+        var groupId = GetId(TelegramIntegrationFactAttribute.GroupIdVariable);
+        await RequirePremiumUserAsync(groupId, userId);
+
+        var stickers = await _client.GetForumTopicIconStickersAsync();
+        var customEmojiId = stickers
+            .Select(sticker => sticker.CustomEmojiId)
+            .FirstOrDefault(id => !string.IsNullOrWhiteSpace(id));
+        Assert.False(string.IsNullOrWhiteSpace(customEmojiId));
+
+        Message? message = null;
+        try
+        {
+            message = await _client.SendMessageAsync(new SendMessageParameters
+            {
+                ChatId = userId,
+                Text = "Endfix Telegram Premium integration: custom emoji button",
+                ReplyMarkup = new InlineKeyboardMarkup
+                {
+                    InlineKeyboard =
+                    [
+                        [
+                            new InlineKeyboardButton
+                            {
+                                Text = "Premium",
+                                IconCustomEmojiId = customEmojiId,
+                                Style = KeyboardButtonStyle.Success,
+                                CallbackData = "premium_test"
+                            }
+                        ]
+                    ]
+                }
+            });
+
+            var button = Assert.Single(Assert.Single(message.ReplyMarkup!.InlineKeyboard));
+            Assert.Equal(customEmojiId, button.IconCustomEmojiId);
+            Assert.Equal(KeyboardButtonStyle.Success, button.Style);
+        }
+        finally
+        {
+            if (message is not null)
+            {
+                await _client.DeleteMessageAsync(userId, message.MessageId);
+            }
+        }
+    }
+
+    [TelegramPremiumIntegrationFact]
+    public async Task PremiumUser_ReadOnlyProfileCollections_Deserialize()
+    {
+        var userId = GetId(TelegramIntegrationFactAttribute.ChatIdVariable);
+        var groupId = GetId(TelegramIntegrationFactAttribute.GroupIdVariable);
+        await RequirePremiumUserAsync(groupId, userId);
+
+        var profileAudios = await _client.GetUserProfileAudiosAsync(userId, limit: 1);
+        var userGifts = await _client.GetUserGiftsAsync(userId, limit: 1);
+        var availableGifts = await _client.GetAvailableGiftsAsync();
+
+        Assert.InRange(profileAudios.Audios.Count, 0, profileAudios.TotalCount);
+        Assert.InRange(userGifts.Gifts.Count, 0, userGifts.TotalCount);
+        Assert.NotNull(availableGifts.Gifts);
     }
 
     [TelegramRoutingIntegrationFact]
@@ -337,6 +405,16 @@ public sealed class TelegramChatIntegrationTests : IDisposable
     }
 
     public void Dispose() => _httpClient.Dispose();
+
+    private async Task RequirePremiumUserAsync(long groupId, long userId)
+    {
+        var member = await _client.GetChatMemberAsync(groupId, userId);
+        if (member.User.IsPremium is not true)
+        {
+            throw SkipException.ForSkip(
+                "The configured private-chat user does not currently have Telegram Premium.");
+        }
+    }
 
     private static long GetId(string variable)
         => long.Parse(TelegramIntegrationSettings.Get(variable)

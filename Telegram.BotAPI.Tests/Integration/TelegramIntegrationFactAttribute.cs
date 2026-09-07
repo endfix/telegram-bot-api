@@ -80,6 +80,21 @@ internal sealed class TelegramModerationIntegrationFactAttribute : FactAttribute
     }
 }
 
+internal sealed class TelegramPremiumIntegrationFactAttribute : FactAttribute
+{
+    public TelegramPremiumIntegrationFactAttribute()
+    {
+        var missing = TelegramIntegrationSettings.Missing(
+            TelegramIntegrationFactAttribute.TokenVariable,
+            TelegramIntegrationFactAttribute.ChatIdVariable,
+            TelegramIntegrationFactAttribute.GroupIdVariable);
+        if (missing.Count > 0)
+        {
+            Skip = $"Set {string.Join(", ", missing)} to run Telegram Premium integration tests.";
+        }
+    }
+}
+
 internal sealed class TelegramRoutingIntegrationFactAttribute : FactAttribute
 {
     public TelegramRoutingIntegrationFactAttribute()

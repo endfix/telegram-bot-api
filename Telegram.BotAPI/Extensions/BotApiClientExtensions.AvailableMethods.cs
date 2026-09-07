@@ -1056,12 +1056,39 @@ public static partial class BotApiClientExtensions
             ReplyParameters = replyParameters
         }, cancellationToken);
 
+    /// <summary>Sends a point on the map.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendLocationAsync(
         this IBotApiClient client,
         SendLocationParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("sendLocation", parameters), cancellationToken);
 
+    /// <summary>Sends a point on the map.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or username.</param>
+    /// <param name="latitude">Latitude of the location.</param>
+    /// <param name="longitude">Longitude of the location.</param>
+    /// <param name="businessConnectionId">Identifier of the business connection on whose behalf the message is sent.</param>
+    /// <param name="messageThreadId">Target message thread identifier.</param>
+    /// <param name="directMessagesTopicId">Direct messages topic identifier; required for a direct messages chat.</param>
+    /// <param name="ephemeralMessageParameters">Parameters of the ephemeral message to send.</param>
+    /// <param name="horizontalAccuracy">Radius of location uncertainty in meters, from 0 through 1500.</param>
+    /// <param name="livePeriod">Period in seconds during which the location can be updated, from 60 through 86400, or <see cref="int.MaxValue"/> for an indefinitely editable location. Must be 0 for ephemeral messages.</param>
+    /// <param name="heading">Direction of movement in degrees, from 1 through 360.</param>
+    /// <param name="proximityAlertRadius">Maximum proximity-alert distance in meters, from 1 through 100000.</param>
+    /// <param name="disableNotification">Whether to send the message silently.</param>
+    /// <param name="protectContent">Whether to protect the message from forwarding and saving.</param>
+    /// <param name="allowPaidBroadcast">Whether to allow paid high-throughput broadcasting.</param>
+    /// <param name="messageEffectId">Message effect identifier; for private chats only.</param>
+    /// <param name="suggestedPostParameters">Parameters of the suggested post; for direct messages chats only.</param>
+    /// <param name="replyParameters">Description of the message to reply to.</param>
+    /// <param name="replyMarkup">Additional interface options for the message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendLocationAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -1105,12 +1132,41 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Sends information about a venue.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendVenueAsync(
         this IBotApiClient client,
         SendVenueParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("sendVenue", parameters), cancellationToken);
 
+    /// <summary>Sends information about a venue.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or username.</param>
+    /// <param name="latitude">Latitude of the venue.</param>
+    /// <param name="longitude">Longitude of the venue.</param>
+    /// <param name="title">Name of the venue.</param>
+    /// <param name="address">Address of the venue.</param>
+    /// <param name="businessConnectionId">Identifier of the business connection on whose behalf the message is sent.</param>
+    /// <param name="messageThreadId">Target message thread identifier.</param>
+    /// <param name="directMessagesTopicId">Direct messages topic identifier; required for a direct messages chat.</param>
+    /// <param name="ephemeralMessageParameters">Parameters of the ephemeral message to send.</param>
+    /// <param name="foursquareId">Foursquare identifier of the venue.</param>
+    /// <param name="foursquareType">Foursquare type of the venue, if known.</param>
+    /// <param name="googlePlaceId">Google Places identifier of the venue.</param>
+    /// <param name="googlePlaceType">Google Places type of the venue.</param>
+    /// <param name="disableNotification">Whether to send the message silently.</param>
+    /// <param name="protectContent">Whether to protect the message from forwarding and saving.</param>
+    /// <param name="allowPaidBroadcast">Whether to allow paid high-throughput broadcasting.</param>
+    /// <param name="messageEffectId">Message effect identifier; for private chats only.</param>
+    /// <param name="suggestedPostParameters">Parameters of the suggested post; for direct messages chats only.</param>
+    /// <param name="replyParameters">Description of the message to reply to.</param>
+    /// <param name="replyMarkup">Additional interface options for the message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendVenueAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -1158,12 +1214,37 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Sends a phone contact.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendContactAsync(
         this IBotApiClient client,
         SendContactParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("sendContact", parameters), cancellationToken);
 
+    /// <summary>Sends a phone contact.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or username.</param>
+    /// <param name="phoneNumber">Contact's phone number.</param>
+    /// <param name="firstName">Contact's first name.</param>
+    /// <param name="messageThreadId">Target message thread identifier.</param>
+    /// <param name="directMessagesTopicId">Direct messages topic identifier; required for a direct messages chat.</param>
+    /// <param name="businessConnectionId">Identifier of the business connection on whose behalf the message is sent.</param>
+    /// <param name="ephemeralMessageParameters">Parameters of the ephemeral message to send.</param>
+    /// <param name="lastName">Contact's last name.</param>
+    /// <param name="vcard">Additional contact data in vCard format, from 0 through 2048 bytes.</param>
+    /// <param name="disableNotification">Whether to send the message silently.</param>
+    /// <param name="protectContent">Whether to protect the message from forwarding and saving.</param>
+    /// <param name="allowPaidBroadcast">Whether to allow paid high-throughput broadcasting.</param>
+    /// <param name="messageEffectId">Message effect identifier; for private chats only.</param>
+    /// <param name="suggestedPostParameters">Parameters of the suggested post; for direct messages chats only.</param>
+    /// <param name="replyParameters">Description of the message to reply to.</param>
+    /// <param name="replyMarkup">Additional interface options for the message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendContactAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -1203,12 +1284,55 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Sends a native poll.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendPollAsync(
         this IBotApiClient client,
         SendPollParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("sendPoll", parameters), cancellationToken);
 
+    /// <summary>Sends a native poll.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or username. Channel direct messages chats are not supported.</param>
+    /// <param name="question">Poll question, from 1 through 300 characters.</param>
+    /// <param name="options">Answer options; from 1 through 12 items.</param>
+    /// <param name="businessConnectionId">Identifier of the business connection on whose behalf the message is sent.</param>
+    /// <param name="messageThreadId">Target message thread identifier.</param>
+    /// <param name="questionParseMode">Mode for parsing entities in the question; currently only custom emoji entities are allowed.</param>
+    /// <param name="questionEntities">Special entities in the question; can be specified instead of <paramref name="questionParseMode"/>.</param>
+    /// <param name="isAnonymous">Whether the poll is anonymous. Defaults to <see langword="true"/>.</param>
+    /// <param name="type">Poll type. Defaults to a regular poll.</param>
+    /// <param name="allowsMultipleAnswers">Whether the poll allows multiple answers. Defaults to <see langword="false"/>.</param>
+    /// <param name="allowsRevoting">Whether voters may change their selected options. Defaults to <see langword="false"/> for quizzes and <see langword="true"/> for regular polls.</param>
+    /// <param name="shuffleOptions">Whether the answer options are shown in random order.</param>
+    /// <param name="allowAddingOptions">Whether answer options can be added after creation; not supported for anonymous polls and quizzes.</param>
+    /// <param name="hideResultsUntilCloses">Whether results remain hidden until the poll closes.</param>
+    /// <param name="membersOnly">Whether voting is limited to users who have been chat members for more than 24 hours; for channel chats only.</param>
+    /// <param name="countryCodes">Country codes from which voting is allowed; from 0 through 12 ISO 3166-1 alpha-2 codes. Use <c>FT</c> for anonymous numbers.</param>
+    /// <param name="correctOptionIds">Monotonically increasing zero-based identifiers of correct answers; required for quizzes.</param>
+    /// <param name="explanation">Quiz explanation, from 0 through 200 characters and at most two line feeds after entity parsing.</param>
+    /// <param name="explanationParseMode">Mode for parsing entities in the quiz explanation.</param>
+    /// <param name="explanationEntities">Special entities in the quiz explanation; can be specified instead of <paramref name="explanationParseMode"/>.</param>
+    /// <param name="explanationMedia">Media added to the quiz explanation.</param>
+    /// <param name="openPeriod">Number of seconds the poll remains active, from 5 through 2628000; cannot be combined with <paramref name="closeDate"/>.</param>
+    /// <param name="closeDate">Unix timestamp when the poll closes, from 5 through 2628000 seconds in the future; cannot be combined with <paramref name="openPeriod"/>.</param>
+    /// <param name="isClosed">Whether the poll is immediately closed, which can be useful for previews.</param>
+    /// <param name="description">Poll description, from 0 through 1024 characters after entity parsing.</param>
+    /// <param name="descriptionParseMode">Mode for parsing entities in the poll description.</param>
+    /// <param name="descriptionEntities">Special entities in the poll description; can be specified instead of <paramref name="descriptionParseMode"/>.</param>
+    /// <param name="media">Media added to the poll description.</param>
+    /// <param name="disableNotification">Whether to send the message silently.</param>
+    /// <param name="protectContent">Whether to protect the message from forwarding and saving.</param>
+    /// <param name="allowPaidBroadcast">Whether to allow paid high-throughput broadcasting.</param>
+    /// <param name="messageEffectId">Message effect identifier; for private chats only.</param>
+    /// <param name="replyParameters">Description of the message to reply to.</param>
+    /// <param name="replyMarkup">Additional interface options for the message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendPollAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -1284,12 +1408,29 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Sends a checklist on behalf of a connected business account.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendChecklistAsync(
         this IBotApiClient client,
         SendChecklistParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("sendChecklist", parameters), cancellationToken);
 
+    /// <summary>Sends a checklist on behalf of a connected business account.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="businessConnectionId">Identifier of the business connection on whose behalf the message is sent.</param>
+    /// <param name="chatId">Target chat identifier.</param>
+    /// <param name="checklist">Checklist to send.</param>
+    /// <param name="disableNotification">Whether to send the message silently.</param>
+    /// <param name="protectContent">Whether to protect the message from forwarding and saving.</param>
+    /// <param name="messageEffectId">Message effect identifier.</param>
+    /// <param name="replyParameters">Description of the message to reply to.</param>
+    /// <param name="replyMarkup">Inline keyboard for the message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendChecklistAsync(
         this IBotApiClient client,
         string businessConnectionId,
@@ -1313,12 +1454,33 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Sends an animated emoji that displays a random value.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendDiceAsync(
         this IBotApiClient client,
         SendDiceParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("sendDice", parameters), cancellationToken);
 
+    /// <summary>Sends an animated emoji that displays a random value.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or username.</param>
+    /// <param name="businessConnectionId">Identifier of the business connection on whose behalf the message is sent.</param>
+    /// <param name="messageThreadId">Target message thread identifier.</param>
+    /// <param name="directMessagesTopicId">Direct messages topic identifier; required for a direct messages chat.</param>
+    /// <param name="emoji">Emoji on which the dice animation is based. Defaults to the standard die emoji.</param>
+    /// <param name="disableNotification">Whether to send the message silently.</param>
+    /// <param name="protectContent">Whether to protect the message from forwarding.</param>
+    /// <param name="allowPaidBroadcast">Whether to allow paid high-throughput broadcasting.</param>
+    /// <param name="messageEffectId">Message effect identifier; for private chats only.</param>
+    /// <param name="suggestedPostParameters">Parameters of the suggested post; for direct messages chats only.</param>
+    /// <param name="replyParameters">Description of the message to reply to.</param>
+    /// <param name="replyMarkup">Additional interface options for the message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
     public static async Task<Message> SendDiceAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -1350,12 +1512,31 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Streams a temporary partial message while its contents are being generated.</summary>
+    /// <remarks>The draft is an ephemeral preview and must be followed by a complete message to persist the output.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SendMessageDraftAsync(
         this IBotApiClient client,
         SendMessageDraftParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("sendMessageDraft", parameters), cancellationToken);
 
+    /// <summary>Streams a temporary partial message while its contents are being generated.</summary>
+    /// <remarks>The draft is an ephemeral preview and must be followed by a complete message to persist the output.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target private chat identifier.</param>
+    /// <param name="draftId">Non-zero draft identifier. Reusing an identifier animates changes to the same draft.</param>
+    /// <param name="messageThreadId">Target message thread identifier.</param>
+    /// <param name="text">Draft text, from 0 through 4096 characters after entity parsing. An empty value shows a thinking placeholder.</param>
+    /// <param name="parseMode">Mode for parsing entities in <paramref name="text"/>.</param>
+    /// <param name="entities">Special entities in <paramref name="text"/>; can be specified instead of <paramref name="parseMode"/>.</param>
+    /// <param name="canStop">Whether to show a button that lets the user stop further drafts.</param>
+    /// <param name="keepOnStop">Whether to keep the draft temporarily after the user stops generation.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SendMessageDraftAsync(
         this IBotApiClient client,
         long chatId,
@@ -1379,12 +1560,25 @@ public static partial class BotApiClientExtensions
             KeepOnStop = keepOnStop
         }, cancellationToken);
 
+    /// <summary>Shows a temporary status describing an action being performed by the bot.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SendChatActionAsync(
         this IBotApiClient client,
         SendChatActionParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("sendChatAction", parameters), cancellationToken);
 
+    /// <summary>Shows a temporary status describing an action being performed by the bot.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or username. Channels and channel direct messages are not supported.</param>
+    /// <param name="action">Action to broadcast, such as <c>typing</c>, <c>upload_photo</c> or <c>record_video</c>.</param>
+    /// <param name="businessConnectionId">Identifier of the business connection on whose behalf the action is sent.</param>
+    /// <param name="messageThreadId">Target message thread identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SendChatActionAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -1400,12 +1594,25 @@ public static partial class BotApiClientExtensions
             MessageThreadId = messageThreadId
         }, cancellationToken);
 
+    /// <summary>Changes the reactions selected on a message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetMessageReactionAsync(
         this IBotApiClient client,
         SetMessageReactionParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("setMessageReaction", parameters), cancellationToken);
 
+    /// <summary>Changes the reactions selected on a message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or username.</param>
+    /// <param name="messageId">Target message identifier. For a media group, the reaction applies to its first non-deleted message.</param>
+    /// <param name="reaction">Reaction types to set. An omitted or empty list removes the bot's reactions.</param>
+    /// <param name="isBig">Whether to display the reaction with a large animation.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetMessageReactionAsync(
         this IBotApiClient client,
         ChatIdSource chatId,

@@ -2276,12 +2276,25 @@ public static partial class BotApiClientExtensions
             InviteLink = inviteLink
         }, cancellationToken);
 
+    /// <summary>Approves a request to join a chat.</summary>
+    /// <remarks>The bot must be an administrator with the right to invite users.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> ApproveChatJoinRequestAsync(
         this IBotApiClient client,
         ApproveChatJoinRequestParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("approveChatJoinRequest", parameters), cancellationToken);
 
+    /// <summary>Approves a request to join a chat.</summary>
+    /// <remarks>The bot must be an administrator with the right to invite users.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or channel username.</param>
+    /// <param name="userId">Identifier of the user whose request is approved.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> ApproveChatJoinRequestAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2293,12 +2306,25 @@ public static partial class BotApiClientExtensions
             UserId = userId
         }, cancellationToken);
 
+    /// <summary>Declines a request to join a chat.</summary>
+    /// <remarks>The bot must be an administrator with the right to invite users.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeclineChatJoinRequestAsync(
         this IBotApiClient client,
         DeclineChatJoinRequestParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("declineChatJoinRequest", parameters), cancellationToken);
 
+    /// <summary>Declines a request to join a chat.</summary>
+    /// <remarks>The bot must be an administrator with the right to invite users.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or channel username.</param>
+    /// <param name="userId">Identifier of the user whose request is declined.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeclineChatJoinRequestAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2310,12 +2336,23 @@ public static partial class BotApiClientExtensions
             UserId = userId
         }, cancellationToken);
 
+    /// <summary>Processes a received chat join request query.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> AnswerChatJoinRequestQueryAsync(
         this IBotApiClient client,
         AnswerChatJoinRequestQueryParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("answerChatJoinRequestQuery", parameters), cancellationToken);
 
+    /// <summary>Processes a received chat join request query.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatJoinRequestQueryId">Identifier of the join request query.</param>
+    /// <param name="result">Outcome that approves, declines or leaves the request queued for other administrators.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> AnswerChatJoinRequestQueryAsync(
         this IBotApiClient client,
         string chatJoinRequestQueryId,
@@ -2327,12 +2364,25 @@ public static partial class BotApiClientExtensions
             Result = result
         }, cancellationToken);
 
+    /// <summary>Shows a Mini App to the user before resolving a received chat join request query.</summary>
+    /// <remarks>Resolve the query after the interaction by calling <see cref="AnswerChatJoinRequestQueryAsync(IBotApiClient, string, AnswerChatJoinRequestQueryResult, CancellationToken)"/>.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SendChatJoinRequestWebAppAsync(
         this IBotApiClient client,
         SendChatJoinRequestWebAppParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("sendChatJoinRequestWebApp", parameters), cancellationToken);
 
+    /// <summary>Shows a Mini App to the user before resolving a received chat join request query.</summary>
+    /// <remarks>Resolve the query after the interaction by calling <see cref="AnswerChatJoinRequestQueryAsync(IBotApiClient, string, AnswerChatJoinRequestQueryResult, CancellationToken)"/>.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatJoinRequestQueryId">Identifier of the join request query.</param>
+    /// <param name="webAppUrl">HTTPS URL of the Mini App to open.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SendChatJoinRequestWebAppAsync(
         this IBotApiClient client,
         string chatJoinRequestQueryId,
@@ -2344,12 +2394,23 @@ public static partial class BotApiClientExtensions
             WebAppUrl = webAppUrl
         }, cancellationToken);
 
+    /// <summary>Sets a new profile photo for a non-private chat.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetChatPhotoAsync(
         this IBotApiClient client,
         SetChatPhotoParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("setChatPhoto", parameters), cancellationToken);
 
+    /// <summary>Sets a new profile photo for a non-private chat.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or channel username.</param>
+    /// <param name="photo">New chat photo to upload.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetChatPhotoAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2361,12 +2422,22 @@ public static partial class BotApiClientExtensions
             Photo = photo
         }, cancellationToken);
 
+    /// <summary>Deletes the profile photo of a non-private chat.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeleteChatPhotoAsync(
         this IBotApiClient client,
         DeleteChatPhotoParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("deleteChatPhoto", parameters), cancellationToken);
 
+    /// <summary>Deletes the profile photo of a non-private chat.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or channel username.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeleteChatPhotoAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2376,12 +2447,23 @@ public static partial class BotApiClientExtensions
             ChatId = chatId
         }, cancellationToken);
 
+    /// <summary>Changes the title of a non-private chat.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetChatTitleAsync(
         this IBotApiClient client,
         SetChatTitleParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("setChatTitle", parameters), cancellationToken);
 
+    /// <summary>Changes the title of a non-private chat.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or channel username.</param>
+    /// <param name="title">New chat title, from 1 through 128 characters.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetChatTitleAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2393,12 +2475,23 @@ public static partial class BotApiClientExtensions
             Title = title
         }, cancellationToken);
 
+    /// <summary>Changes the description of a group, supergroup or channel.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetChatDescriptionAsync(
         this IBotApiClient client,
         SetChatDescriptionParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("setChatDescription", parameters), cancellationToken);
 
+    /// <summary>Changes the description of a group, supergroup or channel.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or channel username.</param>
+    /// <param name="description">New chat description, from 0 through 255 characters.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetChatDescriptionAsync(
         this IBotApiClient client,
         ChatIdSource chatId,

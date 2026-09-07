@@ -2,8 +2,12 @@ using System.Text;
 
 namespace Endfix.Telegram.BotAPI.Extensions;
 
+/// <summary>Provides string conversion helpers.</summary>
 public static class StringExtensions
 {
+    /// <summary>Converts a PascalCase or camelCase identifier to snake_case.</summary>
+    /// <param name="text">Identifier to convert.</param>
+    /// <returns>The snake_case identifier, or the original value when it is null or empty.</returns>
     public static string ToSnake(this string text)
     {
         if (string.IsNullOrEmpty(text))

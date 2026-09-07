@@ -1,0 +1,133 @@
+name: Generate benchmark snapshot
+
+on:
+  workflow_dispatch:
+    inputs:
+      runner:
+        description: Runner label
+        required: true
+        default: windows-latest
+        type: choice
+        options:
+          - windows-latest
+          - self-hosted
+      run_stress:
+        description: Include sequential and 10-worker stress runs
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    runs-on: ${{ inputs.runner }}
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 9.0.317
+
+      - name: Record start time
+        shell: pwsh
+        run: |
+          "BENCHMARK_STARTED_UTC=$((Get-Date).ToUniversalTime().ToString('o'))" >> $env:GITHUB_ENV
+
+      - name: Restore
+        run: dotnet restore Telegram.BotAPI.Benchmarks/Telegram.BotAPI.Benchmarks.csproj
+
+      - name: Run BenchmarkDotNet
+        shell: pwsh
+        run: |
+          $results = Resolve-Path "Telegram.BotAPI.Benchmarks/results" -ErrorAction SilentlyContinue
+          if ($results) {
+            Get-ChildItem -LiteralPath $results -Force | Remove-Item -Recurse -Force
+          }
+          dotnet run --project Telegram.BotAPI.Benchmarks/Telegram.BotAPI.Benchmarks.csproj -c Release --no-restore -- --filter * --join
+
+      - name: Run stress profiles
+        if: ${{ inputs.run_stress }}
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force artifacts/benchmark-snapshot | Out-Null
+          dotnet run --project Telegram.BotAPI.Benchmarks/Telegram.BotAPI.Benchmarks.csproj -c Release --no-restore -- --stress |
+            Tee-Object artifacts/benchmark-snapshot/stress-sequential.txt
+          dotnet run --project Telegram.BotAPI.Benchmarks/Telegram.BotAPI.Benchmarks.csproj -c Release --no-restore -- --stress-parallel 10 |
+            Tee-Object artifacts/benchmark-snapshot/stress-parallel-10.txt
+
+      - name: Assemble snapshot
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $output = "artifacts/benchmark-snapshot"
+          New-Item -ItemType Directory -Force $output | Out-Null
+
+          $report = Get-ChildItem "Telegram.BotAPI.Benchmarks/results/*-report-github.md" |
+            Sort-Object LastWriteTimeUtc -Descending |
+            Select-Object -First 1
+          $csv = Get-ChildItem "Telegram.BotAPI.Benchmarks/results/*-report.csv" |
+            Sort-Object LastWriteTimeUtc -Descending |
+            Select-Object -First 1
+          if (-not $report -or -not $csv) {
+            throw "BenchmarkDotNet did not produce the expected Markdown and CSV reports."
+          }
+
+          $description = (git describe --tags --long --always).Trim()
+          $nearestTag = (git describe --tags --abbrev=0).Trim()
+          $packageVersion = $nearestTag.TrimStart('v')
+          $totalCommits = (git rev-list --count HEAD).Trim()
+          $commitsSinceTag = (git rev-list --count "$nearestTag..HEAD").Trim()
+          $commitDate = (git show -s --format=%cI HEAD).Trim()
+          $finishedUtc = (Get-Date).ToUniversalTime().ToString('o')
+          $os = Get-CimInstance Win32_OperatingSystem
+          $cpu = Get-CimInstance Win32_Processor | Select-Object -First 1
+          $system = Get-CimInstance Win32_ComputerSystem
+          $memoryGiB = [Math]::Round($system.TotalPhysicalMemory / 1GB, 1)
+          $dotnetSdk = (dotnet --version).Trim()
+
+          $metadata = @"
+          # Benchmark snapshot
+
+          | Property | Value |
+          | --- | --- |
+          | Library version | $packageVersion ($description) |
+          | Commit | ${{ github.sha }} |
+          | Commit date | $commitDate |
+          | Commit count | $totalCommits total; $commitsSinceTag since $nearestTag |
+          | Run window | $env:BENCHMARK_STARTED_UTC to $finishedUtc |
+          | Runner | ${{ runner.name }} (${{ inputs.runner }}) |
+          | OS | $($os.Caption) $($os.Version) |
+          | Architecture | $([Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture) process / $([Runtime.InteropServices.RuntimeInformation]::OSArchitecture) OS |
+          | CPU | $($cpu.Name.Trim()) ($($cpu.NumberOfCores) cores, $($cpu.NumberOfLogicalProcessors) logical) |
+          | Memory | $memoryGiB GiB |
+          | .NET SDK | $dotnetSdk |
+          | BenchmarkDotNet | 0.15.8 |
+          | Configuration | Release, .NET 9, DefaultJob, high-performance power plan when available |
+
+          Absolute timings should be compared on the same hardware and runtime configuration.
+          The benchmarks use local transports and do not measure Telegram or network throughput.
+
+          ## Full BenchmarkDotNet report
+
+          "@
+
+          Set-Content "$output/README.md" $metadata
+          Get-Content $report.FullName | Add-Content "$output/README.md"
+          Copy-Item $csv.FullName "$output/results.csv"
+          Get-Content "$output/README.md" -TotalCount 20 >> $env:GITHUB_STEP_SUMMARY
+
+      - name: Upload snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-${{ github.sha }}-${{ runner.os }}-${{ runner.arch }}
+          path: artifacts/benchmark-snapshot
+          if-no-files-found: error
+          retention-days: 90

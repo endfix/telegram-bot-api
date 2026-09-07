@@ -5,8 +5,12 @@ The project measures the local cost of the library without making requests to Te
 Run all benchmarks from the repository root:
 
 ```powershell
-dotnet run --project Telegram.BotAPI.Benchmarks\Telegram.BotAPI.Benchmarks.csproj -c Release
+dotnet run --project Telegram.BotAPI.Benchmarks\Telegram.BotAPI.Benchmarks.csproj -c Release -- --filter * --join
 ```
+
+Published snapshots retain the GitHub-flavored Markdown report and the
+machine-readable CSV report. BenchmarkDotNet may also create working artifacts,
+including HTML, which are not published.
 
 Run one group:
 
@@ -57,7 +61,25 @@ The same scenarios are available as Visual Studio launch profiles:
 - `Benchmarks / stress parallel` runs the same test with 10 bounded workers;
 - `Benchmarks / quick` runs a short serialization smoke test.
 
-The benchmark project targets .NET 9. Results are written to `results` in this project directory and should be compared on the same machine and runtime configuration.
+The benchmark project targets .NET 9. Results are written to `results` in this
+project directory and should be compared on the same machine and runtime
+configuration. Published snapshots identify the tested commit and environment;
+they are reference points rather than cross-machine performance guarantees.
+
+## Published snapshots
+
+The `Generate benchmark snapshot` GitHub Actions workflow can be started
+manually. It runs the complete joined benchmark set and optionally the
+sequential and 10-worker stress profiles. The downloadable artifact contains:
+
+- `README.md` with the library version, commit description and counts, run
+  dates, test-machine configuration, and the full BenchmarkDotNet table;
+- `results.csv` for machine-readable comparisons;
+- stress output logs when stress profiles are enabled.
+
+Use `windows-latest` for an independently reproducible snapshot whose exact
+runner hardware is recorded. Use a stable `self-hosted` runner when comparing
+results over time, because GitHub-hosted hardware may change between runs.
 
 ## ARM stress run
 

@@ -179,6 +179,26 @@ dotnet run --project Telegram.BotAPI.Benchmarks/Telegram.BotAPI.Benchmarks.cspro
 dotnet run --project Telegram.BotAPI.Benchmarks/Telegram.BotAPI.Benchmarks.csproj -c Release -- --stress-parallel 10
 ```
 
+## Performance snapshot
+
+The latest published snapshot was recorded on September 7, 2026 at commit
+`c19cb34` (`v0.4.0-77-gc19cb34`) on .NET 9.0.19, Windows 10 x64, and an Intel
+Xeon E5-2690 v3. The benchmarks use local transports and exclude Telegram and
+network latency.
+
+| Scenario | Mean | Allocated |
+| --- | ---: | ---: |
+| Serialize parameters | 566.2 ns | 264 B |
+| Deserialize message | 1.216 us | 1,720 B |
+| Request and deserialize | 6.099 us | 5,272 B |
+| Request without parameters and deserialize | 3.426 us | 3,688 B |
+| Send scalar message | 4.227 us | 3,232 B |
+| Prepare one local-file photo | 226.510 us | 3,768 B |
+| Prepare 10-local-file media group | 2.071 ms | 28,489 B |
+
+The complete environment, all 82 measurements, raw CSV data, and million-call
+stress profiles are in the [benchmark snapshot](Telegram.BotAPI.Benchmarks/results/2026-09-07-c19cb34-windows-x64-net9/README.md).
+
 ## Status
 
 The project follows the Telegram Bot API release it targets. While the package remains below `1.0`, public contracts may still change to correct modeling issues or complete the file-source API. After `1.0`, incompatible public API changes will require a major version.

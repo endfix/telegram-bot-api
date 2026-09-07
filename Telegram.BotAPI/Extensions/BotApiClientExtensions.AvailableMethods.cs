@@ -3394,12 +3394,24 @@ public static partial class BotApiClientExtensions
             AddedUserIds = addedUserIds
         }, cancellationToken);
 
+    /// <summary>Changes the bot's command list.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetMyCommandsAsync(
         this IBotApiClient client,
         SetMyCommandsParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("setMyCommands", parameters), cancellationToken);
 
+    /// <summary>Changes the bot's command list.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="commands">Commands to set; at most 100 items.</param>
+    /// <param name="scope">Scope in which the commands apply. Defaults to the default command scope.</param>
+    /// <param name="languageCode">Two-letter ISO 639-1 language code. An empty value defines the fallback list for the scope.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetMyCommandsAsync(
         this IBotApiClient client,
         IReadOnlyList<BotCommand> commands,
@@ -3413,12 +3425,25 @@ public static partial class BotApiClientExtensions
             LanguageCode = languageCode
         }, cancellationToken);
 
+    /// <summary>Deletes the bot's command list for a scope and language.</summary>
+    /// <remarks>After deletion, affected users see commands inherited from a higher-level scope.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeleteMyCommandsAsync(
         this IBotApiClient client,
         DeleteMyCommandsParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("deleteMyCommands", parameters), cancellationToken);
 
+    /// <summary>Deletes the bot's command list for a scope and language.</summary>
+    /// <remarks>After deletion, affected users see commands inherited from a higher-level scope.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="scope">Scope from which commands are removed. Defaults to the default command scope.</param>
+    /// <param name="languageCode">Two-letter ISO 639-1 language code. An empty value targets the fallback list for the scope.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeleteMyCommandsAsync(
         this IBotApiClient client,
         BotCommandScope? scope = null,
@@ -3430,12 +3455,23 @@ public static partial class BotApiClientExtensions
             LanguageCode = languageCode
         }, cancellationToken);
 
+    /// <summary>Returns the bot's command list for a scope and language.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The configured commands, or an empty list when none are set.</returns>
     public static async Task<IReadOnlyList<BotCommand>> GetMyCommandsAsync(
         this IBotApiClient client,
         GetMyCommandsParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<IReadOnlyList<BotCommand>>(new ApiRequest("getMyCommands", parameters), cancellationToken);
 
+    /// <summary>Returns the bot's command list for a scope and language.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="scope">Scope for which commands are returned. Defaults to the default command scope.</param>
+    /// <param name="languageCode">Two-letter ISO 639-1 language code or an empty string.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The configured commands, or an empty list when none are set.</returns>
     public static async Task<IReadOnlyList<BotCommand>> GetMyCommandsAsync(
         this IBotApiClient client,
         BotCommandScope? scope = null,
@@ -3447,12 +3483,23 @@ public static partial class BotApiClientExtensions
             LanguageCode = languageCode
         }, cancellationToken);
 
+    /// <summary>Changes the bot's name.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetMyNameAsync(
         this IBotApiClient client,
         SetMyNameParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("setMyName", parameters), cancellationToken);
 
+    /// <summary>Changes the bot's name.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="name">New name, from 0 through 64 characters. Pass an empty string to remove the name for the selected language.</param>
+    /// <param name="languageCode">Two-letter ISO 639-1 language code. An empty value changes the fallback name.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetMyNameAsync(
         this IBotApiClient client,
         string? name = null,
@@ -3464,12 +3511,22 @@ public static partial class BotApiClientExtensions
             LanguageCode = languageCode
         }, cancellationToken);
 
+    /// <summary>Returns the bot's name for a user language.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The bot's localized name.</returns>
     public static async Task<BotName> GetMyNameAsync(
         this IBotApiClient client,
         GetMyNameParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<BotName>(new ApiRequest("getMyName", parameters), cancellationToken);
 
+    /// <summary>Returns the bot's name for a user language.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="languageCode">Two-letter ISO 639-1 language code or an empty string.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The bot's localized name.</returns>
     public static async Task<BotName> GetMyNameAsync(
         this IBotApiClient client,
         string? languageCode = null,
@@ -3479,12 +3536,23 @@ public static partial class BotApiClientExtensions
             LanguageCode = languageCode
         }, cancellationToken);
 
+    /// <summary>Changes the description shown in an empty chat with the bot.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetMyDescriptionAsync(
         this IBotApiClient client,
         SetMyDescriptionParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("setMyDescription", parameters), cancellationToken);
 
+    /// <summary>Changes the description shown in an empty chat with the bot.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="description">New description, from 0 through 512 characters. Pass an empty string to remove it for the selected language.</param>
+    /// <param name="languageCode">Two-letter ISO 639-1 language code. An empty value changes the fallback description.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetMyDescriptionAsync(
         this IBotApiClient client,
         string? description = null,
@@ -3496,12 +3564,22 @@ public static partial class BotApiClientExtensions
             LanguageCode = languageCode
         }, cancellationToken);
 
+    /// <summary>Returns the bot's description for a user language.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The bot's localized description.</returns>
     public static async Task<BotDescription> GetMyDescriptionAsync(
         this IBotApiClient client,
         GetMyDescriptionParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<BotDescription>(new ApiRequest("getMyDescription", parameters), cancellationToken);
 
+    /// <summary>Returns the bot's description for a user language.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="languageCode">Two-letter ISO 639-1 language code or an empty string.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The bot's localized description.</returns>
     public static async Task<BotDescription> GetMyDescriptionAsync(
         this IBotApiClient client,
         string? languageCode = null,
@@ -3511,12 +3589,23 @@ public static partial class BotApiClientExtensions
             LanguageCode = languageCode
         }, cancellationToken);
 
+    /// <summary>Changes the short description shown on the bot's profile and shared links.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetMyShortDescriptionAsync(
         this IBotApiClient client,
         SetMyShortDescriptionParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("setMyShortDescription", parameters), cancellationToken);
 
+    /// <summary>Changes the short description shown on the bot's profile and shared links.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="shortDescription">New short description, from 0 through 120 characters. Pass an empty string to remove it for the selected language.</param>
+    /// <param name="languageCode">Two-letter ISO 639-1 language code. An empty value changes the fallback short description.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetMyShortDescriptionAsync(
         this IBotApiClient client,
         string? shortDescription = null,
@@ -3528,12 +3617,22 @@ public static partial class BotApiClientExtensions
             LanguageCode = languageCode
         }, cancellationToken);
 
+    /// <summary>Returns the bot's short description for a user language.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The bot's localized short description.</returns>
     public static async Task<BotShortDescription> GetMyShortDescriptionAsync(
         this IBotApiClient client,
         GetMyShortDescriptionParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<BotShortDescription>(new ApiRequest("getMyShortDescription", parameters), cancellationToken);
 
+    /// <summary>Returns the bot's short description for a user language.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="languageCode">Two-letter ISO 639-1 language code or an empty string.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The bot's localized short description.</returns>
     public static async Task<BotShortDescription> GetMyShortDescriptionAsync(
         this IBotApiClient client,
         string? languageCode = null,
@@ -3543,12 +3642,22 @@ public static partial class BotApiClientExtensions
             LanguageCode = languageCode
         }, cancellationToken);
 
+    /// <summary>Changes the bot's profile photo.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetMyProfilePhotoAsync(
         this IBotApiClient client,
         SetMyProfilePhotoParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("setMyProfilePhoto", parameters), cancellationToken);
 
+    /// <summary>Changes the bot's profile photo.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="photo">New profile photo.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetMyProfilePhotoAsync(
         this IBotApiClient client,
         InputProfilePhoto photo,
@@ -3558,12 +3667,21 @@ public static partial class BotApiClientExtensions
             Photo = photo
         }, cancellationToken);
 
+    /// <summary>Removes the bot's profile photo.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> RemoveMyProfilePhotoAsync(
         this IBotApiClient client,
         RemoveMyProfilePhotoParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("removeMyProfilePhoto", parameters), cancellationToken);
 
+    /// <summary>Removes the bot's profile photo.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> RemoveMyProfilePhotoAsync(
         this IBotApiClient client,
         CancellationToken cancellationToken = default)
@@ -3572,12 +3690,23 @@ public static partial class BotApiClientExtensions
             // No parameters required for this method
         }, cancellationToken);
 
+    /// <summary>Changes the bot's menu button in a private chat or its default menu button.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetChatMenuButtonAsync(
         this IBotApiClient client,
         SetChatMenuButtonParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("setChatMenuButton", parameters), cancellationToken);
 
+    /// <summary>Changes the bot's menu button in a private chat or its default menu button.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target private chat identifier. Omit it to change the default menu button.</param>
+    /// <param name="menuButton">New menu button. Defaults to Telegram's default menu button.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetChatMenuButtonAsync(
         this IBotApiClient client,
         long? chatId = null,
@@ -3589,12 +3718,22 @@ public static partial class BotApiClientExtensions
             MenuButton = menuButton
         }, cancellationToken);
 
+    /// <summary>Returns the bot's menu button in a private chat or its default menu button.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The effective menu button.</returns>
     public static async Task<MenuButton> GetChatMenuButtonAsync(
         this IBotApiClient client,
         GetChatMenuButtonParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<MenuButton>(new ApiRequest("getChatMenuButton", parameters), cancellationToken);
 
+    /// <summary>Returns the bot's menu button in a private chat or its default menu button.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target private chat identifier. Omit it to return the default menu button.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The effective menu button.</returns>
     public static async Task<MenuButton> GetChatMenuButtonAsync(
         this IBotApiClient client,
         long? chatId = null,
@@ -3604,12 +3743,24 @@ public static partial class BotApiClientExtensions
             ChatId = chatId
         }, cancellationToken);
 
+    /// <summary>Changes the administrator rights suggested when the bot is added as an administrator.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetMyDefaultAdministratorRightsAsync(
         this IBotApiClient client,
         SetMyDefaultAdministratorRightsParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("setMyDefaultAdministratorRights", parameters), cancellationToken);
 
+    /// <summary>Changes the administrator rights suggested when the bot is added as an administrator.</summary>
+    /// <remarks>Users may modify the suggested rights before adding the bot.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="rights">New default rights. Omit them to clear the configured defaults.</param>
+    /// <param name="forChannels">Whether to change channel rights instead of group and supergroup rights.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetMyDefaultAdministratorRightsAsync(
         this IBotApiClient client,
         ChatAdministratorRights? rights = null,
@@ -3621,12 +3772,22 @@ public static partial class BotApiClientExtensions
             ForChannels = forChannels
         }, cancellationToken);
 
+    /// <summary>Returns the bot's current default administrator rights.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The configured default administrator rights.</returns>
     public static async Task<ChatAdministratorRights> GetMyDefaultAdministratorRightsAsync(
         this IBotApiClient client,
         GetMyDefaultAdministratorRightsParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<ChatAdministratorRights>(new ApiRequest("getMyDefaultAdministratorRights", parameters), cancellationToken);
 
+    /// <summary>Returns the bot's current default administrator rights.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="forChannels">Whether to return channel rights instead of group and supergroup rights.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The configured default administrator rights.</returns>
     public static async Task<ChatAdministratorRights> GetMyDefaultAdministratorRightsAsync(
         this IBotApiClient client,
         bool? forChannels = null,

@@ -3167,12 +3167,26 @@ public static partial class BotApiClientExtensions
             ChatId = chatId
         }, cancellationToken);
 
+    /// <summary>Answers a callback query from an inline keyboard.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> AnswerCallbackQueryAsync(
         this IBotApiClient client,
         AnswerCallbackQueryParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("answerCallbackQuery", parameters), cancellationToken);
 
+    /// <summary>Answers a callback query from an inline keyboard.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="callbackQueryId">Identifier of the callback query.</param>
+    /// <param name="text">Notification text, from 0 through 200 characters. Nothing is shown when omitted.</param>
+    /// <param name="showAlert">Whether to show an alert instead of a notification at the top of the chat.</param>
+    /// <param name="url">URL to open in the user's client, subject to Telegram's callback game URL rules.</param>
+    /// <param name="cacheTime">Maximum number of seconds the client may cache the result. Defaults to 0.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> AnswerCallbackQueryAsync(
         this IBotApiClient client,
         string callbackQueryId,
@@ -3190,12 +3204,23 @@ public static partial class BotApiClientExtensions
             CacheTime = cacheTime
         }, cancellationToken);
 
+    /// <summary>Replies to a received guest message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>Information about the sent guest message.</returns>
     public static async Task<SentGuestMessage> AnswerGuestQueryAsync(
         this IBotApiClient client,
         AnswerGuestQueryParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<SentGuestMessage>(new ApiRequest("answerGuestQuery", parameters), cancellationToken);
 
+    /// <summary>Replies to a received guest message.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="guestQueryId">Identifier of the guest query.</param>
+    /// <param name="result">Inline query result describing the message to send.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>Information about the sent guest message.</returns>
     public static async Task<SentGuestMessage> AnswerGuestQueryAsync(
         this IBotApiClient client,
         string guestQueryId,
@@ -3207,12 +3232,25 @@ public static partial class BotApiClientExtensions
             Result = result
         }, cancellationToken);
 
+    /// <summary>Returns the boosts added to a chat by a user.</summary>
+    /// <remarks>The bot must be an administrator in the chat.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The boosts added by the user.</returns>
     public static async Task<UserChatBoosts> GetUserChatBoostsAsync(
         this IBotApiClient client,
         GetUserChatBoostsParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<UserChatBoosts>(new ApiRequest("getUserChatBoosts", parameters), cancellationToken);
 
+    /// <summary>Returns the boosts added to a chat by a user.</summary>
+    /// <remarks>The bot must be an administrator in the chat.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or channel username.</param>
+    /// <param name="userId">Target user identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The boosts added by the user.</returns>
     public static async Task<UserChatBoosts> GetUserChatBoostsAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -3224,12 +3262,22 @@ public static partial class BotApiClientExtensions
             UserId = userId
         }, cancellationToken);
 
+    /// <summary>Returns information about the bot's connection to a business account.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>Information about the business connection.</returns>
     public static async Task<BusinessConnection> GetBusinessConnectionAsync(
         this IBotApiClient client,
         GetBusinessConnectionParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<BusinessConnection>(new ApiRequest("getBusinessConnection", parameters), cancellationToken);
 
+    /// <summary>Returns information about the bot's connection to a business account.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="businessConnectionId">Identifier of the business connection.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>Information about the business connection.</returns>
     public static async Task<BusinessConnection> GetBusinessConnectionAsync(
         this IBotApiClient client,
         string businessConnectionId,
@@ -3239,12 +3287,22 @@ public static partial class BotApiClientExtensions
             BusinessConnectionId = businessConnectionId
         }, cancellationToken);
 
+    /// <summary>Returns the token of a managed bot.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The managed bot's token.</returns>
     public static async Task<string> GetManagedBotTokenAsync(
         this IBotApiClient client,
         GetManagedBotTokenParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<string>(new ApiRequest("getManagedBotToken", parameters), cancellationToken);
 
+    /// <summary>Returns the token of a managed bot.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="userId">Identifier of the managed bot.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The managed bot's token.</returns>
     public static async Task<string> GetManagedBotTokenAsync(
         this IBotApiClient client,
         long userId,
@@ -3254,12 +3312,22 @@ public static partial class BotApiClientExtensions
             UserId = userId
         }, cancellationToken);
 
+    /// <summary>Revokes the current token of a managed bot and generates a replacement.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The new managed bot token.</returns>
     public static async Task<string> ReplaceManagedBotTokenAsync(
         this IBotApiClient client,
         ReplaceManagedBotTokenParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<string>(new ApiRequest("replaceManagedBotToken", parameters), cancellationToken);
 
+    /// <summary>Revokes the current token of a managed bot and generates a replacement.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="userId">Identifier of the managed bot.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The new managed bot token.</returns>
     public static async Task<string> ReplaceManagedBotTokenAsync(
         this IBotApiClient client,
         long userId,
@@ -3269,12 +3337,22 @@ public static partial class BotApiClientExtensions
             UserId = userId
         }, cancellationToken);
 
+    /// <summary>Returns the access settings of a managed bot.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The managed bot's access settings.</returns>
     public static async Task<BotAccessSettings> GetManagedBotAccessSettingsAsync(
         this IBotApiClient client,
         GetManagedBotAccessSettingsParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<BotAccessSettings>(new ApiRequest("getManagedBotAccessSettings", parameters), cancellationToken);
 
+    /// <summary>Returns the access settings of a managed bot.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="userId">Identifier of the managed bot.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The managed bot's access settings.</returns>
     public static async Task<BotAccessSettings> GetManagedBotAccessSettingsAsync(
         this IBotApiClient client,
         long userId,
@@ -3284,12 +3362,25 @@ public static partial class BotApiClientExtensions
             UserId = userId
         }, cancellationToken);
 
+    /// <summary>Changes the access settings of a managed bot.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetManagedBotAccessSettingsAsync(
         this IBotApiClient client,
         SetManagedBotAccessSettingsParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("setManagedBotAccessSettings", parameters), cancellationToken);
 
+    /// <summary>Changes the access settings of a managed bot.</summary>
+    /// <remarks>The managed bot's owner always retains access.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="userId">Identifier of the managed bot.</param>
+    /// <param name="isAccessRestricted">Whether only selected users may access the managed bot.</param>
+    /// <param name="addedUserIds">Up to 10 additional user identifiers that retain access. Ignored when <paramref name="isAccessRestricted"/> is <see langword="false"/>.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetManagedBotAccessSettingsAsync(
         this IBotApiClient client,
         long userId,

@@ -1748,12 +1748,25 @@ public static partial class BotApiClientExtensions
             FileId = fileId
         }, cancellationToken);
 
+    /// <summary>Bans a user in a group, supergroup or channel.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> BanChatMemberAsync(
         this IBotApiClient client,
         BanChatMemberParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("banChatMember", parameters), cancellationToken);
 
+    /// <summary>Bans a user in a group, supergroup or channel.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target group identifier or target supergroup or channel username.</param>
+    /// <param name="userId">Target user identifier.</param>
+    /// <param name="untilDate">Unix timestamp when the user is unbanned. A duration under 30 seconds or over 366 days is treated as permanent.</param>
+    /// <param name="revokeMessages">Whether to delete all messages from the removed user. Always <see langword="true"/> for supergroups and channels.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> BanChatMemberAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -1769,12 +1782,25 @@ public static partial class BotApiClientExtensions
             RevokeMessages = revokeMessages
         }, cancellationToken);
 
+    /// <summary>Unbans a previously banned user in a supergroup or channel.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> UnbanChatMemberAsync(
         this IBotApiClient client,
         UnbanChatMemberParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("unbanChatMember", parameters), cancellationToken);
 
+    /// <summary>Unbans a previously banned user in a supergroup or channel.</summary>
+    /// <remarks>Unless <paramref name="onlyIfBanned"/> is <see langword="true"/>, a current member is removed from the chat but remains able to rejoin.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target group identifier or target supergroup or channel username.</param>
+    /// <param name="userId">Target user identifier.</param>
+    /// <param name="onlyIfBanned">Whether to do nothing when the user is not banned.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> UnbanChatMemberAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -1788,12 +1814,26 @@ public static partial class BotApiClientExtensions
             OnlyIfBanned = onlyIfBanned
         }, cancellationToken);
 
+    /// <summary>Restricts a user in a supergroup.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> RestrictChatMemberAsync(
         this IBotApiClient client,
         RestrictChatMemberParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("restrictChatMember", parameters), cancellationToken);
 
+    /// <summary>Restricts a user in a supergroup.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target supergroup identifier or username.</param>
+    /// <param name="userId">Target user identifier.</param>
+    /// <param name="permissions">Permissions to grant to the user. Grant all permissions to lift restrictions.</param>
+    /// <param name="useIndependentChatPermissions">Whether chat permissions are applied independently instead of using Telegram's implied permission relationships.</param>
+    /// <param name="untilDate">Unix timestamp when restrictions are lifted. A duration under 30 seconds or over 366 days is treated as permanent.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> RestrictChatMemberAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -1811,9 +1851,39 @@ public static partial class BotApiClientExtensions
             UntilDate = untilDate
         }, cancellationToken);
 
+    /// <summary>Promotes or demotes a user in a supergroup or channel.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> PromoteChatMemberAsync(this IBotApiClient client, PromoteChatMemberParameters parameters, CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("promoteChatMember", parameters), cancellationToken);
 
+    /// <summary>Promotes or demotes a user in a supergroup or channel.</summary>
+    /// <remarks>Set every administrator privilege to <see langword="false"/> to demote the user.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target supergroup or channel identifier or channel username.</param>
+    /// <param name="userId">Target user identifier.</param>
+    /// <param name="isAnonymous">Whether the administrator's presence in the chat is hidden.</param>
+    /// <param name="canManageChat">Whether the administrator can access management features. This privilege is implied by any other administrator privilege.</param>
+    /// <param name="canDeleteMessages">Whether the administrator can delete messages from other users.</param>
+    /// <param name="canManageVideoChats">Whether the administrator can manage video chats.</param>
+    /// <param name="canRestrictMembers">Whether the administrator can restrict, ban or unban members, or access supergroup statistics.</param>
+    /// <param name="canPromoteMembers">Whether the administrator can add administrators with a subset of their privileges and demote administrators they promoted.</param>
+    /// <param name="canChangeInfo">Whether the administrator can change the chat title, photo and other settings.</param>
+    /// <param name="canInviteUsers">Whether the administrator can invite users.</param>
+    /// <param name="canPostStories">Whether the administrator can post stories to the chat.</param>
+    /// <param name="canEditStories">Whether the administrator can edit stories posted by others, post stories, pin stories and access the story archive.</param>
+    /// <param name="canDeleteStories">Whether the administrator can delete stories posted by others.</param>
+    /// <param name="canPostMessages">Whether the administrator can post in the channel, approve suggested posts or access channel statistics; for channels only.</param>
+    /// <param name="canEditMessages">Whether the administrator can edit messages from other users and pin messages; for channels only.</param>
+    /// <param name="canPinMessages">Whether the administrator can pin messages; for supergroups only.</param>
+    /// <param name="canManageTopics">Whether the administrator can create, rename, close and reopen forum topics; for supergroups only.</param>
+    /// <param name="canManageDirectMessages">Whether the administrator can manage channel direct messages and decline suggested posts; for channels only.</param>
+    /// <param name="canManageTags">Whether the administrator can edit tags of regular members; for groups and supergroups only.</param>
+    /// <param name="canSendWelcomeMessages">Whether the administrator can manage welcome messages or, for bots, send them directly.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> PromoteChatMemberAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -1861,12 +1931,24 @@ public static partial class BotApiClientExtensions
             CanSendWelcomeMessages = canSendWelcomeMessages
         }, cancellationToken);
 
+    /// <summary>Sets a custom title for an administrator in a supergroup who was promoted by the bot.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetChatAdministratorCustomTitleAsync(
         this IBotApiClient client,
         SetChatAdministratorCustomTitleParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("setChatAdministratorCustomTitle", parameters), cancellationToken);
 
+    /// <summary>Sets a custom title for an administrator in a supergroup who was promoted by the bot.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target supergroup identifier or username.</param>
+    /// <param name="userId">Target administrator identifier.</param>
+    /// <param name="customTitle">New administrator title, from 0 through 16 characters; emoji are not allowed.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetChatAdministratorCustomTitleAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -1880,12 +1962,24 @@ public static partial class BotApiClientExtensions
             CustomTitle = customTitle
         }, cancellationToken);
 
+    /// <summary>Sets a tag for a regular member in a group or supergroup.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetChatMemberTagAsync(
         this IBotApiClient client,
         SetChatMemberTagParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("setChatMemberTag", parameters), cancellationToken);
 
+    /// <summary>Sets a tag for a regular member in a group or supergroup.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target group or supergroup identifier or username.</param>
+    /// <param name="userId">Target member identifier.</param>
+    /// <param name="tag">New member tag, from 0 through 16 characters; emoji are not allowed.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetChatMemberTagAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -1899,12 +1993,23 @@ public static partial class BotApiClientExtensions
             Tag = tag
         }, cancellationToken);
 
+    /// <summary>Bans a channel chat in a supergroup or channel.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> BanChatSenderChatAsync(
         this IBotApiClient client,
         BanChatSenderChatParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("banChatSenderChat", parameters), cancellationToken);
 
+    /// <summary>Bans a channel chat in a supergroup or channel.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target supergroup or channel identifier or channel username.</param>
+    /// <param name="senderChatId">Target sender chat identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> BanChatSenderChatAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -1916,12 +2021,23 @@ public static partial class BotApiClientExtensions
             SenderChatId = senderChatId
         }, cancellationToken);
 
+    /// <summary>Unbans a previously banned channel chat in a supergroup or channel.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> UnbanChatSenderChatAsync(
         this IBotApiClient client,
         UnbanChatSenderChatParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("unbanChatSenderChat", parameters), cancellationToken);
 
+    /// <summary>Unbans a previously banned channel chat in a supergroup or channel.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target supergroup or channel identifier or channel username.</param>
+    /// <param name="senderChatId">Target sender chat identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> UnbanChatSenderChatAsync(
         this IBotApiClient client,
         ChatIdSource chatId,

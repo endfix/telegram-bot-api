@@ -122,7 +122,8 @@ Tests whose required secrets are absent are skipped. A fully configured run
 currently verifies bot capabilities, default chat permissions, rollback-safe
 member restrictions, channel/discussion linking, group/channel metadata and
 message lifecycle, group and channel invite links, pins, reactions, member
-counts, forum topics, and cross-chat copy and forwarding. File scenarios
+counts, channel-photo replacement and restoration, forum topics, and cross-chat
+copy and forwarding. File scenarios
 cover buffered and streaming downloads, profile-photo restore, sticker-set lifecycle, standalone
 media, media groups with typed thumbnail/cover files, paid media, nested poll
 media, nested rich-message uploads, reply-markup editing, and stopping live
@@ -155,3 +156,7 @@ The regular suite does not exercise `banChatMember` followed by
 `unbanChatMember`: unbanning allows a user to rejoin but does not restore their
 membership. That lifecycle requires an explicitly destructive scenario and a
 cooperating account that rejoins the group afterward.
+
+The channel-photo test downloads the current large photo before making any
+change because Telegram invalidates chat-photo file IDs when the photo changes.
+It restores the saved bytes by uploading them as a new photo during cleanup.

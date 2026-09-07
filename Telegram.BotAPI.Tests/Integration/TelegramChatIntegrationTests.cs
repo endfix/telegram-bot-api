@@ -497,6 +497,65 @@ public sealed class TelegramChatIntegrationTests : IDisposable
         }
     }
 
+    [TelegramChannelIntegrationFact]
+    public async Task ChannelPhoto_RollBack()
+    {
+        var channelId = GetId(TelegramIntegrationFactAttribute.ChannelIdVariable);
+        var initiallyHadPhoto = (await _client.GetChatAsync(channelId)).Photo is not null;
+        byte[]? restorationBytes = null;
+        var photoPresent = initiallyHadPhoto;
+        var restorationCompleted = false;
+
+        try
+        {
+            if (!initiallyHadPhoto)
+            {
+                Assert.True(await _client.SetChatPhotoAsync(
+                    channelId,
+                    new InputPhotoFile(FixturePath("cover.jpg"))));
+                photoPresent = true;
+            }
+
+            restorationBytes = await DownloadChatPhotoAsync(channelId);
+
+            Assert.True(await _client.SetChatPhotoAsync(
+                channelId,
+                new InputPhotoFile(FixturePath("album-photo.jpg"))));
+            photoPresent = true;
+            Assert.NotNull((await _client.GetChatAsync(channelId)).Photo);
+
+            Assert.True(await _client.DeleteChatPhotoAsync(channelId));
+            photoPresent = false;
+            Assert.Null((await _client.GetChatAsync(channelId)).Photo);
+
+            Assert.True(await _client.SetChatPhotoAsync(
+                channelId,
+                new InputPhotoFile(InputFileSource.FromMemory(
+                    restorationBytes,
+                    "restored-channel-photo.jpg"))));
+            photoPresent = true;
+            restorationCompleted = true;
+            Assert.NotNull((await _client.GetChatAsync(channelId)).Photo);
+        }
+        finally
+        {
+            if (initiallyHadPhoto && !restorationCompleted && restorationBytes is not null)
+            {
+                Assert.True(await _client.SetChatPhotoAsync(
+                    channelId,
+                    new InputPhotoFile(InputFileSource.FromMemory(
+                        restorationBytes,
+                        "original-channel-photo.jpg"))));
+            }
+            else if (!initiallyHadPhoto && photoPresent)
+            {
+                Assert.True(await _client.DeleteChatPhotoAsync(channelId));
+            }
+        }
+
+        Assert.Equal(initiallyHadPhoto, (await _client.GetChatAsync(channelId)).Photo is not null);
+    }
+
     [TelegramRoutingIntegrationFact]
     public async Task Messages_CopyAndForwardAcrossConfiguredChats()
     {
@@ -557,6 +616,19 @@ public sealed class TelegramChatIntegrationTests : IDisposable
         CanPinMessages = true,
         CanManageTopics = true
     };
+
+    private static string FixturePath(string fileName)
+        => Path.Combine(AppContext.BaseDirectory, "Fixtures", "Media", fileName);
+
+    private async Task<byte[]> DownloadChatPhotoAsync(long chatId)
+    {
+        var photo = Assert.IsType<ChatPhoto>((await _client.GetChatAsync(chatId)).Photo);
+        var file = await _client.GetFileAsync(photo.BigFileId);
+        Assert.False(string.IsNullOrWhiteSpace(file.FilePath));
+        var content = await _client.GetFileBytesAsync(file.FilePath!);
+        Assert.NotEmpty(content);
+        return content;
+    }
 
     private static ChatPermissions CopyPermissions(
         ChatPermissions source,

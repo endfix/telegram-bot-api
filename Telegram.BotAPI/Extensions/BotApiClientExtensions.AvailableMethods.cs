@@ -2503,12 +2503,25 @@ public static partial class BotApiClientExtensions
             Description = description
         }, cancellationToken);
 
+    /// <summary>Adds a message to a chat's list of pinned messages.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> PinChatMessageAsync(
         this IBotApiClient client,
         PinChatMessageParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("pinChatMessage", parameters), cancellationToken);
 
+    /// <summary>Adds a message to a chat's list of pinned messages.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or channel username.</param>
+    /// <param name="messageId">Identifier of the message to pin.</param>
+    /// <param name="businessConnectionId">Identifier of the business connection on whose behalf the message is pinned.</param>
+    /// <param name="disableNotification">Whether to suppress the notification about the new pinned message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> PinChatMessageAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2524,12 +2537,24 @@ public static partial class BotApiClientExtensions
             DisableNotification = disableNotification
         }, cancellationToken);
 
+    /// <summary>Removes a message from a chat's list of pinned messages.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> UnpinChatMessageAsync(
         this IBotApiClient client,
         UnpinChatMessageParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("unpinChatMessage", parameters), cancellationToken);
 
+    /// <summary>Removes a message from a chat's list of pinned messages.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or channel username.</param>
+    /// <param name="businessConnectionId">Identifier of the business connection on whose behalf the message is unpinned.</param>
+    /// <param name="messageId">Identifier of the message to unpin. Required with <paramref name="businessConnectionId"/>; otherwise the most recently sent pinned message is unpinned when omitted.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> UnpinChatMessageAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2543,12 +2568,22 @@ public static partial class BotApiClientExtensions
             MessageId = messageId
         }, cancellationToken);
 
+    /// <summary>Clears a chat's list of pinned messages.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> UnpinAllChatMessagesAsync(
         this IBotApiClient client,
         UnpinAllChatMessagesParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("unpinAllChatMessages", parameters), cancellationToken);
 
+    /// <summary>Clears a chat's list of pinned messages.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or channel username.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> UnpinAllChatMessagesAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2558,12 +2593,22 @@ public static partial class BotApiClientExtensions
             ChatId = chatId
         }, cancellationToken);
 
+    /// <summary>Makes the bot leave a group, supergroup or channel.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> LeaveChatAsync(
         this IBotApiClient client,
         LeaveChatParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("leaveChat", parameters), cancellationToken);
 
+    /// <summary>Makes the bot leave a group, supergroup or channel.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or username. For channel direct messages, specify the corresponding channel.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> LeaveChatAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2573,12 +2618,22 @@ public static partial class BotApiClientExtensions
             ChatId = chatId
         }, cancellationToken);
 
+    /// <summary>Returns up-to-date information about a chat.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>Full information about the chat.</returns>
     public static async Task<ChatFullInfo> GetChatAsync(
         this IBotApiClient client,
         GetChatParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<ChatFullInfo>(new ApiRequest("getChat", parameters), cancellationToken);
 
+    /// <summary>Returns up-to-date information about a chat.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or username.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>Full information about the chat.</returns>
     public static async Task<ChatFullInfo> GetChatAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2588,12 +2643,23 @@ public static partial class BotApiClientExtensions
             ChatId = chatId
         }, cancellationToken);
 
+    /// <summary>Returns the administrators of a chat.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The chat administrators.</returns>
     public static async Task<IReadOnlyList<ChatMember>> GetChatAdministratorsAsync(
         this IBotApiClient client,
         GetChatAdministratorsParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<IReadOnlyList<ChatMember>>(new ApiRequest("getChatAdministrators", parameters), cancellationToken);
 
+    /// <summary>Returns the administrators of a chat.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or username.</param>
+    /// <param name="returnBots">Whether to include all administrator bots. Other bots are omitted by default.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The chat administrators.</returns>
     public static async Task<IReadOnlyList<ChatMember>> GetChatAdministratorsAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2605,12 +2671,22 @@ public static partial class BotApiClientExtensions
             ReturnBots = returnBots
         }, cancellationToken);
 
+    /// <summary>Returns the number of members in a chat.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The number of chat members.</returns>
     public static async Task<int> GetChatMemberCountAsync(
         this IBotApiClient client,
         GetChatMemberCountParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<int>(new ApiRequest("getChatMemberCount", parameters), cancellationToken);
 
+    /// <summary>Returns the number of members in a chat.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or username.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The number of chat members.</returns>
     public static async Task<int> GetChatMemberCountAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2620,12 +2696,25 @@ public static partial class BotApiClientExtensions
             ChatId = chatId
         }, cancellationToken);
 
+    /// <summary>Returns information about a member of a chat.</summary>
+    /// <remarks>Information about users other than the bot is guaranteed only when the bot is a chat administrator.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>Information about the chat member.</returns>
     public static async Task<ChatMember> GetChatMemberAsync(
         this IBotApiClient client,
         GetChatMemberParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<ChatMember>(new ApiRequest("getChatMember", parameters), cancellationToken);
 
+    /// <summary>Returns information about a member of a chat.</summary>
+    /// <remarks>Information about users other than the bot is guaranteed only when the bot is a chat administrator.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat identifier or username.</param>
+    /// <param name="userId">Target user identifier.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>Information about the chat member.</returns>
     public static async Task<ChatMember> GetChatMemberAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
@@ -2637,12 +2726,23 @@ public static partial class BotApiClientExtensions
             UserId = userId
         }, cancellationToken);
 
+    /// <summary>Returns recent messages from the personal chat displayed on a user's profile.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The recent personal-chat messages.</returns>
     public static async Task<IReadOnlyList<Message>> GetUserPersonalChatMessagesAsync(
         this IBotApiClient client,
         GetUserPersonalChatMessagesParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<IReadOnlyList<Message>>(new ApiRequest("getUserPersonalChatMessages", parameters), cancellationToken);
 
+    /// <summary>Returns recent messages from the personal chat displayed on a user's profile.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="userId">Target user identifier.</param>
+    /// <param name="limit">Maximum number of messages to return, from 1 through 20.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The recent personal-chat messages.</returns>
     public static async Task<IReadOnlyList<Message>> GetUserPersonalChatMessagesAsync(
         this IBotApiClient client,
         long userId,

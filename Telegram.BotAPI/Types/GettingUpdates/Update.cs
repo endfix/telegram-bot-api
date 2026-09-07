@@ -104,6 +104,7 @@ public sealed class Update
         { BusinessMessage: not null } => UpdateType.BusinessMessage,
         { EditedBusinessMessage: not null } => UpdateType.EditedBusinessMessage,
         { DeletedBusinessMessages: not null } => UpdateType.DeletedBusinessMessages,
+        { GuestMessage: not null } => UpdateType.GuestMessage,
         { MessageReaction: not null } => UpdateType.MessageReaction,
         { MessageReactionCount: not null } => UpdateType.MessageReactionCount,
         { InlineQuery: not null } => UpdateType.InlineQuery,

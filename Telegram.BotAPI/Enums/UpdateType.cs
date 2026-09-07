@@ -11,6 +11,7 @@ public enum UpdateType
     BusinessMessage,
     EditedBusinessMessage,
     DeletedBusinessMessages,
+    GuestMessage,
     MessageReaction,
     MessageReactionCount,
     InlineQuery,

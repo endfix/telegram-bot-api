@@ -27,6 +27,23 @@ public class GettingUpdatesSerializationTests
     }
 
     [Fact]
+    public void Guest_Message_Has_Guest_Message_Update_Type()
+    {
+        var update = new Update
+        {
+            UpdateId = 1001,
+            GuestMessage = new Message
+            {
+                MessageId = 2002,
+                Chat = new Chat { Id = 3003, Type = ChatTypes.Private },
+                Date = 1_700_000_000
+            }
+        };
+
+        Assert.Equal(UpdateType.GuestMessage, update.Type);
+    }
+
+    [Fact]
     public void Can_Roundtrip_WebhookInfo()
     {
         Utils.AssertRoundtrip(new WebhookInfo

@@ -1,0 +1,156 @@
+:root {
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--tg-theme-text-color, #18222d);
+  background: var(--tg-theme-bg-color, #f4f7f9);
+  letter-spacing: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 280px;
+  margin: 0;
+  background: var(--tg-theme-bg-color, #f4f7f9);
+}
+
+.shell {
+  width: min(100%, 560px);
+  min-height: var(--tg-viewport-stable-height, 100vh);
+  margin: 0 auto;
+  padding: max(24px, env(safe-area-inset-top)) 18px max(24px, env(safe-area-inset-bottom));
+}
+
+header {
+  margin-bottom: 28px;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 0;
+  font-size: 30px;
+  line-height: 1.15;
+  font-weight: 750;
+}
+
+h2 {
+  margin-bottom: 0;
+  font-size: 17px;
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+.eyebrow {
+  margin-bottom: 5px;
+  color: var(--tg-theme-accent-text-color, #168acd);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+section {
+  padding: 18px 0;
+  border-top: 1px solid var(--tg-theme-section-separator-color, #d9e1e7);
+}
+
+.section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.badge {
+  flex: none;
+  padding: 4px 7px;
+  border: 1px solid currentColor;
+  border-radius: 6px;
+  color: var(--tg-theme-hint-color, #6b7b88);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.badge[data-state="success"] {
+  color: #218739;
+}
+
+.badge[data-state="error"] {
+  color: var(--tg-theme-destructive-text-color, #cf3b35);
+}
+
+.badge[data-state="pending"] {
+  color: var(--tg-theme-accent-text-color, #168acd);
+}
+
+dl {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+dl div {
+  display: grid;
+  grid-template-columns: minmax(90px, 1fr) minmax(120px, 2fr);
+  gap: 12px;
+}
+
+dt {
+  color: var(--tg-theme-hint-color, #6b7b88);
+}
+
+dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-weight: 600;
+  text-align: right;
+}
+
+.permission {
+  margin-top: 8px;
+}
+
+.message {
+  min-height: 44px;
+  margin-bottom: 16px;
+  color: var(--tg-theme-subtitle-text-color, #526471);
+  line-height: 1.45;
+}
+
+button {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 7px;
+  color: var(--tg-theme-button-text-color, #ffffff);
+  background: var(--tg-theme-button-color, #168acd);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+button:focus-visible {
+  outline: 3px solid var(--tg-theme-link-color, #168acd);
+  outline-offset: 3px;
+}
+
+.footnote {
+  margin: 18px 0 0;
+  color: var(--tg-theme-hint-color, #6b7b88);
+  font-size: 12px;
+  line-height: 1.4;
+  text-align: center;
+}

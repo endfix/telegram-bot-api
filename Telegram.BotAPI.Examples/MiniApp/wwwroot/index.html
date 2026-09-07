@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <title>Bot API Mini App tests</title>
+  <script src="https://telegram.org/js/telegram-web-app.js?63"></script>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <p class="eyebrow">Telegram.BotAPI</p>
+      <h1>Mini App tests</h1>
+    </header>
+
+    <section class="status-panel" aria-labelledby="environment-title">
+      <div class="section-heading">
+        <h2 id="environment-title">Environment</h2>
+        <span id="support-badge" class="badge" data-state="pending">Checking</span>
+      </div>
+      <dl>
+        <div>
+          <dt>Platform</dt>
+          <dd id="platform">Unknown</dd>
+        </div>
+        <div>
+          <dt>Bot API</dt>
+          <dd id="version">Unknown</dd>
+        </div>
+        <div>
+          <dt>Premium</dt>
+          <dd id="premium">Unknown</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="permission" aria-labelledby="permission-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Premium test prerequisite</p>
+          <h2 id="permission-title">Emoji status access</h2>
+        </div>
+        <span id="permission-badge" class="badge" data-state="idle">Not requested</span>
+      </div>
+      <p id="permission-message" class="message" role="status" aria-live="polite">
+        Grant the bot permission to update your emoji status during live tests.
+      </p>
+      <button id="request-access" type="button" disabled>Request access</button>
+    </section>
+
+    <p class="footnote">No bot token or Telegram authorization data leaves this page.</p>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>

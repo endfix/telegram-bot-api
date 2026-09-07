@@ -4583,11 +4583,31 @@ public static partial class BotApiClientExtensions
             StarCount = starCount
         }, cancellationToken);
 
+    /// <summary>Posts a story on behalf of a managed business account.</summary>
+    /// <remarks>Requires the <c>can_manage_stories</c> business bot right.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The posted story.</returns>
     public static async Task<Story> PostStoryAsync(
         this IBotApiClient client,
         PostStoryParameters parameters, CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Story>(new ApiRequest("postStory", parameters), cancellationToken);
 
+    /// <summary>Posts a story on behalf of a managed business account.</summary>
+    /// <remarks>Requires the <c>can_manage_stories</c> business bot right.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="businessConnectionId">Identifier of the business connection.</param>
+    /// <param name="content">Content of the story.</param>
+    /// <param name="activePeriod">Seconds after which the story is moved to the archive; must be 21600, 43200, 86400 or 172800.</param>
+    /// <param name="caption">Caption for the story, containing up to 2048 characters after entity parsing.</param>
+    /// <param name="parseMode">Mode used to parse entities in <paramref name="caption"/>.</param>
+    /// <param name="captionEntities">Special entities in the caption, specified instead of <paramref name="parseMode"/>.</param>
+    /// <param name="areas">Interactive areas placed on the story.</param>
+    /// <param name="postToChatPage">Whether to keep the story accessible on the business account's profile after it expires.</param>
+    /// <param name="protectContent">Whether to protect the story from forwarding and screenshots.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The posted story.</returns>
     public static async Task<Story> PostStoryAsync(
         this IBotApiClient client,
         string businessConnectionId,
@@ -4613,12 +4633,29 @@ public static partial class BotApiClientExtensions
             ProtectContent = protectContent
         }, cancellationToken);
 
+    /// <summary>Reposts a story on behalf of a managed business account.</summary>
+    /// <remarks>Both business accounts must be managed by the bot, and the source story must have been posted or reposted by the bot. Requires the <c>can_manage_stories</c> right for both accounts.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The reposted story.</returns>
     public static async Task<Story> RepostStoryAsync(
         this IBotApiClient client,
         RepostStoryParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Story>(new ApiRequest("repostStory", parameters), cancellationToken);
 
+    /// <summary>Reposts a story on behalf of a managed business account.</summary>
+    /// <remarks>Both business accounts must be managed by the bot, and the source story must have been posted or reposted by the bot. Requires the <c>can_manage_stories</c> right for both accounts.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="businessConnectionId">Identifier of the business connection used to repost the story.</param>
+    /// <param name="fromChatId">Identifier of the business account that posted the source story.</param>
+    /// <param name="fromStoryId">Identifier of the source story.</param>
+    /// <param name="activePeriod">Seconds after which the reposted story is moved to the archive; must be 21600, 43200, 86400 or 172800.</param>
+    /// <param name="postToChatPage">Whether to keep the story accessible on the business account's profile after it expires.</param>
+    /// <param name="protectContent">Whether to protect the story from forwarding and screenshots.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The reposted story.</returns>
     public static async Task<Story> RepostStoryAsync(
         this IBotApiClient client,
         string businessConnectionId,
@@ -4638,12 +4675,30 @@ public static partial class BotApiClientExtensions
             ProtectContent = protectContent
         }, cancellationToken);
 
+    /// <summary>Edits a story previously posted by the bot for a managed business account.</summary>
+    /// <remarks>Requires the <c>can_manage_stories</c> business bot right.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The edited story.</returns>
     public static async Task<Story> EditStoryAsync(
         this IBotApiClient client,
         EditStoryParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Story>(new ApiRequest("editStory", parameters), cancellationToken);
 
+    /// <summary>Edits a story previously posted by the bot for a managed business account.</summary>
+    /// <remarks>Requires the <c>can_manage_stories</c> business bot right.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="businessConnectionId">Identifier of the business connection.</param>
+    /// <param name="storyId">Identifier of the story to edit.</param>
+    /// <param name="content">New content of the story.</param>
+    /// <param name="caption">New caption for the story, containing up to 2048 characters after entity parsing.</param>
+    /// <param name="parseMode">Mode used to parse entities in <paramref name="caption"/>.</param>
+    /// <param name="captionEntities">Special entities in the caption, specified instead of <paramref name="parseMode"/>.</param>
+    /// <param name="areas">New interactive areas placed on the story.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The edited story.</returns>
     public static async Task<Story> EditStoryAsync(
         this IBotApiClient client,
         string businessConnectionId,
@@ -4665,12 +4720,25 @@ public static partial class BotApiClientExtensions
             Areas = areas
         }, cancellationToken);
 
+    /// <summary>Deletes a story previously posted by the bot for a managed business account.</summary>
+    /// <remarks>Requires the <c>can_manage_stories</c> business bot right.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeleteStoryAsync(
         this IBotApiClient client,
         DeleteStoryParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("deleteStory", parameters), cancellationToken);
 
+    /// <summary>Deletes a story previously posted by the bot for a managed business account.</summary>
+    /// <remarks>Requires the <c>can_manage_stories</c> business bot right.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="businessConnectionId">Identifier of the business connection.</param>
+    /// <param name="storyId">Identifier of the story to delete.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeleteStoryAsync(
         this IBotApiClient client,
         string businessConnectionId,

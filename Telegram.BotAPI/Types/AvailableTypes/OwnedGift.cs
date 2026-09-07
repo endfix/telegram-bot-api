@@ -13,6 +13,7 @@ public abstract class OwnedGift
 /// <summary>Describes a regular gift owned by a user or a chat.</summary>
 public sealed class OwnedGiftRegular : OwnedGift
 {
+    /// <inheritdoc/>
     public override OwnedGiftType Type => OwnedGiftType.Regular;
 
     /// <summary>Information about the regular gift.</summary>
@@ -61,6 +62,7 @@ public sealed class OwnedGiftRegular : OwnedGift
 /// <summary>Describes a unique gift received and owned by a user or a chat.</summary>
 public sealed class OwnedGiftUnique : OwnedGift
 {
+    /// <inheritdoc/>
     public override OwnedGiftType Type => OwnedGiftType.Unique;
 
     /// <summary>Information about the unique gift.</summary>

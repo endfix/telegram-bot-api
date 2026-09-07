@@ -14,6 +14,7 @@ public abstract class InputRichBlock
 /// <summary>A text paragraph.</summary>
 public sealed class InputRichBlockParagraph : InputRichBlock
 {
+    /// <inheritdoc/>
     public override InputRichBlockType Type => InputRichBlockType.Paragraph;
 
     /// <summary>Text of the paragraph.</summary>
@@ -23,6 +24,7 @@ public sealed class InputRichBlockParagraph : InputRichBlock
 /// <summary>A section heading.</summary>
 public sealed class InputRichBlockSectionHeading : InputRichBlock
 {
+    /// <inheritdoc/>
     public override InputRichBlockType Type => InputRichBlockType.Heading;
 
     /// <summary>Text of the heading.</summary>
@@ -35,6 +37,7 @@ public sealed class InputRichBlockSectionHeading : InputRichBlock
 /// <summary>A preformatted text block.</summary>
 public sealed class InputRichBlockPreformatted : InputRichBlock
 {
+    /// <inheritdoc/>
     public override InputRichBlockType Type => InputRichBlockType.Pre;
 
     /// <summary>Text of the preformatted block.</summary>
@@ -47,6 +50,7 @@ public sealed class InputRichBlockPreformatted : InputRichBlock
 /// <summary>A footer.</summary>
 public sealed class InputRichBlockFooter : InputRichBlock
 {
+    /// <inheritdoc/>
     public override InputRichBlockType Type => InputRichBlockType.Footer;
 
     /// <summary>Text of the footer.</summary>
@@ -56,12 +60,14 @@ public sealed class InputRichBlockFooter : InputRichBlock
 /// <summary>A horizontal divider.</summary>
 public sealed class InputRichBlockDivider : InputRichBlock
 {
+    /// <inheritdoc/>
     public override InputRichBlockType Type => InputRichBlockType.Divider;
 }
 
 /// <summary>A block containing a mathematical expression in LaTeX format.</summary>
 public sealed class InputRichBlockMathematicalExpression : InputRichBlock
 {
+    /// <inheritdoc/>
     public override InputRichBlockType Type => InputRichBlockType.MathematicalExpression;
 
     /// <summary>Mathematical expression in LaTeX format.</summary>
@@ -71,6 +77,7 @@ public sealed class InputRichBlockMathematicalExpression : InputRichBlock
 /// <summary>A named anchor.</summary>
 public sealed class InputRichBlockAnchor : InputRichBlock
 {
+    /// <inheritdoc/>
     public override InputRichBlockType Type => InputRichBlockType.Anchor;
 
     /// <summary>Name of the anchor.</summary>
@@ -80,6 +87,7 @@ public sealed class InputRichBlockAnchor : InputRichBlock
 /// <summary>A list of rich block items.</summary>
 public sealed class InputRichBlockList : InputRichBlock
 {
+    /// <inheritdoc/>
     public override InputRichBlockType Type => InputRichBlockType.List;
 
     /// <summary>Items of the list.</summary>
@@ -89,6 +97,7 @@ public sealed class InputRichBlockList : InputRichBlock
 /// <summary>A block quotation.</summary>
 public sealed class InputRichBlockBlockQuotation : InputRichBlock
 {
+    /// <inheritdoc/>
     public override InputRichBlockType Type => InputRichBlockType.Blockquote;
 
     /// <summary>Content of the quotation.</summary>
@@ -101,6 +110,7 @@ public sealed class InputRichBlockBlockQuotation : InputRichBlock
 /// <summary>An expandable block quotation.</summary>
 public sealed class InputRichBlockExpandableBlockQuotation : InputRichBlock
 {
+    /// <inheritdoc/>
     public override InputRichBlockType Type => InputRichBlockType.ExpandableBlockquote;
 
     /// <summary>Content of the quotation.</summary>
@@ -113,6 +123,7 @@ public sealed class InputRichBlockExpandableBlockQuotation : InputRichBlock
 /// <summary>A centered pull quotation.</summary>
 public sealed class InputRichBlockPullQuotation : InputRichBlock
 {
+    /// <inheritdoc/>
     public override InputRichBlockType Type => InputRichBlockType.Pullquote;
 
     /// <summary>Text of the quotation.</summary>
@@ -125,6 +136,7 @@ public sealed class InputRichBlockPullQuotation : InputRichBlock
 /// <summary>A collage of rich blocks.</summary>
 public sealed class InputRichBlockCollage : InputRichBlock
 {
+    /// <inheritdoc/>
     public override InputRichBlockType Type => InputRichBlockType.Collage;
 
     /// <summary>Elements of the collage.</summary>
@@ -137,6 +149,7 @@ public sealed class InputRichBlockCollage : InputRichBlock
 /// <summary>A slideshow of rich blocks.</summary>
 public sealed class InputRichBlockSlideshow : InputRichBlock
 {
+    /// <inheritdoc/>
     public override InputRichBlockType Type => InputRichBlockType.Slideshow;
 
     /// <summary>Elements of the slideshow.</summary>
@@ -149,6 +162,7 @@ public sealed class InputRichBlockSlideshow : InputRichBlock
 /// <summary>A table in a rich message.</summary>
 public sealed class InputRichBlockTable : InputRichBlock
 {
+    /// <inheritdoc/>
     public override InputRichBlockType Type => InputRichBlockType.Table;
 
     /// <summary>Rows and cells of the table.</summary>
@@ -170,6 +184,7 @@ public sealed class InputRichBlockTable : InputRichBlock
 /// <summary>An expandable details block.</summary>
 public sealed class InputRichBlockDetails : InputRichBlock
 {
+    /// <inheritdoc/>
     public override InputRichBlockType Type => InputRichBlockType.Details;
 
     /// <summary>Always-visible summary of the block.</summary>
@@ -185,6 +200,7 @@ public sealed class InputRichBlockDetails : InputRichBlock
 /// <summary>A map block.</summary>
 public sealed class InputRichBlockMap : InputRichBlock
 {
+    /// <inheritdoc/>
     public override InputRichBlockType Type => InputRichBlockType.Map;
 
     /// <summary>Center location of the map.</summary>
@@ -206,6 +222,7 @@ public sealed class InputRichBlockMap : InputRichBlock
 /// <summary>A row of buttons in a rich message.</summary>
 public sealed class InputRichBlockButtons : InputRichBlock
 {
+    /// <inheritdoc/>
     public override InputRichBlockType Type => InputRichBlockType.Buttons;
 
     /// <summary>List of buttons in the row; 1-8 buttons are allowed.</summary>
@@ -218,6 +235,7 @@ public sealed class InputRichBlockButtons : InputRichBlock
 /// <summary>An animation media block.</summary>
 public sealed class InputRichBlockAnimation : InputRichBlock
 {
+    /// <inheritdoc/>
     public override InputRichBlockType Type => InputRichBlockType.Animation;
 
     /// <summary>Animation to send.</summary>
@@ -230,6 +248,7 @@ public sealed class InputRichBlockAnimation : InputRichBlock
 /// <summary>An audio media block.</summary>
 public sealed class InputRichBlockAudio : InputRichBlock
 {
+    /// <inheritdoc/>
     public override InputRichBlockType Type => InputRichBlockType.Audio;
 
     /// <summary>Audio to send.</summary>
@@ -242,6 +261,7 @@ public sealed class InputRichBlockAudio : InputRichBlock
 /// <summary>A document media block.</summary>
 public sealed class InputRichBlockDocument : InputRichBlock
 {
+    /// <inheritdoc/>
     public override InputRichBlockType Type => InputRichBlockType.Document;
 
     /// <summary>Document to send.</summary>
@@ -254,6 +274,7 @@ public sealed class InputRichBlockDocument : InputRichBlock
 /// <summary>A photo media block.</summary>
 public sealed class InputRichBlockPhoto : InputRichBlock
 {
+    /// <inheritdoc/>
     public override InputRichBlockType Type => InputRichBlockType.Photo;
 
     /// <summary>Photo to send.</summary>
@@ -266,6 +287,7 @@ public sealed class InputRichBlockPhoto : InputRichBlock
 /// <summary>A video media block.</summary>
 public sealed class InputRichBlockVideo : InputRichBlock
 {
+    /// <inheritdoc/>
     public override InputRichBlockType Type => InputRichBlockType.Video;
 
     /// <summary>Video to send.</summary>
@@ -278,6 +300,7 @@ public sealed class InputRichBlockVideo : InputRichBlock
 /// <summary>A voice note media block.</summary>
 public sealed class InputRichBlockVoiceNote : InputRichBlock
 {
+    /// <inheritdoc/>
     public override InputRichBlockType Type => InputRichBlockType.VoiceNote;
 
     /// <summary>Voice note to send.</summary>
@@ -290,6 +313,7 @@ public sealed class InputRichBlockVoiceNote : InputRichBlock
 /// <summary>A “Thinking...” placeholder block for streamed rich message drafts.</summary>
 public sealed class InputRichBlockThinking : InputRichBlock
 {
+    /// <inheritdoc/>
     public override InputRichBlockType Type => InputRichBlockType.Thinking;
 
     /// <summary>Text displayed in the placeholder.</summary>

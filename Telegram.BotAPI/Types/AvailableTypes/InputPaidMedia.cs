@@ -15,6 +15,7 @@ public abstract class InputPaidMedia
 /// <summary>Describes a live photo to send as paid media.</summary>
 public sealed class InputPaidMediaLivePhoto : InputPaidMedia
 {
+    /// <inheritdoc/>
     public override InputPaidMediaType Type => InputPaidMediaType.LivePhoto;
 
     /// <summary>Static photo of the live photo.</summary>
@@ -24,12 +25,14 @@ public sealed class InputPaidMediaLivePhoto : InputPaidMedia
 /// <summary>Describes a photo to send as paid media.</summary>
 public sealed class InputPaidMediaPhoto : InputPaidMedia
 {
+    /// <inheritdoc/>
     public override InputPaidMediaType Type => InputPaidMediaType.Photo;
 }
 
 /// <summary>Describes a video to send as paid media.</summary>
 public sealed class InputPaidMediaVideo : InputPaidMedia
 {
+    /// <inheritdoc/>
     public override InputPaidMediaType Type => InputPaidMediaType.Video;
 
     /// <summary>Optional. Thumbnail of the video.</summary>

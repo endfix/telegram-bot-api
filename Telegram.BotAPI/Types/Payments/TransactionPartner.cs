@@ -13,6 +13,7 @@ public abstract class TransactionPartner
 /// <summary>Describes a transaction partner that is a user.</summary>
 public sealed class TransactionPartnerUser : TransactionPartner
 {
+    /// <inheritdoc/>
     public override TransactionPartnerType Type => TransactionPartnerType.User;
 
     /// <summary>Type of the transaction.</summary>
@@ -46,6 +47,7 @@ public sealed class TransactionPartnerUser : TransactionPartner
 /// <summary>Describes a transaction partner that is a chat.</summary>
 public sealed class TransactionPartnerChat : TransactionPartner
 {
+    /// <inheritdoc/>
     public override TransactionPartnerType Type => TransactionPartnerType.Chat;
 
     /// <summary>The chat involved in the transaction.</summary>
@@ -58,6 +60,7 @@ public sealed class TransactionPartnerChat : TransactionPartner
 /// <summary>Describes an affiliate program as a transaction partner.</summary>
 public sealed class TransactionPartnerAffiliateProgram : TransactionPartner
 {
+    /// <inheritdoc/>
     public override TransactionPartnerType Type => TransactionPartnerType.AffiliateProgram;
 
     /// <summary>Optional. The sponsor user of the affiliate program.</summary>
@@ -70,6 +73,7 @@ public sealed class TransactionPartnerAffiliateProgram : TransactionPartner
 /// <summary>Describes Fragment as a transaction partner.</summary>
 public sealed class TransactionPartnerFragment : TransactionPartner
 {
+    /// <inheritdoc/>
     public override TransactionPartnerType Type => TransactionPartnerType.Fragment;
 
     /// <summary>Optional. Current state of the revenue withdrawal.</summary>
@@ -79,12 +83,14 @@ public sealed class TransactionPartnerFragment : TransactionPartner
 /// <summary>Describes Telegram Ads as a transaction partner.</summary>
 public sealed class TransactionPartnerTelegramAds : TransactionPartner
 {
+    /// <inheritdoc/>
     public override TransactionPartnerType Type => TransactionPartnerType.TelegramAds;
 }
 
 /// <summary>Describes the Telegram API as a transaction partner.</summary>
 public sealed class TransactionPartnerTelegramApi : TransactionPartner
 {
+    /// <inheritdoc/>
     public override TransactionPartnerType Type => TransactionPartnerType.TelegramApi;
 
     /// <summary>Number of API requests made.</summary>
@@ -94,5 +100,6 @@ public sealed class TransactionPartnerTelegramApi : TransactionPartner
 /// <summary>Describes an unknown or other transaction partner.</summary>
 public sealed class TransactionPartnerOther : TransactionPartner
 {
+    /// <inheritdoc/>
     public override TransactionPartnerType Type => TransactionPartnerType.Other;
 }

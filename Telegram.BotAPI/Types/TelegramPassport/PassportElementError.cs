@@ -19,6 +19,7 @@ public abstract class PassportElementError
 /// <summary>Describes an error in a data field.</summary>
 public sealed class PassportElementErrorDataField : PassportElementError
 {
+    /// <inheritdoc/>
     public override PassportElementErrorSource Source => PassportElementErrorSource.Data;
 
     /// <summary>Name of the data field that contains the error.</summary>
@@ -31,6 +32,7 @@ public sealed class PassportElementErrorDataField : PassportElementError
 /// <summary>Describes an error in the front side of a document.</summary>
 public sealed class PassportElementErrorFrontSide : PassportElementError
 {
+    /// <inheritdoc/>
     public override PassportElementErrorSource Source => PassportElementErrorSource.FrontSide;
 
     /// <summary>Base64-encoded hash of the file with the error.</summary>
@@ -40,6 +42,7 @@ public sealed class PassportElementErrorFrontSide : PassportElementError
 /// <summary>Describes an error in the reverse side of a document.</summary>
 public sealed class PassportElementErrorReverseSide : PassportElementError
 {
+    /// <inheritdoc/>
     public override PassportElementErrorSource Source => PassportElementErrorSource.ReverseSide;
 
     /// <summary>Base64-encoded hash of the file with the error.</summary>
@@ -49,6 +52,7 @@ public sealed class PassportElementErrorReverseSide : PassportElementError
 /// <summary>Describes an error in a document selfie.</summary>
 public sealed class PassportElementErrorSelfie : PassportElementError
 {
+    /// <inheritdoc/>
     public override PassportElementErrorSource Source => PassportElementErrorSource.Selfie;
 
     /// <summary>Base64-encoded hash of the file with the error.</summary>
@@ -58,6 +62,7 @@ public sealed class PassportElementErrorSelfie : PassportElementError
 /// <summary>Describes an error in a document file.</summary>
 public sealed class PassportElementErrorFile : PassportElementError
 {
+    /// <inheritdoc/>
     public override PassportElementErrorSource Source => PassportElementErrorSource.File;
 
     /// <summary>Base64-encoded hash of the file with the error.</summary>
@@ -67,6 +72,7 @@ public sealed class PassportElementErrorFile : PassportElementError
 /// <summary>Describes an error in one or more document files.</summary>
 public sealed class PassportElementErrorFiles : PassportElementError
 {
+    /// <inheritdoc/>
     public override PassportElementErrorSource Source => PassportElementErrorSource.Files;
 
     /// <summary>Base64-encoded hashes of the files with errors.</summary>
@@ -76,6 +82,7 @@ public sealed class PassportElementErrorFiles : PassportElementError
 /// <summary>Describes an error in a translated document file.</summary>
 public sealed class PassportElementErrorTranslationFile : PassportElementError
 {
+    /// <inheritdoc/>
     public override PassportElementErrorSource Source => PassportElementErrorSource.TranslationFile;
 
     /// <summary>Base64-encoded hash of the file with the error.</summary>
@@ -85,6 +92,7 @@ public sealed class PassportElementErrorTranslationFile : PassportElementError
 /// <summary>Describes an error in one or more translated document files.</summary>
 public sealed class PassportElementErrorTranslationFiles : PassportElementError
 {
+    /// <inheritdoc/>
     public override PassportElementErrorSource Source => PassportElementErrorSource.TranslationFiles;
 
     /// <summary>Base64-encoded hashes of the files with errors.</summary>
@@ -94,6 +102,7 @@ public sealed class PassportElementErrorTranslationFiles : PassportElementError
 /// <summary>Describes an error in an unspecified part of a Passport element.</summary>
 public sealed class PassportElementErrorUnspecified : PassportElementError
 {
+    /// <inheritdoc/>
     public override PassportElementErrorSource Source => PassportElementErrorSource.Unspecified;
 
     /// <summary>Base64-encoded hash of the Passport element with the error.</summary>

@@ -14,6 +14,7 @@ public abstract class RichBlock
 /// <summary>A paragraph of rich text.</summary>
 public sealed class RichBlockParagraph : RichBlock
 {
+    /// <inheritdoc/>
     public override RichBlockType Type => RichBlockType.Paragraph;
 
     /// <summary>Text of the paragraph.</summary>
@@ -23,6 +24,7 @@ public sealed class RichBlockParagraph : RichBlock
 /// <summary>A section heading.</summary>
 public sealed class RichBlockSectionHeading : RichBlock
 {
+    /// <inheritdoc/>
     public override RichBlockType Type => RichBlockType.Heading;
 
     /// <summary>Text of the heading.</summary>
@@ -35,6 +37,7 @@ public sealed class RichBlockSectionHeading : RichBlock
 /// <summary>A preformatted text block.</summary>
 public sealed class RichBlockPreformatted : RichBlock
 {
+    /// <inheritdoc/>
     public override RichBlockType Type => RichBlockType.Pre;
 
     /// <summary>Text of the preformatted block.</summary>
@@ -47,6 +50,7 @@ public sealed class RichBlockPreformatted : RichBlock
 /// <summary>A footer.</summary>
 public sealed class RichBlockFooter : RichBlock
 {
+    /// <inheritdoc/>
     public override RichBlockType Type => RichBlockType.Footer;
 
     /// <summary>Text of the footer.</summary>
@@ -56,12 +60,14 @@ public sealed class RichBlockFooter : RichBlock
 /// <summary>A horizontal divider.</summary>
 public sealed class RichBlockDivider : RichBlock
 {
+    /// <inheritdoc/>
     public override RichBlockType Type => RichBlockType.Divider;
 }
 
 /// <summary>A block containing a mathematical expression.</summary>
 public sealed class RichBlockMathematicalExpression : RichBlock
 {
+    /// <inheritdoc/>
     public override RichBlockType Type => RichBlockType.MathematicalExpression;
 
     /// <summary>Mathematical expression in LaTeX format.</summary>
@@ -71,6 +77,7 @@ public sealed class RichBlockMathematicalExpression : RichBlock
 /// <summary>A named anchor.</summary>
 public sealed class RichBlockAnchor : RichBlock
 {
+    /// <inheritdoc/>
     public override RichBlockType Type => RichBlockType.Anchor;
 
     /// <summary>Name of the anchor.</summary>
@@ -80,6 +87,7 @@ public sealed class RichBlockAnchor : RichBlock
 /// <summary>A list of rich block items.</summary>
 public sealed class RichBlockList : RichBlock
 {
+    /// <inheritdoc/>
     public override RichBlockType Type => RichBlockType.List;
 
     /// <summary>Items in the list.</summary>
@@ -89,6 +97,7 @@ public sealed class RichBlockList : RichBlock
 /// <summary>A block quotation.</summary>
 public sealed class RichBlockBlockQuotation : RichBlock
 {
+    /// <inheritdoc/>
     public override RichBlockType Type => RichBlockType.Blockquote;
 
     /// <summary>Content of the quotation.</summary>
@@ -101,6 +110,7 @@ public sealed class RichBlockBlockQuotation : RichBlock
 /// <summary>An expandable block quotation.</summary>
 public sealed class RichBlockExpandableBlockQuotation : RichBlock
 {
+    /// <inheritdoc/>
     public override RichBlockType Type => RichBlockType.ExpandableBlockquote;
 
     /// <summary>Content of the quotation.</summary>
@@ -113,6 +123,7 @@ public sealed class RichBlockExpandableBlockQuotation : RichBlock
 /// <summary>A centered pull quotation.</summary>
 public sealed class RichBlockPullQuotation : RichBlock
 {
+    /// <inheritdoc/>
     public override RichBlockType Type => RichBlockType.Pullquote;
 
     /// <summary>Text of the quotation.</summary>
@@ -125,6 +136,7 @@ public sealed class RichBlockPullQuotation : RichBlock
 /// <summary>A collage of rich blocks.</summary>
 public sealed class RichBlockCollage : RichBlock
 {
+    /// <inheritdoc/>
     public override RichBlockType Type => RichBlockType.Collage;
 
     /// <summary>Elements of the collage.</summary>
@@ -137,6 +149,7 @@ public sealed class RichBlockCollage : RichBlock
 /// <summary>A slideshow of rich blocks.</summary>
 public sealed class RichBlockSlideshow : RichBlock
 {
+    /// <inheritdoc/>
     public override RichBlockType Type => RichBlockType.Slideshow;
 
     /// <summary>Elements of the slideshow.</summary>
@@ -149,6 +162,7 @@ public sealed class RichBlockSlideshow : RichBlock
 /// <summary>A table in a rich message.</summary>
 public sealed class RichBlockTable : RichBlock
 {
+    /// <inheritdoc/>
     public override RichBlockType Type => RichBlockType.Table;
 
     /// <summary>Rows and cells of the table.</summary>
@@ -170,6 +184,7 @@ public sealed class RichBlockTable : RichBlock
 /// <summary>An expandable details block.</summary>
 public sealed class RichBlockDetails : RichBlock
 {
+    /// <inheritdoc/>
     public override RichBlockType Type => RichBlockType.Details;
 
     /// <summary>Always-visible summary of the block.</summary>
@@ -185,6 +200,7 @@ public sealed class RichBlockDetails : RichBlock
 /// <summary>A map block.</summary>
 public sealed class RichBlockMap : RichBlock
 {
+    /// <inheritdoc/>
     public override RichBlockType Type => RichBlockType.Map;
 
     /// <summary>Center location of the map.</summary>
@@ -206,6 +222,7 @@ public sealed class RichBlockMap : RichBlock
 /// <summary>A row of buttons in a rich message.</summary>
 public sealed class RichBlockButtons : RichBlock
 {
+    /// <inheritdoc/>
     public override RichBlockType Type => RichBlockType.Buttons;
 
     /// <summary>Buttons in the row.</summary>
@@ -218,6 +235,7 @@ public sealed class RichBlockButtons : RichBlock
 /// <summary>An animation media block.</summary>
 public sealed class RichBlockAnimation : RichBlock
 {
+    /// <inheritdoc/>
     public override RichBlockType Type => RichBlockType.Animation;
 
     /// <summary>Animation in the block.</summary>
@@ -233,6 +251,7 @@ public sealed class RichBlockAnimation : RichBlock
 /// <summary>An audio media block.</summary>
 public sealed class RichBlockAudio : RichBlock
 {
+    /// <inheritdoc/>
     public override RichBlockType Type => RichBlockType.Audio;
 
     /// <summary>Audio in the block.</summary>
@@ -245,6 +264,7 @@ public sealed class RichBlockAudio : RichBlock
 /// <summary>A document media block.</summary>
 public sealed class RichBlockDocument : RichBlock
 {
+    /// <inheritdoc/>
     public override RichBlockType Type => RichBlockType.Document;
 
     /// <summary>Document in the block.</summary>
@@ -257,6 +277,7 @@ public sealed class RichBlockDocument : RichBlock
 /// <summary>A photo media block.</summary>
 public sealed class RichBlockPhoto : RichBlock
 {
+    /// <inheritdoc/>
     public override RichBlockType Type => RichBlockType.Photo;
 
     /// <summary>Photo sizes available for the block.</summary>
@@ -272,6 +293,7 @@ public sealed class RichBlockPhoto : RichBlock
 /// <summary>A video media block.</summary>
 public sealed class RichBlockVideo : RichBlock
 {
+    /// <inheritdoc/>
     public override RichBlockType Type => RichBlockType.Video;
 
     /// <summary>Video in the block.</summary>
@@ -287,6 +309,7 @@ public sealed class RichBlockVideo : RichBlock
 /// <summary>A voice note media block.</summary>
 public sealed class RichBlockVoiceNote : RichBlock
 {
+    /// <inheritdoc/>
     public override RichBlockType Type => RichBlockType.VoiceNote;
 
     /// <summary>Voice note in the block.</summary>
@@ -299,6 +322,7 @@ public sealed class RichBlockVoiceNote : RichBlock
 /// <summary>A “Thinking...” placeholder block used in streamed rich message drafts.</summary>
 public sealed class RichBlockThinking : RichBlock
 {
+    /// <inheritdoc/>
     public override RichBlockType Type => RichBlockType.Thinking;
 
     /// <summary>Text displayed in the placeholder.</summary>

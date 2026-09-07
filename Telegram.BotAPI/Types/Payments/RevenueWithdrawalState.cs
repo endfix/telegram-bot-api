@@ -12,12 +12,14 @@ public abstract class RevenueWithdrawalState
 /// <summary>Indicates that the revenue withdrawal is in progress.</summary>
 public sealed class RevenueWithdrawalStatePending : RevenueWithdrawalState
 {
+    /// <inheritdoc/>
     public override RevenueWithdrawalStateType Type => RevenueWithdrawalStateType.Pending;
 }
 
 /// <summary>Indicates that the revenue withdrawal was completed successfully.</summary>
 public sealed class RevenueWithdrawalStateSucceeded : RevenueWithdrawalState
 {
+    /// <inheritdoc/>
     public override RevenueWithdrawalStateType Type => RevenueWithdrawalStateType.Succeeded;
 
     /// <summary>Date when the withdrawal was completed, in Unix time.</summary>
@@ -30,5 +32,6 @@ public sealed class RevenueWithdrawalStateSucceeded : RevenueWithdrawalState
 /// <summary>Indicates that the revenue withdrawal failed.</summary>
 public sealed class RevenueWithdrawalStateFailed : RevenueWithdrawalState
 {
+    /// <inheritdoc/>
     public override RevenueWithdrawalStateType Type => RevenueWithdrawalStateType.Failed;
 }

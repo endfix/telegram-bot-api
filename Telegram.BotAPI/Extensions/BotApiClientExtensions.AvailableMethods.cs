@@ -4665,13 +4665,13 @@ public static partial class BotApiClientExtensions
             Areas = areas
         }, cancellationToken);
 
-    public static async Task<Story> DeleteStoryAsync(
+    public static async Task<bool> DeleteStoryAsync(
         this IBotApiClient client,
         DeleteStoryParameters parameters,
         CancellationToken cancellationToken = default)
-        => await client.ExecuteAsync<Story>(new ApiRequest("deleteStory", parameters), cancellationToken);
+        => await client.ExecuteAsync<bool>(new ApiRequest("deleteStory", parameters), cancellationToken);
 
-    public static async Task<Story> DeleteStoryAsync(
+    public static async Task<bool> DeleteStoryAsync(
         this IBotApiClient client,
         string businessConnectionId,
         int storyId,

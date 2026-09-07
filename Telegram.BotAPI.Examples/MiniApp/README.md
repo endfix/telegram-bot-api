@@ -13,17 +13,20 @@ dotnet run --project Telegram.BotAPI.Examples/MiniApp/Telegram.BotAPI.Example.Mi
 The local host is useful for browser layout and JavaScript checks. Telegram
 capabilities are available only when the page is launched as a Mini App.
 
-## Host through Statically
+## Host through GitHub Pages
 
-After the files are pushed to the public repository, configure the bot's Main
-App URL as:
+Enable **GitHub Actions** as the Pages source in the repository settings. The
+`mini-app-pages.yml` workflow publishes `wwwroot` when its files change. Then
+configure the bot's Main App URL as:
 
 ```text
-https://cdn.statically.io/gh/endfix/telegram-bot-api@main/Telegram.BotAPI.Examples/MiniApp/wwwroot/index.html
+https://endfix.github.io/telegram-bot-api/
 ```
 
-The `main` URL is convenient while developing. Use a release tag or commit SHA
-instead of `main` when a stable, immutable test harness is required.
+The Mini App needs a web host rather than a source-file CDN: its entry point
+must be served as `text/html`. Statically currently serves this repository's
+HTML source without that media type, causing browsers to display the markup as
+plain text.
 
 Open the Main App from Telegram and select **Request access**. Telegram should
 show its native permission dialog. Once access is granted, the Bot API method

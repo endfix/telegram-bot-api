@@ -131,6 +131,11 @@ account through `getChatMember` before exercising Premium-dependent behavior.
 When Telegram does not report `is_premium`, only those scenarios are skipped;
 the rest of the live suite remains unaffected.
 
+The emoji-status mutation additionally requires the user to grant access through
+the Mini App example. Set `TELEGRAM_BOT_EMOJI_STATUS_ACCESS=true` only after that
+permission has been granted. The test restores the user's previous emoji status
+and expiration date in its cleanup block.
+
 ## Side effects and rollback
 
 The suite deliberately changes live resources. It creates messages, invite

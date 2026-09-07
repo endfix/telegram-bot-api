@@ -153,6 +153,37 @@ public sealed class TelegramChatIntegrationTests : IDisposable
         Assert.NotNull(availableGifts.Gifts);
     }
 
+    [TelegramEmojiStatusIntegrationFact]
+    public async Task PremiumUser_EmojiStatus_MutationIsAcceptedAndRestored()
+    {
+        var userId = GetId(TelegramIntegrationFactAttribute.ChatIdVariable);
+        var groupId = GetId(TelegramIntegrationFactAttribute.GroupIdVariable);
+        await RequirePremiumUserAsync(groupId, userId);
+
+        var originalChat = await _client.GetChatAsync(userId);
+        var originalEmojiId = originalChat.EmojiStatusCustomEmojiId;
+        var originalExpirationDate = originalChat.EmojiStatusExpirationDate;
+        var stickers = await _client.GetForumTopicIconStickersAsync();
+        var testEmojiId = stickers
+            .Select(sticker => sticker.CustomEmojiId)
+            .FirstOrDefault(id =>
+                !string.IsNullOrWhiteSpace(id) &&
+                !string.Equals(id, originalEmojiId, StringComparison.Ordinal));
+        Assert.False(string.IsNullOrWhiteSpace(testEmojiId));
+
+        try
+        {
+            Assert.True(await _client.SetUserEmojiStatusAsync(userId, testEmojiId));
+        }
+        finally
+        {
+            Assert.True(await _client.SetUserEmojiStatusAsync(
+                userId,
+                originalEmojiId ?? string.Empty,
+                originalExpirationDate));
+        }
+    }
+
     [TelegramRoutingIntegrationFact]
     public async Task ChannelAndGroup_AreLinkedForDiscussion()
     {

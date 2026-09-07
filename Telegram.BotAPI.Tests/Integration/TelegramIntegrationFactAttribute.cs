@@ -12,6 +12,7 @@ internal sealed class TelegramIntegrationFactAttribute : FactAttribute
     public const string ChannelIdVariable = "TELEGRAM_BOT_CHANNEL_ID";
     public const string TestUserIdVariable = "TELEGRAM_BOT_TEST_USER_ID";
     public const string KeepMessagesVariable = "TELEGRAM_BOT_KEEP_MESSAGES";
+    public const string EmojiStatusAccessVariable = "TELEGRAM_BOT_EMOJI_STATUS_ACCESS";
 
     public TelegramIntegrationFactAttribute()
     {
@@ -91,6 +92,30 @@ internal sealed class TelegramPremiumIntegrationFactAttribute : FactAttribute
         if (missing.Count > 0)
         {
             Skip = $"Set {string.Join(", ", missing)} to run Telegram Premium integration tests.";
+        }
+    }
+}
+
+internal sealed class TelegramEmojiStatusIntegrationFactAttribute : FactAttribute
+{
+    public TelegramEmojiStatusIntegrationFactAttribute()
+    {
+        var missing = TelegramIntegrationSettings.Missing(
+            TelegramIntegrationFactAttribute.TokenVariable,
+            TelegramIntegrationFactAttribute.ChatIdVariable,
+            TelegramIntegrationFactAttribute.GroupIdVariable);
+        if (missing.Count > 0)
+        {
+            Skip = $"Set {string.Join(", ", missing)} to run the Telegram emoji-status integration test.";
+            return;
+        }
+
+        if (!bool.TryParse(
+                TelegramIntegrationSettings.Get(TelegramIntegrationFactAttribute.EmojiStatusAccessVariable),
+                out var accessGranted) || !accessGranted)
+        {
+            Skip = $"Grant emoji-status access through the Mini App and set " +
+                $"{TelegramIntegrationFactAttribute.EmojiStatusAccessVariable}=true to run this test.";
         }
     }
 }

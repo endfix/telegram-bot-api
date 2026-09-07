@@ -1628,12 +1628,24 @@ public static partial class BotApiClientExtensions
             IsBig = isBig
         }, cancellationToken);
 
+    /// <summary>Returns a user's profile pictures.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The user's profile pictures.</returns>
     public static async Task<UserProfilePhotos> GetUserProfilePhotosAsync(
         this IBotApiClient client,
         GetUserProfilePhotosParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<UserProfilePhotos>(new ApiRequest("getUserProfilePhotos", parameters), cancellationToken);
 
+    /// <summary>Returns a user's profile pictures.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="userId">Target user identifier.</param>
+    /// <param name="offset">Sequential number of the first profile picture to return.</param>
+    /// <param name="limit">Maximum number of profile pictures to return, from 1 through 100. Defaults to 100.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The user's profile pictures.</returns>
     public static async Task<UserProfilePhotos> GetUserProfilePhotosAsync(
         this IBotApiClient client,
         long userId,
@@ -1647,12 +1659,24 @@ public static partial class BotApiClientExtensions
             Limit = limit
         }, cancellationToken);
 
+    /// <summary>Returns a user's profile audio files.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The user's profile audio files.</returns>
     public static async Task<UserProfileAudios> GetUserProfileAudiosAsync(
         this IBotApiClient client,
         GetUserProfileAudiosParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<UserProfileAudios>(new ApiRequest("getUserProfileAudios", parameters), cancellationToken);
 
+    /// <summary>Returns a user's profile audio files.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="userId">Target user identifier.</param>
+    /// <param name="offset">Sequential number of the first profile audio to return.</param>
+    /// <param name="limit">Maximum number of profile audio files to return, from 1 through 100. Defaults to 100.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The user's profile audio files.</returns>
     public static async Task<UserProfileAudios> GetUserProfileAudiosAsync(
         this IBotApiClient client,
         long userId,
@@ -1666,12 +1690,24 @@ public static partial class BotApiClientExtensions
             Limit = limit
         }, cancellationToken);
 
+    /// <summary>Changes the emoji status of a user who granted the bot permission to manage it.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetUserEmojiStatusAsync(
         this IBotApiClient client,
         SetUserEmojiStatusParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("setUserEmojiStatus", parameters), cancellationToken);
 
+    /// <summary>Changes the emoji status of a user who granted the bot permission to manage it.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="userId">Target user identifier.</param>
+    /// <param name="emojiStatusCustomEmojiId">Custom emoji identifier to set. Pass an empty string to remove the status.</param>
+    /// <param name="emojiStatusExpirationDate">Unix timestamp when the emoji status expires.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetUserEmojiStatusAsync(
         this IBotApiClient client,
         long userId,
@@ -1685,12 +1721,24 @@ public static partial class BotApiClientExtensions
             EmojiStatusExpirationDate = emojiStatusExpirationDate
         }, cancellationToken);
 
+    /// <summary>Returns basic file information and prepares the file for downloading.</summary>
+    /// <remarks>The returned file path is valid for at least one hour. Request the file again after it expires.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>Information required to download the file.</returns>
     public static async Task<FileStruct> GetFileAsync(
         this IBotApiClient client,
         GetFileParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<FileStruct>(new ApiRequest("getFile", parameters), cancellationToken);
 
+    /// <summary>Returns basic file information and prepares the file for downloading.</summary>
+    /// <remarks>The returned file path is valid for at least one hour. Request the file again after it expires.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="fileId">Identifier of the file.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>Information required to download the file.</returns>
     public static async Task<FileStruct> GetFileAsync(
         this IBotApiClient client,
         string fileId,

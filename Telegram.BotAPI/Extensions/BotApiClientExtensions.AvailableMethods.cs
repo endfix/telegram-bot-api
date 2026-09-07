@@ -4011,12 +4011,26 @@ public static partial class BotApiClientExtensions
             ChatId = chatId
         }, cancellationToken);
 
+    /// <summary>Marks an incoming message as read on behalf of a business account.</summary>
+    /// <remarks>Requires the <c>can_read_messages</c> business bot right.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> ReadBusinessMessageAsync(
         this IBotApiClient client,
         ReadBusinessMessageParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("readBusinessMessage", parameters), cancellationToken);
 
+    /// <summary>Marks an incoming message as read on behalf of a business account.</summary>
+    /// <remarks>Requires the <c>can_read_messages</c> business bot right.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="businessConnectionId">Identifier of the business connection.</param>
+    /// <param name="chatId">Identifier of the chat where the message was received; the chat must have been active within the last 24 hours.</param>
+    /// <param name="messageId">Identifier of the message to mark as read.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> ReadBusinessMessageAsync(
         this IBotApiClient client,
         string businessConnectionId,
@@ -4030,12 +4044,25 @@ public static partial class BotApiClientExtensions
             MessageId = messageId
         }, cancellationToken);
 
+    /// <summary>Deletes messages on behalf of a business account.</summary>
+    /// <remarks>Deleting the bot's messages requires <c>can_delete_sent_messages</c>; deleting any message requires <c>can_delete_all_messages</c>.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeleteBusinessMessagesAsync(
         this IBotApiClient client,
         DeleteBusinessMessagesParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("deleteBusinessMessages", parameters), cancellationToken);
 
+    /// <summary>Deletes messages on behalf of a business account.</summary>
+    /// <remarks>Deleting the bot's messages requires <c>can_delete_sent_messages</c>; deleting any message requires <c>can_delete_all_messages</c>.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="businessConnectionId">Identifier of the business connection.</param>
+    /// <param name="messageIds">From 1 through 100 message identifiers, all belonging to the same chat.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeleteBusinessMessagesAsync(
         this IBotApiClient client,
         string businessConnectionId,
@@ -4047,12 +4074,26 @@ public static partial class BotApiClientExtensions
             MessageIds = messageIds
         }, cancellationToken);
 
+    /// <summary>Changes the first and last name of a managed business account.</summary>
+    /// <remarks>Requires the <c>can_change_name</c> business bot right.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetBusinessAccountNameAsync(
         this IBotApiClient client,
         SetBusinessAccountNameParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("setBusinessAccountName", parameters), cancellationToken);
 
+    /// <summary>Changes the first and last name of a managed business account.</summary>
+    /// <remarks>Requires the <c>can_change_name</c> business bot right.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="businessConnectionId">Identifier of the business connection.</param>
+    /// <param name="firstName">New first name, from 1 through 64 characters.</param>
+    /// <param name="lastName">New last name, from 0 through 64 characters.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetBusinessAccountNameAsync(
         this IBotApiClient client,
         string businessConnectionId,
@@ -4066,12 +4107,25 @@ public static partial class BotApiClientExtensions
             LastName = lastName
         }, cancellationToken);
 
+    /// <summary>Changes the username of a managed business account.</summary>
+    /// <remarks>Requires the <c>can_change_username</c> business bot right.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetBusinessAccountUsernameAsync(
         this IBotApiClient client,
         SetBusinessAccountUsernameParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("setBusinessAccountUsername", parameters), cancellationToken);
 
+    /// <summary>Changes the username of a managed business account.</summary>
+    /// <remarks>Requires the <c>can_change_username</c> business bot right.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="businessConnectionId">Identifier of the business connection.</param>
+    /// <param name="username">New username, from 0 through 32 characters.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetBusinessAccountUsernameAsync(
         this IBotApiClient client,
         string businessConnectionId,
@@ -4083,12 +4137,25 @@ public static partial class BotApiClientExtensions
             Username = username,
         }, cancellationToken);
 
+    /// <summary>Changes the bio of a managed business account.</summary>
+    /// <remarks>Requires the <c>can_change_bio</c> business bot right.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetBusinessAccountBioAsync(
         this IBotApiClient client,
         SetBusinessAccountBioParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("setBusinessAccountBio", parameters), cancellationToken);
 
+    /// <summary>Changes the bio of a managed business account.</summary>
+    /// <remarks>Requires the <c>can_change_bio</c> business bot right.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="businessConnectionId">Identifier of the business connection.</param>
+    /// <param name="bio">New bio, from 0 through 140 characters.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetBusinessAccountBioAsync(
         this IBotApiClient client,
         string businessConnectionId,
@@ -4100,12 +4167,26 @@ public static partial class BotApiClientExtensions
             Bio = bio
         }, cancellationToken);
 
+    /// <summary>Changes the profile photo of a managed business account.</summary>
+    /// <remarks>Requires the <c>can_edit_profile_photo</c> business bot right.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetBusinessAccountProfilePhotoAsync(
         this IBotApiClient client,
         SetBusinessAccountProfilePhotoParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("setBusinessAccountProfilePhoto", parameters), cancellationToken);
 
+    /// <summary>Changes the profile photo of a managed business account.</summary>
+    /// <remarks>Requires the <c>can_edit_profile_photo</c> business bot right.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="businessConnectionId">Identifier of the business connection.</param>
+    /// <param name="photo">New profile photo.</param>
+    /// <param name="isPublic">Whether to set the public photo, which remains visible when the main photo is hidden by privacy settings.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetBusinessAccountProfilePhotoAsync(
         this IBotApiClient client,
         string businessConnectionId,
@@ -4119,12 +4200,25 @@ public static partial class BotApiClientExtensions
             IsPublic = isPublic
         }, cancellationToken);
 
+    /// <summary>Removes a profile photo from a managed business account.</summary>
+    /// <remarks>Requires the <c>can_edit_profile_photo</c> business bot right.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> RemoveBusinessAccountProfilePhotoAsync(
         this IBotApiClient client,
         RemoveBusinessAccountProfilePhotoParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("removeBusinessAccountProfilePhoto", parameters), cancellationToken);
 
+    /// <summary>Removes a profile photo from a managed business account.</summary>
+    /// <remarks>Requires the <c>can_edit_profile_photo</c> business bot right.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="businessConnectionId">Identifier of the business connection.</param>
+    /// <param name="isPublic">Whether to remove the public photo. Removing the main photo promotes the previous profile photo, if present.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> RemoveBusinessAccountProfilePhotoAsync(
         this IBotApiClient client,
         string businessConnectionId,
@@ -4136,12 +4230,26 @@ public static partial class BotApiClientExtensions
             IsPublic = isPublic
         }, cancellationToken);
 
+    /// <summary>Changes settings for incoming gifts in a managed business account.</summary>
+    /// <remarks>Requires the <c>can_change_gift_settings</c> business bot right.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetBusinessAccountGiftSettingsAsync(
         this IBotApiClient client,
         SetBusinessAccountGiftSettingsParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("setBusinessAccountGiftSettings", parameters), cancellationToken);
 
+    /// <summary>Changes settings for incoming gifts in a managed business account.</summary>
+    /// <remarks>Requires the <c>can_change_gift_settings</c> business bot right.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="businessConnectionId">Identifier of the business connection.</param>
+    /// <param name="showGiftButton">Whether to always show the gift button in the input field.</param>
+    /// <param name="acceptedGiftTypes">Gift types accepted by the business account.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetBusinessAccountGiftSettingsAsync(
         this IBotApiClient client,
         string businessConnectionId,
@@ -4155,12 +4263,24 @@ public static partial class BotApiClientExtensions
             AcceptedGiftTypes = acceptedGiftTypes
         }, cancellationToken);
 
+    /// <summary>Returns the Telegram Stars balance of a managed business account.</summary>
+    /// <remarks>Requires the <c>can_view_gifts_and_stars</c> business bot right.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The business account's Stars balance.</returns>
     public static async Task<StarAmount> GetBusinessAccountStarBalanceAsync(
         this IBotApiClient client,
         GetBusinessAccountStarBalanceParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<StarAmount>(new ApiRequest("getBusinessAccountStarBalance", parameters), cancellationToken);
 
+    /// <summary>Returns the Telegram Stars balance of a managed business account.</summary>
+    /// <remarks>Requires the <c>can_view_gifts_and_stars</c> business bot right.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="businessConnectionId">Identifier of the business connection.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The business account's Stars balance.</returns>
     public static async Task<StarAmount> GetBusinessAccountStarBalanceAsync(
         this IBotApiClient client,
         string businessConnectionId,
@@ -4170,12 +4290,25 @@ public static partial class BotApiClientExtensions
             BusinessConnectionId = businessConnectionId
         }, cancellationToken);
 
+    /// <summary>Transfers Telegram Stars from a business account to the bot's balance.</summary>
+    /// <remarks>Requires the <c>can_transfer_stars</c> business bot right.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> TransferBusinessAccountStarsAsync(
         this IBotApiClient client,
         TransferBusinessAccountStarsParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("transferBusinessAccountStars", parameters), cancellationToken);
 
+    /// <summary>Transfers Telegram Stars from a business account to the bot's balance.</summary>
+    /// <remarks>Requires the <c>can_transfer_stars</c> business bot right.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="businessConnectionId">Identifier of the business connection.</param>
+    /// <param name="starCount">Number of Telegram Stars to transfer, from 1 through 10000.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> TransferBusinessAccountStarsAsync(
         this IBotApiClient client,
         string businessConnectionId,

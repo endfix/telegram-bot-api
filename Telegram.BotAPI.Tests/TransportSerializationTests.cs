@@ -106,7 +106,7 @@ public sealed class TransportSerializationTests
     }
 
     [Fact]
-    public async Task SendMediaGroup_WithStreamFactory_ReopensAndDisposesStreamForRetry()
+    public async Task SendMediaGroup_WithStreamFactory_ReopensEquivalentContentAndDisposesStreamsForRetry()
     {
         var streamsCreated = 0;
         var streamsDisposed = 0;

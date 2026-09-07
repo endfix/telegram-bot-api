@@ -16,6 +16,6 @@ public sealed class TransferGiftParameters : ApiRequestParameters
     /// <summary>Identifier of the new owner's chat, which must have been active within the last 24 hours.</summary>
     public required long NewOwnerChatId { get; init; }
 
-    /// <summary>Stars paid from the business account for the transfer.</summary>
+    /// <summary>Stars paid from the business account for the transfer. A positive value requires the <c>can_transfer_stars</c> business bot right.</summary>
     public int? StarCount { get; init; }
 }

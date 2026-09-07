@@ -11,10 +11,10 @@ public sealed class GetChatGiftsParameters : ApiRequestParameters
     /// <summary>Target chat identifier or channel username.</summary>
     public required ChatIdSource ChatId { get; init; }
 
-    /// <summary>Whether to exclude gifts not saved to the chat's profile.</summary>
+    /// <summary>Whether to exclude gifts not saved to the chat's profile. Always <see langword="true"/> unless the bot has the <c>can_post_messages</c> administrator right in the channel.</summary>
     public bool? ExcludeUnsaved { get; init; }
 
-    /// <summary>Whether to exclude gifts saved to the chat's profile.</summary>
+    /// <summary>Whether to exclude gifts saved to the chat's profile. Always <see langword="false"/> unless the bot has the <c>can_post_messages</c> administrator right in the channel.</summary>
     public bool? ExcludeSaved { get; init; }
 
     /// <summary>Whether to exclude gifts with an unlimited supply.</summary>

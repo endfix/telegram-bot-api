@@ -1641,7 +1641,7 @@ public static partial class BotApiClientExtensions
 
     /// <summary>Returns a user's profile pictures.</summary>
     /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="userId">Target user identifier.</param>
+    /// <param name="userId">Identifier of the target user who will receive the Telegram Premium subscription.</param>
     /// <param name="offset">Sequential number of the first profile picture to return.</param>
     /// <param name="limit">Maximum number of profile pictures to return, from 1 through 100. Defaults to 100.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
@@ -4060,7 +4060,7 @@ public static partial class BotApiClientExtensions
     /// <remarks>Deleting the bot's messages requires <c>can_delete_sent_messages</c>; deleting any message requires <c>can_delete_all_messages</c>.</remarks>
     /// <param name="client">Bot API client used to send the request.</param>
     /// <param name="businessConnectionId">Identifier of the business connection.</param>
-    /// <param name="messageIds">From 1 through 100 message identifiers, all belonging to the same chat.</param>
+    /// <param name="messageIds">From 1 through 100 message identifiers, all belonging to the same chat and subject to the limitations of the <c>deleteMessage</c> method.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> DeleteBusinessMessagesAsync(
@@ -4184,7 +4184,7 @@ public static partial class BotApiClientExtensions
     /// <param name="client">Bot API client used to send the request.</param>
     /// <param name="businessConnectionId">Identifier of the business connection.</param>
     /// <param name="photo">New profile photo.</param>
-    /// <param name="isPublic">Whether to set the public photo, which remains visible when the main photo is hidden by privacy settings.</param>
+    /// <param name="isPublic">Whether to set the public photo, which remains visible when the main photo is hidden by privacy settings. An account can have only one public photo.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> SetBusinessAccountProfilePhotoAsync(
@@ -4440,8 +4440,8 @@ public static partial class BotApiClientExtensions
     /// <summary>Returns gifts owned by a chat.</summary>
     /// <param name="client">Bot API client used to send the request.</param>
     /// <param name="chatId">Target chat identifier or channel username.</param>
-    /// <param name="excludeUnsaved">Whether to exclude gifts not saved to the chat's profile.</param>
-    /// <param name="excludeSaved">Whether to exclude gifts saved to the chat's profile.</param>
+    /// <param name="excludeUnsaved">Whether to exclude gifts not saved to the chat's profile. Always <see langword="true"/> unless the bot has the <c>can_post_messages</c> administrator right in the channel.</param>
+    /// <param name="excludeSaved">Whether to exclude gifts saved to the chat's profile. Always <see langword="false"/> unless the bot has the <c>can_post_messages</c> administrator right in the channel.</param>
     /// <param name="excludeUnlimited">Whether to exclude gifts with an unlimited supply.</param>
     /// <param name="excludeLimitedUpgradable">Whether to exclude limited gifts that can be upgraded to unique gifts.</param>
     /// <param name="excludeLimitedNonUpgradable">Whether to exclude limited gifts that cannot be upgraded to unique gifts.</param>
@@ -4565,7 +4565,7 @@ public static partial class BotApiClientExtensions
     /// <param name="businessConnectionId">Identifier of the business connection.</param>
     /// <param name="ownedGiftId">Identifier of the unique gift to transfer.</param>
     /// <param name="newOwnerChatId">Identifier of the new owner's chat, which must have been active within the last 24 hours.</param>
-    /// <param name="starCount">Stars paid from the business account for the transfer.</param>
+    /// <param name="starCount">Stars paid from the business account for the transfer. A positive value requires the <c>can_transfer_stars</c> business bot right.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static async Task<bool> TransferGiftAsync(

@@ -9,7 +9,7 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class GiftPremiumSubscriptionParameters : ApiRequestParameters
 {
-    /// <summary>Target user identifier.</summary>
+    /// <summary>Identifier of the target user who will receive the Telegram Premium subscription.</summary>
     public required long UserId { get; init; }
 
     /// <summary>Subscription duration; must be 3, 6 or 12 months.</summary>

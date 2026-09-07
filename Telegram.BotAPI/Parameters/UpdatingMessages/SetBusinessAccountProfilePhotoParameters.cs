@@ -14,6 +14,6 @@ public sealed class SetBusinessAccountProfilePhotoParameters : ApiRequestParamet
     /// <summary>New profile photo.</summary>
     public required InputProfilePhoto Photo { get; init; }
 
-    /// <summary>Whether to set the public photo, which remains visible when the main photo is hidden by privacy settings.</summary>
+    /// <summary>Whether to set the public photo, which remains visible when the main photo is hidden by privacy settings. An account can have only one public photo.</summary>
     public bool? IsPublic { get; init; }
 }

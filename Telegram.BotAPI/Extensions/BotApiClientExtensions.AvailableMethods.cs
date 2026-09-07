@@ -4355,13 +4355,13 @@ public static partial class BotApiClientExtensions
             Limit = limit
         }, cancellationToken);
 
-    public static async Task<OwnedGifts> GetUserGiftsASync(
+    public static async Task<OwnedGifts> GetUserGiftsAsync(
         this IBotApiClient client,
         GetUserGiftsParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<OwnedGifts>(new ApiRequest("getUserGifts", parameters), cancellationToken);
 
-    public static async Task<OwnedGifts> GetUserGiftsASync(
+    public static async Task<OwnedGifts> GetUserGiftsAsync(
         this IBotApiClient client,
         long userId,
         bool? excludeUnlimited = null,
@@ -4373,7 +4373,7 @@ public static partial class BotApiClientExtensions
         string? offset = null,
         int? limit = null,
         CancellationToken cancellationToken = default)
-        => await client.GetUserGiftsASync(new GetUserGiftsParameters
+        => await client.GetUserGiftsAsync(new GetUserGiftsParameters
         {
             UserId = userId,
             ExcludeUnlimited = excludeUnlimited,

@@ -42,10 +42,13 @@ public sealed class InputMediaAnimation : InputMediaCaptionedFile, IInputPollMed
     /// <summary>Indicates whether to show the caption above the animation.</summary>
     public bool? ShowCaptionAboveMedia { get; init; }
 
+    /// <summary>Animation width in pixels.</summary>
     public int? Width { get; init; }
 
+    /// <summary>Animation height in pixels.</summary>
     public int? Height { get; init; }
 
+    /// <summary>Animation duration in seconds.</summary>
     public int? Duration { get; init; }
 
     /// <summary>Indicates whether the animation is covered by a spoiler animation.</summary>
@@ -71,12 +74,16 @@ public sealed class InputMediaAudio : InputMediaCaptionedFile, IInputPollMedia
     /// <summary>Gets the audio media kind.</summary>
     public override InputMediaType Type => InputMediaType.Audio;
 
+    /// <summary>JPEG thumbnail for a newly uploaded audio file; must be under 200 kB and at most 320 pixels in each dimension.</summary>
     public ThumbnailSource? Thumbnail { get; init; }
 
+    /// <summary>Audio duration in seconds.</summary>
     public int? Duration { get; init; }
 
+    /// <summary>Performer of the audio.</summary>
     public string? Performer { get; init; }
 
+    /// <summary>Title of the audio.</summary>
     public string? Title { get; init; }
 }
 
@@ -99,8 +106,10 @@ public sealed class InputMediaLivePhoto : InputMediaCaptionedFile, IInputPollMed
     /// <summary>Photo media source.</summary>
     public required MediaSource Photo { get; init; }
 
+    /// <summary>Indicates whether to show the caption above the live photo.</summary>
     public bool? ShowCaptionAboveMedia { get; init; }
 
+    /// <summary>Indicates whether the live photo is covered by a spoiler animation.</summary>
     public bool? HasSpoiler { get; init; }
 }
 
@@ -110,10 +119,13 @@ public sealed class InputMediaLocation : InputMedia, IInputPollMedia, IInputPoll
     /// <summary>Gets the location media kind.</summary>
     public override InputMediaType Type => InputMediaType.Location;
 
+    /// <summary>Latitude of the location.</summary>
     public required double Latitude { get; init; }
 
+    /// <summary>Longitude of the location.</summary>
     public required double Longitude { get; init; }
 
+    /// <summary>Radius of uncertainty for the location in meters; 0-1500.</summary>
     public double? HorizontalAccuracy { get; init; }
 }
 
@@ -123,8 +135,10 @@ public sealed class InputMediaPhoto : InputMediaCaptionedFile, IInputPollMedia, 
     /// <summary>Gets the photo media kind.</summary>
     public override InputMediaType Type => InputMediaType.Photo;
 
+    /// <summary>Indicates whether to show the caption above the photo.</summary>
     public bool? ShowCaptionAboveMedia { get; init; }
 
+    /// <summary>Indicates whether the photo is covered by a spoiler animation.</summary>
     public bool? HasSpoiler { get; init; }
 }
 
@@ -144,20 +158,28 @@ public sealed class InputMediaVenue : InputMedia, IInputPollMedia, IInputPollOpt
     /// <summary>Gets the venue media kind.</summary>
     public override InputMediaType Type => InputMediaType.Venue;
 
+    /// <summary>Latitude of the venue.</summary>
     public required double Latitude { get; init; }
 
+    /// <summary>Longitude of the venue.</summary>
     public required double Longitude { get; init; }
 
+    /// <summary>Name of the venue.</summary>
     public required string Title { get; init; }
 
+    /// <summary>Address of the venue.</summary>
     public required string Address { get; init; }
 
+    /// <summary>Foursquare identifier of the venue.</summary>
     public string? FoursquareId { get; init; }
 
+    /// <summary>Foursquare type of the venue.</summary>
     public string? FoursquareType { get; init; }
 
+    /// <summary>Google Places identifier of the venue.</summary>
     public string? GooglePlaceId { get; init; }
 
+    /// <summary>Google Places type of the venue.</summary>
     public string? GooglePlaceType { get; init; }
 }
 
@@ -173,20 +195,25 @@ public sealed class InputMediaVideo : InputMediaCaptionedFile, IInputPollMedia, 
     /// <summary>Video cover, if supplied.</summary>
     public CoverSource? Cover { get; init; }
 
+    /// <summary>Start timestamp for the video in the message.</summary>
     public int? StartTimestamp { get; init; }
 
     /// <summary>Indicates whether to show the caption above the video.</summary>
     public bool? ShowCaptionAboveMedia { get; init; }
 
+    /// <summary>Video width in pixels.</summary>
     public int? Width { get; init; }
 
+    /// <summary>Video height in pixels.</summary>
     public int? Height { get; init; }
 
+    /// <summary>Video duration in seconds.</summary>
     public int? Duration { get; init; }
 
     /// <summary>Indicates whether the video supports streaming.</summary>
     public bool? SupportsStreaming { get; init; }
 
+    /// <summary>Indicates whether the video is covered by a spoiler animation.</summary>
     public bool? HasSpoiler { get; init; }
 }
 

@@ -121,7 +121,7 @@ Tests whose required secrets are absent are skipped. A fully configured run
 currently verifies bot capabilities, chat permissions, channel/discussion
 linking, group/channel metadata and message lifecycle, invite links, pins,
 reactions, forum topics, and cross-chat copy and forwarding. File scenarios
-cover downloads, profile-photo restore, sticker-set lifecycle, standalone
+cover buffered and streaming downloads, profile-photo restore, sticker-set lifecycle, standalone
 media, media groups with typed thumbnail/cover files, paid media, nested poll
 media, nested rich-message uploads, reply-markup editing, and stopping live
 locations.

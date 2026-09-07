@@ -92,6 +92,38 @@ public sealed class TelegramFileIntegrationTests : IDisposable
     }
 
     [TelegramIntegrationFact]
+    public async Task DownloadFile_StreamsTelegramDocumentAndLeavesDestinationOpen()
+    {
+        var expected = "Endfix.Telegram.BotAPI streaming download"u8.ToArray();
+        await using var file = await TemporaryFile.CreateAsync(".txt", expected);
+        var sentMessageIds = new List<long>();
+
+        try
+        {
+            var message = await RequestAsync<Message>("sendDocument", new SendDocumentParameters
+            {
+                ChatId = _chatId,
+                Document = new InputDocumentFile(file.Path),
+                Caption = "[Endfix.Telegram.BotAPI integration] streaming download"
+            });
+            sentMessageIds.Add(message.MessageId);
+
+            var telegramFile = await _client.GetFileAsync(message.Document!.FileId);
+            Assert.False(string.IsNullOrWhiteSpace(telegramFile.FilePath));
+
+            using var destination = new MemoryStream();
+            await _client.DownloadFileAsync(telegramFile.FilePath!, destination);
+
+            Assert.True(destination.CanWrite);
+            Assert.Equal(expected, destination.ToArray());
+        }
+        finally
+        {
+            await DeleteMessagesAsync(sentMessageIds);
+        }
+    }
+
+    [TelegramIntegrationFact]
     public async Task SendMediaGroup_UploadsFilesThroughAttachReferences()
     {
         await using var firstFile = await TemporaryFile.CreateAsync(".png", PngBytes);

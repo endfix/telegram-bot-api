@@ -394,11 +394,12 @@ public sealed class ClientBehaviorTests
     public async Task DownloadFileAsync_WritesSuccessfulResponseToDestination()
     {
         var expected = new byte[] { 1, 2, 3, 4 };
+        var source = new TrackingReadStream(expected);
         using var context = new ClientContext(responses:
         [
             new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new ByteArrayContent(expected)
+                Content = new StreamContent(source)
             }
         ]);
         using var destination = new MemoryStream();
@@ -408,6 +409,7 @@ public sealed class ClientBehaviorTests
 
         destination.ToArray().Should().Equal(expected);
         destination.CanRead.Should().BeTrue();
+        source.IsDisposed.Should().BeTrue();
         context.Handler.LastRequestUri.Should().Be(
             "https://api.telegram.org/file/bottest-token/documents/file.bin");
     }
@@ -435,9 +437,13 @@ public sealed class ClientBehaviorTests
     [Fact]
     public async Task DownloadFileAsync_RejectsHttpErrorBody()
     {
+        var source = new TrackingReadStream("not found"u8.ToArray());
         using var context = new ClientContext(responses:
         [
-            ResponseHandler.ResponseMessage("not found", HttpStatusCode.NotFound)
+            new HttpResponseMessage(HttpStatusCode.NotFound)
+            {
+                Content = new StreamContent(source)
+            }
         ]);
         using var destination = new MemoryStream();
 
@@ -446,6 +452,8 @@ public sealed class ClientBehaviorTests
         var exception = await action.Should().ThrowAsync<HttpRequestException>();
         exception.Which.StatusCode.Should().Be(HttpStatusCode.NotFound);
         destination.Length.Should().Be(0);
+        destination.CanWrite.Should().BeTrue();
+        source.IsDisposed.Should().BeTrue();
     }
 
     [Fact]
@@ -468,11 +476,12 @@ public sealed class ClientBehaviorTests
     [Fact]
     public async Task DownloadFileAsync_CancelsWhileReadingResponseBody()
     {
+        var source = new CancellationBlockingStream();
         using var context = new ClientContext(responses:
         [
             new HttpResponseMessage(HttpStatusCode.OK)
             {
-                Content = new StreamContent(new CancellationBlockingStream())
+                Content = new StreamContent(source)
             }
         ]);
         using var destination = new MemoryStream();
@@ -485,6 +494,8 @@ public sealed class ClientBehaviorTests
 
         await action.Should().ThrowAsync<OperationCanceledException>();
         context.Handler.RequestCount.Should().Be(1);
+        destination.CanWrite.Should().BeTrue();
+        source.IsDisposed.Should().BeTrue();
     }
 
     [Fact]
@@ -768,6 +779,8 @@ public sealed class ClientBehaviorTests
 
     private sealed class CancellationBlockingStream : Stream
     {
+        public bool IsDisposed { get; private set; }
+
         public override bool CanRead => true;
 
         public override bool CanSeek => false;
@@ -806,6 +819,23 @@ public sealed class ClientBehaviorTests
 
         public override void Write(byte[] buffer, int offset, int count)
             => throw new NotSupportedException();
+
+        protected override void Dispose(bool disposing)
+        {
+            IsDisposed = true;
+            base.Dispose(disposing);
+        }
+    }
+
+    private sealed class TrackingReadStream(byte[] content) : MemoryStream(content, writable: false)
+    {
+        public bool IsDisposed { get; private set; }
+
+        protected override void Dispose(bool disposing)
+        {
+            IsDisposed = true;
+            base.Dispose(disposing);
+        }
     }
 
 }

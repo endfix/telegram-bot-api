@@ -10,6 +10,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Reflection;
 using System.Linq;
@@ -123,6 +124,10 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
     /// transport, HTTP, and JSON failures retain their standard .NET exception types.
     /// Only Telegram rate-limit responses are retried automatically.
     /// </remarks>
+    /// <typeparam name="T">The expected result type.</typeparam>
+    /// <param name="request">The request to send.</param>
+    /// <param name="cancellation">Token used to cancel the request.</param>
+    /// <returns>The Telegram API response envelope.</returns>
     public async Task<ApiResponse<T>> RequestAsync<T>(ApiRequest request, CancellationToken cancellation = default)
     {
         if (request is null)
@@ -184,6 +189,10 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
     /// Sends a request and returns its result, throwing <see cref="ApiRequestException"/>
     /// when Telegram returns an unsuccessful API response.
     /// </summary>
+    /// <typeparam name="TResult">The expected result type.</typeparam>
+    /// <param name="request">The request to send.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The successful Telegram API result.</returns>
     public async Task<TResult> ExecuteAsync<TResult>(ApiRequest request, CancellationToken cancellationToken)
     {
         var response = await RequestAsync<TResult>(request, cancellationToken);
@@ -198,19 +207,49 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
     /// <summary>
     /// Downloads a Telegram file and rejects unsuccessful HTTP responses.
     /// </summary>
+    /// <param name="filePath">Relative file path returned by <c>getFile</c>.</param>
+    /// <param name="cancellation">Token used to cancel the download.</param>
+    /// <returns>A byte array containing the complete file.</returns>
     public async Task<byte[]> GetFileBytesAsync(string filePath, CancellationToken cancellation = default)
+    {
+        using var destination = new MemoryStream();
+        await DownloadFileAsync(filePath, destination, cancellation).ConfigureAwait(false);
+        return destination.ToArray();
+    }
+
+    /// <summary>
+    /// Downloads a Telegram file into a destination stream without buffering the complete file in memory.
+    /// </summary>
+    /// <remarks>The destination stream remains open and positioned after the downloaded content.</remarks>
+    /// <param name="filePath">Relative file path returned by <c>getFile</c>.</param>
+    /// <param name="destination">Writable stream that receives the file content.</param>
+    /// <param name="cancellationToken">Token used to cancel the download.</param>
+    /// <returns>A task that completes when the file has been written to the destination.</returns>
+    public async Task DownloadFileAsync(
+        string filePath,
+        Stream destination,
+        CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(filePath))
         {
             throw new ArgumentException("The file path cannot be null or empty.", nameof(filePath));
         }
 
+        if (destination is null)
+        {
+            throw new ArgumentNullException(nameof(destination));
+        }
+
         using var response = await _httpClient
-            .GetAsync(new Uri(_baseAddress, $"./file/bot{_token}/{filePath}"), cancellation)
+            .GetAsync(
+                new Uri(_baseAddress, $"./file/bot{_token}/{filePath}"),
+                HttpCompletionOption.ResponseHeadersRead,
+                cancellationToken)
             .ConfigureAwait(false);
 
         response.EnsureSuccessStatusCode();
-        return await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
+        using var source = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+        await source.CopyToAsync(destination, 81920, cancellationToken).ConfigureAwait(false);
     }
 
     private async Task<HttpResponseMessage> GetResponse(ApiRequest request, CancellationToken cancellation)

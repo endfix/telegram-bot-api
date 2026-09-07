@@ -14,6 +14,8 @@ public sealed partial class BotApiClient
     /// <summary>
     /// Downloads the currencies supported by Telegram payments.
     /// </summary>
+    /// <param name="cancellationToken">Token used to cancel the download.</param>
+    /// <returns>A dictionary of supported currencies keyed by ISO 4217 currency code.</returns>
     public async Task<IReadOnlyDictionary<string, Currency>> GetCurrenciesAsync(
         CancellationToken cancellationToken = default)
     {

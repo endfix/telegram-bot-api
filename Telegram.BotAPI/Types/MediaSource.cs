@@ -9,9 +9,13 @@ public readonly struct MediaSource : IFileSource
     private MediaSource(object value) => _value = value;
 
     /// <summary>Converts a Telegram file ID or URL to a media source.</summary>
+    /// <param name="fileIdOrUrl">Telegram file ID or HTTP URL of the media.</param>
+    /// <returns>A media source containing the supplied value.</returns>
     public static implicit operator MediaSource(string fileIdOrUrl) => new(fileIdOrUrl);
 
     /// <summary>Converts a typed input file to a media source.</summary>
+    /// <param name="inputFile">Typed media file to upload.</param>
+    /// <returns>A media source containing the supplied input file.</returns>
     public static implicit operator MediaSource(InputFile inputFile) => new(inputFile);
 
     /// <summary>Gets the original file ID, URL, or typed input file.</summary>

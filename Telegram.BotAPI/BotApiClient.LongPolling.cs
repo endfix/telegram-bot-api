@@ -23,6 +23,12 @@ public sealed partial class BotApiClient
     /// is persisted across polling sessions. Only one polling session can run on
     /// a client instance at a time.
     /// </summary>
+    /// <param name="limit">Maximum number of updates retrieved per request, from 1 to 100.</param>
+    /// <param name="timeout">Long-polling timeout in seconds.</param>
+    /// <param name="allowedUpdates">Update types to receive, or <see langword="null"/> to use Telegram's current setting.</param>
+    /// <param name="maxParallel">Maximum number of updates processed concurrently.</param>
+    /// <param name="cancellationToken">Token used to stop polling.</param>
+    /// <returns>A task that completes when polling stops.</returns>
     public async Task StartPollingAsync(
         int limit = 1,
         int timeout = 20,

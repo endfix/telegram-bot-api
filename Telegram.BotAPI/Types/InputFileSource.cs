@@ -30,6 +30,8 @@ public abstract class InputFileSource
     /// <summary>
     /// Creates a source that opens the specified local file for every request attempt.
     /// </summary>
+    /// <param name="path">Path of the local file.</param>
+    /// <returns>A repeatable file source backed by the local path.</returns>
     public static InputFileSource FromPath(string path)
     {
         if (string.IsNullOrWhiteSpace(path))
@@ -43,6 +45,9 @@ public abstract class InputFileSource
     /// <summary>
     /// Creates a source from an in-memory snapshot of the supplied content.
     /// </summary>
+    /// <param name="content">File content copied into the source.</param>
+    /// <param name="fileName">File name sent in the multipart content disposition.</param>
+    /// <returns>A repeatable in-memory file source.</returns>
     public static InputFileSource FromMemory(ReadOnlyMemory<byte> content, string fileName) =>
         new MemoryInputFileSource(content.ToArray(), fileName);
 
@@ -54,6 +59,9 @@ public abstract class InputFileSource
     /// Calls made while retrying the same request must expose equivalent content.
     /// Exceptions thrown by the factory propagate to the caller and stop the request.
     /// </summary>
+    /// <param name="streamFactory">Factory that returns a new independent readable stream on every call.</param>
+    /// <param name="fileName">File name sent in the multipart content disposition.</param>
+    /// <returns>A repeatable stream-backed file source.</returns>
     public static InputFileSource FromStream(Func<Stream> streamFactory, string fileName)
     {
         if (streamFactory is null)

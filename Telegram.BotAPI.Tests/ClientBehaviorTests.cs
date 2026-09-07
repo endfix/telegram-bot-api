@@ -391,6 +391,115 @@ public sealed class ClientBehaviorTests
     }
 
     [Fact]
+    public async Task DownloadFileAsync_WritesSuccessfulResponseToDestination()
+    {
+        var expected = new byte[] { 1, 2, 3, 4 };
+        using var context = new ClientContext(responses:
+        [
+            new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new ByteArrayContent(expected)
+            }
+        ]);
+        using var destination = new MemoryStream();
+        IBotApiClient client = context.Client;
+
+        await client.DownloadFileAsync("documents/file.bin", destination);
+
+        destination.ToArray().Should().Equal(expected);
+        destination.CanRead.Should().BeTrue();
+        context.Handler.LastRequestUri.Should().Be(
+            "https://api.telegram.org/file/bottest-token/documents/file.bin");
+    }
+
+    [Fact]
+    public async Task DownloadFileAsync_PreservesConfiguredPathPrefix()
+    {
+        using var context = new ClientContext(
+            url: "https://custom.example/telegram",
+            responses:
+            [
+                new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new ByteArrayContent([1, 2, 3, 4])
+                }
+            ]);
+        using var destination = new MemoryStream();
+
+        await context.Client.DownloadFileAsync("documents/file.bin", destination);
+
+        context.Handler.LastRequestUri.Should().Be(
+            "https://custom.example/telegram/file/bottest-token/documents/file.bin");
+    }
+
+    [Fact]
+    public async Task DownloadFileAsync_RejectsHttpErrorBody()
+    {
+        using var context = new ClientContext(responses:
+        [
+            ResponseHandler.ResponseMessage("not found", HttpStatusCode.NotFound)
+        ]);
+        using var destination = new MemoryStream();
+
+        var action = () => context.Client.DownloadFileAsync("missing.bin", destination);
+
+        var exception = await action.Should().ThrowAsync<HttpRequestException>();
+        exception.Which.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        destination.Length.Should().Be(0);
+    }
+
+    [Fact]
+    public async Task DownloadFileAsync_PreservesCallerCancellation()
+    {
+        using var context = new ClientContext();
+        using var destination = new MemoryStream();
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+
+        var action = () => context.Client.DownloadFileAsync(
+            "file.bin",
+            destination,
+            cancellation.Token);
+
+        await action.Should().ThrowAsync<OperationCanceledException>();
+        context.Handler.RequestCount.Should().Be(0);
+    }
+
+    [Fact]
+    public async Task DownloadFileAsync_CancelsWhileReadingResponseBody()
+    {
+        using var context = new ClientContext(responses:
+        [
+            new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StreamContent(new CancellationBlockingStream())
+            }
+        ]);
+        using var destination = new MemoryStream();
+        using var cancellation = new CancellationTokenSource(TimeSpan.FromSeconds(1));
+
+        var action = () => context.Client.DownloadFileAsync(
+            "file.bin",
+            destination,
+            cancellation.Token);
+
+        await action.Should().ThrowAsync<OperationCanceledException>();
+        context.Handler.RequestCount.Should().Be(1);
+    }
+
+    [Fact]
+    public async Task DownloadFileAsync_RejectsNullDestination()
+    {
+        using var context = new ClientContext();
+
+        var action = () => context.Client.DownloadFileAsync("file.bin", null!);
+
+        await action.Should().ThrowAsync<ArgumentNullException>()
+            .WithParameterName("destination");
+        context.Handler.RequestCount.Should().Be(0);
+    }
+
+    [Fact]
     public async Task GetCurrenciesAsync_IsAvailableThroughInterface()
     {
         using var context = new ClientContext("""
@@ -655,6 +764,48 @@ public sealed class ClientBehaviorTests
             {
                 Content = new StringContent(json, Encoding.UTF8, "application/json")
             };
+    }
+
+    private sealed class CancellationBlockingStream : Stream
+    {
+        public override bool CanRead => true;
+
+        public override bool CanSeek => false;
+
+        public override bool CanWrite => false;
+
+        public override long Length => throw new NotSupportedException();
+
+        public override long Position
+        {
+            get => throw new NotSupportedException();
+            set => throw new NotSupportedException();
+        }
+
+        public override void Flush()
+            => throw new NotSupportedException();
+
+        public override int Read(byte[] buffer, int offset, int count)
+            => throw new NotSupportedException();
+
+        public override async Task<int> ReadAsync(
+            byte[] buffer,
+            int offset,
+            int count,
+            CancellationToken cancellationToken)
+        {
+            await Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
+            return 0;
+        }
+
+        public override long Seek(long offset, SeekOrigin origin)
+            => throw new NotSupportedException();
+
+        public override void SetLength(long value)
+            => throw new NotSupportedException();
+
+        public override void Write(byte[] buffer, int offset, int count)
+            => throw new NotSupportedException();
     }
 
 }

@@ -7,8 +7,12 @@ public readonly struct StickerSource : IFileSource
     private StickerSource(object value) => _value = value;
 
     /// <summary>Converts a file ID to a sticker source.</summary>
+    /// <param name="fileId">Telegram file ID of the sticker.</param>
+    /// <returns>A sticker source containing the supplied file ID.</returns>
     public static implicit operator StickerSource(string fileId) => new(fileId);
     /// <summary>Converts an input file to a sticker source.</summary>
+    /// <param name="inputFile">Sticker file to upload.</param>
+    /// <returns>A sticker source containing the supplied input file.</returns>
     public static implicit operator StickerSource(InputStickerFile inputFile) => new(inputFile);
 
     /// <summary>Gets the original file ID or input file.</summary>

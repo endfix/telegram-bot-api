@@ -93,6 +93,17 @@ var fileBytes = await api.GetFileBytesAsync(file.FilePath!);
 await File.WriteAllBytesAsync("downloaded-report.pdf", fileBytes);
 ```
 
+For larger files, stream the response directly to a destination instead of
+buffering it in a `byte[]`:
+
+```cs
+await using var destination = File.Create("downloaded-report.pdf");
+await api.DownloadFileAsync(file.FilePath!, destination);
+```
+
+`DownloadFileAsync` leaves the destination stream open and positioned after
+the downloaded content.
+
 ## Uploading files
 
 Typed input files accept a local path or a repeatable `InputFileSource`. Local

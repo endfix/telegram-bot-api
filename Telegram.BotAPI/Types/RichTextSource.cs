@@ -7,8 +7,12 @@ public readonly struct RichTextSource
     private RichTextSource(object value) => _value = value;
 
     /// <summary>Converts plain text to a rich text source.</summary>
+    /// <param name="text">Plain text value.</param>
+    /// <returns>A rich text source containing the supplied text.</returns>
     public static implicit operator RichTextSource(string text) => new(text);
     /// <summary>Converts a typed rich text value to a rich text source.</summary>
+    /// <param name="richText">Typed rich text value.</param>
+    /// <returns>A rich text source containing the supplied rich text.</returns>
     public static implicit operator RichTextSource(RichText richText) => new(richText);
 
     /// <summary>Gets the original text or rich text value.</summary>

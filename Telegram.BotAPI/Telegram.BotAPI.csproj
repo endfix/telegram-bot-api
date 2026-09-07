@@ -18,6 +18,8 @@
 		<IsPackable>true</IsPackable>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<WarningsAsErrors>$(WarningsAsErrors);CS1570;CS1572;CS1573;CS1584;CS1587;CS1591;CS1658;CS1710;CS1734;CS1735</WarningsAsErrors>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -8,7 +8,9 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class AnswerChatJoinRequestQueryParameters : ApiRequestParameters
 {
+    /// <summary>Gets the unique identifier of the join request query.</summary>
     public required string ChatJoinRequestQueryId { get; init; }
 
+    /// <summary>Gets whether to approve, decline, or leave the decision to other administrators.</summary>
     public required AnswerChatJoinRequestQueryResult Result { get; init; }
 }

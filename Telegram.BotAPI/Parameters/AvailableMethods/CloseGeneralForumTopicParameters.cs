@@ -8,5 +8,6 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// </summary>
 public sealed class CloseGeneralForumTopicParameters : ApiRequestParameters
 {
+    /// <summary>Gets the unique identifier or username of the target forum supergroup.</summary>
     public required ChatIdSource ChatId { get; init; }
 }

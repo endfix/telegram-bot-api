@@ -1,4 +1,5 @@
 using Endfix.Telegram.BotAPI.Enums;
+using System;
 using System.IO;
 
 namespace Endfix.Telegram.BotAPI.Types;
@@ -41,6 +42,13 @@ public abstract class InputFile
     /// of streams returned by earlier or concurrent calls.
     /// </summary>
     /// <returns>A new readable stream owned by the caller.</returns>
+    /// <exception cref="FileNotFoundException">A path-backed source file does not exist.</exception>
+    /// <exception cref="DirectoryNotFoundException">A path-backed source directory does not exist.</exception>
+    /// <exception cref="UnauthorizedAccessException">The source cannot be opened for reading.</exception>
+    /// <exception cref="IOException">An I/O error occurs while opening a path-backed source.</exception>
+    /// <exception cref="InvalidOperationException">
+    /// A stream factory returns <see langword="null"/> or an unreadable stream.
+    /// </exception>
     public Stream GetStream() => _source.OpenRead();
 }
 

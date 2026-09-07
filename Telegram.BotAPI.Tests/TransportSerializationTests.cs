@@ -208,6 +208,31 @@ public sealed class TransportSerializationTests
     }
 
     [Fact]
+    public void InputFile_WithMissingFile_ThrowsFileNotFoundException()
+    {
+        var path = Path.Combine(Path.GetTempPath(), $"telegram-bot-api-{Guid.NewGuid():N}.bin");
+        var file = new InputDocumentFile(path);
+
+        var action = () => file.GetStream();
+
+        action.Should().ThrowExactly<FileNotFoundException>();
+    }
+
+    [Fact]
+    public void InputFile_WithMissingDirectory_PreservesDirectoryNotFoundException()
+    {
+        var path = Path.Combine(
+            Path.GetTempPath(),
+            $"telegram-bot-api-{Guid.NewGuid():N}",
+            "missing.bin");
+        var file = new InputDocumentFile(path);
+
+        var action = () => file.GetStream();
+
+        action.Should().ThrowExactly<DirectoryNotFoundException>();
+    }
+
+    [Fact]
     public async Task SendMediaGroup_WithLocalFile_SendsAttachReferenceAndBinaryPart()
     {
         var file = await TemporaryFile.CreateAsync([0x10, 0x20, 0x30]);

@@ -30,8 +30,16 @@ public abstract class InputFileSource
     /// <summary>
     /// Creates a source that opens the specified local file for every request attempt.
     /// </summary>
+    /// <remarks>
+    /// The file is not opened until the request consumes the source. File-system
+    /// errors are reported by <see cref="InputFile.GetStream"/> at that time.
+    /// </remarks>
     /// <param name="path">Path of the local file.</param>
     /// <returns>A repeatable file source backed by the local path.</returns>
+    /// <exception cref="ArgumentException">
+    /// <paramref name="path"/> is empty, consists only of white-space characters,
+    /// or does not contain a file name.
+    /// </exception>
     public static InputFileSource FromPath(string path)
     {
         if (string.IsNullOrWhiteSpace(path))
@@ -78,15 +86,8 @@ public abstract class InputFileSource
     {
         private readonly string _path = path;
 
-        internal override Stream OpenRead()
-        {
-            if (!File.Exists(_path))
-            {
-                throw new FileNotFoundException("The input file was not found.", _path);
-            }
-
-            return new FileStream(_path, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, useAsync: true);
-        }
+        internal override Stream OpenRead() =>
+            new FileStream(_path, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, useAsync: true);
     }
 
     private sealed class MemoryInputFileSource(byte[] content, string fileName) : InputFileSource(fileName)

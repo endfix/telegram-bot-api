@@ -412,8 +412,11 @@ public sealed class TelegramChatIntegrationTests : IDisposable
         var original = await _client.GetChatAsync(channelId);
         var temporaryTitle = $"Endfix integration {DateTimeOffset.UtcNow:HHmmss}";
         const string temporaryDescription = "Endfix.Telegram.BotAPI channel integration test";
+        const string editedInviteLinkName = "Endfix channel invite edited";
         Message? message = null;
         var messagePinned = false;
+        ChatInviteLink? inviteLink = null;
+        var inviteLinkRevoked = false;
 
         try
         {
@@ -431,6 +434,15 @@ public sealed class TelegramChatIntegrationTests : IDisposable
                 messageId: message.MessageId);
             Assert.Equal("Endfix channel integration: after edit", edited.Text);
 
+            Assert.True(await _client.SetMessageReactionAsync(
+                channelId,
+                message.MessageId,
+                [new ReactionTypeEmoji { Emoji = "👍" }]));
+            Assert.True(await _client.SetMessageReactionAsync(
+                channelId,
+                message.MessageId,
+                []));
+
             Assert.True(await _client.PinChatMessageAsync(channelId, message.MessageId, disableNotification: true));
             messagePinned = true;
             Assert.Equal(message.MessageId, (await _client.GetChatAsync(channelId)).PinnedMessage?.MessageId);
@@ -438,9 +450,33 @@ public sealed class TelegramChatIntegrationTests : IDisposable
             Assert.True(await _client.UnpinChatMessageAsync(channelId, messageId: message.MessageId));
             Assert.NotEqual(message.MessageId, (await _client.GetChatAsync(channelId)).PinnedMessage?.MessageId);
             messagePinned = false;
+
+            Assert.True(await _client.GetChatMemberCountAsync(channelId) > 0);
+
+            inviteLink = await _client.CreateChatInviteLinkAsync(
+                channelId,
+                name: "Endfix channel integration");
+            Assert.False(inviteLink.IsRevoked);
+
+            inviteLink = await _client.EditChatInviteLinkAsync(
+                channelId,
+                inviteLink.InviteLink,
+                name: editedInviteLinkName);
+            Assert.Equal(editedInviteLinkName, inviteLink.Name);
+
+            inviteLink = await _client.RevokeChatInviteLinkAsync(
+                channelId,
+                inviteLink.InviteLink);
+            inviteLinkRevoked = true;
+            Assert.True(inviteLink.IsRevoked);
         }
         finally
         {
+            if (inviteLink is not null && !inviteLinkRevoked)
+            {
+                await _client.RevokeChatInviteLinkAsync(channelId, inviteLink.InviteLink);
+            }
+
             if (message is not null)
             {
                 try

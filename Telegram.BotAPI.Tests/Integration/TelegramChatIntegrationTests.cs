@@ -169,6 +169,7 @@ public sealed class TelegramChatIntegrationTests : IDisposable
         var temporaryTitle = $"Endfix integration {DateTimeOffset.UtcNow:HHmmss}";
         const string temporaryDescription = "Endfix.Telegram.BotAPI integration test";
         Message? message = null;
+        var messagePinned = false;
         ChatInviteLink? inviteLink = null;
         var inviteLinkRevoked = false;
 
@@ -189,7 +190,12 @@ public sealed class TelegramChatIntegrationTests : IDisposable
             Assert.Equal("Endfix group integration: after edit", edited.Text);
 
             Assert.True(await _client.PinChatMessageAsync(groupId, message.MessageId, disableNotification: true));
+            messagePinned = true;
+            Assert.Equal(message.MessageId, (await _client.GetChatAsync(groupId)).PinnedMessage?.MessageId);
+
             Assert.True(await _client.UnpinChatMessageAsync(groupId, messageId: message.MessageId));
+            Assert.NotEqual(message.MessageId, (await _client.GetChatAsync(groupId)).PinnedMessage?.MessageId);
+            messagePinned = false;
 
             inviteLink = await _client.CreateChatInviteLinkAsync(
                 groupId,
@@ -217,7 +223,17 @@ public sealed class TelegramChatIntegrationTests : IDisposable
 
             if (message is not null)
             {
-                await _client.DeleteMessageAsync(groupId, message.MessageId);
+                try
+                {
+                    if (messagePinned)
+                    {
+                        await _client.UnpinChatMessageAsync(groupId, messageId: message.MessageId);
+                    }
+                }
+                finally
+                {
+                    await _client.DeleteMessageAsync(groupId, message.MessageId);
+                }
             }
 
             Assert.True(await _client.SetChatTitleAsync(groupId, original.Title!));
@@ -233,6 +249,7 @@ public sealed class TelegramChatIntegrationTests : IDisposable
         var temporaryTitle = $"Endfix integration {DateTimeOffset.UtcNow:HHmmss}";
         const string temporaryDescription = "Endfix.Telegram.BotAPI channel integration test";
         Message? message = null;
+        var messagePinned = false;
 
         try
         {
@@ -251,13 +268,28 @@ public sealed class TelegramChatIntegrationTests : IDisposable
             Assert.Equal("Endfix channel integration: after edit", edited.Text);
 
             Assert.True(await _client.PinChatMessageAsync(channelId, message.MessageId, disableNotification: true));
+            messagePinned = true;
+            Assert.Equal(message.MessageId, (await _client.GetChatAsync(channelId)).PinnedMessage?.MessageId);
+
             Assert.True(await _client.UnpinChatMessageAsync(channelId, messageId: message.MessageId));
+            Assert.NotEqual(message.MessageId, (await _client.GetChatAsync(channelId)).PinnedMessage?.MessageId);
+            messagePinned = false;
         }
         finally
         {
             if (message is not null)
             {
-                await _client.DeleteMessageAsync(channelId, message.MessageId);
+                try
+                {
+                    if (messagePinned)
+                    {
+                        await _client.UnpinChatMessageAsync(channelId, messageId: message.MessageId);
+                    }
+                }
+                finally
+                {
+                    await _client.DeleteMessageAsync(channelId, message.MessageId);
+                }
             }
 
             Assert.True(await _client.SetChatTitleAsync(channelId, original.Title!));

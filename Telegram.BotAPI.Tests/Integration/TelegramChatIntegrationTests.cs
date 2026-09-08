@@ -262,6 +262,26 @@ public sealed class TelegramChatIntegrationTests : IDisposable
         Assert.True(administrator.CanInviteUsers);
     }
 
+    [TelegramRoutingIntegrationFact]
+    public async Task ChannelReadOnlyCollections_Deserialize()
+    {
+        var channelId = GetId(TelegramIntegrationFactAttribute.ChannelIdVariable);
+        var userId = GetId(TelegramIntegrationFactAttribute.ChatIdVariable);
+
+        var gifts = await _client.GetChatGiftsAsync(channelId, limit: 1);
+        Assert.True(gifts.TotalCount >= gifts.Gifts.Count);
+        Assert.InRange(gifts.Gifts.Count, 0, 1);
+
+        var boosts = await _client.GetUserChatBoostsAsync(channelId, userId);
+        Assert.All(boosts.Boosts, boost =>
+        {
+            Assert.False(string.IsNullOrWhiteSpace(boost.BoostId));
+            Assert.True(boost.AddDate > 0);
+            Assert.True(boost.ExpirationDate >= boost.AddDate);
+            Assert.NotNull(boost.Source);
+        });
+    }
+
     [TelegramModerationIntegrationFact]
     public async Task TestUser_IsVisibleInGroup()
     {

@@ -122,7 +122,8 @@ dotnet test Telegram.BotAPI.Tests/Telegram.BotAPI.Tests.csproj --filter "FullyQu
 Tests whose required secrets are absent are skipped. A fully configured run
 currently verifies bot capabilities, default chat permissions, rollback-safe
 member restrictions, channel/discussion linking, group/channel metadata and
-message lifecycle, per-chat bot settings, group and channel invite links, pins,
+message lifecycle, per-chat bot settings, group, channel and paid subscription
+invite links, pins,
 reactions, member counts, channel-photo replacement and restoration, forum
 topics, member tags, administrator promotion and custom titles, and cross-chat
 copy and forwarding. It also restores the bot's suggested default administrator

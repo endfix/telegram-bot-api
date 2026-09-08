@@ -259,6 +259,7 @@ public sealed class TelegramChatIntegrationTests : IDisposable
         Assert.True(administrator.CanDeleteMessages);
         Assert.True(administrator.CanPostMessages);
         Assert.True(administrator.CanEditMessages);
+        Assert.True(administrator.CanInviteUsers);
     }
 
     [TelegramModerationIntegrationFact]
@@ -648,6 +649,7 @@ public sealed class TelegramChatIntegrationTests : IDisposable
             inviteLink = await _client.RevokeChatInviteLinkAsync(groupId, inviteLink.InviteLink);
             inviteLinkRevoked = true;
             Assert.True(inviteLink.IsRevoked);
+
         }
         finally
         {
@@ -688,6 +690,8 @@ public sealed class TelegramChatIntegrationTests : IDisposable
         var messagePinned = false;
         ChatInviteLink? inviteLink = null;
         var inviteLinkRevoked = false;
+        ChatInviteLink? subscriptionInviteLink = null;
+        var subscriptionInviteLinkRevoked = false;
 
         try
         {
@@ -740,9 +744,36 @@ public sealed class TelegramChatIntegrationTests : IDisposable
                 inviteLink.InviteLink);
             inviteLinkRevoked = true;
             Assert.True(inviteLink.IsRevoked);
+
+            subscriptionInviteLink = await _client.CreateChatSubscriptionInviteLinkAsync(
+                channelId,
+                subscriptionPeriod: 2_592_000,
+                subscriptionPrice: 1,
+                name: "Endfix subscription integration");
+            Assert.Equal(2_592_000, subscriptionInviteLink.SubscriptionPeriod);
+            Assert.Equal(1, subscriptionInviteLink.SubscriptionPrice);
+
+            subscriptionInviteLink = await _client.EditChatSubscriptionInviteLinkAsync(
+                channelId,
+                subscriptionInviteLink.InviteLink,
+                name: "Endfix subscription edited");
+            Assert.Equal("Endfix subscription edited", subscriptionInviteLink.Name);
+
+            subscriptionInviteLink = await _client.RevokeChatInviteLinkAsync(
+                channelId,
+                subscriptionInviteLink.InviteLink);
+            subscriptionInviteLinkRevoked = true;
+            Assert.True(subscriptionInviteLink.IsRevoked);
         }
         finally
         {
+            if (subscriptionInviteLink is not null && !subscriptionInviteLinkRevoked)
+            {
+                await _client.RevokeChatInviteLinkAsync(
+                    channelId,
+                    subscriptionInviteLink.InviteLink);
+            }
+
             if (inviteLink is not null && !inviteLinkRevoked)
             {
                 await _client.RevokeChatInviteLinkAsync(channelId, inviteLink.InviteLink);

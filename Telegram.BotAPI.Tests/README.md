@@ -122,7 +122,8 @@ dotnet test Telegram.BotAPI.Tests/Telegram.BotAPI.Tests.csproj --filter "FullyQu
 Tests whose required secrets are absent are skipped. A fully configured run
 currently verifies bot capabilities, default chat permissions, rollback-safe
 member restrictions, channel/discussion linking, group/channel metadata and
-message lifecycle, per-chat bot settings, group, channel and paid subscription
+message lifecycle, private-chat actions, drafts, venues, contacts and poll
+stopping, per-chat bot settings, group, channel and paid subscription
 invite links, pins,
 reactions, member counts, channel-photo replacement and restoration, forum
 topics, member tags, administrator promotion and custom titles, and cross-chat
@@ -132,7 +133,11 @@ rights independently for groups and channels. File scenarios cover buffered and 
 profile-photo restore, sticker-set lifecycle, optional group sticker-set
 assignment, standalone media, media groups with typed thumbnail/cover files,
 paid media, nested poll media, nested rich-message uploads, reply-markup editing,
-and stopping live locations.
+and editing and stopping live locations.
+
+Live-test clients disable automatic retries for Telegram `429` responses so a
+run reports the affected method and `retry_after` value instead of waiting for a
+potentially long server cooldown.
 
 The bot needs the **Add New Admins** and **Manage Tags** administrator rights for
 the promotion and member-tag scenarios. The group sticker-set scenario is

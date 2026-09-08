@@ -28,7 +28,7 @@ public sealed class TelegramFileIntegrationTests : IDisposable
         _chatId = long.Parse(
             TelegramIntegrationSettings.Get(TelegramIntegrationFactAttribute.ChatIdVariable)
                 ?? throw new InvalidOperationException("Telegram chat id is not configured."));
-        _client = new BotApiClient(token, _httpClient);
+        _client = new BotApiClient(token, _httpClient, maxRetryAttempts: 0);
     }
 
     [TelegramIntegrationFact]
@@ -480,6 +480,28 @@ public sealed class TelegramFileIntegrationTests : IDisposable
                 messageId: location.MessageId);
 
             Assert.Equal(location.MessageId, stopped.MessageId);
+
+            var editableLocation = await RequestAsync<Message>("sendLocation", new SendLocationParameters
+            {
+                ChatId = _chatId,
+                Latitude = 55.751244,
+                Longitude = 37.618423,
+                LivePeriod = 60
+            });
+            sentMessageIds.Add(editableLocation.MessageId);
+
+            var editedLocation = await _client.EditMessageLiveLocationAsync(
+                latitude: 55.752,
+                longitude: 37.619,
+                chatId: _chatId,
+                messageId: editableLocation.MessageId,
+                livePeriod: 60);
+
+            Assert.Equal(editableLocation.MessageId, editedLocation.MessageId);
+            var editedCoordinates = Assert.IsType<Location>(editedLocation.Location);
+            Assert.Equal(55.752, editedCoordinates.Latitude, precision: 3);
+            Assert.Equal(37.619, editedCoordinates.Longitude, precision: 3);
+            Assert.Equal(60, editedCoordinates.LivePeriod);
         }
         finally
         {

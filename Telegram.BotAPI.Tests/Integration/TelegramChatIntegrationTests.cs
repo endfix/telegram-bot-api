@@ -21,7 +21,7 @@ public sealed class TelegramChatIntegrationTests : IDisposable
     {
         var token = TelegramIntegrationSettings.Get(TelegramIntegrationFactAttribute.TokenVariable)
             ?? throw new InvalidOperationException("Telegram bot token is not configured.");
-        _client = new BotApiClient(token, _httpClient);
+        _client = new BotApiClient(token, _httpClient, maxRetryAttempts: 0);
     }
 
     [TelegramIntegrationFact]
@@ -214,6 +214,74 @@ public sealed class TelegramChatIntegrationTests : IDisposable
         Assert.Equal(
             originalChannelRights.Serialize(),
             (await _client.GetMyDefaultAdministratorRightsAsync(forChannels: true)).Serialize());
+    }
+
+    [TelegramIntegrationFact]
+    public async Task PrivateChatStructuredMessages_AreDeliveredAndDeleted()
+    {
+        var chatId = GetId(TelegramIntegrationFactAttribute.ChatIdVariable);
+        var messageIds = new List<long>();
+
+        try
+        {
+            Assert.True(await _client.SendChatActionAsync(chatId, "typing"));
+
+            var draftId = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            Assert.True(await _client.SendMessageDraftAsync(
+                chatId,
+                draftId,
+                text: "Endfix integration draft"));
+
+            var completedDraft = await _client.SendMessageAsync(
+                chatId,
+                "Endfix integration draft completed");
+            messageIds.Add(completedDraft.MessageId);
+
+            var venue = await _client.SendVenueAsync(
+                chatId,
+                latitude: 55.751244,
+                longitude: 37.618423,
+                title: "Endfix integration venue",
+                address: "Test address");
+            messageIds.Add(venue.MessageId);
+            Assert.Equal("Endfix integration venue", venue.Venue?.Title);
+            Assert.Equal("Test address", venue.Venue?.Address);
+
+            var contact = await _client.SendContactAsync(
+                chatId,
+                phoneNumber: "+12025550123",
+                firstName: "Endfix",
+                lastName: "Integration",
+                vcard: "BEGIN:VCARD\nVERSION:3.0\nFN:Endfix Integration\nTEL:+12025550123\nEND:VCARD");
+            messageIds.Add(contact.MessageId);
+            Assert.Equal("+12025550123", contact.Contact?.PhoneNumber);
+            Assert.Equal("Endfix", contact.Contact?.FirstName);
+            Assert.Equal("Integration", contact.Contact?.LastName);
+
+            var pollMessage = await _client.SendPollAsync(
+                chatId,
+                "Endfix integration poll lifecycle",
+                [
+                    new InputPollOption { Text = "First" },
+                    new InputPollOption { Text = "Second" }
+                ]);
+            messageIds.Add(pollMessage.MessageId);
+            Assert.False(pollMessage.Poll?.IsClosed);
+
+            var stoppedPoll = await _client.StopPollAsync(
+                chatId,
+                pollMessage.MessageId,
+                businessConnectionId: null);
+            Assert.True(stoppedPoll.IsClosed);
+            Assert.Equal(pollMessage.Poll?.Id, stoppedPoll.Id);
+        }
+        finally
+        {
+            foreach (var messageId in messageIds)
+            {
+                await _client.DeleteMessageAsync(chatId, messageId);
+            }
+        }
     }
 
     [TelegramGroupIntegrationFact]

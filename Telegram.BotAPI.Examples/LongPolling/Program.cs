@@ -10,6 +10,9 @@ namespace Endfix.Telegram.BotAPI.Example.LongPolling;
 internal class Program
 {
     private const string DefaultMiniAppUrl = "https://endfix.github.io/telegram-bot-api/";
+    private const string GroupIdSetting = "TELEGRAM_BOT_GROUP_ID";
+    private const string OwnerChatIdSetting = "TELEGRAM_BOT_CHAT_ID";
+    private const string TestUserIdSetting = "TELEGRAM_BOT_TEST_USER_ID";
 
     static async Task Main(string[] args)
     {
@@ -52,11 +55,12 @@ internal class Program
                 logger: loggerFactory.CreateLogger<IBotApiClient>());
 
             var bot = await api.GetMeAsync(cancellation.Token);
+            var joinRequestProbe = new JoinRequestProbeState();
             logger.LogInformation("Starting event harness for @{Username} ({BotId})", bot.Username, bot.Id);
 
             await api.DeleteWebhookAsync(dropPendingUpdates: false, cancellationToken: cancellation.Token);
             logger.LogInformation(
-                "Long polling is active. Send /probe or /webapp to @{Username}; press Ctrl+C to stop.",
+                "Long polling is active. Send /probe, /webapp, or /join decline to @{Username}; press Ctrl+C to stop.",
                 bot.Username);
 
             api.OnUpdate += async (_, update, cancellationToken) =>
@@ -76,6 +80,8 @@ internal class Program
                                 api,
                                 message,
                                 config["TelegramBotApi:MiniAppUrl"] ?? DefaultMiniAppUrl,
+                                config,
+                                joinRequestProbe,
                                 logger,
                                 cancellationToken);
                             break;
@@ -117,11 +123,12 @@ internal class Program
                             break;
 
                         case UpdateType.ChatJoinRequest when update.ChatJoinRequest is { } joinRequest:
-                            logger.LogWarning(
-                                "Join request from user {UserId} for chat {ChatId}; query id: {QueryId}",
-                                joinRequest.From.Id,
-                                joinRequest.Chat.Id,
-                                joinRequest.QueryId);
+                            await HandleJoinRequestAsync(
+                                api,
+                                joinRequest,
+                                joinRequestProbe,
+                                logger,
+                                cancellationToken);
                             break;
                     }
                 }
@@ -162,9 +169,13 @@ internal class Program
         IBotApiClient api,
         Message message,
         string miniAppUrl,
+        IConfiguration config,
+        JoinRequestProbeState joinRequestProbe,
         ILogger logger,
         CancellationToken cancellationToken)
     {
+        joinRequestProbe.RememberThread(message.Chat.Id, message.MessageThreadId);
+
         if (message.WebAppData is { } webAppData)
         {
             logger.LogInformation(
@@ -180,8 +191,9 @@ internal class Program
             return;
         }
 
-        var command = message.Text?
-            .Split(' ', 2, StringSplitOptions.RemoveEmptyEntries)
+        var commandParts = message.Text?
+            .Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        var command = commandParts?
             .FirstOrDefault()?
             .Split('@', 2)[0];
 
@@ -229,7 +241,225 @@ internal class Program
                     OneTimeKeyboard = true
                 },
                 cancellationToken: cancellationToken);
+            return;
         }
+
+        if (command == "/join")
+        {
+            await StartJoinRequestProbeAsync(
+                api,
+                message,
+                commandParts,
+                config,
+                joinRequestProbe,
+                logger,
+                cancellationToken);
+        }
+    }
+
+    private static async Task StartJoinRequestProbeAsync(
+        IBotApiClient api,
+        Message message,
+        IReadOnlyList<string>? commandParts,
+        IConfiguration config,
+        JoinRequestProbeState state,
+        ILogger logger,
+        CancellationToken cancellationToken)
+    {
+        var ownerChatId = GetOptionalId(config, OwnerChatIdSetting, "TelegramBotApi:OwnerChatId");
+        var groupId = GetOptionalId(config, GroupIdSetting, "TelegramBotApi:GroupId");
+        var testUserId = GetOptionalId(config, TestUserIdSetting, "TelegramBotApi:TestUserId");
+        if (ownerChatId is null || groupId is null)
+        {
+            await api.SendMessageAsync(
+                message.Chat.Id,
+                $"Configure {OwnerChatIdSetting} and {GroupIdSetting} before running the join-request probe.",
+                messageThreadId: message.MessageThreadId,
+                cancellationToken: cancellationToken);
+            return;
+        }
+
+        var isAuthorized = message.Chat.Id == ownerChatId || message.Chat.Id == testUserId;
+        if (message.Chat.Type != ChatTypes.Private || !isAuthorized)
+        {
+            logger.LogWarning("Ignored /join from unauthorized chat {ChatId}", message.Chat.Id);
+            return;
+        }
+
+        var actionText = commandParts?.Skip(1).FirstOrDefault() ?? "decline";
+        if (!Enum.TryParse<JoinRequestProbeAction>(actionText, ignoreCase: true, out var action))
+        {
+            await api.SendMessageAsync(
+                message.Chat.Id,
+                "Use /join decline or /join approve.",
+                messageThreadId: message.MessageThreadId,
+                cancellationToken: cancellationToken);
+            return;
+        }
+
+        var probeUserId = testUserId ?? message.Chat.Id;
+        var member = await api.GetChatMemberAsync(groupId.Value, probeUserId, cancellationToken);
+        logger.LogInformation(
+            "Join-request probe user {UserId} currently has status {MemberStatus} in chat {ChatId}",
+            probeUserId,
+            member.Status,
+            groupId);
+        if (member.Status == ChatMemberStatus.Kicked)
+        {
+            await api.UnbanChatMemberAsync(
+                groupId.Value,
+                probeUserId,
+                onlyIfBanned: true,
+                cancellationToken: cancellationToken);
+            member = await api.GetChatMemberAsync(groupId.Value, probeUserId, cancellationToken);
+            logger.LogInformation(
+                "Unbanned join-request probe user {UserId}; current status: {MemberStatus}",
+                probeUserId,
+                member.Status);
+        }
+
+        if (member.Status != ChatMemberStatus.Left)
+        {
+            await api.SendMessageAsync(
+                message.Chat.Id,
+                $"The test user cannot submit a join request while its status is {member.Status}.",
+                messageThreadId: message.MessageThreadId,
+                cancellationToken: cancellationToken);
+            return;
+        }
+
+        if (state.Current is { } previous)
+        {
+            await RevokeProbeLinkAsync(api, previous, logger, cancellationToken);
+            state.Current = null;
+        }
+
+        var expiresAt = DateTimeOffset.UtcNow.AddMinutes(15);
+        var requestedExpireDate = checked((int)expiresAt.ToUnixTimeSeconds());
+        var inviteLink = await api.CreateChatInviteLinkAsync(
+            groupId.Value,
+            name: $"Event probe {action.ToString().ToLowerInvariant()}",
+            expireDate: requestedExpireDate,
+            createsJoinRequest: true,
+            cancellationToken: cancellationToken);
+        state.Current = new JoinRequestProbe(groupId.Value, inviteLink.InviteLink, action);
+
+        var replyMarkup = new InlineKeyboardMarkup
+        {
+            InlineKeyboard =
+            [
+                [new InlineKeyboardButton
+                {
+                    Text = "Open join-request link",
+                    Url = inviteLink.InviteLink
+                }]
+            ]
+        };
+        await api.SendMessageAsync(
+            message.Chat.Id,
+            $"Join-request probe created at {DateTimeOffset.Now:HH:mm:ss}. Open this link from an account that is not a member of the target group. The request will be {action.ToString().ToLowerInvariant()}d automatically.",
+            messageThreadId: message.MessageThreadId,
+            replyMarkup: replyMarkup,
+            cancellationToken: cancellationToken);
+
+        if (testUserId is not null && testUserId != message.Chat.Id)
+        {
+            try
+            {
+                await api.SendMessageAsync(
+                    testUserId.Value,
+                    $"Join-request probe created at {DateTimeOffset.Now:HH:mm:ss}: this request will be {action.ToString().ToLowerInvariant()}d automatically.",
+                    messageThreadId: state.GetThread(testUserId.Value),
+                    replyMarkup: replyMarkup,
+                    cancellationToken: cancellationToken);
+            }
+            catch (ApiRequestException exception)
+            {
+                logger.LogWarning(
+                    exception,
+                    "Could not deliver the join-request link to test user {UserId}",
+                    testUserId);
+            }
+        }
+
+        logger.LogInformation(
+            "Created a join-request link for chat {ChatId}; action: {Action}; test user: {TestUserId}; requested expiry: {RequestedExpireDate} ({ExpiresAt:u}); returned expiry: {ReturnedExpireDate}",
+            groupId,
+            action,
+            testUserId,
+            requestedExpireDate,
+            expiresAt,
+            inviteLink.ExpireDate);
+    }
+
+    private static async Task HandleJoinRequestAsync(
+        IBotApiClient api,
+        ChatJoinRequest joinRequest,
+        JoinRequestProbeState state,
+        ILogger logger,
+        CancellationToken cancellationToken)
+    {
+        logger.LogWarning(
+            "Join request from user {UserId} for chat {ChatId}; query id: {QueryId}",
+            joinRequest.From.Id,
+            joinRequest.Chat.Id,
+            joinRequest.QueryId);
+
+        if (state.Current is not { } probe ||
+            probe.ChatId != joinRequest.Chat.Id ||
+            joinRequest.InviteLink?.InviteLink != probe.InviteLink)
+        {
+            logger.LogWarning("The join request does not belong to the active probe and was left pending.");
+            return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(joinRequest.QueryId))
+        {
+            var result = probe.Action == JoinRequestProbeAction.Approve
+                ? AnswerChatJoinRequestQueryResult.Approve
+                : AnswerChatJoinRequestQueryResult.Decline;
+            await api.AnswerChatJoinRequestQueryAsync(joinRequest.QueryId, result, cancellationToken);
+        }
+        else if (probe.Action == JoinRequestProbeAction.Approve)
+        {
+            await api.ApproveChatJoinRequestAsync(joinRequest.Chat.Id, joinRequest.From.Id, cancellationToken);
+        }
+        else
+        {
+            await api.DeclineChatJoinRequestAsync(joinRequest.Chat.Id, joinRequest.From.Id, cancellationToken);
+        }
+
+        logger.LogInformation(
+            "Join request from user {UserId} was {Action}d successfully",
+            joinRequest.From.Id,
+            probe.Action.ToString().ToLowerInvariant());
+        await RevokeProbeLinkAsync(api, probe, logger, cancellationToken);
+        state.Current = null;
+    }
+
+    private static async Task RevokeProbeLinkAsync(
+        IBotApiClient api,
+        JoinRequestProbe probe,
+        ILogger logger,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            await api.RevokeChatInviteLinkAsync(
+                probe.ChatId,
+                probe.InviteLink,
+                cancellationToken);
+        }
+        catch (ApiRequestException exception)
+        {
+            logger.LogWarning(exception, "Could not revoke join-request probe link for chat {ChatId}", probe.ChatId);
+        }
+    }
+
+    private static long? GetOptionalId(IConfiguration config, string environmentName, string configurationName)
+    {
+        var value = Environment.GetEnvironmentVariable(environmentName) ?? config[environmentName] ?? config[configurationName];
+        return long.TryParse(value, out var id) ? id : null;
     }
 
     private static string GetToken(IConfiguration config)
@@ -242,5 +472,26 @@ internal class Program
             ? throw new InvalidOperationException(
                 "Set TELEGRAM_BOT_TOKEN using an environment variable or .NET User Secrets.")
             : token;
+    }
+
+    private enum JoinRequestProbeAction
+    {
+        Approve,
+        Decline
+    }
+
+    private sealed record JoinRequestProbe(long ChatId, string InviteLink, JoinRequestProbeAction Action);
+
+    private sealed class JoinRequestProbeState
+    {
+        private readonly Dictionary<long, long?> _messageThreads = [];
+
+        public JoinRequestProbe? Current { get; set; }
+
+        public long? GetThread(long chatId)
+            => _messageThreads.TryGetValue(chatId, out var messageThreadId) ? messageThreadId : null;
+
+        public void RememberThread(long chatId, long? messageThreadId)
+            => _messageThreads[chatId] = messageThreadId;
     }
 }

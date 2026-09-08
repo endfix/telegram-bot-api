@@ -50,6 +50,20 @@
       <button id="request-access" type="button" disabled>Request access</button>
     </section>
 
+    <section aria-labelledby="event-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Long polling probe</p>
+          <h2 id="event-title">Web App data</h2>
+        </div>
+        <span id="event-badge" class="badge" data-state="idle">Not sent</span>
+      </div>
+      <p id="event-message" class="message" role="status" aria-live="polite">
+        Launch this Mini App from the bot's reply keyboard to send an Update.
+      </p>
+      <button id="send-test-data" type="button" disabled>Send test data</button>
+    </section>
+
     <p class="footnote">No bot token or Telegram authorization data leaves this page.</p>
   </main>
 

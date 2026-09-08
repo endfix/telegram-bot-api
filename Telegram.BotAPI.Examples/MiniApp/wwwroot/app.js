@@ -7,6 +7,9 @@
   const supportBadge = document.querySelector("#support-badge");
   const permissionBadge = document.querySelector("#permission-badge");
   const permissionMessage = document.querySelector("#permission-message");
+  const eventBadge = document.querySelector("#event-badge");
+  const eventMessage = document.querySelector("#event-message");
+  const sendTestDataButton = document.querySelector("#send-test-data");
 
   const setBadge = (element, text, state) => {
     element.textContent = text;
@@ -36,6 +39,7 @@
 
   webApp.ready();
   webApp.expand();
+  sendTestDataButton.disabled = false;
 
   document.querySelector("#platform").textContent = webApp.platform || "Unknown";
   document.querySelector("#version").textContent = webApp.version || "Unknown";
@@ -69,5 +73,15 @@
       setPermissionResult(granted);
       requestButton.disabled = false;
     });
+  });
+
+  sendTestDataButton.addEventListener("click", () => {
+    setBadge(eventBadge, "Sending", "pending");
+    eventMessage.textContent = "Sending test data to the bot.";
+    webApp.sendData(JSON.stringify({
+      kind: "event-harness",
+      sentAt: new Date().toISOString(),
+      platform: webApp.platform || "unknown"
+    }));
   });
 })();

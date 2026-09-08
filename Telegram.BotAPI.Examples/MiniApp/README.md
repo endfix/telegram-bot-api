@@ -31,3 +31,7 @@ plain text.
 Open the Main App from Telegram and select **Request access**. Telegram should
 show its native permission dialog. Once access is granted, the Bot API method
 `setUserEmojiStatus` can be exercised for that user by the Premium live tests.
+
+The LongPolling example can also send a reply-keyboard Mini App button. Launch
+the page through that button and select **Send test data** to deliver a
+`web_app_data` update to the event harness.

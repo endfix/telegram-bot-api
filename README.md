@@ -93,7 +93,7 @@ the trailing slash is optional.
 
 ## Examples
 
-- [**Long polling**: sequential (FIFO) or parallel update processing.](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/LongPolling)
+- [**Long polling**: `ILogger` integration, interactive event probes, and sequential (FIFO) or parallel update processing.](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/LongPolling)
 - [**Webhook**: ASP.NET Core endpoint with secret-token validation.](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/Webhook)
 - [**Mini App**: browser capability harness for Telegram Web App and Premium scenarios.](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/MiniApp)
 

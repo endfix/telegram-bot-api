@@ -31,20 +31,42 @@
     webApp?.HapticFeedback?.notificationOccurred("error");
   };
 
-  if (!webApp?.initData) {
+  if (!webApp) {
     setBadge(supportBadge, "Browser preview", "error");
-    permissionMessage.textContent = "Launch this page from the bot's Main App in Telegram.";
+    permissionMessage.textContent = "Launch this page from Telegram.";
     return;
   }
 
   webApp.ready();
   webApp.expand();
-  sendTestDataButton.disabled = false;
 
   document.querySelector("#platform").textContent = webApp.platform || "Unknown";
   document.querySelector("#version").textContent = webApp.version || "Unknown";
   document.querySelector("#premium").textContent =
     webApp.initDataUnsafe?.user?.is_premium === true ? "Yes" : "Not reported";
+
+  if (typeof webApp.sendData === "function") {
+    sendTestDataButton.disabled = false;
+    sendTestDataButton.addEventListener("click", () => {
+      setBadge(eventBadge, "Sending", "pending");
+      eventMessage.textContent = "Sending test data to the bot.";
+      webApp.sendData(JSON.stringify({
+        kind: "event-harness",
+        sentAt: new Date().toISOString(),
+        platform: webApp.platform || "unknown"
+      }));
+    });
+  } else {
+    setBadge(eventBadge, "Unsupported", "error");
+    eventMessage.textContent = "This Telegram client does not expose WebApp.sendData.";
+  }
+
+  if (!webApp.initData) {
+    setBadge(supportBadge, "Limited context", "pending");
+    permissionMessage.textContent =
+      "Launch this page from the bot's Main App to test Premium authorization.";
+    return;
+  }
 
   const supported =
     webApp.isVersionAtLeast(minimumVersion) &&
@@ -75,13 +97,4 @@
     });
   });
 
-  sendTestDataButton.addEventListener("click", () => {
-    setBadge(eventBadge, "Sending", "pending");
-    eventMessage.textContent = "Sending test data to the bot.";
-    webApp.sendData(JSON.stringify({
-      kind: "event-harness",
-      sentAt: new Date().toISOString(),
-      platform: webApp.platform || "unknown"
-    }));
-  });
 })();

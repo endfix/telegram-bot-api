@@ -136,9 +136,10 @@ and stopping live locations.
 
 The bot needs the **Add New Admins** and **Manage Tags** administrator rights for
 the promotion and member-tag scenarios. The group sticker-set scenario is
-disabled by default because Telegram may report `can_set_sticker_set=false` even
-when the bot can change chat information. Enable it only for an eligible
-supergroup by setting `TELEGRAM_BOT_GROUP_STICKER_SET_ACCESS=true`.
+disabled by default because Telegram exposes group sticker sets only for groups
+with at least 100 members; smaller groups omit `can_set_sticker_set` even when
+the bot can change chat information. Enable it only for an eligible supergroup
+by setting `TELEGRAM_BOT_GROUP_STICKER_SET_ACCESS=true`.
 
 Premium scenarios derive the user ID from `TELEGRAM_BOT_CHAT_ID` and verify the
 account through `getChatMember` before exercising Premium-dependent behavior.

@@ -125,7 +125,8 @@ member restrictions, channel/discussion linking, group/channel metadata and
 message lifecycle, per-chat bot settings, group and channel invite links, pins,
 reactions, member counts, channel-photo replacement and restoration, forum
 topics, member tags, administrator promotion and custom titles, and cross-chat
-copy and forwarding. File scenarios cover buffered and streaming downloads,
+copy and forwarding. It also restores the bot's suggested default administrator
+rights independently for groups and channels. File scenarios cover buffered and streaming downloads,
 profile-photo restore, sticker-set lifecycle, optional group sticker-set
 assignment, standalone media, media groups with typed thumbnail/cover files,
 paid media, nested poll media, nested rich-message uploads, reply-markup editing,

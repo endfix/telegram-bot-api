@@ -159,6 +159,63 @@ public sealed class TelegramChatIntegrationTests : IDisposable
             (await _client.GetMyShortDescriptionAsync(languageCode)).ShortDescription);
     }
 
+    [TelegramIntegrationFact]
+    public async Task BotDefaultAdministratorRights_RollBack()
+    {
+        var originalGroupRights = await _client.GetMyDefaultAdministratorRightsAsync(forChannels: false);
+        var originalChannelRights = await _client.GetMyDefaultAdministratorRightsAsync(forChannels: true);
+        var groupRightsChanged = false;
+        var channelRightsChanged = false;
+
+        try
+        {
+            var temporaryGroupRights = CopyAdministratorRights(
+                originalGroupRights,
+                canPinMessages: originalGroupRights.CanPinMessages is not true);
+            Assert.True(await _client.SetMyDefaultAdministratorRightsAsync(
+                temporaryGroupRights,
+                forChannels: false));
+            groupRightsChanged = true;
+            Assert.Equal(
+                temporaryGroupRights.CanPinMessages,
+                (await _client.GetMyDefaultAdministratorRightsAsync(forChannels: false)).CanPinMessages);
+
+            var temporaryChannelRights = CopyAdministratorRights(
+                originalChannelRights,
+                canPostMessages: originalChannelRights.CanPostMessages is not true);
+            Assert.True(await _client.SetMyDefaultAdministratorRightsAsync(
+                temporaryChannelRights,
+                forChannels: true));
+            channelRightsChanged = true;
+            Assert.Equal(
+                temporaryChannelRights.CanPostMessages,
+                (await _client.GetMyDefaultAdministratorRightsAsync(forChannels: true)).CanPostMessages);
+        }
+        finally
+        {
+            if (channelRightsChanged)
+            {
+                Assert.True(await _client.SetMyDefaultAdministratorRightsAsync(
+                    originalChannelRights,
+                    forChannels: true));
+            }
+
+            if (groupRightsChanged)
+            {
+                Assert.True(await _client.SetMyDefaultAdministratorRightsAsync(
+                    originalGroupRights,
+                    forChannels: false));
+            }
+        }
+
+        Assert.Equal(
+            originalGroupRights.Serialize(),
+            (await _client.GetMyDefaultAdministratorRightsAsync(forChannels: false)).Serialize());
+        Assert.Equal(
+            originalChannelRights.Serialize(),
+            (await _client.GetMyDefaultAdministratorRightsAsync(forChannels: true)).Serialize());
+    }
+
     [TelegramGroupIntegrationFact]
     public async Task GroupConfiguration_IsUsable()
     {
@@ -867,6 +924,32 @@ public sealed class TelegramChatIntegrationTests : IDisposable
             CanManageDirectMessages = false,
             CanManageTags = false,
             CanSendWelcomeMessages = false
+        };
+
+    private static ChatAdministratorRights CopyAdministratorRights(
+        ChatAdministratorRights source,
+        bool? canPostMessages = null,
+        bool? canPinMessages = null)
+        => new()
+        {
+            IsAnonymous = source.IsAnonymous,
+            CanManageChat = source.CanManageChat,
+            CanDeleteMessages = source.CanDeleteMessages,
+            CanManageVideoChats = source.CanManageVideoChats,
+            CanRestrictMembers = source.CanRestrictMembers,
+            CanPromoteMembers = source.CanPromoteMembers,
+            CanChangeInfo = source.CanChangeInfo,
+            CanInviteUsers = source.CanInviteUsers,
+            CanPostStories = source.CanPostStories,
+            CanEditStories = source.CanEditStories,
+            CanDeleteStories = source.CanDeleteStories,
+            CanPostMessages = canPostMessages ?? source.CanPostMessages,
+            CanEditMessages = source.CanEditMessages,
+            CanPinMessages = canPinMessages ?? source.CanPinMessages,
+            CanManageTopics = source.CanManageTopics,
+            CanManageDirectMessages = source.CanManageDirectMessages,
+            CanManageTags = source.CanManageTags,
+            CanSendWelcomeMessages = source.CanSendWelcomeMessages
         };
 
     private static ChatPermissions CopyPermissions(

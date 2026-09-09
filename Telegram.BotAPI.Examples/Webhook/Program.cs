@@ -27,7 +27,10 @@ public class Program
             Timeout = TimeSpan.FromMinutes(5)
         };
 
-        var api = new BotApiClient(token, client);
+        var api = new BotApiClient(
+            token,
+            client,
+            logger: app.Services.GetRequiredService<ILogger<IBotApiClient>>());
 
         _ = Task.Run(async () =>
         {

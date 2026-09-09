@@ -94,7 +94,7 @@ the trailing slash is optional.
 ## Examples
 
 - [**Long polling**: `ILogger` integration, interactive event probes, and sequential (FIFO) or parallel update processing.](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/LongPolling)
-- [**Webhook**: ASP.NET Core endpoint with secret-token validation.](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/Webhook)
+- [**Webhook**: ASP.NET Core logging integration and an endpoint with secret-token validation.](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/Webhook)
 - [**Mini App**: browser capability harness for Telegram Web App and Premium scenarios.](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/MiniApp)
 
 The Long Polling and Webhook examples accept `TELEGRAM_BOT_TOKEN` from an environment variable or .NET User Secrets while retaining their existing `appsettings.json` keys as a fallback:

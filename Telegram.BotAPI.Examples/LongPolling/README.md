@@ -4,6 +4,20 @@ This example demonstrates both `ILogger` integration and interactive Bot API
 updates. It logs every received `Update` as JSON and handles callback queries,
 inline queries, Mini App data and join requests.
 
+It also demonstrates the recommended application lifetime model for polling:
+
+- one singleton `IBotApiClient` represents one bot;
+- a singleton `BackgroundService` owns the polling session and its event
+  subscription;
+- each update is processed in a newly created async DI scope, so scoped handlers,
+  database contexts and other scoped services are not retained by the singleton
+  client's `OnUpdate` event;
+- the hosted service always unsubscribes in `finally` when polling stops.
+
+The supplied `HttpClient` is also a singleton owned and disposed by the DI
+container. Its `SocketsHttpHandler.PooledConnectionLifetime` refreshes pooled
+connections without replacing the application-level bot client.
+
 Configure `TELEGRAM_BOT_TOKEN` through an environment variable or .NET User
 Secrets, then run:
 
@@ -29,4 +43,4 @@ revokes its temporary 15-minute link.
 
 The harness removes an existing webhook without dropping pending updates because
 Telegram does not allow long polling while a webhook is active. Press `Ctrl+C`
-to stop it.
+to stop it; the Generic Host passes shutdown cancellation to the polling session.

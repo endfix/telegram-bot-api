@@ -3,6 +3,8 @@ using Endfix.Telegram.BotAPI.Exceptions;
 using Endfix.Telegram.BotAPI.Extensions;
 using Endfix.Telegram.BotAPI.Types;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace Endfix.Telegram.BotAPI.Example.LongPolling;
@@ -16,152 +18,174 @@ internal class Program
 
     static async Task Main(string[] args)
     {
-        using var loggerFactory = LoggerFactory.Create(builder => builder
+        var builder = Host.CreateApplicationBuilder(new HostApplicationBuilderSettings
+        {
+            Args = args,
+            ContentRootPath = AppContext.BaseDirectory
+        });
+        builder.Configuration.AddUserSecrets<Program>(optional: true);
+        builder.Logging.ClearProviders();
+        builder.Logging
             .SetMinimumLevel(LogLevel.Debug)
             .AddSimpleConsole(options =>
             {
                 options.SingleLine = true;
                 options.TimestampFormat = "HH:mm:ss ";
-            }));
-        var logger = loggerFactory.CreateLogger<Program>();
+            });
 
-        using var cancellation = new CancellationTokenSource();
-        Console.CancelKeyPress += (_, eventArgs) =>
+        builder.Services.AddSingleton(_ => new HttpClient(new SocketsHttpHandler
         {
-            eventArgs.Cancel = true;
-            cancellation.Cancel();
-        };
-
-        try
+            PooledConnectionLifetime = TimeSpan.FromMinutes(5),
+            MaxConnectionsPerServer = 10
+        })
         {
-            var config = new ConfigurationBuilder()
-                .SetBasePath(AppContext.BaseDirectory)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddUserSecrets<Program>(optional: true)
-                .Build();
+            Timeout = TimeSpan.FromMinutes(5)
+        });
+        builder.Services.AddSingleton<IBotApiClient>(services => new BotApiClient(
+            token: GetToken(services.GetRequiredService<IConfiguration>()),
+            services.GetRequiredService<HttpClient>(),
+            logger: services.GetRequiredService<ILogger<IBotApiClient>>()));
+        builder.Services.AddSingleton<JoinRequestProbeState>();
+        builder.Services.AddScoped<UpdateProcessor>();
+        builder.Services.AddHostedService<TelegramPollingService>();
 
-            using var handler = new SocketsHttpHandler
-            {
-                PooledConnectionLifetime = TimeSpan.FromSeconds(5),
-                MaxConnectionsPerServer = 10
-            };
-            using var httpClient = new HttpClient(handler)
-            {
-                Timeout = TimeSpan.FromMinutes(5)
-            };
-            using var api = new BotApiClient(
-                token: GetToken(config),
-                httpClient,
-                logger: loggerFactory.CreateLogger<IBotApiClient>());
+        await builder.Build().RunAsync();
+    }
 
-            var bot = await api.GetMeAsync(cancellation.Token);
-            var joinRequestProbe = new JoinRequestProbeState();
+    private sealed class TelegramPollingService(
+        IBotApiClient api,
+        IServiceScopeFactory scopeFactory,
+        ILogger<TelegramPollingService> logger) : BackgroundService
+    {
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        {
+            var bot = await api.GetMeAsync(stoppingToken);
             logger.LogInformation("Starting event harness for @{Username} ({BotId})", bot.Username, bot.Id);
 
-            await api.DeleteWebhookAsync(dropPendingUpdates: false, cancellationToken: cancellation.Token);
+            await api.DeleteWebhookAsync(dropPendingUpdates: false, cancellationToken: stoppingToken);
             logger.LogInformation(
                 "Long polling is active. Send /probe, /webapp, or /join decline to @{Username}; press Ctrl+C to stop.",
                 bot.Username);
 
-            api.OnUpdate += async (_, update, cancellationToken) =>
+            api.OnUpdate += HandleUpdateAsync;
+            try
             {
-                logger.LogInformation(
-                    "Update {UpdateId} ({UpdateType}): {UpdateJson}",
-                    update.UpdateId,
-                    update.Type,
-                    update.Serialize(writeIndented: false));
+                await api.StartPollingAsync(
+                    limit: 10,
+                    maxParallel: 1,
+                    cancellationToken: stoppingToken);
+            }
+            finally
+            {
+                api.OnUpdate -= HandleUpdateAsync;
+                logger.LogInformation("Event harness stopped.");
+            }
+        }
 
-                try
+        private async Task HandleUpdateAsync(
+            IBotApiClient sender,
+            Update update,
+            CancellationToken cancellationToken)
+        {
+            await using var scope = scopeFactory.CreateAsyncScope();
+            var processor = scope.ServiceProvider.GetRequiredService<UpdateProcessor>();
+            await processor.ProcessAsync(sender, update, cancellationToken);
+        }
+    }
+
+    private sealed class UpdateProcessor(
+        IConfiguration config,
+        JoinRequestProbeState joinRequestProbe,
+        ILogger<UpdateProcessor> logger)
+    {
+        public async Task ProcessAsync(
+            IBotApiClient api,
+            Update update,
+            CancellationToken cancellationToken)
+        {
+            logger.LogInformation(
+                "Update {UpdateId} ({UpdateType}): {UpdateJson}",
+                update.UpdateId,
+                update.Type,
+                update.Serialize(writeIndented: false));
+
+            try
+            {
+                switch (update.Type)
                 {
-                    switch (update.Type)
-                    {
-                        case UpdateType.Message when update.Message is { } message:
-                            await HandleMessageAsync(
-                                api,
-                                message,
-                                config["TelegramBotApi:MiniAppUrl"] ?? DefaultMiniAppUrl,
-                                config,
-                                joinRequestProbe,
-                                logger,
-                                cancellationToken);
-                            break;
+                    case UpdateType.Message when update.Message is { } message:
+                        await HandleMessageAsync(
+                            api,
+                            message,
+                            config["TelegramBotApi:MiniAppUrl"] ?? DefaultMiniAppUrl,
+                            config,
+                            joinRequestProbe,
+                            logger,
+                            cancellationToken);
+                        break;
 
-                        case UpdateType.CallbackQuery when update.CallbackQuery is { } callback:
-                            await api.AnswerCallbackQueryAsync(
-                                callback.Id,
-                                text: $"Received: {callback.Data}",
-                                cancellationToken: cancellationToken);
-                            logger.LogInformation(
-                                "Answered callback {CallbackId} from user {UserId} with data {CallbackData}",
-                                callback.Id,
-                                callback.From.Id,
-                                callback.Data);
-                            break;
+                    case UpdateType.CallbackQuery when update.CallbackQuery is { } callback:
+                        await api.AnswerCallbackQueryAsync(
+                            callback.Id,
+                            text: $"Received: {callback.Data}",
+                            cancellationToken: cancellationToken);
+                        logger.LogInformation(
+                            "Answered callback {CallbackId} from user {UserId} with data {CallbackData}",
+                            callback.Id,
+                            callback.From.Id,
+                            callback.Data);
+                        break;
 
-                        case UpdateType.InlineQuery when update.InlineQuery is { } inlineQuery:
-                            await api.AnswerInlineQueryAsync(
-                                inlineQuery.Id,
-                                [
-                                    new InlineQueryResultArticle
+                    case UpdateType.InlineQuery when update.InlineQuery is { } inlineQuery:
+                        await api.AnswerInlineQueryAsync(
+                            inlineQuery.Id,
+                            [
+                                new InlineQueryResultArticle
+                                {
+                                    Id = "event-harness-result",
+                                    Title = "Telegram.BotAPI event probe",
+                                    Description = "Select this result to complete the inline-query probe.",
+                                    InputMessageContent = new InputTextMessageContent
                                     {
-                                        Id = "event-harness-result",
-                                        Title = "Telegram.BotAPI event probe",
-                                        Description = "Select this result to complete the inline-query probe.",
-                                        InputMessageContent = new InputTextMessageContent
-                                        {
-                                            MessageText = $"Inline query received: {inlineQuery.Query}"
-                                        }
+                                        MessageText = $"Inline query received: {inlineQuery.Query}"
                                     }
-                                ],
-                                cacheTime: 0,
-                                isPersonal: true,
-                                cancellationToken: cancellationToken);
-                            logger.LogInformation(
-                                "Answered inline query {InlineQueryId} from user {UserId}",
-                                inlineQuery.Id,
-                                inlineQuery.From.Id);
-                            break;
+                                }
+                            ],
+                            cacheTime: 0,
+                            isPersonal: true,
+                            cancellationToken: cancellationToken);
+                        logger.LogInformation(
+                            "Answered inline query {InlineQueryId} from user {UserId}",
+                            inlineQuery.Id,
+                            inlineQuery.From.Id);
+                        break;
 
-                        case UpdateType.ChatJoinRequest when update.ChatJoinRequest is { } joinRequest:
-                            await HandleJoinRequestAsync(
-                                api,
-                                joinRequest,
-                                joinRequestProbe,
-                                logger,
-                                cancellationToken);
-                            break;
-                    }
+                    case UpdateType.ChatJoinRequest when update.ChatJoinRequest is { } joinRequest:
+                        await HandleJoinRequestAsync(
+                            api,
+                            joinRequest,
+                            joinRequestProbe,
+                            logger,
+                            cancellationToken);
+                        break;
                 }
-                catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
-                {
-                }
-                catch (ApiRequestException exception)
-                {
-                    logger.LogError(
-                        exception,
-                        "Telegram rejected update {UpdateId}: {ErrorCode} {Description}",
-                        update.UpdateId,
-                        exception.ErrorCode,
-                        exception.Message);
-                }
-                catch (Exception exception)
-                {
-                    logger.LogError(exception, "Failed to process update {UpdateId}", update.UpdateId);
-                }
-            };
-
-            await api.StartPollingAsync(
-                limit: 10,
-                maxParallel: 1,
-                cancellationToken: cancellation.Token);
-        }
-        catch (OperationCanceledException) when (cancellation.IsCancellationRequested)
-        {
-            logger.LogInformation("Event harness stopped.");
-        }
-        catch (Exception exception)
-        {
-            logger.LogCritical(exception, "Event harness terminated unexpectedly.");
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+            }
+            catch (ApiRequestException exception)
+            {
+                logger.LogError(
+                    exception,
+                    "Telegram rejected update {UpdateId}: {ErrorCode} {Description}",
+                    update.UpdateId,
+                    exception.ErrorCode,
+                    exception.Message);
+            }
+            catch (Exception exception)
+            {
+                logger.LogError(exception, "Failed to process update {UpdateId}", update.UpdateId);
+            }
         }
     }
 

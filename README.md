@@ -19,13 +19,13 @@ Typed .NET client for the Telegram Bot API. The library targets .NET Standard 2.
 
 The project follows the Telegram Bot API release it targets. While the package
 remains below `1.0`, public contracts may still change to correct modeling
-issues or complete the file-source API. After `1.0`, incompatible public API
-changes will require a major version.
+issues while the stable contract is being finalized. After `1.0`, incompatible
+public API changes will require a major version.
 
 ## Installation
 
 ```bash
-dotnet add package Endfix.Telegram.BotAPI --version 0.4.0
+dotnet add package Endfix.Telegram.BotAPI --version 0.5.0
 ```
 
 ## Runtime compatibility
@@ -215,11 +215,11 @@ Run local tests without contacting Telegram:
 dotnet test Telegram.BotAPI.Tests/Telegram.BotAPI.Tests.csproj --filter "Category!=Integration"
 ```
 
-See the [test project guide](Telegram.BotAPI.Tests/README.md) for the live test topology, BotFather settings, administrator rights, secrets, rollback behavior and focused run commands.
+See the [test project guide](https://github.com/endfix/telegram-bot-api/blob/main/Telegram.BotAPI.Tests/README.md) for the live test topology, BotFather settings, administrator rights, secrets, rollback behavior and focused run commands.
 
 ## Benchmarks
 
-The [benchmark project](Telegram.BotAPI.Benchmarks/README.md) contains serialization, rich-message and local transport benchmarks, plus sequential and bounded-parallel stress profiles:
+The [benchmark project](https://github.com/endfix/telegram-bot-api/blob/main/Telegram.BotAPI.Benchmarks/README.md) contains serialization, rich-message and local transport benchmarks, plus sequential and bounded-parallel stress profiles:
 
 ```bash
 dotnet run --project Telegram.BotAPI.Benchmarks/Telegram.BotAPI.Benchmarks.csproj -c Release -- --filter * --join
@@ -245,7 +245,7 @@ network latency.
 | Prepare 10-local-file media group | 2.071 ms | 28,489 B |
 
 The complete environment, all 82 measurements, raw CSV data, and million-call
-stress profiles are in the [benchmark snapshot](Telegram.BotAPI.Benchmarks/results/2026-09-07-c19cb34-windows-x64-net9/README.md).
+stress profiles are in the [benchmark snapshot](https://github.com/endfix/telegram-bot-api/blob/main/Telegram.BotAPI.Benchmarks/results/2026-09-07-c19cb34-windows-x64-net9/README.md).
 
 ## API documentation source
 
@@ -264,4 +264,4 @@ Push the intended release commit to `main` and wait for CI to pass before creati
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](https://github.com/endfix/telegram-bot-api/blob/main/LICENSE).

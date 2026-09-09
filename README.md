@@ -17,6 +17,10 @@ Typed .NET client for the Telegram Bot API. The library targets .NET Standard 2.
 
 ## Status
 
+Use this package when you need a strongly typed, low-level Telegram Bot API
+client with explicit control over requests, polling, webhooks, transport and
+serialization.
+
 The project follows the Telegram Bot API release it targets. While the package
 remains below `1.0`, public contracts may still change to correct modeling
 issues while the stable contract is being finalized. After `1.0`, incompatible
@@ -27,40 +31,6 @@ public API changes will require a major version.
 ```bash
 dotnet add package Endfix.Telegram.BotAPI --version 0.5.0
 ```
-
-## Runtime compatibility
-
-The library targets `netstandard2.0`. This is a library target, not a
-requirement to install a particular .NET SDK in the consuming application.
-Modern .NET runtimes implement .NET Standard 2.0 directly; older runtimes use
-the compatible NuGet assets supplied by the package dependencies.
-
-| Consumer target | Status | Guidance |
-| --- | --- | --- |
-| `.NET 10`, `.NET 9`, `.NET 8` | Supported | Recommended targets for new applications. |
-| `.NET 7`, `.NET 6` | Compatible via `netstandard2.0` | NuGet selects the `netstandard2.0` assets. The library can be consumed normally; use these targets where the application is intentionally pinned to that runtime. |
-| `.NET 5`, `.NET Core 3.1` | Compatible, legacy | Should be treated as migration targets because these runtimes are out of support. |
-| `.NET Core 2.0` through `2.2` | Compatible in principle | NuGet compatibility is possible through `netstandard2.0`, but this is not a current CI target. |
-| `.NET Framework 4.7.2` through `4.8.1` | Compatible | Practical choice for maintained classic Windows applications. |
-| `.NET Framework 4.6.2` through `4.7.1` | Package-dependent | May resolve the package graph, but is not a recommended baseline for new builds. |
-| `.NET Framework 4.6.1` | Not a recommended baseline | Although .NET Standard compatibility tables list it, Microsoft documents compatibility issues for consuming higher .NET Standard libraries from this framework version. |
-
-The compatibility column describes framework and NuGet asset compatibility;
-it is not a claim that every listed runtime is actively tested by this
-repository. The test and example projects currently exercise modern .NET
-targets, while the published library remains `netstandard2.0` to support
-older consumers. The `System.Text.Json` dependency also provides a
-`netstandard2.0` asset and a `.NET Framework 4.6.2` asset, so dependency
-resolution still matters for classic Framework applications.
-
-NuGet does not need a dedicated `net6.0` or `net7.0` asset for this package.
-Applications targeting those frameworks fall back to the compatible
-`netstandard2.0` asset; its absence from a package manager's specialized asset
-list does not mean that .NET 6 or .NET 7 consumers are unsupported.
-
-This library does not require Native AOT, a particular CPU architecture, or a
-specific operating system. The consuming runtime must still support the
-selected .NET target and the package dependency graph.
 
 ## Quick start
 
@@ -85,43 +55,43 @@ var message = await api.SendMessageAsync(
     text: "Hello from Endfix.Telegram.BotAPI");
 ```
 
-`BotApiClient` disposes the `HttpClient` it creates when none is supplied. A supplied `HttpClient` remains owned by the caller and should normally be reused for the application's lifetime.
-
 Custom Bot API base URLs may include a path prefix. For example, passing
 `https://example.com/telegram/` as `url` sends API requests below that path;
 the trailing slash is optional.
 
-## Examples
+## Receiving updates
 
-- [**Long polling**: `ILogger` integration, interactive event probes, and sequential (FIFO) or parallel update processing.](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/LongPolling)
-- [**Webhook**: ASP.NET Core logging integration and an endpoint with secret-token validation.](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/Webhook)
-- [**Mini App**: browser capability harness for Telegram Web App and Premium scenarios.](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/MiniApp)
+Long polling raises `OnUpdate` for each received update. It processes updates
+sequentially in FIFO order by default:
 
-The Long Polling and Webhook examples accept `TELEGRAM_BOT_TOKEN` from an environment variable or .NET User Secrets while retaining their existing `appsettings.json` keys as a fallback:
+```cs
+api.OnUpdate += async (client, update, cancellationToken) =>
+{
+    if (update.Message?.Text is not { } text)
+        return;
 
-```bash
-dotnet user-secrets set "TELEGRAM_BOT_TOKEN" "<token>" --project Telegram.BotAPI.Examples/LongPolling/Telegram.BotAPI.Example.LongPolling.csproj
-dotnet user-secrets set "TELEGRAM_BOT_TOKEN" "<token>" --project Telegram.BotAPI.Examples/Webhook/Telegram.BotAPI.Example.Webhook.csproj
+    await client.SendMessageAsync(
+        update.Message.Chat.Id,
+        $"Echo: {text}",
+        cancellationToken: cancellationToken);
+};
+
+using var stopping = new CancellationTokenSource();
+Console.CancelKeyPress += (_, eventArgs) =>
+{
+    eventArgs.Cancel = true;
+    stopping.Cancel();
+};
+
+await api.StartPollingAsync(cancellationToken: stopping.Token);
 ```
 
-Long polling processes updates sequentially in FIFO order by default (`maxParallel = 1`). Set `maxParallel` to a value greater than `1` to enable concurrent processing. FIFO ordering is not guaranteed in parallel mode, including the order in which handlers start or complete. Use sequential processing for stateful workflows that depend on update ordering.
+Set `maxParallel` above `1` to enable concurrent processing. Use sequential
+processing for stateful workflows that depend on update ordering.
 
-Only one `StartPollingAsync` session can run on a client instance at a time. A concurrent start fails with `InvalidOperationException`; after the active session stops, the same client can be started again.
-
-For hosted applications, use one singleton `IBotApiClient` per bot and let a singleton `BackgroundService` own `StartPollingAsync`. Subscribe when the service starts, unsubscribe in `finally`, and create a DI scope inside the event callback before resolving scoped handlers or database contexts. Do not subscribe scoped or transient objects directly to the singleton client's `OnUpdate` event. The [Long Polling example](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/LongPolling) demonstrates this pattern without adding DI dependencies to the core package.
-
-All `OnUpdate` subscribers are invoked in registration order and each returned task is awaited before processing for that update completes. Handlers receive the polling session's cancellation token so long-running work can stop cooperatively. A failing subscriber is logged without preventing later subscribers from running; cancellation caused by the polling token is treated as a normal shutdown.
-
-`StartPollingAsync` uses best-effort delivery. Handler failures are logged and are not retried; a failed update is confirmed if the polling loop later sends a higher offset. Because the offset is neither sent until the next `getUpdates` request nor persisted by the client, an interrupted polling session may receive an update again even after its handler ran. Applications that require durable processing or explicit delivery guarantees should own the `GetUpdatesAsync` loop and persist their checkpoint explicitly.
-
-The Long Polling and Webhook projects include placeholder configuration files.
-Replace the placeholders locally or use User Secrets before running them.
-
-## Retry behavior
-
-The client automatically retries Telegram responses with error code `429`, waiting for the server-provided `retry_after` interval before the next attempt. It makes at most six retries by default; configure `maxRetryAttempts` in the constructor or set it to `0` to disable automatic retries. Timeouts, cancellations and other transport failures are not retried automatically because the client cannot know whether Telegram processed the original request.
-
-`RequestAsync` returns Telegram API responses, while `ExecuteAsync` throws `ApiRequestException` when Telegram returns `ok = false`. Argument errors, caller cancellation, timeouts, HTTP and network failures, and malformed JSON responses retain their standard .NET exception types.
+For webhooks, deserialize an `Update` at an HTTPS endpoint and validate
+Telegram's secret-token header before processing it. See the complete examples
+for both receiving models below.
 
 ## Uploading files
 
@@ -196,6 +166,144 @@ await api.DownloadFileAsync(file.FilePath!, destination);
 
 `DownloadFileAsync` leaves the destination stream open and positioned after
 the downloaded content.
+
+## Production usage
+
+Use one singleton `IBotApiClient` per bot. In hosted applications, let a
+singleton `BackgroundService` own `StartPollingAsync`, subscribe when the
+service starts, unsubscribe in `finally`, and create a DI scope inside the
+event callback before resolving scoped handlers or database contexts. Never
+subscribe a scoped or transient object directly to the singleton client's
+`OnUpdate` event.
+
+A supplied `HttpClient` remains owned by the caller and should normally be
+reused for the application's lifetime. Configure
+`SocketsHttpHandler.PooledConnectionLifetime` when pooled connections must be
+refreshed without replacing the application-level bot client. `BotApiClient`
+disposes the `HttpClient` only when it created that client internally.
+
+The Long Polling example demonstrates the hosted lifetime and scope-per-update
+pattern without adding DI dependencies to the core package. Both server-side
+examples pass `ILogger<IBotApiClient>` from their application's logging
+pipeline to the client.
+
+## Complete examples
+
+- [**Long polling**: `ILogger` integration, interactive event probes, and sequential (FIFO) or parallel update processing.](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/LongPolling)
+- [**Webhook**: ASP.NET Core logging integration and an endpoint with secret-token validation.](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/Webhook)
+- [**Mini App**: browser capability harness for Telegram Web App and Premium scenarios.](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/MiniApp)
+
+The Long Polling and Webhook examples accept `TELEGRAM_BOT_TOKEN` from an environment variable or .NET User Secrets while retaining their existing `appsettings.json` keys as a fallback:
+
+```bash
+dotnet user-secrets set "TELEGRAM_BOT_TOKEN" "<token>" --project Telegram.BotAPI.Examples/LongPolling/Telegram.BotAPI.Example.LongPolling.csproj
+dotnet user-secrets set "TELEGRAM_BOT_TOKEN" "<token>" --project Telegram.BotAPI.Examples/Webhook/Telegram.BotAPI.Example.Webhook.csproj
+```
+
+The Long Polling and Webhook projects include placeholder configuration files.
+Replace the placeholders locally or use User Secrets before running them.
+
+## Behavior and guarantees
+
+The following behavior is part of the library's current runtime contract and
+is covered by deterministic tests. Intentional changes to these guarantees
+should update both the tests and this documentation.
+
+| Concern | Guarantee |
+| --- | --- |
+| Telegram API errors | `RequestAsync` returns the response; `ExecuteAsync` throws `ApiRequestException` when `ok` is `false`. |
+| Rate limits | Error `429` is retried after Telegram's `retry_after`, up to six retries by default. |
+| Other failures | Timeouts, cancellation, transport failures and non-429 API errors are not retried automatically. |
+| Polling session | Only one session can run per client instance; the client can be started again after that session stops. |
+| Update ordering | `maxParallel = 1` is sequential and FIFO; parallel mode does not guarantee update start or completion order. |
+| Update handlers | Subscribers run in registration order for each update and each returned task is awaited. A failing subscriber does not prevent later subscribers from running. |
+| Delivery | Long polling is best effort. Handler failures are not retried and interrupted sessions may receive an update again. |
+| Cancellation | The polling token is forwarded to handlers. Caller cancellation and standard timeout or transport exception types are preserved. |
+| External `HttpClient` | Remains owned by the caller and is never disposed by `BotApiClient`. |
+| Internal `HttpClient` | Is owned by `BotApiClient` and disposed with it. |
+| Upload source | A fresh stream is opened for each attempt and disposed by the request. |
+| Download destination | Remains open and positioned after the downloaded content. |
+
+### Requests and retries
+
+The client automatically retries Telegram responses with error code `429`,
+waiting for the server-provided `retry_after` interval before the next attempt.
+It makes at most six retries by default; configure `maxRetryAttempts` in the
+constructor or set it to `0` to disable automatic retries. Timeouts,
+cancellations and other transport failures are not retried automatically
+because the client cannot know whether Telegram processed the original request.
+
+`RequestAsync` returns Telegram API responses, while `ExecuteAsync` throws
+`ApiRequestException` when Telegram returns `ok = false`. Argument errors,
+caller cancellation, timeouts, HTTP and network failures, and malformed JSON
+responses retain their standard .NET exception types.
+
+### Polling and update handlers
+
+Only one `StartPollingAsync` session can run on a client instance at a time. A
+concurrent start fails with `InvalidOperationException`; after the active
+session stops, the same client can be started again.
+
+All `OnUpdate` subscribers are invoked in registration order and each returned
+task is awaited before processing for that update completes. Handlers receive
+the polling session's cancellation token so long-running work can stop
+cooperatively. A failing subscriber is logged without preventing later
+subscribers from running; cancellation caused by the polling token is treated
+as a normal shutdown.
+
+`StartPollingAsync` uses best-effort delivery. Handler failures are logged and
+are not retried; a failed update is confirmed if the polling loop later sends a
+higher offset. Because the offset is neither sent until the next `getUpdates`
+request nor persisted by the client, an interrupted polling session may receive
+an update again even after its handler ran. Applications that require durable
+processing or explicit delivery guarantees should own the `GetUpdatesAsync`
+loop and persist their checkpoint explicitly.
+
+### Resource ownership
+
+Path-based upload sources are lazy. Stream factories may be called repeatedly
+for retries or repeated requests, and concurrently when the same source is used
+by parallel requests. Each call must return an independent readable stream with
+equivalent content. The library disposes streams returned to an API request;
+code that calls `InputFile.GetStream()` directly owns that returned stream.
+
+The client never disposes a supplied `HttpClient`. If no client is supplied,
+`BotApiClient` creates one and disposes it with the bot client. Streaming file
+downloads never dispose the caller's destination stream.
+
+## Runtime compatibility
+
+The library targets `netstandard2.0`. This is a library target, not a
+requirement to install a particular .NET SDK in the consuming application.
+Modern .NET runtimes implement .NET Standard 2.0 directly; older runtimes use
+the compatible NuGet assets supplied by the package dependencies.
+
+| Consumer target | Status | Guidance |
+| --- | --- | --- |
+| `.NET 10`, `.NET 9`, `.NET 8` | Supported | Recommended targets for new applications. |
+| `.NET 7`, `.NET 6` | Compatible via `netstandard2.0` | NuGet selects the `netstandard2.0` assets. The library can be consumed normally; use these targets where the application is intentionally pinned to that runtime. |
+| `.NET 5`, `.NET Core 3.1` | Compatible, legacy | Should be treated as migration targets because these runtimes are out of support. |
+| `.NET Core 2.0` through `2.2` | Compatible in principle | NuGet compatibility is possible through `netstandard2.0`, but this is not a current CI target. |
+| `.NET Framework 4.7.2` through `4.8.1` | Compatible | Practical choice for maintained classic Windows applications. |
+| `.NET Framework 4.6.2` through `4.7.1` | Package-dependent | May resolve the package graph, but is not a recommended baseline for new builds. |
+| `.NET Framework 4.6.1` | Not a recommended baseline | Although .NET Standard compatibility tables list it, Microsoft documents compatibility issues for consuming higher .NET Standard libraries from this framework version. |
+
+The compatibility column describes framework and NuGet asset compatibility;
+it is not a claim that every listed runtime is actively tested by this
+repository. The test and example projects currently exercise modern .NET
+targets, while the published library remains `netstandard2.0` to support
+older consumers. The `System.Text.Json` dependency also provides a
+`netstandard2.0` asset and a `.NET Framework 4.6.2` asset, so dependency
+resolution still matters for classic Framework applications.
+
+NuGet does not need a dedicated `net6.0` or `net7.0` asset for this package.
+Applications targeting those frameworks fall back to the compatible
+`netstandard2.0` asset; its absence from a package manager's specialized asset
+list does not mean that .NET 6 or .NET 7 consumers are unsupported.
+
+This library does not require Native AOT, a particular CPU architecture, or a
+specific operating system. The consuming runtime must still support the
+selected .NET target and the package dependency graph.
 
 ## Development
 

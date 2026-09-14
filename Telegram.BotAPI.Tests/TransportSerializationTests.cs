@@ -180,6 +180,38 @@ public sealed class TransportSerializationTests
     }
 
     [Fact]
+    public async Task SendMediaGroup_WhenLaterStreamFactoryThrows_DisposesAlreadyOpenedStream()
+    {
+        var streamsDisposed = 0;
+        var firstSource = InputFileSource.FromStream(
+            () => new TrackingMemoryStream(
+                [0x41, 0x42, 0x43],
+                () => streamsDisposed++),
+            "first-photo.jpg");
+        var failingSource = InputFileSource.FromStream(
+            () => throw new FileNotFoundException("The second source is unavailable."),
+            "second-photo.jpg");
+        using var context = new ClientContext();
+
+        var action = () => context.Client.RequestAsync<bool>(new ApiRequest(
+            "sendMediaGroup",
+            new SendMediaGroupParameters
+            {
+                ChatId = 123456789L,
+                Media =
+                [
+                    new InputMediaPhoto { Media = new InputPhotoFile(firstSource) },
+                    new InputMediaPhoto { Media = new InputPhotoFile(failingSource) }
+                ]
+            }));
+
+        await action.Should().ThrowExactlyAsync<FileNotFoundException>()
+            .WithMessage("The second source is unavailable.");
+        streamsDisposed.Should().Be(1);
+        context.Handler.LastRequest.Should().BeNull();
+    }
+
+    [Fact]
     public void InputFile_WithNullStreamFactoryResult_ThrowsClearException()
     {
         var file = new InputPhotoFile(InputFileSource.FromStream(

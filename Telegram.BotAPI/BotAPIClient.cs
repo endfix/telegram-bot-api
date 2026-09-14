@@ -137,7 +137,7 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
 
         for (var retryCount = 0; ; retryCount++)
         {
-            using var responseMessage = await GetResponse(request, cancellation).ConfigureAwait(false);
+            using var responseMessage = await SendRequestAsync(request, cancellation).ConfigureAwait(false);
 
             ApiResponse<T>? apiResponse;
             try
@@ -252,70 +252,71 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
         await source.CopyToAsync(destination, 81920, cancellationToken).ConfigureAwait(false);
     }
 
-    private async Task<HttpResponseMessage> GetResponse(ApiRequest request, CancellationToken cancellation)
+    private async Task<HttpResponseMessage> SendRequestAsync(
+        ApiRequest request,
+        CancellationToken cancellationToken)
     {
         var requestUri = new Uri(_baseAddress, $"./bot{_token}/{request.MethodName}");
         var parameters = request.Parameters;
-        
 
         if (parameters is null)
         {
-            return await _httpClient.GetAsync(requestUri, cancellation).ConfigureAwait(false);
+            return await _httpClient.GetAsync(requestUri, cancellationToken).ConfigureAwait(false);
         }
 
+        using var httpContent = new MultipartFormDataContent();
+        if (!PopulateMultipartContent(parameters, httpContent))
+        {
+            return await _httpClient.GetAsync(requestUri, cancellationToken).ConfigureAwait(false);
+        }
+
+        return await _httpClient.PostAsync(requestUri, httpContent, cancellationToken).ConfigureAwait(false);
+    }
+
+    private static bool PopulateMultipartContent(
+        object parameters,
+        MultipartFormDataContent httpContent)
+    {
         var properties = _parametersCache.GetOrAdd(parameters.GetType(), type => type.GetProperties());
         var hasParameters = false;
         var fileIdx = 0;
-        var httpContent = new MultipartFormDataContent();
 
-        try
+        foreach (var property in properties)
         {
-            foreach (var property in properties)
+            var value = property.GetValue(parameters);
+            if (value == null)
             {
-                var value = property.GetValue(parameters);
-                if (value == null)
-                {
-                    continue;
-                }
-
-                hasParameters = true;
-
-                if (value is IFileSource source)
-                {
-                    value = source.Value;
-                }
-
-                if (value is InputFile inputFile)
-                {
-                    httpContent.Add(
-                        new StreamContent(inputFile.GetStream()),
-                        _fieldNamesCache.GetOrAdd(property.Name, name => name.ToSnake()),
-                        inputFile.FileName);
-                }
-                else
-                {
-                    var serializedValue = SerializeMultipartValue(
-                        value,
-                        httpContent,
-                        ref fileIdx);
-
-                    httpContent.Add(
-                        new StringContent(serializedValue, Encoding.UTF8),
-                        _fieldNamesCache.GetOrAdd(property.Name, name => name.ToSnake()));
-                }
+                continue;
             }
 
-            if (!hasParameters)
+            hasParameters = true;
+
+            if (value is IFileSource source)
             {
-                return await _httpClient.GetAsync(requestUri, cancellation).ConfigureAwait(false);
+                value = source.Value;
             }
 
-            return await _httpClient.PostAsync(requestUri, httpContent, cancellation).ConfigureAwait(false);
+            if (value is InputFile inputFile)
+            {
+                httpContent.Add(
+                    new StreamContent(inputFile.GetStream()),
+                    _fieldNamesCache.GetOrAdd(property.Name, name => name.ToSnake()),
+                    inputFile.FileName);
+            }
+            else
+            {
+                var serializedValue = SerializeMultipartValue(
+                    value,
+                    httpContent,
+                    ref fileIdx);
+
+                httpContent.Add(
+                    new StringContent(serializedValue, Encoding.UTF8),
+                    _fieldNamesCache.GetOrAdd(property.Name, name => name.ToSnake()));
+            }
         }
-        finally
-        {
-            httpContent.Dispose();
-        }
+
+        return hasParameters;
     }
 
     private static JsonNode PrepareJsonValue(

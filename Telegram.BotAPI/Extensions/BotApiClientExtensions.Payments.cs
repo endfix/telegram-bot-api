@@ -22,7 +22,7 @@ public static partial class BotApiClientExtensions
 
     /// <summary>Sends an invoice to a chat.</summary>
     /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="ChatId">Target chat or channel.</param>
+    /// <param name="chatId">Target chat or channel.</param>
     /// <param name="title">Product name, 1-32 characters.</param>
     /// <param name="description">Product description, 1-255 characters.</param>
     /// <param name="payload">Bot-defined invoice payload, 1-128 bytes.</param>
@@ -57,7 +57,7 @@ public static partial class BotApiClientExtensions
     /// <returns>The message containing the invoice.</returns>
     public static async Task<Message> SendInvoiceAsync(
         this IBotApiClient client,
-        ChatIdSource ChatId,
+        ChatIdSource chatId,
         string title,
         string description,
         string payload,
@@ -91,7 +91,7 @@ public static partial class BotApiClientExtensions
         CancellationToken cancellationToken = default)
         => await client.SendInvoiceAsync(new SendInvoiceParameters
         {
-            ChatId = ChatId,
+            ChatId = chatId,
             MessageThreadId = messageThreadId,
             DirectMessagesTopicId = directMessagesTopicId,
             Title = title,

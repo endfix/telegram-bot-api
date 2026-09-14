@@ -295,8 +295,8 @@ to install a particular .NET SDK in the consuming application.
 | Consumer target | Status | Guidance |
 | --- | --- | --- |
 | `.NET 10`, `.NET 9`, `.NET 8` | Supported via `net8.0` | Recommended targets for new applications. |
-| `.NET 7`, `.NET 6` | Compatible via `netstandard2.0` | NuGet selects the `netstandard2.0` assets. The library can be consumed normally; use these targets where the application is intentionally pinned to that runtime. |
-| `.NET 5`, `.NET Core 3.1` | Compatible, legacy | Should be treated as migration targets because these runtimes are out of support. |
+| `.NET 7`, `.NET 6` | Best-effort compatibility via `netstandard2.0` | CI executes the packaged fallback on .NET 6. However, the current `System.Text.Json 10.x` dependency does not support these end-of-life runtimes, so this is a regression check rather than a production support promise. |
+| `.NET 5`, `.NET Core 3.1` | NuGet asset compatibility only | These runtimes and the current dependency combination are not exercised or supported. Treat them as migration targets. |
 | `.NET Core 2.0` through `2.2` | Compatible in principle | NuGet compatibility is possible through `netstandard2.0`, but this is not a current CI target. |
 | `.NET Framework 4.7.2` through `4.8.1` | Compatible | Practical choice for maintained classic Windows applications. |
 | `.NET Framework 4.6.2` through `4.7.1` | Package-dependent | May resolve the package graph, but is not a recommended baseline for new builds. |
@@ -307,10 +307,12 @@ it is not a claim that every listed runtime is actively tested by this
 repository. The test and example projects exercise the `net8.0` asset, while
 CI compiles and package-validates both library targets.
 
-NuGet does not need a dedicated `net6.0` or `net7.0` asset for this package.
-Applications targeting those frameworks fall back to the compatible
-`netstandard2.0` asset; its absence from a package manager's specialized asset
-list does not mean that .NET 6 or .NET 7 consumers are unsupported.
+NuGet does not need a dedicated `net6.0` or `net7.0` asset to resolve this
+package: applications targeting those frameworks select `netstandard2.0`.
+Asset selection alone does not imply that every transitive dependency supports
+the consuming runtime. In particular, the .NET 6 smoke run is deliberately kept
+as a best-effort compatibility canary and surfaces the support warnings emitted
+by the current 10.x dependency graph.
 
 ### Dependency footprint
 
@@ -346,6 +348,12 @@ dotnet test Telegram.BotAPI.Tests/Telegram.BotAPI.Tests.csproj --filter "Categor
 ```
 
 See the [test project guide](https://github.com/endfix/telegram-bot-api/blob/main/Telegram.BotAPI.Tests/README.md) for the live test topology, BotFather settings, administrator rights, secrets, rollback behavior and focused run commands.
+
+CI also installs the locally packed NuGet package into two small consumer
+applications. One executes the native `net8.0` asset on .NET 8; the other
+executes the `netstandard2.0` fallback in a .NET 6 Docker container. These smoke
+tests use an in-memory HTTP handler and require neither a bot token nor network
+access to Telegram. See the [package smoke guide](https://github.com/endfix/telegram-bot-api/blob/main/eng/PackageSmoke/README.md) for the exact checks and local commands.
 
 ## Benchmarks
 

@@ -36,3 +36,30 @@ jobs:
           --no-build
           --output ./artifacts
           -p:PackageVersion=0.0.0-ci
+
+      - name: Restore package smoke consumers
+        run: >-
+          dotnet restore eng/PackageSmoke/Telegram.BotAPI.PackageSmoke.csproj
+          --source ./artifacts
+          --source https://api.nuget.org/v3/index.json
+
+      - name: Run .NET 8 package smoke
+        run: >-
+          dotnet run
+          --project eng/PackageSmoke/Telegram.BotAPI.PackageSmoke.csproj
+          --configuration Release
+          --framework net8.0
+          --no-restore
+          -- net8.0
+
+      - name: Build .NET Standard fallback consumer
+        run: >-
+          dotnet build eng/PackageSmoke/Telegram.BotAPI.PackageSmoke.csproj
+          --configuration Release
+          --framework net6.0
+          --no-restore
+
+      - name: Run .NET Standard fallback on .NET 6
+        run: |
+          docker build --tag telegram-bot-api-package-smoke:net6 eng/PackageSmoke
+          docker run --rm telegram-bot-api-package-smoke:net6

@@ -1,4 +1,6 @@
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Endfix.Telegram.BotAPI.Extensions;
 using FluentAssertions;
 using Xunit;
@@ -23,10 +25,56 @@ public class JsonSerializerExtensionsTests
         stream.CanRead.Should().BeTrue();
     }
 
+    [Fact]
+    public void TryGetEnum_ReturnsFalseForMalformedEnumValue()
+    {
+        using var document = JsonDocument.Parse("\"not-a-value\"");
+        var options = new JsonSerializerOptions();
+        options.Converters.Add(new JsonStringEnumConverter());
+
+        var success = document.RootElement.TryGetEnum<TestEnum>(options, out var value);
+
+        success.Should().BeFalse();
+        value.Should().Be(default(TestEnum));
+    }
+
+    [Fact]
+    public void TryGetEnum_DoesNotHideUnexpectedConverterFailure()
+    {
+        using var document = JsonDocument.Parse("\"value\"");
+        var options = new JsonSerializerOptions();
+        options.Converters.Add(new ThrowingEnumConverter());
+
+        var action = () => document.RootElement.TryGetEnum<TestEnum>(options, out _);
+
+        action.Should().Throw<InvalidOperationException>()
+            .WithMessage("Unexpected converter failure.");
+    }
+
     public sealed class TestPayload
     {
         public string DisplayName { get; set; } = string.Empty;
 
         public int[] Values { get; set; } = [];
+    }
+
+    private enum TestEnum
+    {
+        Value
+    }
+
+    private sealed class ThrowingEnumConverter : JsonConverter<TestEnum>
+    {
+        public override TestEnum Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options)
+            => throw new InvalidOperationException("Unexpected converter failure.");
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            TestEnum value,
+            JsonSerializerOptions options)
+            => throw new NotSupportedException();
     }
 }

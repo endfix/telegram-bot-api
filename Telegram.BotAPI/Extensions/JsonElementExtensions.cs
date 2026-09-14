@@ -22,7 +22,7 @@ public static class JsonElementExtensions
             value = result;
             return true;
         }
-        catch
+        catch (JsonException)
         {
             value = default;
             return false;

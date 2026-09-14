@@ -58,9 +58,7 @@ public static class JsonSerializerExtensions
     /// <summary>Gets the serializer options used for indented Telegram Bot API payloads.</summary>
     public static readonly JsonSerializerOptions IndentedOptions = new(Options)
     {
-        WriteIndented = true,
-        IndentCharacter = ' ',
-        IndentSize = 4
+        WriteIndented = true
     };
 
     /// <summary>Deserializes JSON using the Telegram Bot API serializer options.</summary>

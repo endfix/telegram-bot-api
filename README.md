@@ -3,7 +3,9 @@
 [![.NET%20Standard](https://img.shields.io/badge/.NET%20Standard-2.0-blue.svg)](https://learn.microsoft.com/en-us/dotnet/standard/net-standard?tabs=net-standard-2-0)
 [![NuGet](https://img.shields.io/nuget/v/Endfix.Telegram.BotAPI.svg)](https://www.nuget.org/packages/Endfix.Telegram.BotAPI/)
 
-Typed .NET client for the Telegram Bot API. The library targets .NET Standard 2.0 and uses `System.Text.Json` for request and response contracts.
+Typed .NET client for the Telegram Bot API. The package provides native
+`net8.0` and compatible `netstandard2.0` assets and uses `System.Text.Json` for
+request and response contracts.
 
 ## Features
 
@@ -95,8 +97,12 @@ for both receiving models below.
 
 ## Uploading files
 
-Typed input files accept a local path or a repeatable `InputFileSource`. Local
-files can use the explicit path source:
+Typed input files accept a local path or a repeatable `InputFileSource`. Choose
+the source according to where the content already lives and how often it will
+be sent.
+
+Use a path for a large or one-off local file. The source is lazy and does not
+buffer the complete file in memory:
 
 ```cs
 var document = new InputDocumentFile(
@@ -104,13 +110,14 @@ var document = new InputDocumentFile(
 ```
 
 Passing the path directly as `new InputDocumentFile("report.pdf")` remains a
-short equivalent. Path sources are lazy: constructing one does not access the
-filesystem. The file is opened again for every request attempt, and normal
-`FileStream` exceptions surface when the request consumes it or when
-`InputFile.GetStream()` is called directly.
+short equivalent. Constructing a path source does not access the filesystem.
+The file is opened again for every request attempt, and normal `FileStream`
+exceptions surface when the request consumes it or when `InputFile.GetStream()`
+is called directly.
 
-Use an in-memory source when the content is already available without touching
-the filesystem:
+Use an in-memory source when the content is already available as bytes, or when
+a small or medium payload is sent repeatedly and the application deliberately
+wants to avoid opening its file for every attempt:
 
 ```cs
 var document = new InputDocumentFile(
@@ -118,6 +125,13 @@ var document = new InputDocumentFile(
 
 await api.SendDocumentAsync(chatId, document);
 ```
+
+`FromMemory` takes its own snapshot of the supplied bytes. Reading a large file
+into a byte array solely for one upload usually adds memory use and a copy
+without avoiding the original disk read. Local benchmarks show that an already
+loaded memory source has much lower request-preparation overhead than opening a
+path, but they intentionally exclude the cost of loading that byte array and
+network transfer normally dominates a Telegram upload.
 
 For databases, object storage, generated content and other stream-backed data,
 provide a factory that returns a new readable stream for each request attempt.
@@ -273,14 +287,14 @@ downloads never dispose the caller's destination stream.
 
 ## Runtime compatibility
 
-The library targets `netstandard2.0`. This is a library target, not a
-requirement to install a particular .NET SDK in the consuming application.
-Modern .NET runtimes implement .NET Standard 2.0 directly; older runtimes use
-the compatible NuGet assets supplied by the package dependencies.
+The package targets `net8.0` and `netstandard2.0`. NuGet selects the native
+`net8.0` asset for .NET 8 and later applications. Older runtimes use the
+compatible `netstandard2.0` fallback; this is a library target, not a requirement
+to install a particular .NET SDK in the consuming application.
 
 | Consumer target | Status | Guidance |
 | --- | --- | --- |
-| `.NET 10`, `.NET 9`, `.NET 8` | Supported | Recommended targets for new applications. |
+| `.NET 10`, `.NET 9`, `.NET 8` | Supported via `net8.0` | Recommended targets for new applications. |
 | `.NET 7`, `.NET 6` | Compatible via `netstandard2.0` | NuGet selects the `netstandard2.0` assets. The library can be consumed normally; use these targets where the application is intentionally pinned to that runtime. |
 | `.NET 5`, `.NET Core 3.1` | Compatible, legacy | Should be treated as migration targets because these runtimes are out of support. |
 | `.NET Core 2.0` through `2.2` | Compatible in principle | NuGet compatibility is possible through `netstandard2.0`, but this is not a current CI target. |
@@ -290,20 +304,26 @@ the compatible NuGet assets supplied by the package dependencies.
 
 The compatibility column describes framework and NuGet asset compatibility;
 it is not a claim that every listed runtime is actively tested by this
-repository. The test and example projects currently exercise modern .NET
-targets, while the published library remains `netstandard2.0` to support
-older consumers. The `System.Text.Json` dependency also provides a
-`netstandard2.0` asset and a `.NET Framework 4.6.2` asset, so dependency
-resolution still matters for classic Framework applications.
+repository. The test and example projects exercise the `net8.0` asset, while
+CI compiles and package-validates both library targets.
 
 NuGet does not need a dedicated `net6.0` or `net7.0` asset for this package.
 Applications targeting those frameworks fall back to the compatible
 `netstandard2.0` asset; its absence from a package manager's specialized asset
 list does not mean that .NET 6 or .NET 7 consumers are unsupported.
 
-This library does not require Native AOT, a particular CPU architecture, or a
-specific operating system. The consuming runtime must still support the
-selected .NET target and the package dependency graph.
+### Dependency footprint
+
+.NET 8 and later consumers select the `net8.0` asset and use the
+runtime-provided `System.Text.Json`. The `netstandard2.0` fallback references
+`System.Text.Json 10.0.11` and its compatibility dependencies for older .NET
+and .NET Framework consumers. NuGet resolves that graph automatically; an
+application normally should not pin its transitive packages manually.
+
+The package does not claim trimming or Native AOT compatibility and has no
+platform-specific runtime identifier or operating-system requirement. The
+consuming runtime must still support the selected .NET target and dependency
+graph.
 
 ## Development
 

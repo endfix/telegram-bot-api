@@ -28,3 +28,11 @@ jobs:
 
       - name: Test
         run: dotnet test Telegram.BotAPI.sln --configuration Release --no-build
+
+      - name: Validate package assets
+        run: >-
+          dotnet pack Telegram.BotAPI/Telegram.BotAPI.csproj
+          --configuration Release
+          --no-build
+          --output ./artifacts
+          -p:PackageVersion=0.0.0-ci

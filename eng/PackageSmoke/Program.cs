@@ -17,7 +17,7 @@ var expectedFramework = expectedAsset switch
     "netstandard2.0" => ".NETStandard,Version=v2.0",
     _ => throw new InvalidOperationException($"Unsupported expected asset: {expectedAsset}.")
 };
-var expectedJsonMajor = expectedAsset == "net8.0" ? 8 : 10;
+const int expectedJsonMajor = 8;
 
 var libraryAssembly = typeof(BotApiClient).Assembly;
 var actualFramework = libraryAssembly

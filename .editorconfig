@@ -1,0 +1,17 @@
+root = true
+
+[*.{cs,csproj,props,targets,sln,json,md}]
+end_of_line = crlf
+insert_final_newline = true
+
+[*.{yml,yaml,sh}]
+end_of_line = lf
+insert_final_newline = true
+
+[Dockerfile]
+end_of_line = lf
+insert_final_newline = true
+
+[.dockerignore]
+end_of_line = lf
+insert_final_newline = true

@@ -11,7 +11,10 @@ namespace Endfix.Telegram.BotAPI.Extensions;
 /// <summary>Provides JSON serialization helpers configured for the Telegram Bot API contract.</summary>
 public static class JsonSerializerExtensions
 {
-    /// <summary>Gets the serializer options used for Telegram Bot API payloads.</summary>
+    /// <summary>Gets the read-only serializer options used for Telegram Bot API payloads.</summary>
+    /// <remarks>
+    /// Create a <see cref="JsonSerializerOptions"/> copy to customize these options.
+    /// </remarks>
     public static readonly JsonSerializerOptions Options = new()
     {
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
@@ -55,11 +58,20 @@ public static class JsonSerializerExtensions
         }
     };
 
-    /// <summary>Gets the serializer options used for indented Telegram Bot API payloads.</summary>
+    /// <summary>Gets the read-only serializer options used for indented Telegram Bot API payloads.</summary>
+    /// <remarks>
+    /// Create a <see cref="JsonSerializerOptions"/> copy to customize these options.
+    /// </remarks>
     public static readonly JsonSerializerOptions IndentedOptions = new(Options)
     {
         WriteIndented = true
     };
+
+    static JsonSerializerExtensions()
+    {
+        Options.MakeReadOnly(populateMissingResolver: true);
+        IndentedOptions.MakeReadOnly(populateMissingResolver: true);
+    }
 
     /// <summary>Deserializes JSON using the Telegram Bot API serializer options.</summary>
     /// <typeparam name="T">Type of value to deserialize.</typeparam>

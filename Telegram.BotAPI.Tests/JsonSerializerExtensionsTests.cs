@@ -10,6 +10,32 @@ namespace Endfix.Telegram.BotAPI.Tests;
 public class JsonSerializerExtensionsTests
 {
     [Fact]
+    public void SharedOptions_AreReadOnlyBeforeSerialization()
+    {
+        JsonSerializerExtensions.Options.IsReadOnly.Should().BeTrue();
+        JsonSerializerExtensions.IndentedOptions.IsReadOnly.Should().BeTrue();
+
+        var changeOptions = () => JsonSerializerExtensions.Options.PropertyNamingPolicy = null;
+        var changeIndentedOptions = () => JsonSerializerExtensions.IndentedOptions.WriteIndented = false;
+
+        changeOptions.Should().Throw<InvalidOperationException>();
+        changeIndentedOptions.Should().Throw<InvalidOperationException>();
+    }
+
+    [Fact]
+    public void SharedOptions_CanBeCopiedForIndependentCustomization()
+    {
+        var options = new JsonSerializerOptions(JsonSerializerExtensions.Options)
+        {
+            PropertyNamingPolicy = null
+        };
+
+        options.IsReadOnly.Should().BeFalse();
+        options.PropertyNamingPolicy.Should().BeNull();
+        JsonSerializerExtensions.Options.PropertyNamingPolicy.Should().Be(JsonNamingPolicy.SnakeCaseLower);
+    }
+
+    [Fact]
     public async Task DeserializeAsyncFromStream_RestoresValueAndLeavesStreamOpen()
     {
         const string json = """{"display_name":"Endfix","values":[1,2,3]}""";

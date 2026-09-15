@@ -27,6 +27,8 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 - Preserve unexpected enum converter failures instead of treating every
   exception as an unknown enum value.
+- Freeze the shared serializer options during type initialization to prevent
+  process-wide mutation; callers can still copy them for customization.
 - Dispose an opened upload stream if multipart header validation fails before
   its content is transferred to the request container.
 

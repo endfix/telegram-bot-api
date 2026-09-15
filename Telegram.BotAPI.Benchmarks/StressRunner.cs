@@ -12,6 +12,7 @@ namespace Endfix.Telegram.BotAPI.Benchmarks;
 internal static class StressRunner
 {
     private const int Iterations = 1_000_000;
+    private const int WarmupIterationsPerWorker = 1_000;
 
     public static async Task RunAsync(int maxParallel)
     {
@@ -28,11 +29,15 @@ internal static class StressRunner
             Text = "Stress test message"
         });
 
-        // Warm up lazy serializer and reflection caches before taking the baseline.
-        await client.RequestAsync<Message>(request).ConfigureAwait(false);
+        // Warm up the same concurrency shape so worker tasks, ThreadPool threads,
+        // and per-thread runtime caches are not counted as retained workload state.
+        var warmupIterations = checked(maxParallel * WarmupIterationsPerWorker);
+        await RunWorkersAsync(client, request, warmupIterations, maxParallel).ConfigureAwait(false);
         ForceCollection();
         var process = Process.GetCurrentProcess();
-        var managedBefore = GC.GetTotalMemory(forceFullCollection: true);
+        process.Refresh();
+        var managedBefore = GC.GetTotalMemory(forceFullCollection: false);
+        var allocatedBefore = GC.GetTotalAllocatedBytes(precise: true);
         var workingSetBefore = process.WorkingSet64;
         var cpuBefore = process.TotalProcessorTime;
         var collectionsBefore = new[]
@@ -43,49 +48,70 @@ internal static class StressRunner
         };
         var stopwatch = Stopwatch.StartNew();
 
-        if (maxParallel == 1)
-        {
-            await RunWorkerAsync(Iterations).ConfigureAwait(false);
-        }
-        else
-        {
-            var iterationsPerWorker = Iterations / maxParallel;
-            var remainder = Iterations % maxParallel;
-            var workers = new Task[maxParallel];
-
-            for (var workerIndex = 0; workerIndex < maxParallel; workerIndex++)
-            {
-                var workerIterations = iterationsPerWorker + (workerIndex < remainder ? 1 : 0);
-                workers[workerIndex] = Task.Run(() => RunWorkerAsync(workerIterations));
-            }
-
-            await Task.WhenAll(workers).ConfigureAwait(false);
-        }
+        await RunWorkersAsync(client, request, Iterations, maxParallel).ConfigureAwait(false);
 
         stopwatch.Stop();
+        var allocatedAfter = GC.GetTotalAllocatedBytes(precise: true);
+        var collectionsAfter = new[]
+        {
+            GC.CollectionCount(0),
+            GC.CollectionCount(1),
+            GC.CollectionCount(2)
+        };
         process.Refresh();
-        var managedAfter = GC.GetTotalMemory(forceFullCollection: true);
-        var workingSetAfter = process.WorkingSet64;
         var cpuAfter = process.TotalProcessorTime;
+        ForceCollection();
+        var managedAfter = GC.GetTotalMemory(forceFullCollection: false);
+        process.Refresh();
+        var workingSetAfter = process.WorkingSet64;
 
         Console.WriteLine($"Iterations:       {Iterations:N0}");
+        Console.WriteLine($"Warm-up:         {warmupIterations:N0}");
         Console.WriteLine($"Max parallel:     {maxParallel:N0}");
+        Console.WriteLine($"GC mode:          {(System.Runtime.GCSettings.IsServerGC ? "Server" : "Workstation")}");
         Console.WriteLine($"Elapsed:          {stopwatch.Elapsed}");
         Console.WriteLine($"Average:          {stopwatch.Elapsed.TotalMilliseconds * 1_000 / Iterations:N2} us/op");
         Console.WriteLine($"CPU time:         {cpuAfter - cpuBefore}");
+        Console.WriteLine($"Total allocated:  {(allocatedAfter - allocatedBefore) / 1024.0 / 1024.0:N1} MB");
+        Console.WriteLine($"Allocated/op:     {(allocatedAfter - allocatedBefore) / (double)Iterations:N1} B");
         Console.WriteLine($"Retained managed before: {managedBefore / 1024.0:N1} KB");
         Console.WriteLine($"Retained managed after:  {managedAfter / 1024.0:N1} KB");
         Console.WriteLine($"Retained managed delta:  {(managedAfter - managedBefore) / 1024.0:N1} KB");
         Console.WriteLine($"Working set before: {workingSetBefore / 1024.0 / 1024.0:N1} MB");
         Console.WriteLine($"Working set after:  {workingSetAfter / 1024.0 / 1024.0:N1} MB");
         Console.WriteLine($"Working set delta:  {(workingSetAfter - workingSetBefore) / 1024.0 / 1024.0:N1} MB");
-        Console.WriteLine($"GC collections:     Gen0 {GC.CollectionCount(0) - collectionsBefore[0]:N0}, " +
-                          $"Gen1 {GC.CollectionCount(1) - collectionsBefore[1]:N0}, " +
-                          $"Gen2 {GC.CollectionCount(2) - collectionsBefore[2]:N0}");
+        Console.WriteLine($"GC collections:     Gen0 {collectionsAfter[0] - collectionsBefore[0]:N0}, " +
+                          $"Gen1 {collectionsAfter[1] - collectionsBefore[1]:N0}, " +
+                          $"Gen2 {collectionsAfter[2] - collectionsBefore[2]:N0}");
+    }
 
-        async Task RunWorkerAsync(int iterations)
+    private static async Task RunWorkersAsync(
+        BotApiClient client,
+        ApiRequest request,
+        int iterations,
+        int maxParallel)
+    {
+        if (maxParallel == 1)
         {
-            for (var i = 0; i < iterations; i++)
+            await RunWorkerAsync(iterations).ConfigureAwait(false);
+            return;
+        }
+
+        var iterationsPerWorker = iterations / maxParallel;
+        var remainder = iterations % maxParallel;
+        var workers = new Task[maxParallel];
+
+        for (var workerIndex = 0; workerIndex < maxParallel; workerIndex++)
+        {
+            var workerIterations = iterationsPerWorker + (workerIndex < remainder ? 1 : 0);
+            workers[workerIndex] = Task.Run(() => RunWorkerAsync(workerIterations));
+        }
+
+        await Task.WhenAll(workers).ConfigureAwait(false);
+
+        async Task RunWorkerAsync(int workerIterations)
+        {
+            for (var i = 0; i < workerIterations; i++)
             {
                 var response = await client.RequestAsync<Message>(request).ConfigureAwait(false);
                 ValidateResponse(response);

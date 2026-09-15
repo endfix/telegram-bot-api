@@ -24,6 +24,8 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - Normalized the invoice extension's `chatId` parameter casing.
 - Kept required-member compiler shims internal and limited them to the
   `netstandard2.0` asset.
+- Made stress profiles warm up their measured concurrency shape, report total
+  allocations and GC mode, and exclude measurement-induced collections.
 
 ### Fixed
 

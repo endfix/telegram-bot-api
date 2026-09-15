@@ -44,11 +44,16 @@ dotnet run --project Telegram.BotAPI.Benchmarks\Telegram.BotAPI.Benchmarks.cspro
 dotnet run --project Telegram.BotAPI.Benchmarks\Telegram.BotAPI.Benchmarks.csproj -c Release -- --stress-parallel 10
 ```
 
-The stress test reports elapsed and CPU time, retained managed memory after a full GC,
-Working Set, and GC collection counts across 1,000,000 complete local client calls. It
-is intended to reveal throughput or long-running memory-retention problems. It does not
-measure total managed allocations: use `Benchmarks / transport` and its BenchmarkDotNet
-`Allocated` result for allocations per operation.
+The stress test warms up the same concurrency shape that it measures, then reports
+elapsed and CPU time, total managed allocations, retained managed memory after a full
+GC, Working Set, GC mode, and collection counts across 1,000,000 complete local client
+calls. It is intended to reveal throughput or long-running memory-retention problems.
+Use `Benchmarks / transport` and its BenchmarkDotNet `Allocated` result when precise
+per-operation allocation statistics and distributions are required.
+
+For comparisons, run each stress profile in at least three separate processes. A single
+stress timing is directional rather than benchmark-grade, and sequential and parallel
+results must use the same library asset, runtime patch, machine, and GC configuration.
 
 The same scenarios are available as Visual Studio launch profiles:
 
@@ -73,7 +78,8 @@ they are reference points rather than cross-machine performance guarantees.
 
 The `Generate benchmark snapshot` GitHub Actions workflow can be started
 manually. It runs the complete joined benchmark set and optionally the
-sequential and 10-worker stress profiles. The downloadable artifact contains:
+sequential and 10-worker stress profiles in three independent processes each.
+The downloadable artifact contains:
 
 - `README.md` with the library version, commit description and counts, run
   dates, test-machine configuration, and the full BenchmarkDotNet table;

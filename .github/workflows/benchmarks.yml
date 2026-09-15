@@ -58,9 +58,17 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force artifacts/benchmark-snapshot | Out-Null
-          dotnet run --project Telegram.BotAPI.Benchmarks/Telegram.BotAPI.Benchmarks.csproj -c Release --no-restore -- --stress |
+          1..3 | ForEach-Object {
+            "Sequential run $_"
+            dotnet run --project Telegram.BotAPI.Benchmarks/Telegram.BotAPI.Benchmarks.csproj -c Release --no-restore --no-build -- --stress
+            if ($LASTEXITCODE -ne 0) { throw "Sequential stress run $_ failed." }
+          } |
             Tee-Object artifacts/benchmark-snapshot/stress-sequential.txt
-          dotnet run --project Telegram.BotAPI.Benchmarks/Telegram.BotAPI.Benchmarks.csproj -c Release --no-restore -- --stress-parallel 10 |
+          1..3 | ForEach-Object {
+            "Parallel-10 run $_"
+            dotnet run --project Telegram.BotAPI.Benchmarks/Telegram.BotAPI.Benchmarks.csproj -c Release --no-restore --no-build -- --stress-parallel 10
+            if ($LASTEXITCODE -ne 0) { throw "Parallel stress run $_ failed." }
+          } |
             Tee-Object artifacts/benchmark-snapshot/stress-parallel-10.txt
 
       - name: Assemble snapshot

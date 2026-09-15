@@ -7,6 +7,8 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-09-15
+
 ### Added
 
 - Added a native `net8.0` package asset alongside `netstandard2.0`.
@@ -26,6 +28,10 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
   `netstandard2.0` asset.
 - Made stress profiles warm up their measured concurrency shape, report total
   allocations and GC mode, and exclude measurement-induced collections.
+- Consolidated committed benchmark evidence into one rolling human-readable
+  report and one normalized JSON data file; raw exports remain CI artifacts.
+- Added automatic GitHub Release creation from the matching changelog section
+  when a version tag is built, and made repeat package publication idempotent.
 
 ### Fixed
 
@@ -67,5 +73,6 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - Preserved original input-source open exceptions.
 - Corrected `deleteStory` and user-gift response contracts.
 
-[Unreleased]: https://github.com/endfix/telegram-bot-api/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/endfix/telegram-bot-api/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/endfix/telegram-bot-api/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/endfix/telegram-bot-api/compare/v0.4.0...v0.5.0

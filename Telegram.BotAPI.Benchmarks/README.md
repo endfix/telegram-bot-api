@@ -8,9 +8,10 @@ Run all benchmarks from the repository root:
 dotnet run --project Telegram.BotAPI.Benchmarks\Telegram.BotAPI.Benchmarks.csproj -c Release -- --filter * --join
 ```
 
-Published snapshots retain the GitHub-flavored Markdown report and the
-machine-readable CSV report. BenchmarkDotNet may also create working artifacts,
-including HTML, which are not published.
+BenchmarkDotNet writes its raw Markdown, CSV, and HTML artifacts to the ignored
+`results` directory. When a run is accepted as the new reference, its findings
+are summarized in `RESULTS.md` and its normalized measurements replace
+`benchmark-data.json`.
 
 Run one group:
 
@@ -32,10 +33,13 @@ The multipart diagnostic group separates local-file opening, direct multipart
 writing from `FileStream` and preloaded `MemoryStream` sources, client-side
 request preparation without consuming the body, and complete multipart writes
 to `Stream.Null`. The complete client pipeline compares local paths with
-`InputFileSource.FromMemory`. It covers 1 file, 10 files, two nested files, and
-payload sizes of 256 B, 64 KB, and 1 MB. The memory-stream case starts from an
-already loaded byte array, so it measures stream and multipart overhead rather
-than loading the payload into memory.
+`InputFileSource.FromMemory`. It covers 1 part, 10 parts, two nested files, and
+payload sizes of 256 B, 64 KB, and 1 MB. The 10-part path-backed scenarios open
+ten independent streams over the same generated file. They measure multipart
+and stream multiplicity with a warm filesystem cache, not ten distinct files or
+cold-file I/O. The memory-stream case starts from an already loaded byte array,
+so it measures stream and multipart overhead rather than loading the payload
+into memory.
 
 Run the long local stress test:
 
@@ -66,15 +70,18 @@ The same scenarios are available as Visual Studio launch profiles:
 - `Benchmarks / stress parallel` runs the same test with 10 bounded workers;
 - `Benchmarks / quick` runs a short serialization smoke test.
 
-The benchmark project targets .NET 9. Results are written to `results` in this
-project directory and should be compared on the same machine and runtime
-configuration. Published snapshots identify the tested commit and environment;
-they are reference points rather than cross-machine performance guarantees.
+The benchmark project targets .NET 9. Temporary results are written to `results`
+in this project directory and should be compared on the same machine and runtime
+configuration. The curated report identifies the tested commit and environment;
+it is a reference point rather than a cross-machine performance guarantee.
 
-## Published snapshots
+## Latest results
 
-- [September 15, 2026 — `5f58e9a`, Windows x64, .NET 9](results/2026-09-15-5f58e9a-windows-x64-net9/README.md)
-- [September 7, 2026 — `c19cb34`, Windows x64, .NET 9](results/2026-09-07-c19cb34-windows-x64-net9/README.md)
+The repository keeps one curated [human-readable report](RESULTS.md) and one
+[normalized data file](benchmark-data.json). They are replaced when a new
+canonical snapshot is accepted; previous versions remain available through Git
+history and release tags. Raw BenchmarkDotNet exports and stress logs are build
+artifacts rather than repository snapshots.
 
 The `Generate benchmark snapshot` GitHub Actions workflow can be started
 manually. It runs the complete joined benchmark set and optionally the

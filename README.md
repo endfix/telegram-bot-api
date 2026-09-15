@@ -1,4 +1,4 @@
-# Telegram Bot API (С#)
+# Telegram Bot API (C#)
 [![Bot%20API](https://img.shields.io/badge/Bot%20API-10.3-26A5E4.svg?logo=telegram&logoColor=white)](https://core.telegram.org/bots/api#august-24-2026)
 [![Targets](https://img.shields.io/badge/targets-net8.0%20%7C%20netstandard2.0-512BD4.svg?logo=dotnet&logoColor=white)](#runtime-compatibility)
 [![NuGet](https://img.shields.io/nuget/v/Endfix.Telegram.BotAPI.svg?logo=nuget&logoColor=white&color=004880)](https://www.nuget.org/packages/Endfix.Telegram.BotAPI/)
@@ -33,7 +33,7 @@ See [CHANGELOG.md](CHANGELOG.md) for release notes and unreleased changes.
 ## Installation
 
 ```bash
-dotnet add package Endfix.Telegram.BotAPI --version 0.5.0
+dotnet add package Endfix.Telegram.BotAPI --version 0.6.0
 ```
 
 ## Quick start
@@ -365,25 +365,25 @@ dotnet run --project Telegram.BotAPI.Benchmarks/Telegram.BotAPI.Benchmarks.cspro
 dotnet run --project Telegram.BotAPI.Benchmarks/Telegram.BotAPI.Benchmarks.csproj -c Release -- --stress-parallel 10
 ```
 
-### Latest snapshot
+### Latest benchmark snapshot
 
-The latest published snapshot was recorded on September 7, 2026 at commit
-`c19cb34` (`v0.4.0-77-gc19cb34`) on .NET 9.0.19, Windows 10 x64, and an Intel
+The current reference snapshot was recorded on September 15, 2026 at commit
+`a229efd` (`v0.5.0-16-ga229efd`) on .NET 9.0.20, Windows 10 x64, and an Intel
 Xeon E5-2690 v3. The benchmarks use local transports and exclude Telegram and
 network latency.
 
 | Scenario | Mean | Allocated |
 | --- | ---: | ---: |
-| Serialize parameters | 566.2 ns | 264 B |
-| Deserialize message | 1.216 us | 1,720 B |
-| Request and deserialize | 6.099 us | 5,272 B |
-| Request without parameters and deserialize | 3.426 us | 3,688 B |
-| Send scalar message | 4.227 us | 3,232 B |
-| Prepare one local-file photo | 226.510 us | 3,768 B |
-| Prepare 10-local-file media group | 2.071 ms | 28,489 B |
+| Serialize parameters | 537.8 ns | 264 B |
+| Deserialize message | 1.310 us | 1,712 B |
+| Request and deserialize | 6.633 us | 5,264 B |
+| Request without parameters and deserialize | 3.278 us | 3,680 B |
+| Send scalar message | 4.626 us | 3,232 B |
+| Prepare one local-file photo | 219.252 us | 3,768 B |
+| Prepare 10-part path-backed media group | 2.047 ms | 28,249 B |
 
-The complete environment, all 82 measurements, raw CSV data, and million-call
-stress profiles are in the [benchmark snapshot](https://github.com/endfix/telegram-bot-api/blob/main/Telegram.BotAPI.Benchmarks/results/2026-09-07-c19cb34-windows-x64-net9/README.md).
+The complete environment, interpretation, all 82 measurements, focused repeats,
+and million-call stress profiles are in the [latest benchmark report](https://github.com/endfix/telegram-bot-api/blob/main/Telegram.BotAPI.Benchmarks/RESULTS.md), with normalized measurements in [`benchmark-data.json`](https://github.com/endfix/telegram-bot-api/blob/main/Telegram.BotAPI.Benchmarks/benchmark-data.json).
 
 ## API documentation source
 
@@ -398,7 +398,7 @@ descriptions.
 
 ## Releases
 
-Push the intended release commit to `main` and wait for CI to pass before creating a `vX.Y.Z` tag. Pushing the tag starts the publish workflow, which independently restores, builds, tests, packs with the version derived from the tag, and publishes the package to NuGet.
+Push the intended release commit to `main` and wait for CI to pass before creating a `vX.Y.Z` tag. Pushing the tag starts the publish workflow, which independently restores, builds, tests, packs with the version derived from the tag, publishes the package to NuGet, and creates the corresponding GitHub Release from that version's `CHANGELOG.md` section.
 
 ## License
 

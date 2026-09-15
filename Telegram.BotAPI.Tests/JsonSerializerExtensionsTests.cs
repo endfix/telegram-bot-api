@@ -59,6 +59,41 @@ public class JsonSerializerExtensionsTests
     }
 
     [Fact]
+    public void VcardProperties_UseTelegramWireName()
+    {
+        object[] values =
+        [
+            new Contact
+            {
+                PhoneNumber = "+12025550123",
+                FirstName = "Endfix",
+                Vcard = "BEGIN:VCARD"
+            },
+            new InputContactMessageContent
+            {
+                PhoneNumber = "+12025550123",
+                FirstName = "Endfix",
+                Vcard = "BEGIN:VCARD"
+            },
+            new InlineQueryResultContact
+            {
+                Id = "contact-result",
+                PhoneNumber = "+12025550123",
+                FirstName = "Endfix",
+                Vcard = "BEGIN:VCARD"
+            }
+        ];
+
+        foreach (var value in values)
+        {
+            using var document = JsonDocument.Parse(value.Serialize());
+
+            document.RootElement.GetProperty("vcard").GetString().Should().Be("BEGIN:VCARD");
+            document.RootElement.TryGetProperty("v_card", out _).Should().BeFalse();
+        }
+    }
+
+    [Fact]
     public async Task DeserializeAsyncFromStream_RestoresValueAndLeavesStreamOpen()
     {
         const string json = """{"display_name":"Endfix","values":[1,2,3]}""";

@@ -482,7 +482,7 @@ public static partial class BotApiClientExtensions
         bool? disableNotification = null,
         bool? protectContent = null,
         bool? allowPaidBroadcast = null,
-        long? messageEffectId = null,
+        string? messageEffectId = null,
         SuggestedPostParameters? suggestedPostParameters = null,
         ReplyParameters? replyParameters = null,
         ReplyMarkup? replyMarkup = null,

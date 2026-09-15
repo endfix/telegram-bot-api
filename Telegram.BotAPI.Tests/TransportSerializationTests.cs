@@ -597,7 +597,8 @@ public sealed class TransportSerializationTests
         {
             ChatId = 123456789L,
             LivePhoto = new InputVideoFile(videoFile.Path),
-            Photo = new InputPhotoFile(photoFile.Path)
+            Photo = new InputPhotoFile(photoFile.Path),
+            MessageEffectId = "effect-123456789"
         }));
 
         context.Handler.LastRequest.Should().NotBeNull();
@@ -605,6 +606,8 @@ public sealed class TransportSerializationTests
             .Which.Content.Should().Equal(0x01, 0x02);
         context.Handler.LastRequest.Parts.Should().ContainSingle(part => part.Name == "photo")
             .Which.Content.Should().Equal(0x03, 0x04);
+        context.Handler.LastRequest.Parts.Should().ContainSingle(part => part.Name == "message_effect_id")
+            .Which.Text.Should().Be("effect-123456789");
     }
 
     [Fact]

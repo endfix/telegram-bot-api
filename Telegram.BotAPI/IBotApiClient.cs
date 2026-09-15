@@ -54,6 +54,10 @@ public interface IBotApiClient
     /// <summary>
     /// Downloads the currencies supported by Telegram payments.
     /// </summary>
+    /// <remarks>
+    /// The data is fetched from Telegram's public currency definition on
+    /// <c>core.telegram.org</c>, independently of the configured Bot API base address.
+    /// </remarks>
     /// <param name="cancellationToken">Token used to cancel the download.</param>
     /// <returns>A dictionary of supported currencies keyed by ISO 4217 currency code.</returns>
     Task<IReadOnlyDictionary<string, Currency>> GetCurrenciesAsync(

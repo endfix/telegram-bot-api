@@ -16,5 +16,5 @@ public sealed class Contact
     public long? UserId { get; init; }
 
     /// <summary>Additional contact data in vCard format, if available.</summary>
-    public string? VCard { get; init; }
+    public string? Vcard { get; init; }
 }

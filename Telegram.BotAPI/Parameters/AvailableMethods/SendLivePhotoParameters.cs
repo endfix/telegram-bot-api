@@ -55,7 +55,7 @@ public sealed class SendLivePhotoParameters : ApiRequestParameters
     public bool? AllowPaidBroadcast { get; init; }
 
     /// <summary>Unique identifier of a message effect.</summary>
-    public long? MessageEffectId { get; init; }
+    public string? MessageEffectId { get; init; }
 
     /// <summary>Parameters for a suggested post.</summary>
     public SuggestedPostParameters? SuggestedPostParameters { get; init; }

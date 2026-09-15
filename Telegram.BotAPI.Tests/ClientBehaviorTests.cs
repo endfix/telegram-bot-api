@@ -67,6 +67,20 @@ public sealed class ClientBehaviorTests
     }
 
     [Fact]
+    public async Task RequestAsync_PreservesMissingOptionalErrorParameters()
+    {
+        using var context = new ClientContext(
+            "{\"ok\":false,\"error_code\":400,\"description\":\"Bad Request\",\"parameters\":{}}");
+
+        var response = await context.Client.RequestAsync<User>(
+            new ApiRequest("getMe", parameters: null));
+
+        response.Parameters.Should().NotBeNull();
+        response.Parameters!.MigrateToChatId.Should().BeNull();
+        response.Parameters.RetryAfter.Should().BeNull();
+    }
+
+    [Fact]
     public async Task RequestAsync_StopsRetrying429AfterConfiguredAttempts()
     {
         using var context = new ClientContext(

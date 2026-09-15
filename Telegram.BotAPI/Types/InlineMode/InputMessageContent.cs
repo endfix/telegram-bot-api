@@ -94,7 +94,7 @@ public sealed class InputContactMessageContent : InputMessageContent
     public string? LastName { get; init; }
 
     /// <summary>Additional contact data as a vCard, containing 0-2048 bytes.</summary>
-    public string? VCard { get; init; }
+    public string? Vcard { get; init; }
 }
 
 /// <summary>Describes invoice message content for an inline result.</summary>

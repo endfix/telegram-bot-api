@@ -22,6 +22,8 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - Separated multipart request preparation from response handling without
   changing disposal semantics.
 - Normalized the invoice extension's `chatId` parameter casing.
+- Kept required-member compiler shims internal and limited them to the
+  `netstandard2.0` asset.
 
 ### Fixed
 
@@ -31,6 +33,10 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
   process-wide mutation; callers can still copy them for customization.
 - Parse numeric chat identifiers using the invariant JSON contract regardless
   of the process culture.
+- Serialize live-photo message effect identifiers and vCard fields using the
+  Telegram wire types and names.
+- Preserve the absence of optional migration and retry response parameters
+  instead of exposing their default numeric values.
 - Dispose an opened upload stream if multipart header validation fails before
   its content is transferred to the request container.
 

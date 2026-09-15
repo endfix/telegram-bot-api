@@ -440,7 +440,7 @@ public sealed class InlineQueryResultContact : InlineQueryResult
     public string? LastName { get; init; }
 
     /// <summary>Additional contact data in vCard format, from 0 through 2048 bytes.</summary>
-    public string? VCard { get; init; }
+    public string? Vcard { get; init; }
 
     /// <summary>Inline keyboard attached to the message.</summary>
     public InlineKeyboardMarkup? ReplyMarkup { get; init; }

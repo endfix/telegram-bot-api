@@ -1,7 +1,9 @@
+using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Endfix.Telegram.BotAPI.Extensions;
+using Endfix.Telegram.BotAPI.Types;
 using FluentAssertions;
 using Xunit;
 
@@ -33,6 +35,27 @@ public class JsonSerializerExtensionsTests
         options.IsReadOnly.Should().BeFalse();
         options.PropertyNamingPolicy.Should().BeNull();
         JsonSerializerExtensions.Options.PropertyNamingPolicy.Should().Be(JsonNamingPolicy.SnakeCaseLower);
+    }
+
+    [Fact]
+    public void DeserializeChatId_UsesInvariantCultureForNumericString()
+    {
+        var culture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
+        culture.NumberFormat.NegativeSign = "~";
+        var previousCulture = CultureInfo.CurrentCulture;
+
+        try
+        {
+            CultureInfo.CurrentCulture = culture;
+
+            var actual = "\"-1001234567890\"".Deserialize<ChatIdSource>();
+
+            actual.Value.Should().Be(-1001234567890L);
+        }
+        finally
+        {
+            CultureInfo.CurrentCulture = previousCulture;
+        }
     }
 
     [Fact]

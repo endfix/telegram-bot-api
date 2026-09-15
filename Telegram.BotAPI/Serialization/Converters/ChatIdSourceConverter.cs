@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Endfix.Telegram.BotAPI.Types;
@@ -17,7 +18,7 @@ internal sealed class ChatIdSourceConverter : JsonConverter<ChatIdSource>
         if (reader.TokenType == JsonTokenType.String)
         {
             var value = reader.GetString();
-            if (long.TryParse(value, out var id))
+            if (long.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var id))
             {
                 return id;
             }

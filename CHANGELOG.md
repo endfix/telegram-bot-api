@@ -29,6 +29,8 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
   exception as an unknown enum value.
 - Freeze the shared serializer options during type initialization to prevent
   process-wide mutation; callers can still copy them for customization.
+- Parse numeric chat identifiers using the invariant JSON contract regardless
+  of the process culture.
 - Dispose an opened upload stream if multipart header validation fails before
   its content is transferred to the request container.
 

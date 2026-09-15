@@ -68,6 +68,9 @@ they are reference points rather than cross-machine performance guarantees.
 
 ## Published snapshots
 
+- [September 15, 2026 — `5f58e9a`, Windows x64, .NET 9](results/2026-09-15-5f58e9a-windows-x64-net9/README.md)
+- [September 7, 2026 — `c19cb34`, Windows x64, .NET 9](results/2026-09-07-c19cb34-windows-x64-net9/README.md)
+
 The `Generate benchmark snapshot` GitHub Actions workflow can be started
 manually. It runs the complete joined benchmark set and optionally the
 sequential and 10-worker stress profiles. The downloadable artifact contains:

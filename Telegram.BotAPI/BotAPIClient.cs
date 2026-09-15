@@ -298,10 +298,10 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
 
             if (value is InputFile inputFile)
             {
-                httpContent.Add(
-                    new StreamContent(inputFile.GetStream()),
-                    _fieldNamesCache.GetOrAdd(property.Name, name => name.ToSnake()),
-                    inputFile.FileName);
+                AddFileContent(
+                    httpContent,
+                    inputFile,
+                    _fieldNamesCache.GetOrAdd(property.Name, name => name.ToSnake()));
             }
             else
             {
@@ -378,7 +378,7 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
         if (value is InputFile file)
         {
             var attachName = $"attach_{fileIdx++}";
-            content.Add(new StreamContent(file.GetStream()), attachName, file.FileName);
+            AddFileContent(content, file, attachName);
             return JsonValue.Create($"attach://{attachName}");
         }
 
@@ -436,6 +436,32 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
         }
 
         return node;
+    }
+
+    private static void AddFileContent(
+        MultipartFormDataContent content,
+        InputFile file,
+        string name)
+    {
+        var fileContent = new StreamContent(file.GetStream());
+
+        try
+        {
+            content.Add(fileContent, name, file.FileName);
+        }
+        catch
+        {
+            try
+            {
+                fileContent.Dispose();
+            }
+            catch
+            {
+                // Preserve the exception that prevented ownership transfer.
+            }
+
+            throw;
+        }
     }
 
     private static int GetFilePropertyPriority(string propertyName)

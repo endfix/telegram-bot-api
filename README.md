@@ -1,7 +1,7 @@
 # Telegram Bot API (С#)
 [![Bot%20API](https://img.shields.io/badge/Bot%20API-10.3-26A5E4.svg?logo=telegram&logoColor=white)](https://core.telegram.org/bots/api#august-24-2026)
 [![Targets](https://img.shields.io/badge/targets-net8.0%20%7C%20netstandard2.0-512BD4.svg?logo=dotnet&logoColor=white)](#runtime-compatibility)
-[![NuGet](https://img.shields.io/nuget/v/Endfix.Telegram.BotAPI.svg)](https://www.nuget.org/packages/Endfix.Telegram.BotAPI/)
+[![NuGet](https://img.shields.io/nuget/v/Endfix.Telegram.BotAPI.svg?logo=nuget&logoColor=white&color=004880)](https://www.nuget.org/packages/Endfix.Telegram.BotAPI/)
 
 Typed .NET client for the Telegram Bot API. The package provides native
 `net8.0` and compatible `netstandard2.0` assets and uses `System.Text.Json` for

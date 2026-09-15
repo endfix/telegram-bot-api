@@ -27,6 +27,8 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 - Preserve unexpected enum converter failures instead of treating every
   exception as an unknown enum value.
+- Dispose an opened upload stream if multipart header validation fails before
+  its content is transferred to the request container.
 
 ## [0.5.0] - 2026-09-09
 

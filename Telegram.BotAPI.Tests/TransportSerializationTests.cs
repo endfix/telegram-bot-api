@@ -212,6 +212,60 @@ public sealed class TransportSerializationTests
     }
 
     [Fact]
+    public async Task SendPhoto_WhenMultipartHeaderValidationFails_DisposesOpenedStream()
+    {
+        var disposeCount = 0;
+        var source = InputFileSource.FromStream(
+            () => new TrackingMemoryStream(
+                [0x41, 0x42, 0x43],
+                () => disposeCount++),
+            "invalid\r\nphoto.jpg");
+        using var context = new ClientContext();
+
+        var action = () => context.Client.RequestAsync<bool>(new ApiRequest(
+            "sendPhoto",
+            new SendPhotoParameters
+            {
+                ChatId = 123456789L,
+                Photo = new InputPhotoFile(source)
+            }));
+
+        await action.Should().ThrowExactlyAsync<FormatException>();
+        disposeCount.Should().Be(1);
+        context.Handler.LastRequest.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task SendMediaGroup_WhenNestedMultipartHeaderValidationFails_DisposesOpenedStream()
+    {
+        var disposeCount = 0;
+        var source = InputFileSource.FromStream(
+            () => new TrackingMemoryStream(
+                [0x41, 0x42, 0x43],
+                () => disposeCount++),
+            "invalid\r\nphoto.jpg");
+        using var context = new ClientContext();
+
+        var action = () => context.Client.RequestAsync<bool>(new ApiRequest(
+            "sendMediaGroup",
+            new SendMediaGroupParameters
+            {
+                ChatId = 123456789L,
+                Media =
+                [
+                    new InputMediaPhoto
+                    {
+                        Media = new InputPhotoFile(source)
+                    }
+                ]
+            }));
+
+        await action.Should().ThrowExactlyAsync<FormatException>();
+        disposeCount.Should().Be(1);
+        context.Handler.LastRequest.Should().BeNull();
+    }
+
+    [Fact]
     public void InputFile_WithNullStreamFactoryResult_ThrowsClearException()
     {
         var file = new InputPhotoFile(InputFileSource.FromStream(

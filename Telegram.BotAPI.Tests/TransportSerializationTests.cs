@@ -23,8 +23,11 @@ public sealed class TransportSerializationTests
 
         context.Handler.LastRequest.Should().NotBeNull();
         var request = context.Handler.LastRequest!;
-        var photo = request.Parts.Should().ContainSingle(part => part.Name == "photo").Which;
-        Assert.Equal("photo-file-id", photo.Text);
+        request.ContentType.Should().Be("application/json");
+        request.Parts.Should().BeEmpty();
+        using var document = JsonDocument.Parse(request.Body!);
+        document.RootElement.GetProperty("chat_id").GetInt64().Should().Be(123456789L);
+        document.RootElement.GetProperty("photo").GetString().Should().Be("photo-file-id");
     }
 
     [Fact]
@@ -42,6 +45,7 @@ public sealed class TransportSerializationTests
 
         context.Handler.LastRequest.Should().NotBeNull();
         var request = context.Handler.LastRequest!;
+        request.ContentType.Should().Be("multipart/form-data");
         var photo = request.Parts.Should().ContainSingle(part => part.Name == "photo").Which;
         photo.FileName.Should().Be(System.IO.Path.GetFileName(file.Path));
         photo.Content.Should().Equal(0x01, 0x02, 0x03, 0xFF);
@@ -532,18 +536,17 @@ public sealed class TransportSerializationTests
 
         context.Handler.LastRequest.Should().NotBeNull();
         var request = context.Handler.LastRequest!;
-        request.Parts.Should().ContainSingle(part => part.Name == "chat_id")
-            .Which.Text.Should().Be("@contract_test");
-        var replyMarkup = request.Parts.Should()
-            .ContainSingle(part => part.Name == "reply_markup")
-            .Which.Text;
-
-        replyMarkup.Should().Contain("\"inline_keyboard\"");
-        replyMarkup.Should().Contain("\"callback_data\":\"open\"");
+        request.ContentType.Should().Be("application/json");
+        request.Parts.Should().BeEmpty();
+        using var document = JsonDocument.Parse(request.Body!);
+        document.RootElement.GetProperty("chat_id").GetString().Should().Be("@contract_test");
+        var replyMarkup = document.RootElement.GetProperty("reply_markup");
+        replyMarkup.GetProperty("inline_keyboard")[0][0].GetProperty("callback_data")
+            .GetString().Should().Be("open");
     }
 
     [Fact]
-    public async Task SendMessage_SerializesScalarMultipartFieldsWithoutJsonQuotes()
+    public async Task SendMessage_SendsJsonScalarsWithNativeJsonTypes()
     {
         using var context = new ClientContext();
 
@@ -556,13 +559,14 @@ public sealed class TransportSerializationTests
         }));
 
         context.Handler.LastRequest.Should().NotBeNull();
-        var parts = context.Handler.LastRequest!.Parts;
-        parts.Should().ContainSingle(part => part.Name == "chat_id")
-            .Which.Text.Should().Be("123456789");
-        parts.Should().ContainSingle(part => part.Name == "message_thread_id")
-            .Which.Text.Should().Be("42");
-        parts.Should().ContainSingle(part => part.Name == "disable_notification")
-            .Which.Text.Should().Be("true");
+        var request = context.Handler.LastRequest!;
+        request.ContentType.Should().Be("application/json");
+        request.Parts.Should().BeEmpty();
+        using var document = JsonDocument.Parse(request.Body!);
+        document.RootElement.GetProperty("chat_id").GetInt64().Should().Be(123456789L);
+        document.RootElement.GetProperty("message_thread_id").GetInt64().Should().Be(42);
+        document.RootElement.GetProperty("text").GetString().Should().Be("Scalars");
+        document.RootElement.GetProperty("disable_notification").GetBoolean().Should().BeTrue();
     }
 
     [Fact]
@@ -676,7 +680,7 @@ public sealed class TransportSerializationTests
     }
 
     [Fact]
-    public async Task SendPoll_SendsTopLevelEnumWithoutJsonQuotes()
+    public async Task SendPoll_SendsJsonEnumAsSnakeCaseString()
     {
         using var context = new ClientContext();
 
@@ -689,8 +693,42 @@ public sealed class TransportSerializationTests
         }));
 
         context.Handler.LastRequest.Should().NotBeNull();
-        context.Handler.LastRequest!.Parts.Should().ContainSingle(part => part.Name == "type")
-            .Which.Text.Should().Be("quiz");
+        var request = context.Handler.LastRequest!;
+        request.ContentType.Should().Be("application/json");
+        request.Parts.Should().BeEmpty();
+        using var document = JsonDocument.Parse(request.Body!);
+        document.RootElement.GetProperty("type").GetString().Should().Be("quiz");
+        document.RootElement.GetProperty("options")[0].GetProperty("text").GetString().Should().Be("One");
+    }
+
+    [Fact]
+    public async Task SendMediaGroup_WithFileId_SendsJsonBody()
+    {
+        using var context = new ClientContext();
+
+        await context.Client.RequestAsync<bool>(new ApiRequest("sendMediaGroup", new SendMediaGroupParameters
+        {
+            ChatId = 123456789L,
+            Media =
+            [
+                new InputMediaPhoto
+                {
+                    Media = "telegram-photo-file-id",
+                    Caption = "Photo"
+                }
+            ]
+        }));
+
+        context.Handler.LastRequest.Should().NotBeNull();
+        var request = context.Handler.LastRequest!;
+        request.ContentType.Should().Be("application/json");
+        request.Parts.Should().BeEmpty();
+        using var document = JsonDocument.Parse(request.Body!);
+        document.RootElement.GetProperty("chat_id").GetInt64().Should().Be(123456789L);
+        document.RootElement.GetProperty("media")[0].GetProperty("media")
+            .GetString().Should().Be("telegram-photo-file-id");
+        document.RootElement.GetProperty("media")[0].GetProperty("caption")
+            .GetString().Should().Be("Photo");
     }
 
     [Fact]

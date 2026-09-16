@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text;
+using System.Text.Json;
 
 namespace Endfix.Telegram.BotAPI.Tests.Infrastructure;
 
@@ -27,13 +28,21 @@ internal sealed record RecordedRequest(
     HttpMethod Method,
     Uri? Uri,
     string? ContentType,
-    IReadOnlyList<RecordedPart> Parts)
+    IReadOnlyList<RecordedPart> Parts,
+    string? Body)
 {
+    public long GetJsonInt64(string propertyName)
+    {
+        using var document = JsonDocument.Parse(
+            Body ?? throw new InvalidOperationException("The request has no JSON body."));
+        return document.RootElement.GetProperty(propertyName).GetInt64();
+    }
     public static async Task<RecordedRequest> CreateAsync(
         HttpRequestMessage request,
         CancellationToken cancellationToken)
     {
         var parts = new List<RecordedPart>();
+        string? body = null;
 
         if (request.Content is MultipartFormDataContent multipart)
         {
@@ -46,12 +55,17 @@ internal sealed record RecordedRequest(
                     await content.ReadAsByteArrayAsync(cancellationToken)));
             }
         }
+        else if (request.Content is not null)
+        {
+            body = await request.Content.ReadAsStringAsync(cancellationToken);
+        }
 
         return new RecordedRequest(
             request.Method,
             request.RequestUri,
             request.Content?.Headers.ContentType?.MediaType,
-            parts);
+            parts,
+            body);
     }
 
     private static string? NormalizeHeaderValue(string? value)

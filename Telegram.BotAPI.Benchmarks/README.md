@@ -23,11 +23,11 @@ dotnet run --project Telegram.BotAPI.Benchmarks\Telegram.BotAPI.Benchmarks.cspro
 dotnet run --project Telegram.BotAPI.Benchmarks\Telegram.BotAPI.Benchmarks.csproj -c Release -- --filter *MultipartDiagnostic*
 ```
 
-The multipart group compares scalar fields, top-level file sources, media groups
-at Telegram's practical 10-item size, and deeply nested poll/rich media. Its fake
-HTTP handler does not read the request body, so the results isolate multipart object
-construction, JSON preparation, nested-file traversal, and local file opening rather
-than network transfer.
+The multipart group compares a no-file `sendMessage` (JSON body), top-level file
+sources, media groups at Telegram's practical 10-item size, and deeply nested
+poll/rich media. Its fake HTTP handler does not read the request body, so the
+results isolate request construction, nested-file traversal, and local file
+opening rather than network transfer.
 
 The multipart diagnostic group separates local-file opening, direct multipart
 writing from `FileStream` and preloaded `MemoryStream` sources, client-side

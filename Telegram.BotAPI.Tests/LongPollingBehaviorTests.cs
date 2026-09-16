@@ -129,8 +129,7 @@ public sealed class LongPollingBehaviorTests
         await context.Client.StartPollingAsync(cancellationToken: cancellation.Token);
 
         Assert.Equal(2, handler.Requests.Count);
-        var offset = Assert.Single(handler.Requests[1].Parts, part => part.Name == "offset");
-        Assert.Equal("2", offset.Text);
+        Assert.Equal(2, handler.Requests[1].GetJsonInt64("offset"));
     }
 
     [Fact]
@@ -167,8 +166,7 @@ public sealed class LongPollingBehaviorTests
         await polling.WaitAsync(TimeSpan.FromSeconds(2));
 
         Assert.Equal(2, handler.Requests.Count);
-        var offset = Assert.Single(handler.Requests[1].Parts, part => part.Name == "offset");
-        Assert.Equal("3", offset.Text);
+        Assert.Equal(3, handler.Requests[1].GetJsonInt64("offset"));
     }
 
     [Fact]
@@ -290,8 +288,7 @@ public sealed class LongPollingBehaviorTests
         Assert.Equal(2, handler.Requests.Count);
         Assert.All(handler.Requests, request =>
         {
-            var offset = Assert.Single(request.Parts, part => part.Name == "offset");
-            Assert.Equal("0", offset.Text);
+            Assert.Equal(0, request.GetJsonInt64("offset"));
         });
     }
 

@@ -31,7 +31,8 @@ public sealed partial class BotApiClient
 
             response.EnsureSuccessStatusCode();
 
-            using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            using var stream = await ReadContentStreamAsync(response.Content, cancellationToken)
+                .ConfigureAwait(false);
             var result = await stream
                 .DeserializeAsync<Dictionary<string, Currency>>(cancellationToken)
                 .ConfigureAwait(false);

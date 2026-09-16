@@ -12,6 +12,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Linq;
 using System.Text;
@@ -36,7 +37,11 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
 
     private static readonly ConcurrentDictionary<Type, PropertyInfo[]> _parametersCache = new();
 
+    private static readonly ConcurrentDictionary<Type, bool> _typeMayContainFilesCache = new();
+
     private static readonly ConcurrentDictionary<string, string> _fieldNamesCache = new();
+
+    private static Type[]? _exportedLibraryTypes;
 
     private static readonly Uri _defaultBaseAddress = new("https://api.telegram.org");
 
@@ -142,7 +147,8 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
             ApiResponse<T>? apiResponse;
             try
             {
-                using var responseStream = await responseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                using var responseStream = await ReadContentStreamAsync(responseMessage.Content, cancellation)
+                    .ConfigureAwait(false);
                 apiResponse = await responseStream.DeserializeAsync<ApiResponse<T>>(cancellation).ConfigureAwait(false);
             }
             catch (JsonException) when (!responseMessage.IsSuccessStatusCode)
@@ -248,7 +254,7 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
             .ConfigureAwait(false);
 
         response.EnsureSuccessStatusCode();
-        using var source = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+        using var source = await ReadContentStreamAsync(response.Content, cancellationToken).ConfigureAwait(false);
         await source.CopyToAsync(destination, 81920, cancellationToken).ConfigureAwait(false);
     }
 
@@ -264,13 +270,212 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
             return await _httpClient.GetAsync(requestUri, cancellationToken).ConfigureAwait(false);
         }
 
-        using var httpContent = new MultipartFormDataContent();
-        if (!PopulateMultipartContent(parameters, httpContent))
+        using var httpContent = CreateRequestContent(parameters);
+        if (httpContent is null)
         {
             return await _httpClient.GetAsync(requestUri, cancellationToken).ConfigureAwait(false);
         }
 
         return await _httpClient.PostAsync(requestUri, httpContent, cancellationToken).ConfigureAwait(false);
+    }
+
+    private static HttpContent? CreateRequestContent(object parameters)
+    {
+        if (!TypeMayContainFiles(parameters.GetType()) || !ContainsInputFile(parameters))
+        {
+            var bytes = JsonSerializer.SerializeToUtf8Bytes(
+                parameters,
+                parameters.GetType(),
+                JsonSerializerExtensions.Options);
+
+            if (bytes.Length <= 2)
+            {
+                return null;
+            }
+
+            var jsonContent = new ByteArrayContent(bytes);
+            jsonContent.Headers.ContentType = new MediaTypeHeaderValue("application/json")
+            {
+                CharSet = "utf-8"
+            };
+            return jsonContent;
+        }
+
+        var multipart = new MultipartFormDataContent();
+        try
+        {
+            if (!PopulateMultipartContent(parameters, multipart))
+            {
+                multipart.Dispose();
+                return null;
+            }
+        }
+        catch
+        {
+            multipart.Dispose();
+            throw;
+        }
+
+        return multipart;
+    }
+
+    private static bool TypeMayContainFiles(Type type)
+        => _typeMayContainFilesCache.GetOrAdd(type, static t => ComputeTypeMayContainFiles(t, new HashSet<Type>()));
+
+    private static bool ComputeTypeMayContainFiles(Type type, HashSet<Type> seen)
+    {
+        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+        {
+            return ComputeTypeMayContainFiles(Nullable.GetUnderlyingType(type)!, seen);
+        }
+
+        if (typeof(InputFile).IsAssignableFrom(type) || typeof(IFileSource).IsAssignableFrom(type))
+        {
+            return true;
+        }
+
+        if (type.IsPrimitive ||
+            type.IsEnum ||
+            type == typeof(string) ||
+            type == typeof(decimal) ||
+            type == typeof(object) ||
+            type == typeof(Uri) ||
+            type == typeof(Guid) ||
+            type == typeof(DateTime) ||
+            type == typeof(DateTimeOffset) ||
+            type == typeof(byte[]))
+        {
+            return false;
+        }
+
+        var elementType = GetEnumerableElementType(type);
+        if (elementType is not null)
+        {
+            return ComputeTypeMayContainFiles(elementType, seen);
+        }
+
+        if (type.Namespace is null ||
+            !type.Namespace.StartsWith("Endfix.Telegram.BotAPI", StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        if (!seen.Add(type))
+        {
+            return false;
+        }
+
+        foreach (var property in type.GetProperties())
+        {
+            if (ComputeTypeMayContainFiles(property.PropertyType, seen))
+            {
+                return true;
+            }
+        }
+
+        if (type.IsAbstract || type.IsInterface)
+        {
+            foreach (var candidate in ExportedLibraryTypes)
+            {
+                if (candidate != type &&
+                    !candidate.IsAbstract &&
+                    !candidate.IsInterface &&
+                    type.IsAssignableFrom(candidate) &&
+                    ComputeTypeMayContainFiles(candidate, seen))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private static Type[] ExportedLibraryTypes
+        => _exportedLibraryTypes ??= typeof(BotApiClient).Assembly.GetExportedTypes();
+
+    private static Type? GetEnumerableElementType(Type type)
+    {
+        if (type.IsArray)
+        {
+            return type.GetElementType();
+        }
+
+        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+        {
+            return type.GetGenericArguments()[0];
+        }
+
+        foreach (var interfaceType in type.GetInterfaces())
+        {
+            if (interfaceType.IsGenericType &&
+                interfaceType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+            {
+                return interfaceType.GetGenericArguments()[0];
+            }
+        }
+
+        return null;
+    }
+
+    private static bool ContainsInputFile(object value)
+    {
+        while (value is IFileSource source)
+        {
+            value = source.Value;
+            if (value is null)
+            {
+                return false;
+            }
+        }
+
+        if (value is InputFile)
+        {
+            return true;
+        }
+
+        var type = value.GetType();
+        if (!TypeMayContainFiles(type))
+        {
+            return false;
+        }
+
+        if (value is IEnumerable enumerable)
+        {
+            foreach (var item in enumerable)
+            {
+                if (item is not null && ContainsInputFile(item))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        var properties = _parametersCache.GetOrAdd(type, static t => t.GetProperties());
+        foreach (var property in properties)
+        {
+            var propertyValue = property.GetValue(value);
+            if (propertyValue is not null && ContainsInputFile(propertyValue))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static Task<Stream> ReadContentStreamAsync(
+        HttpContent content,
+        CancellationToken cancellationToken)
+    {
+#if NET5_0_OR_GREATER
+        return content.ReadAsStreamAsync(cancellationToken);
+#else
+        cancellationToken.ThrowIfCancellationRequested();
+        return content.ReadAsStreamAsync();
+#endif
     }
 
     private static bool PopulateMultipartContent(

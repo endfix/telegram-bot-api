@@ -136,9 +136,9 @@ assignment, standalone media, media groups with typed thumbnail/cover files,
 paid media, nested poll media, nested rich-message uploads, reply-markup editing,
 and editing and stopping live locations.
 
-Live-test clients disable automatic retries for Telegram `429` responses so a
-run reports the affected method and `retry_after` value instead of waiting for a
-potentially long server cooldown.
+Live-test HTTP calls are spaced by 500 ms. Clients still disable automatic
+retries for Telegram `429` responses so a run reports the affected method and
+`retry_after` value instead of waiting for a potentially long server cooldown.
 
 The bot needs the **Add New Admins** and **Manage Tags** administrator rights for
 the promotion and member-tag scenarios. The group sticker-set scenario is

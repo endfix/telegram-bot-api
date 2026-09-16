@@ -1,4 +1,5 @@
 using Endfix.Telegram.BotAPI.Enums;
+using Endfix.Telegram.BotAPI.Exceptions;
 using Endfix.Telegram.BotAPI.Extensions;
 using Endfix.Telegram.BotAPI.Parameters;
 using Endfix.Telegram.BotAPI.Types;
@@ -11,10 +12,7 @@ namespace Endfix.Telegram.BotAPI.Tests.Integration;
 [Collection(TelegramIntegrationCollection.Name)]
 public sealed class TelegramChatIntegrationTests : IDisposable
 {
-    private readonly HttpClient _httpClient = new()
-    {
-        Timeout = TimeSpan.FromSeconds(30)
-    };
+    private readonly HttpClient _httpClient = TelegramIntegrationHttp.CreateClient();
     private readonly BotApiClient _client;
 
     public TelegramChatIntegrationTests()
@@ -690,8 +688,9 @@ public sealed class TelegramChatIntegrationTests : IDisposable
     {
         var groupId = GetId(TelegramIntegrationFactAttribute.GroupIdVariable);
         var original = await _client.GetChatAsync(groupId);
-        var temporaryTitle = $"Endfix integration {DateTimeOffset.UtcNow:HHmmss}";
-        const string temporaryDescription = "Endfix.Telegram.BotAPI integration test";
+        var stamp = DateTimeOffset.UtcNow.ToString("HHmmss");
+        var temporaryTitle = $"Endfix integration {stamp}";
+        var temporaryDescription = $"Endfix.Telegram.BotAPI integration test {stamp}";
         Message? message = null;
         var messagePinned = false;
         ChatInviteLink? inviteLink = null;
@@ -761,8 +760,10 @@ public sealed class TelegramChatIntegrationTests : IDisposable
                 }
             }
 
-            Assert.True(await _client.SetChatTitleAsync(groupId, original.Title!));
-            Assert.True(await _client.SetChatDescriptionAsync(groupId, original.Description));
+            await RestoreChatTextAsync(
+                () => _client.SetChatTitleAsync(groupId, original.Title!));
+            await RestoreChatTextAsync(
+                () => _client.SetChatDescriptionAsync(groupId, original.Description ?? string.Empty));
         }
     }
 
@@ -771,8 +772,9 @@ public sealed class TelegramChatIntegrationTests : IDisposable
     {
         var channelId = GetId(TelegramIntegrationFactAttribute.ChannelIdVariable);
         var original = await _client.GetChatAsync(channelId);
-        var temporaryTitle = $"Endfix integration {DateTimeOffset.UtcNow:HHmmss}";
-        const string temporaryDescription = "Endfix.Telegram.BotAPI channel integration test";
+        var stamp = DateTimeOffset.UtcNow.ToString("HHmmss");
+        var temporaryTitle = $"Endfix integration {stamp}";
+        var temporaryDescription = $"Endfix.Telegram.BotAPI channel integration test {stamp}";
         const string editedInviteLinkName = "Endfix channel invite edited";
         Message? message = null;
         var messagePinned = false;
@@ -882,8 +884,10 @@ public sealed class TelegramChatIntegrationTests : IDisposable
                 }
             }
 
-            Assert.True(await _client.SetChatTitleAsync(channelId, original.Title!));
-            Assert.True(await _client.SetChatDescriptionAsync(channelId, original.Description));
+            await RestoreChatTextAsync(
+                () => _client.SetChatTitleAsync(channelId, original.Title!));
+            await RestoreChatTextAsync(
+                () => _client.SetChatDescriptionAsync(channelId, original.Description ?? string.Empty));
         }
     }
 
@@ -1107,4 +1111,17 @@ public sealed class TelegramChatIntegrationTests : IDisposable
     private static long GetId(string variable)
         => long.Parse(TelegramIntegrationSettings.Get(variable)
             ?? throw new InvalidOperationException($"{variable} is not configured."));
+
+    private static async Task RestoreChatTextAsync(Func<Task<bool>> restore)
+    {
+        try
+        {
+            Assert.True(await restore());
+        }
+        catch (ApiRequestException exception) when (
+            exception.ErrorCode == 400 &&
+            exception.Message.Contains("not modified", StringComparison.OrdinalIgnoreCase))
+        {
+        }
+    }
 }

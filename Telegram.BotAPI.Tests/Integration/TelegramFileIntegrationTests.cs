@@ -14,10 +14,7 @@ public sealed class TelegramFileIntegrationTests : IDisposable
     private static readonly byte[] PngBytes = Convert.FromBase64String(
         "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=");
 
-    private readonly HttpClient _httpClient = new()
-    {
-        Timeout = TimeSpan.FromSeconds(30)
-    };
+    private readonly HttpClient _httpClient = TelegramIntegrationHttp.CreateClient();
     private readonly BotApiClient _client;
     private readonly long _chatId;
 

@@ -14,6 +14,8 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
   request graph.
 - Reworked the ASP.NET Core webhook example to the same singleton client,
   scope-per-update, and hosted lifetime model as long polling.
+- Clarified that the package is a low-level Bot API client, not a bot
+  framework.
 
 ## [0.6.0] - 2026-09-15
 

@@ -19,9 +19,15 @@ request and response contracts.
 
 ## Status
 
-Use this package when you need a strongly typed, low-level Telegram Bot API
-client with explicit control over requests, polling, webhooks, transport and
-serialization.
+This package is a strongly typed, low-level client for the
+[Telegram Bot API](https://core.telegram.org/bots/api). It maps methods, types,
+transport, and errors. It is not a bot framework: it does not own conversation
+state, handler middleware, or a hosting stack. Applications keep control of
+polling and webhook lifetime, as shown in the examples.
+
+Use this package when you need explicit control over requests and serialization.
+If you want an application framework with routing or dialogs, see Telegram's
+list of community [.NET Bot API libraries](https://core.telegram.org/bots/samples#net).
 
 The project follows the Telegram Bot API release it targets. While the package
 remains below `1.0`, public contracts may still change to correct modeling

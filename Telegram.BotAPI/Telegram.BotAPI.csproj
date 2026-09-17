@@ -7,7 +7,7 @@
 		<AssemblyName>Endfix.Telegram.BotAPI</AssemblyName>
 		<RootNamespace>Endfix.Telegram.BotAPI</RootNamespace>
 		<Authors>endfix</Authors>
-		<Description>Typed .NET client for the Telegram Bot API.</Description>
+		<Description>Low-level typed .NET client for the Telegram Bot API.</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>https://github.com/endfix/telegram-bot-api</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/endfix/telegram-bot-api</RepositoryUrl>

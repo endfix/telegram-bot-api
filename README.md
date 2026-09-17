@@ -94,8 +94,8 @@ Set `maxParallel` above `1` to enable concurrent processing. Use sequential
 processing for stateful workflows that depend on update ordering.
 
 For webhooks, deserialize an `Update` at an HTTPS endpoint and validate
-Telegram's secret-token header before processing it. See the complete examples
-for both receiving models below.
+Telegram's `X-Telegram-Bot-Api-Secret-Token` header before processing it. See
+the complete examples for both receiving models below.
 
 ## Uploading files
 
@@ -198,15 +198,18 @@ reused for the application's lifetime. Configure
 refreshed without replacing the application-level bot client. `BotApiClient`
 disposes the `HttpClient` only when it created that client internally.
 
-The Long Polling example demonstrates the hosted lifetime and scope-per-update
-pattern without adding DI dependencies to the core package. Both server-side
-examples pass `ILogger<IBotApiClient>` from their application's logging
+The Long Polling and Webhook examples demonstrate the same hosted lifetime
+without adding DI dependencies to the core package: one singleton
+`IBotApiClient` per bot, a supplied singleton `HttpClient`, and a new async DI
+scope per update. The webhook hosted service registers the HTTPS endpoint after
+Kestrel starts and removes it on shutdown without dropping pending updates.
+Both examples pass `ILogger<IBotApiClient>` from their application's logging
 pipeline to the client.
 
 ## Complete examples
 
 - [**Long polling**: `ILogger` integration, interactive event probes, and sequential (FIFO) or parallel update processing.](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/LongPolling)
-- [**Webhook**: ASP.NET Core logging integration and an endpoint with secret-token validation.](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/Webhook)
+- [**Webhook**: ASP.NET Core hosted webhook registration, secret-token validation, and scope-per-update processing.](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/Webhook)
 - [**Mini App**: browser capability harness for Telegram Web App and Premium scenarios.](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/MiniApp)
 
 The Long Polling and Webhook examples accept `TELEGRAM_BOT_TOKEN` from an environment variable or .NET User Secrets while retaining their existing `appsettings.json` keys as a fallback:

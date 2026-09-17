@@ -12,6 +12,8 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - Send parameterized requests without uploaded files as `application/json`.
   Keep `multipart/form-data` only when an `InputFile` is present in the
   request graph.
+- Reworked the ASP.NET Core webhook example to the same singleton client,
+  scope-per-update, and hosted lifetime model as long polling.
 
 ## [0.6.0] - 2026-09-15
 

@@ -21,6 +21,23 @@ public interface IBotApiClient
     event UpdateHandler? OnUpdate;
 
     /// <summary>
+    /// Sends a request and returns the Telegram API response envelope.
+    /// </summary>
+    /// <remarks>
+    /// Telegram errors are returned with <c>Ok = false</c> instead of throwing
+    /// <see cref="Exceptions.ApiRequestException"/>. Argument, cancellation,
+    /// transport, HTTP, and JSON failures retain their standard .NET exception types.
+    /// Only Telegram rate-limit responses are retried automatically.
+    /// Use <see cref="ExecuteAsync{T}"/> when unsuccessful Telegram responses
+    /// should throw.
+    /// </remarks>
+    /// <typeparam name="T">The expected result type.</typeparam>
+    /// <param name="request">The request to send.</param>
+    /// <param name="cancellation">Token used to cancel the request.</param>
+    /// <returns>The Telegram API response envelope.</returns>
+    Task<ApiResponse<T>> RequestAsync<T>(ApiRequest request, CancellationToken cancellation = default);
+
+    /// <summary>
     /// Sends a request and returns its result, throwing <see cref="Exceptions.ApiRequestException"/>
     /// when Telegram returns an unsuccessful API response.
     /// </summary>

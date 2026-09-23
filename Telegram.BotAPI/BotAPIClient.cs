@@ -125,9 +125,12 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
     /// Sends a request and returns the Telegram API response envelope.
     /// </summary>
     /// <remarks>
-    /// Telegram errors are returned with <c>Ok = false</c>. Argument, cancellation,
+    /// Telegram errors are returned with <c>Ok = false</c> instead of throwing
+    /// <see cref="Exceptions.ApiRequestException"/>. Argument, cancellation,
     /// transport, HTTP, and JSON failures retain their standard .NET exception types.
     /// Only Telegram rate-limit responses are retried automatically.
+    /// Use <see cref="IBotApiClient.ExecuteAsync{T}"/> when unsuccessful Telegram
+    /// responses should throw.
     /// </remarks>
     /// <typeparam name="T">The expected result type.</typeparam>
     /// <param name="request">The request to send.</param>

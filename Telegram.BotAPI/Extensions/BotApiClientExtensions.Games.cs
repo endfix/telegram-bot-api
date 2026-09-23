@@ -66,6 +66,11 @@ public static partial class BotApiClientExtensions
         }, cancellationToken);
 
     /// <summary>Sets the score of a user in an ordinary game message.</summary>
+    /// <remarks>
+    /// Maps to Telegram's <c>setGameScore</c> for a chat message identified by
+    /// <c>chat_id</c> and <c>message_id</c>. For an inline message, call
+    /// <see cref="SetGameScoreForInlineMessageAsync(IBotApiClient, SetGameScoreParameters, CancellationToken)"/>.
+    /// </remarks>
     /// <param name="client">Bot API client used to send the request.</param>
     /// <param name="parameters">User, score and ordinary message identifiers.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
@@ -77,10 +82,15 @@ public static partial class BotApiClientExtensions
         => await client.ExecuteAsync<Message>(new ApiRequest("setGameScore", parameters), cancellationToken);
 
     /// <summary>Sets the score of a user in an ordinary game message.</summary>
+    /// <remarks>
+    /// Maps to Telegram's <c>setGameScore</c> for a chat message identified by
+    /// <c>chat_id</c> and <c>message_id</c>. For an inline message, call
+    /// <see cref="SetGameScoreForInlineMessageAsync(IBotApiClient, long, string, int, bool?, bool?, CancellationToken)"/>.
+    /// </remarks>
     /// <param name="client">Bot API client used to send the request.</param>
     /// <param name="userId">User whose score should be set.</param>
-    /// <param name="chatId">Chat containing the game message.</param>
-    /// <param name="messageId">Identifier of the game message.</param>
+    /// <param name="chatId">Chat containing the ordinary game message.</param>
+    /// <param name="messageId">Identifier of the ordinary game message.</param>
     /// <param name="score">New non-negative score.</param>
     /// <param name="force">Whether to allow decreasing the user's high score.</param>
     /// <param name="disableEditMessage">Whether to prevent automatic scoreboard updates.</param>
@@ -106,17 +116,27 @@ public static partial class BotApiClientExtensions
         }, cancellationToken);
 
     /// <summary>Sets the score of a user in an inline game message.</summary>
+    /// <remarks>
+    /// Maps to Telegram's <c>setGameScore</c> for an inline message identified by
+    /// <c>inline_message_id</c>. For an ordinary chat message, call
+    /// <see cref="SetGameScoreForMessageAsync(IBotApiClient, SetGameScoreParameters, CancellationToken)"/>.
+    /// </remarks>
     /// <param name="client">Bot API client used to send the request.</param>
     /// <param name="parameters">User, score and inline message identifier.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
-    public static async Task<bool> SetGameScoreInlineAsync(
+    public static async Task<bool> SetGameScoreForInlineMessageAsync(
         this IBotApiClient client,
         SetGameScoreParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<bool>(new ApiRequest("setGameScore", parameters), cancellationToken);
 
     /// <summary>Sets the score of a user in an inline game message.</summary>
+    /// <remarks>
+    /// Maps to Telegram's <c>setGameScore</c> for an inline message identified by
+    /// <c>inline_message_id</c>. For an ordinary chat message, call
+    /// <see cref="SetGameScoreForMessageAsync(IBotApiClient, long, long, long, int, bool?, bool?, CancellationToken)"/>.
+    /// </remarks>
     /// <param name="client">Bot API client used to send the request.</param>
     /// <param name="userId">User whose score should be set.</param>
     /// <param name="inlineMessageId">Identifier of the inline game message.</param>
@@ -125,7 +145,7 @@ public static partial class BotApiClientExtensions
     /// <param name="disableEditMessage">Whether to prevent automatic scoreboard updates.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
-    public static async Task<bool> SetGameScoreInlineAsync(
+    public static async Task<bool> SetGameScoreForInlineMessageAsync(
         this IBotApiClient client,
         long userId,
         string inlineMessageId,
@@ -133,7 +153,7 @@ public static partial class BotApiClientExtensions
         bool? force = null,
         bool? disableEditMessage = null,
         CancellationToken cancellationToken = default)
-        => await client.SetGameScoreInlineAsync(new SetGameScoreParameters
+        => await client.SetGameScoreForInlineMessageAsync(new SetGameScoreParameters
         {
             UserId = userId,
             Score = score,

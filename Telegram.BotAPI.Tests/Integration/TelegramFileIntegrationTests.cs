@@ -450,9 +450,9 @@ public sealed class TelegramFileIntegrationTests : IDisposable
             });
             sentMessageIds.Add(message.MessageId);
 
-            var edited = await _client.EditMessageReplyMarkupAsync(
-                chatId: _chatId,
-                messageId: message.MessageId,
+            var edited = await _client.EditMessageReplyMarkupForMessageAsync(
+                _chatId,
+                message.MessageId,
                 replyMarkup: new InlineKeyboardMarkup
                 {
                     InlineKeyboard =
@@ -463,6 +463,28 @@ public sealed class TelegramFileIntegrationTests : IDisposable
 
             Assert.Equal("after", edited.ReplyMarkup!.InlineKeyboard[0][0].CallbackData);
 
+            await using var photoFile = await TemporaryFile.CreateAsync(".png", PngBytes);
+            var photo = await RequestAsync<Message>("sendPhoto", new SendPhotoParameters
+            {
+                ChatId = _chatId,
+                Photo = new InputPhotoFile(photoFile.Path),
+                Caption = "before caption"
+            });
+            sentMessageIds.Add(photo.MessageId);
+            var photoFileId = Assert.Single(photo.Photo!).FileId;
+
+            var captioned = await _client.EditMessageCaptionForMessageAsync(
+                _chatId,
+                photo.MessageId,
+                "after caption");
+            Assert.Equal("after caption", captioned.Caption);
+
+            var replaced = await _client.EditMessageMediaForMessageAsync(
+                _chatId,
+                photo.MessageId,
+                new InputMediaPhoto { Media = photoFileId, Caption = "replaced media" });
+            Assert.Equal("replaced media", replaced.Caption);
+
             var location = await RequestAsync<Message>("sendLocation", new SendLocationParameters
             {
                 ChatId = _chatId,
@@ -472,9 +494,9 @@ public sealed class TelegramFileIntegrationTests : IDisposable
             });
             sentMessageIds.Add(location.MessageId);
 
-            var stopped = await _client.StopMessageLiveLocationAsync(
-                chatId: _chatId,
-                messageId: location.MessageId);
+            var stopped = await _client.StopMessageLiveLocationForMessageAsync(
+                _chatId,
+                location.MessageId);
 
             Assert.Equal(location.MessageId, stopped.MessageId);
 
@@ -487,11 +509,11 @@ public sealed class TelegramFileIntegrationTests : IDisposable
             });
             sentMessageIds.Add(editableLocation.MessageId);
 
-            var editedLocation = await _client.EditMessageLiveLocationAsync(
+            var editedLocation = await _client.EditMessageLiveLocationForMessageAsync(
+                _chatId,
+                editableLocation.MessageId,
                 latitude: 55.752,
                 longitude: 37.619,
-                chatId: _chatId,
-                messageId: editableLocation.MessageId,
                 livePeriod: 60);
 
             Assert.Equal(editableLocation.MessageId, editedLocation.MessageId);

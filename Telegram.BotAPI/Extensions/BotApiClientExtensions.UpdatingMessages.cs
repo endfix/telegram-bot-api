@@ -9,50 +9,115 @@ namespace Endfix.Telegram.BotAPI.Extensions;
 
 public static partial class BotApiClientExtensions
 {
-    /// <summary>Edits text and optional link preview or keyboard of a message.</summary>
+    /// <summary>Edits text of an ordinary chat message.</summary>
+    /// <remarks>
+    /// Maps to Telegram's <c>editMessageText</c> for a chat message identified by
+    /// <c>chat_id</c> and <c>message_id</c>. For an inline message, call
+    /// <see cref="EditMessageTextForInlineMessageAsync(IBotApiClient, EditMessageTextParameters, CancellationToken)"/>.
+    /// </remarks>
     /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="parameters">Message identifier and replacement text.</param>
+    /// <param name="parameters">Ordinary message identifier and replacement text.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
-    /// <returns>The edited message, or <see langword="true"/> for an inline message.</returns>
-    public static async Task<Message> EditMessageTextAsync(
-        this IBotApiClient client, 
-        EditMessageTextParameters parameters, 
+    /// <returns>The edited message.</returns>
+    public static async Task<Message> EditMessageTextForMessageAsync(
+        this IBotApiClient client,
+        EditMessageTextParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("editMessageText", parameters), cancellationToken);
 
-    /// <summary>Edits text and optional link preview or keyboard of a message.</summary>
+    /// <summary>Edits text of an ordinary chat message.</summary>
+    /// <remarks>
+    /// Maps to Telegram's <c>editMessageText</c> for a chat message identified by
+    /// <c>chat_id</c> and <c>message_id</c>. For an inline message, call
+    /// <see cref="EditMessageTextForInlineMessageAsync(IBotApiClient, string, string, string?, string?, IReadOnlyList{MessageEntity}?, LinkPreviewOptions?, InputRichMessage?, InlineKeyboardMarkup?, CancellationToken)"/>.
+    /// </remarks>
     /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Chat containing the ordinary message.</param>
+    /// <param name="messageId">Identifier of the ordinary message.</param>
     /// <param name="text">New text of the message.</param>
     /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
-    /// <param name="chatId">Chat containing the message.</param>
-    /// <param name="messageId">Identifier of the message to edit.</param>
-    /// <param name="inlineMessageId">Identifier of the inline message to edit.</param>
     /// <param name="parseMode">Mode for parsing entities in the message text.</param>
     /// <param name="entities">Explicit entities in the message text.</param>
     /// <param name="linkPreviewOptions">Options for the link preview.</param>
     /// <param name="richMessage">Rich message content attached to the text.</param>
     /// <param name="replyMarkup">Inline keyboard attached to the message.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
-    /// <returns>The edited message, or <see langword="true"/> for an inline message.</returns>
-    public static async Task<Message> EditMessageTextAsync(
+    /// <returns>The edited message.</returns>
+    public static async Task<Message> EditMessageTextForMessageAsync(
         this IBotApiClient client,
+        ChatIdSource chatId,
+        long messageId,
         string text,
         string? businessConnectionId = null,
-        ChatIdSource? chatId = null,
-        long? messageId = null,
-        string? inlineMessageId = null,
         string? parseMode = null,
         IReadOnlyList<MessageEntity>? entities = null,
         LinkPreviewOptions? linkPreviewOptions = null,
         InputRichMessage? richMessage = null,
         InlineKeyboardMarkup? replyMarkup = null,
         CancellationToken cancellationToken = default)
-        => await client.EditMessageTextAsync(new EditMessageTextParameters
+        => await client.EditMessageTextForMessageAsync(new EditMessageTextParameters
         {
             Text = text,
             BusinessConnectionId = businessConnectionId,
             ChatId = chatId,
             MessageId = messageId,
+            ParseMode = parseMode,
+            Entities = entities,
+            LinkPreviewOptions = linkPreviewOptions,
+            RichMessage = richMessage,
+            ReplyMarkup = replyMarkup
+        }, cancellationToken);
+
+    /// <summary>Edits text of an inline message.</summary>
+    /// <remarks>
+    /// Maps to Telegram's <c>editMessageText</c> for an inline message identified by
+    /// <c>inline_message_id</c>. Telegram returns <c>true</c> rather than a
+    /// <see cref="Message"/>. For an ordinary chat message, call
+    /// <see cref="EditMessageTextForMessageAsync(IBotApiClient, EditMessageTextParameters, CancellationToken)"/>.
+    /// </remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Inline message identifier and replacement text.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
+    public static async Task<bool> EditMessageTextForInlineMessageAsync(
+        this IBotApiClient client,
+        EditMessageTextParameters parameters,
+        CancellationToken cancellationToken = default)
+        => await client.ExecuteAsync<bool>(new ApiRequest("editMessageText", parameters), cancellationToken);
+
+    /// <summary>Edits text of an inline message.</summary>
+    /// <remarks>
+    /// Maps to Telegram's <c>editMessageText</c> for an inline message identified by
+    /// <c>inline_message_id</c>. Telegram returns <c>true</c> rather than a
+    /// <see cref="Message"/>. For an ordinary chat message, call
+    /// <see cref="EditMessageTextForMessageAsync(IBotApiClient, ChatIdSource, long, string, string?, string?, IReadOnlyList{MessageEntity}?, LinkPreviewOptions?, InputRichMessage?, InlineKeyboardMarkup?, CancellationToken)"/>.
+    /// </remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="inlineMessageId">Identifier of the inline message.</param>
+    /// <param name="text">New text of the message.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
+    /// <param name="parseMode">Mode for parsing entities in the message text.</param>
+    /// <param name="entities">Explicit entities in the message text.</param>
+    /// <param name="linkPreviewOptions">Options for the link preview.</param>
+    /// <param name="richMessage">Rich message content attached to the text.</param>
+    /// <param name="replyMarkup">Inline keyboard attached to the message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
+    public static async Task<bool> EditMessageTextForInlineMessageAsync(
+        this IBotApiClient client,
+        string inlineMessageId,
+        string text,
+        string? businessConnectionId = null,
+        string? parseMode = null,
+        IReadOnlyList<MessageEntity>? entities = null,
+        LinkPreviewOptions? linkPreviewOptions = null,
+        InputRichMessage? richMessage = null,
+        InlineKeyboardMarkup? replyMarkup = null,
+        CancellationToken cancellationToken = default)
+        => await client.EditMessageTextForInlineMessageAsync(new EditMessageTextParameters
+        {
+            Text = text,
+            BusinessConnectionId = businessConnectionId,
             InlineMessageId = inlineMessageId,
             ParseMode = parseMode,
             Entities = entities,
@@ -61,47 +126,109 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    /// <summary>Edits the caption of a message containing media.</summary>
+    /// <summary>Edits the caption of an ordinary chat message containing media.</summary>
+    /// <remarks>
+    /// Maps to Telegram's <c>editMessageCaption</c> for a chat message identified by
+    /// <c>chat_id</c> and <c>message_id</c>. For an inline message, call
+    /// <see cref="EditMessageCaptionForInlineMessageAsync(IBotApiClient, EditMessageCaptionParameters, CancellationToken)"/>.
+    /// </remarks>
     /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="parameters">Message identifier and replacement caption.</param>
+    /// <param name="parameters">Ordinary message identifier and replacement caption.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
-    /// <returns>The edited message, or <see langword="true"/> for an inline message.</returns>
-    public static async Task<Message> EditMessageCaptionAsync(
-        this IBotApiClient client, 
-        EditMessageCaptionParameters parameters, 
+    /// <returns>The edited message.</returns>
+    public static async Task<Message> EditMessageCaptionForMessageAsync(
+        this IBotApiClient client,
+        EditMessageCaptionParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("editMessageCaption", parameters), cancellationToken);
 
-    /// <summary>Edits the caption of a message containing media.</summary>
+    /// <summary>Edits the caption of an ordinary chat message containing media.</summary>
+    /// <remarks>
+    /// Maps to Telegram's <c>editMessageCaption</c> for a chat message identified by
+    /// <c>chat_id</c> and <c>message_id</c>. For an inline message, call
+    /// <see cref="EditMessageCaptionForInlineMessageAsync(IBotApiClient, string, string?, string?, string?, IReadOnlyList{MessageEntity}?, bool?, InlineKeyboardMarkup?, CancellationToken)"/>.
+    /// </remarks>
     /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
-    /// <param name="chatId">Chat containing the message.</param>
-    /// <param name="messageId">Identifier of the message to edit.</param>
-    /// <param name="inlineMessageId">Identifier of the inline message to edit.</param>
+    /// <param name="chatId">Chat containing the ordinary message.</param>
+    /// <param name="messageId">Identifier of the ordinary message.</param>
     /// <param name="caption">New caption of the message.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
     /// <param name="parseMode">Mode for parsing entities in the caption.</param>
     /// <param name="captionEntities">Explicit entities in the caption.</param>
     /// <param name="showCaptionAboveMedia">Whether to show the caption above the media.</param>
     /// <param name="replyMarkup">Inline keyboard attached to the message.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
-    /// <returns>The edited message, or <see langword="true"/> for an inline message.</returns>
-    public static async Task<Message> EditMessageCaptionAsync(
+    /// <returns>The edited message.</returns>
+    public static async Task<Message> EditMessageCaptionForMessageAsync(
         this IBotApiClient client,
-        string? businessConnectionId = null,
-        ChatIdSource? chatId = null,
-        long? messageId = null,
-        string? inlineMessageId = null,
+        ChatIdSource chatId,
+        long messageId,
         string? caption = null,
+        string? businessConnectionId = null,
         string? parseMode = null,
         IReadOnlyList<MessageEntity>? captionEntities = null,
         bool? showCaptionAboveMedia = null,
         InlineKeyboardMarkup? replyMarkup = null,
         CancellationToken cancellationToken = default)
-        => await client.EditMessageCaptionAsync(new EditMessageCaptionParameters
+        => await client.EditMessageCaptionForMessageAsync(new EditMessageCaptionParameters
         {
             BusinessConnectionId = businessConnectionId,
             ChatId = chatId,
             MessageId = messageId,
+            Caption = caption,
+            ParseMode = parseMode,
+            CaptionEntities = captionEntities,
+            ShowCaptionAboveMedia = showCaptionAboveMedia,
+            ReplyMarkup = replyMarkup
+        }, cancellationToken);
+
+    /// <summary>Edits the caption of an inline message containing media.</summary>
+    /// <remarks>
+    /// Maps to Telegram's <c>editMessageCaption</c> for an inline message identified by
+    /// <c>inline_message_id</c>. Telegram returns <c>true</c> rather than a
+    /// <see cref="Message"/>. For an ordinary chat message, call
+    /// <see cref="EditMessageCaptionForMessageAsync(IBotApiClient, EditMessageCaptionParameters, CancellationToken)"/>.
+    /// </remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Inline message identifier and replacement caption.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
+    public static async Task<bool> EditMessageCaptionForInlineMessageAsync(
+        this IBotApiClient client,
+        EditMessageCaptionParameters parameters,
+        CancellationToken cancellationToken = default)
+        => await client.ExecuteAsync<bool>(new ApiRequest("editMessageCaption", parameters), cancellationToken);
+
+    /// <summary>Edits the caption of an inline message containing media.</summary>
+    /// <remarks>
+    /// Maps to Telegram's <c>editMessageCaption</c> for an inline message identified by
+    /// <c>inline_message_id</c>. Telegram returns <c>true</c> rather than a
+    /// <see cref="Message"/>. For an ordinary chat message, call
+    /// <see cref="EditMessageCaptionForMessageAsync(IBotApiClient, ChatIdSource, long, string?, string?, string?, IReadOnlyList{MessageEntity}?, bool?, InlineKeyboardMarkup?, CancellationToken)"/>.
+    /// </remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="inlineMessageId">Identifier of the inline message.</param>
+    /// <param name="caption">New caption of the message.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
+    /// <param name="parseMode">Mode for parsing entities in the caption.</param>
+    /// <param name="captionEntities">Explicit entities in the caption.</param>
+    /// <param name="showCaptionAboveMedia">Whether to show the caption above the media.</param>
+    /// <param name="replyMarkup">Inline keyboard attached to the message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
+    public static async Task<bool> EditMessageCaptionForInlineMessageAsync(
+        this IBotApiClient client,
+        string inlineMessageId,
+        string? caption = null,
+        string? businessConnectionId = null,
+        string? parseMode = null,
+        IReadOnlyList<MessageEntity>? captionEntities = null,
+        bool? showCaptionAboveMedia = null,
+        InlineKeyboardMarkup? replyMarkup = null,
+        CancellationToken cancellationToken = default)
+        => await client.EditMessageCaptionForInlineMessageAsync(new EditMessageCaptionParameters
+        {
+            BusinessConnectionId = businessConnectionId,
             InlineMessageId = inlineMessageId,
             Caption = caption,
             ParseMode = parseMode,
@@ -110,93 +237,214 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    /// <summary>Replaces the media content of a message.</summary>
+    /// <summary>Replaces the media of an ordinary chat message.</summary>
+    /// <remarks>
+    /// Maps to Telegram's <c>editMessageMedia</c> for a chat message identified by
+    /// <c>chat_id</c> and <c>message_id</c>. For an inline message, call
+    /// <see cref="EditMessageMediaForInlineMessageAsync(IBotApiClient, EditMessageMediaParameters, CancellationToken)"/>.
+    /// </remarks>
     /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="parameters">Message identifier and replacement media.</param>
+    /// <param name="parameters">Ordinary message identifier and replacement media.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
-    /// <returns>The edited message, or <see langword="true"/> for an inline message.</returns>
-    public static async Task<Message> EditMessageMediaAsync(
-        this IBotApiClient client, 
-        EditMessageMediaParameters parameters, 
+    /// <returns>The edited message.</returns>
+    public static async Task<Message> EditMessageMediaForMessageAsync(
+        this IBotApiClient client,
+        EditMessageMediaParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("editMessageMedia", parameters), cancellationToken);
 
-    /// <summary>Replaces the media content of a message.</summary>
+    /// <summary>Replaces the media of an ordinary chat message.</summary>
+    /// <remarks>
+    /// Maps to Telegram's <c>editMessageMedia</c> for a chat message identified by
+    /// <c>chat_id</c> and <c>message_id</c>. For an inline message, call
+    /// <see cref="EditMessageMediaForInlineMessageAsync(IBotApiClient, string, InputMedia, string?, InlineKeyboardMarkup?, CancellationToken)"/>.
+    /// </remarks>
     /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Chat containing the ordinary message.</param>
+    /// <param name="messageId">Identifier of the ordinary message.</param>
     /// <param name="media">New media content.</param>
     /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
-    /// <param name="chatId">Chat containing the message.</param>
-    /// <param name="messageId">Identifier of the message to edit.</param>
-    /// <param name="inlineMessageId">Identifier of the inline message to edit.</param>
     /// <param name="replyMarkup">Inline keyboard attached to the message.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
-    /// <returns>The edited message, or <see langword="true"/> for an inline message.</returns>
-    public static async Task<Message> EditMessageMediaAsync(
+    /// <returns>The edited message.</returns>
+    public static async Task<Message> EditMessageMediaForMessageAsync(
         this IBotApiClient client,
+        ChatIdSource chatId,
+        long messageId,
         InputMedia media,
         string? businessConnectionId = null,
-        ChatIdSource? chatId = null,
-        long? messageId = null,
-        string? inlineMessageId = null,
         InlineKeyboardMarkup? replyMarkup = null,
         CancellationToken cancellationToken = default)
-        => await client.EditMessageMediaAsync(new EditMessageMediaParameters
+        => await client.EditMessageMediaForMessageAsync(new EditMessageMediaParameters
         {
             Media = media,
             BusinessConnectionId = businessConnectionId,
             ChatId = chatId,
             MessageId = messageId,
+            ReplyMarkup = replyMarkup
+        }, cancellationToken);
+
+    /// <summary>Replaces the media of an inline message.</summary>
+    /// <remarks>
+    /// Maps to Telegram's <c>editMessageMedia</c> for an inline message identified by
+    /// <c>inline_message_id</c>. Telegram returns <c>true</c> rather than a
+    /// <see cref="Message"/>. For an ordinary chat message, call
+    /// <see cref="EditMessageMediaForMessageAsync(IBotApiClient, EditMessageMediaParameters, CancellationToken)"/>.
+    /// </remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Inline message identifier and replacement media.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
+    public static async Task<bool> EditMessageMediaForInlineMessageAsync(
+        this IBotApiClient client,
+        EditMessageMediaParameters parameters,
+        CancellationToken cancellationToken = default)
+        => await client.ExecuteAsync<bool>(new ApiRequest("editMessageMedia", parameters), cancellationToken);
+
+    /// <summary>Replaces the media of an inline message.</summary>
+    /// <remarks>
+    /// Maps to Telegram's <c>editMessageMedia</c> for an inline message identified by
+    /// <c>inline_message_id</c>. Telegram returns <c>true</c> rather than a
+    /// <see cref="Message"/>. For an ordinary chat message, call
+    /// <see cref="EditMessageMediaForMessageAsync(IBotApiClient, ChatIdSource, long, InputMedia, string?, InlineKeyboardMarkup?, CancellationToken)"/>.
+    /// </remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="inlineMessageId">Identifier of the inline message.</param>
+    /// <param name="media">New media content.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
+    /// <param name="replyMarkup">Inline keyboard attached to the message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
+    public static async Task<bool> EditMessageMediaForInlineMessageAsync(
+        this IBotApiClient client,
+        string inlineMessageId,
+        InputMedia media,
+        string? businessConnectionId = null,
+        InlineKeyboardMarkup? replyMarkup = null,
+        CancellationToken cancellationToken = default)
+        => await client.EditMessageMediaForInlineMessageAsync(new EditMessageMediaParameters
+        {
+            Media = media,
+            BusinessConnectionId = businessConnectionId,
             InlineMessageId = inlineMessageId,
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    /// <summary>Updates the live location in a message.</summary>
+    /// <summary>Updates the live location in an ordinary chat message.</summary>
+    /// <remarks>
+    /// Maps to Telegram's <c>editMessageLiveLocation</c> for a chat message identified by
+    /// <c>chat_id</c> and <c>message_id</c>. For an inline message, call
+    /// <see cref="EditMessageLiveLocationForInlineMessageAsync(IBotApiClient, EditMessageLiveLocationParameters, CancellationToken)"/>.
+    /// </remarks>
     /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="parameters">Message identifier and new location data.</param>
+    /// <param name="parameters">Ordinary message identifier and new location data.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
-    /// <returns>The edited message, or <see langword="true"/> for an inline message.</returns>
-    public static async Task<Message> EditMessageLiveLocationAsync(
-        this IBotApiClient client, 
-        EditMessageLiveLocationParameters parameters, 
+    /// <returns>The edited message.</returns>
+    public static async Task<Message> EditMessageLiveLocationForMessageAsync(
+        this IBotApiClient client,
+        EditMessageLiveLocationParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("editMessageLiveLocation", parameters), cancellationToken);
 
-    /// <summary>Updates the live location in a message.</summary>
+    /// <summary>Updates the live location in an ordinary chat message.</summary>
+    /// <remarks>
+    /// Maps to Telegram's <c>editMessageLiveLocation</c> for a chat message identified by
+    /// <c>chat_id</c> and <c>message_id</c>. For an inline message, call
+    /// <see cref="EditMessageLiveLocationForInlineMessageAsync(IBotApiClient, string, double, double, string?, int?, float?, int?, int?, InlineKeyboardMarkup?, CancellationToken)"/>.
+    /// </remarks>
     /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Chat containing the ordinary message.</param>
+    /// <param name="messageId">Identifier of the ordinary message.</param>
     /// <param name="latitude">Latitude of the new location.</param>
     /// <param name="longitude">Longitude of the new location.</param>
     /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
-    /// <param name="chatId">Chat containing the message.</param>
-    /// <param name="messageId">Identifier of the message to edit.</param>
-    /// <param name="inlineMessageId">Identifier of the inline message to edit.</param>
     /// <param name="livePeriod">New period in seconds during which the location can be updated.</param>
     /// <param name="horizontalAccuracy">The radius of uncertainty for the location in meters.</param>
     /// <param name="heading">Direction of travel in degrees.</param>
     /// <param name="proximityAlertRadius">Distance in meters for proximity alerts.</param>
     /// <param name="replyMarkup">Inline keyboard attached to the message.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
-    /// <returns>The edited message, or <see langword="true"/> for an inline message.</returns>
-    public static async Task<Message> EditMessageLiveLocationAsync(
+    /// <returns>The edited message.</returns>
+    public static async Task<Message> EditMessageLiveLocationForMessageAsync(
         this IBotApiClient client,
+        ChatIdSource chatId,
+        long messageId,
         double latitude,
         double longitude,
         string? businessConnectionId = null,
-        ChatIdSource? chatId = null,
-        long? messageId = null,
-        string? inlineMessageId = null,
         int? livePeriod = null,
         float? horizontalAccuracy = null,
         int? heading = null,
         int? proximityAlertRadius = null,
         InlineKeyboardMarkup? replyMarkup = null,
         CancellationToken cancellationToken = default)
-        => await client.EditMessageLiveLocationAsync(new EditMessageLiveLocationParameters
+        => await client.EditMessageLiveLocationForMessageAsync(new EditMessageLiveLocationParameters
         {
             Latitude = latitude,
             Longitude = longitude,
             BusinessConnectionId = businessConnectionId,
             ChatId = chatId,
             MessageId = messageId,
+            LivePeriod = livePeriod,
+            HorizontalAccuracy = horizontalAccuracy,
+            Heading = heading,
+            ProximityAlertRadius = proximityAlertRadius,
+            ReplyMarkup = replyMarkup
+        }, cancellationToken);
+
+    /// <summary>Updates the live location in an inline message.</summary>
+    /// <remarks>
+    /// Maps to Telegram's <c>editMessageLiveLocation</c> for an inline message identified by
+    /// <c>inline_message_id</c>. Telegram returns <c>true</c> rather than a
+    /// <see cref="Message"/>. For an ordinary chat message, call
+    /// <see cref="EditMessageLiveLocationForMessageAsync(IBotApiClient, EditMessageLiveLocationParameters, CancellationToken)"/>.
+    /// </remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Inline message identifier and new location data.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
+    public static async Task<bool> EditMessageLiveLocationForInlineMessageAsync(
+        this IBotApiClient client,
+        EditMessageLiveLocationParameters parameters,
+        CancellationToken cancellationToken = default)
+        => await client.ExecuteAsync<bool>(new ApiRequest("editMessageLiveLocation", parameters), cancellationToken);
+
+    /// <summary>Updates the live location in an inline message.</summary>
+    /// <remarks>
+    /// Maps to Telegram's <c>editMessageLiveLocation</c> for an inline message identified by
+    /// <c>inline_message_id</c>. Telegram returns <c>true</c> rather than a
+    /// <see cref="Message"/>. For an ordinary chat message, call
+    /// <see cref="EditMessageLiveLocationForMessageAsync(IBotApiClient, ChatIdSource, long, double, double, string?, int?, float?, int?, int?, InlineKeyboardMarkup?, CancellationToken)"/>.
+    /// </remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="inlineMessageId">Identifier of the inline message.</param>
+    /// <param name="latitude">Latitude of the new location.</param>
+    /// <param name="longitude">Longitude of the new location.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
+    /// <param name="livePeriod">New period in seconds during which the location can be updated.</param>
+    /// <param name="horizontalAccuracy">The radius of uncertainty for the location in meters.</param>
+    /// <param name="heading">Direction of travel in degrees.</param>
+    /// <param name="proximityAlertRadius">Distance in meters for proximity alerts.</param>
+    /// <param name="replyMarkup">Inline keyboard attached to the message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
+    public static async Task<bool> EditMessageLiveLocationForInlineMessageAsync(
+        this IBotApiClient client,
+        string inlineMessageId,
+        double latitude,
+        double longitude,
+        string? businessConnectionId = null,
+        int? livePeriod = null,
+        float? horizontalAccuracy = null,
+        int? heading = null,
+        int? proximityAlertRadius = null,
+        InlineKeyboardMarkup? replyMarkup = null,
+        CancellationToken cancellationToken = default)
+        => await client.EditMessageLiveLocationForInlineMessageAsync(new EditMessageLiveLocationParameters
+        {
+            Latitude = latitude,
+            Longitude = longitude,
+            BusinessConnectionId = businessConnectionId,
             InlineMessageId = inlineMessageId,
             LivePeriod = livePeriod,
             HorizontalAccuracy = horizontalAccuracy,
@@ -205,39 +453,89 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    /// <summary>Stops updating a live location in a message.</summary>
+    /// <summary>Stops updating a live location in an ordinary chat message.</summary>
+    /// <remarks>
+    /// Maps to Telegram's <c>stopMessageLiveLocation</c> for a chat message identified by
+    /// <c>chat_id</c> and <c>message_id</c>. For an inline message, call
+    /// <see cref="StopMessageLiveLocationForInlineMessageAsync(IBotApiClient, StopMessageLiveLocationParameters, CancellationToken)"/>.
+    /// </remarks>
     /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="parameters">Message identifier and optional replacement keyboard.</param>
+    /// <param name="parameters">Ordinary message identifier and optional replacement keyboard.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
-    /// <returns>The edited message, or <see langword="true"/> for an inline message.</returns>
-    public static async Task<Message> StopMessageLiveLocationAsync(
-        this IBotApiClient client, 
-        StopMessageLiveLocationParameters parameters, 
+    /// <returns>The edited message.</returns>
+    public static async Task<Message> StopMessageLiveLocationForMessageAsync(
+        this IBotApiClient client,
+        StopMessageLiveLocationParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("stopMessageLiveLocation", parameters), cancellationToken);
 
-    /// <summary>Stops updating a live location in a message.</summary>
+    /// <summary>Stops updating a live location in an ordinary chat message.</summary>
+    /// <remarks>
+    /// Maps to Telegram's <c>stopMessageLiveLocation</c> for a chat message identified by
+    /// <c>chat_id</c> and <c>message_id</c>. For an inline message, call
+    /// <see cref="StopMessageLiveLocationForInlineMessageAsync(IBotApiClient, string, string?, InlineKeyboardMarkup?, CancellationToken)"/>.
+    /// </remarks>
     /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Chat containing the ordinary message.</param>
+    /// <param name="messageId">Identifier of the ordinary message.</param>
     /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
-    /// <param name="chatId">Chat containing the message.</param>
-    /// <param name="messageId">Identifier of the message to edit.</param>
-    /// <param name="inlineMessageId">Identifier of the inline message to edit.</param>
     /// <param name="replyMarkup">Inline keyboard attached to the message.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
-    /// <returns>The edited message, or <see langword="true"/> for an inline message.</returns>
-    public static async Task<Message> StopMessageLiveLocationAsync(
+    /// <returns>The edited message.</returns>
+    public static async Task<Message> StopMessageLiveLocationForMessageAsync(
         this IBotApiClient client,
+        ChatIdSource chatId,
+        long messageId,
         string? businessConnectionId = null,
-        ChatIdSource? chatId = null,
-        long? messageId = null,
-        string? inlineMessageId = null,
         InlineKeyboardMarkup? replyMarkup = null,
         CancellationToken cancellationToken = default)
-        => await client.StopMessageLiveLocationAsync(new StopMessageLiveLocationParameters
+        => await client.StopMessageLiveLocationForMessageAsync(new StopMessageLiveLocationParameters
         {
             BusinessConnectionId = businessConnectionId,
             ChatId = chatId,
             MessageId = messageId,
+            ReplyMarkup = replyMarkup
+        }, cancellationToken);
+
+    /// <summary>Stops updating a live location in an inline message.</summary>
+    /// <remarks>
+    /// Maps to Telegram's <c>stopMessageLiveLocation</c> for an inline message identified by
+    /// <c>inline_message_id</c>. Telegram returns <c>true</c> rather than a
+    /// <see cref="Message"/>. For an ordinary chat message, call
+    /// <see cref="StopMessageLiveLocationForMessageAsync(IBotApiClient, StopMessageLiveLocationParameters, CancellationToken)"/>.
+    /// </remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Inline message identifier and optional replacement keyboard.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
+    public static async Task<bool> StopMessageLiveLocationForInlineMessageAsync(
+        this IBotApiClient client,
+        StopMessageLiveLocationParameters parameters,
+        CancellationToken cancellationToken = default)
+        => await client.ExecuteAsync<bool>(new ApiRequest("stopMessageLiveLocation", parameters), cancellationToken);
+
+    /// <summary>Stops updating a live location in an inline message.</summary>
+    /// <remarks>
+    /// Maps to Telegram's <c>stopMessageLiveLocation</c> for an inline message identified by
+    /// <c>inline_message_id</c>. Telegram returns <c>true</c> rather than a
+    /// <see cref="Message"/>. For an ordinary chat message, call
+    /// <see cref="StopMessageLiveLocationForMessageAsync(IBotApiClient, ChatIdSource, long, string?, InlineKeyboardMarkup?, CancellationToken)"/>.
+    /// </remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="inlineMessageId">Identifier of the inline message.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
+    /// <param name="replyMarkup">Inline keyboard attached to the message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
+    public static async Task<bool> StopMessageLiveLocationForInlineMessageAsync(
+        this IBotApiClient client,
+        string inlineMessageId,
+        string? businessConnectionId = null,
+        InlineKeyboardMarkup? replyMarkup = null,
+        CancellationToken cancellationToken = default)
+        => await client.StopMessageLiveLocationForInlineMessageAsync(new StopMessageLiveLocationParameters
+        {
+            BusinessConnectionId = businessConnectionId,
             InlineMessageId = inlineMessageId,
             ReplyMarkup = replyMarkup
         }, cancellationToken);
@@ -279,39 +577,89 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
-    /// <summary>Edits the inline keyboard attached to a message.</summary>
+    /// <summary>Edits the inline keyboard of an ordinary chat message.</summary>
+    /// <remarks>
+    /// Maps to Telegram's <c>editMessageReplyMarkup</c> for a chat message identified by
+    /// <c>chat_id</c> and <c>message_id</c>. For an inline message, call
+    /// <see cref="EditMessageReplyMarkupForInlineMessageAsync(IBotApiClient, EditMessageReplyMarkupParameters, CancellationToken)"/>.
+    /// </remarks>
     /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="parameters">Message identifier and replacement keyboard.</param>
+    /// <param name="parameters">Ordinary message identifier and replacement keyboard.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
-    /// <returns>The edited message, or <see langword="true"/> for an inline message.</returns>
-    public static async Task<Message> EditMessageReplyMarkupAsync(
-        this IBotApiClient client, 
-        EditMessageReplyMarkupParameters parameters, 
+    /// <returns>The edited message.</returns>
+    public static async Task<Message> EditMessageReplyMarkupForMessageAsync(
+        this IBotApiClient client,
+        EditMessageReplyMarkupParameters parameters,
         CancellationToken cancellationToken = default)
         => await client.ExecuteAsync<Message>(new ApiRequest("editMessageReplyMarkup", parameters), cancellationToken);
 
-    /// <summary>Edits the inline keyboard attached to a message.</summary>
+    /// <summary>Edits the inline keyboard of an ordinary chat message.</summary>
+    /// <remarks>
+    /// Maps to Telegram's <c>editMessageReplyMarkup</c> for a chat message identified by
+    /// <c>chat_id</c> and <c>message_id</c>. For an inline message, call
+    /// <see cref="EditMessageReplyMarkupForInlineMessageAsync(IBotApiClient, string, InlineKeyboardMarkup?, string?, CancellationToken)"/>.
+    /// </remarks>
     /// <param name="client">Bot API client used to send the request.</param>
-    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
-    /// <param name="chatId">Chat containing the message.</param>
-    /// <param name="messageId">Identifier of the message to edit.</param>
-    /// <param name="inlineMessageId">Identifier of the inline message to edit.</param>
+    /// <param name="chatId">Chat containing the ordinary message.</param>
+    /// <param name="messageId">Identifier of the ordinary message.</param>
     /// <param name="replyMarkup">Replacement inline keyboard; omit it to remove the keyboard.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
-    /// <returns>The edited message, or <see langword="true"/> for an inline message.</returns>
-    public static async Task<Message> EditMessageReplyMarkupAsync(
+    /// <returns>The edited message.</returns>
+    public static async Task<Message> EditMessageReplyMarkupForMessageAsync(
         this IBotApiClient client,
-        string? businessConnectionId = null,
-        ChatIdSource? chatId = null,
-        long? messageId = null,
-        string? inlineMessageId = null,
+        ChatIdSource chatId,
+        long messageId,
         InlineKeyboardMarkup? replyMarkup = null,
+        string? businessConnectionId = null,
         CancellationToken cancellationToken = default)
-        => await client.EditMessageReplyMarkupAsync(new EditMessageReplyMarkupParameters
+        => await client.EditMessageReplyMarkupForMessageAsync(new EditMessageReplyMarkupParameters
         {
             BusinessConnectionId = businessConnectionId,
             ChatId = chatId,
             MessageId = messageId,
+            ReplyMarkup = replyMarkup
+        }, cancellationToken);
+
+    /// <summary>Edits the inline keyboard of an inline message.</summary>
+    /// <remarks>
+    /// Maps to Telegram's <c>editMessageReplyMarkup</c> for an inline message identified by
+    /// <c>inline_message_id</c>. Telegram returns <c>true</c> rather than a
+    /// <see cref="Message"/>. For an ordinary chat message, call
+    /// <see cref="EditMessageReplyMarkupForMessageAsync(IBotApiClient, EditMessageReplyMarkupParameters, CancellationToken)"/>.
+    /// </remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Inline message identifier and replacement keyboard.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
+    public static async Task<bool> EditMessageReplyMarkupForInlineMessageAsync(
+        this IBotApiClient client,
+        EditMessageReplyMarkupParameters parameters,
+        CancellationToken cancellationToken = default)
+        => await client.ExecuteAsync<bool>(new ApiRequest("editMessageReplyMarkup", parameters), cancellationToken);
+
+    /// <summary>Edits the inline keyboard of an inline message.</summary>
+    /// <remarks>
+    /// Maps to Telegram's <c>editMessageReplyMarkup</c> for an inline message identified by
+    /// <c>inline_message_id</c>. Telegram returns <c>true</c> rather than a
+    /// <see cref="Message"/>. For an ordinary chat message, call
+    /// <see cref="EditMessageReplyMarkupForMessageAsync(IBotApiClient, ChatIdSource, long, InlineKeyboardMarkup?, string?, CancellationToken)"/>.
+    /// </remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="inlineMessageId">Identifier of the inline message.</param>
+    /// <param name="replyMarkup">Replacement inline keyboard; omit it to remove the keyboard.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
+    public static async Task<bool> EditMessageReplyMarkupForInlineMessageAsync(
+        this IBotApiClient client,
+        string inlineMessageId,
+        InlineKeyboardMarkup? replyMarkup = null,
+        string? businessConnectionId = null,
+        CancellationToken cancellationToken = default)
+        => await client.EditMessageReplyMarkupForInlineMessageAsync(new EditMessageReplyMarkupParameters
+        {
+            BusinessConnectionId = businessConnectionId,
             InlineMessageId = inlineMessageId,
             ReplyMarkup = replyMarkup
         }, cancellationToken);

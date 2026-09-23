@@ -683,6 +683,43 @@ public sealed class TelegramChatIntegrationTests : IDisposable
         }
     }
 
+    [TelegramIntegrationFact]
+    public async Task OrdinaryChatMessageEdits_ReturnEditedMessage()
+    {
+        var chatId = GetId(TelegramIntegrationFactAttribute.ChatIdVariable);
+        Message? message = null;
+
+        try
+        {
+            message = await _client.SendMessageAsync(chatId, "Endfix private integration: before edit");
+            var edited = await _client.EditMessageTextForMessageAsync(
+                chatId,
+                message.MessageId,
+                "Endfix private integration: after edit");
+            Assert.Equal("Endfix private integration: after edit", edited.Text);
+            Assert.Equal(message.MessageId, edited.MessageId);
+
+            var withMarkup = await _client.EditMessageReplyMarkupForMessageAsync(
+                chatId,
+                message.MessageId,
+                new InlineKeyboardMarkup
+                {
+                    InlineKeyboard =
+                    [
+                        [new InlineKeyboardButton { Text = "Edited", CallbackData = "edited" }]
+                    ]
+                });
+            Assert.Equal("edited", withMarkup.ReplyMarkup!.InlineKeyboard[0][0].CallbackData);
+        }
+        finally
+        {
+            if (message is not null)
+            {
+                await _client.DeleteMessageAsync(chatId, message.MessageId);
+            }
+        }
+    }
+
     [TelegramGroupIntegrationFact]
     public async Task GroupMetadataMessageAndInviteLink_RollBack()
     {
@@ -706,10 +743,10 @@ public sealed class TelegramChatIntegrationTests : IDisposable
             Assert.Equal(temporaryDescription, changed.Description);
 
             message = await _client.SendMessageAsync(groupId, "Endfix group integration: before edit");
-            var edited = await _client.EditMessageTextAsync(
-                "Endfix group integration: after edit",
-                chatId: groupId,
-                messageId: message.MessageId);
+            var edited = await _client.EditMessageTextForMessageAsync(
+                groupId,
+                message.MessageId,
+                "Endfix group integration: after edit");
             Assert.Equal("Endfix group integration: after edit", edited.Text);
 
             Assert.True(await _client.PinChatMessageAsync(groupId, message.MessageId, disableNotification: true));
@@ -793,10 +830,10 @@ public sealed class TelegramChatIntegrationTests : IDisposable
             Assert.Equal(temporaryDescription, changed.Description);
 
             message = await _client.SendMessageAsync(channelId, "Endfix channel integration: before edit");
-            var edited = await _client.EditMessageTextAsync(
-                "Endfix channel integration: after edit",
-                chatId: channelId,
-                messageId: message.MessageId);
+            var edited = await _client.EditMessageTextForMessageAsync(
+                channelId,
+                message.MessageId,
+                "Endfix channel integration: after edit");
             Assert.Equal("Endfix channel integration: after edit", edited.Text);
 
             Assert.True(await _client.SetMessageReactionAsync(

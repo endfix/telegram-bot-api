@@ -48,6 +48,12 @@ The capability test verifies the corresponding `getMe` fields. Telegram warns
 that private threaded conversations may affect fees for Telegram Star
 purchases; these tests do not make Star purchases.
 
+The inline-message edit test is interactive. It sends a private-chat prompt
+with a button that opens inline mode; `/start` in that chat resends the prompt.
+Select the offered result. Telegram only assigns `inline_message_id` when the
+result includes an inline keyboard. The test skips if no result is chosen
+within 3 minutes.
+
 ## Chat permissions
 
 The bot must be an administrator in the discussion group with these rights:

@@ -20,6 +20,13 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - Treat long-polling cancellation during parallel dispatch as a normal stop.
   `ExecuteAsync` and the polling loop no longer capture a synchronization
   context.
+- Renamed <c>SetGameScoreInlineAsync</c> to
+  <c>SetGameScoreForInlineMessageAsync</c> to match
+  <c>SetGameScoreForMessageAsync</c>.
+- Split <c>editMessage*</c> and <c>stopMessageLiveLocation</c> into
+  <c>ForMessage</c> (<c>Message</c>) and <c>ForInlineMessage</c> (<c>bool</c>)
+  overloads. Telegram returns <c>true</c> for inline messages, which cannot
+  deserialize as <c>Message</c>.
 
 ## [0.6.0] - 2026-09-15
 

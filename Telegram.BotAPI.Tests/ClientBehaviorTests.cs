@@ -211,7 +211,8 @@ public sealed class ClientBehaviorTests
         var action = () => context.Client.RequestAsync<User>(
             new ApiRequest("getMe", parameters: null));
 
-        await action.Should().ThrowAsync<JsonException>();
+        var exception = await action.Should().ThrowAsync<JsonException>();
+        exception.Which.Message.Should().Contain("Broken envelope");
     }
 
     [Fact]

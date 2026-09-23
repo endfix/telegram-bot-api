@@ -169,7 +169,10 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
             if (!apiResponse.Ok && apiResponse.ErrorCode <= 0)
             {
                 responseMessage.EnsureSuccessStatusCode();
-                throw new JsonException($"The response from {request.MethodName} does not contain a valid Telegram error code.");
+                var description = string.IsNullOrWhiteSpace(apiResponse.Description)
+                    ? "The response does not contain a valid Telegram error code."
+                    : apiResponse.Description;
+                throw new JsonException($"The response from {request.MethodName} is not a valid Telegram API envelope: {description}");
             }
 
             if (apiResponse.Ok && !responseMessage.IsSuccessStatusCode)
@@ -202,7 +205,7 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
     /// <param name="request">The request to send.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The successful Telegram API result.</returns>
-    public async Task<TResult> ExecuteAsync<TResult>(ApiRequest request, CancellationToken cancellationToken)
+    public async Task<TResult> ExecuteAsync<TResult>(ApiRequest request, CancellationToken cancellationToken = default)
     {
         var response = await RequestAsync<TResult>(request, cancellationToken).ConfigureAwait(false);
         if (!response.Ok)

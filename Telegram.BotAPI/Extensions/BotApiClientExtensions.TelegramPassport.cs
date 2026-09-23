@@ -16,11 +16,11 @@ public static partial class BotApiClientExtensions
     /// <param name="parameters">User identifier and Passport validation errors.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
-    public static async Task<bool> SetPassportDataErrorsAsync(
+    public static Task<bool> SetPassportDataErrorsAsync(
         this IBotApiClient client, 
         SetPassportDataErrorsParameters parameters, 
         CancellationToken cancellationToken = default)
-        => await client.ExecuteAsync<bool>(new ApiRequest("setPassportDataErrors", parameters), cancellationToken);
+        => client.ExecuteAsync<bool>(new ApiRequest("setPassportDataErrors", parameters), cancellationToken);
 
     /// <summary>
     /// Reports errors in Telegram Passport data submitted by a user.
@@ -30,12 +30,12 @@ public static partial class BotApiClientExtensions
     /// <param name="errors">Passport errors that the user must resolve before resubmitting the data.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
-    public static async Task<bool> SetPassportDataErrorsAsync(
+    public static Task<bool> SetPassportDataErrorsAsync(
         this IBotApiClient client,
         long userId,
         IReadOnlyList<PassportElementError> errors,
         CancellationToken cancellationToken = default)
-        => await client.SetPassportDataErrorsAsync(new SetPassportDataErrorsParameters
+        => client.SetPassportDataErrorsAsync(new SetPassportDataErrorsParameters
         {
             UserId = userId,
             Errors = errors

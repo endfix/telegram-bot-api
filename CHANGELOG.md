@@ -15,6 +15,8 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - Give <c>BotApiClient.ExecuteAsync</c> the same optional cancellation token
   as <c>IBotApiClient.ExecuteAsync</c>.
 - Include Telegram's error description when the API envelope is invalid.
+- Return the inner task from typed extension wrappers instead of wrapping
+  each call in an extra async state machine.
 
 ## [1.0.0] - 2026-09-24
 

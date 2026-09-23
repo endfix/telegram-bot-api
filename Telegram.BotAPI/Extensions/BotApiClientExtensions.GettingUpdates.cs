@@ -17,11 +17,11 @@ public static partial class BotApiClientExtensions
     /// <param name="parameters">Long-polling and update-filter options.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The available updates, or an empty collection when no updates are available.</returns>
-    public static async Task<IReadOnlyList<Update>?> GetUpdatesAsync(
+    public static Task<IReadOnlyList<Update>?> GetUpdatesAsync(
         this IBotApiClient client, 
         GetUpdatesParameters parameters,
         CancellationToken cancellationToken = default)
-        => await client.ExecuteAsync<IReadOnlyList<Update>>(new ApiRequest("getUpdates", parameters), cancellationToken);
+        => client.ExecuteAsync<IReadOnlyList<Update>?>(new ApiRequest("getUpdates", parameters), cancellationToken);
 
     /// <summary>
     /// Retrieves pending updates using long polling.
@@ -33,14 +33,14 @@ public static partial class BotApiClientExtensions
     /// <param name="AllowedUpdates">Optional update types to receive.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The available updates, or an empty collection when no updates are available.</returns>
-    public static async Task<IReadOnlyList<Update>?> GetUpdatesAsync(
+    public static Task<IReadOnlyList<Update>?> GetUpdatesAsync(
         this IBotApiClient client,
         long? offset = null,
         int? limit = null,
         int? timeout = null,
         IReadOnlyList<UpdateType>? AllowedUpdates = null,
         CancellationToken cancellationToken = default)
-        => await client.GetUpdatesAsync(new GetUpdatesParameters
+        => client.GetUpdatesAsync(new GetUpdatesParameters
         {
             Offset = offset,
             Limit = limit,
@@ -55,11 +55,11 @@ public static partial class BotApiClientExtensions
     /// <param name="parameters">Webhook configuration and delivery options.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
-    public static async Task<bool> SetWebhookAsync(
+    public static Task<bool> SetWebhookAsync(
         this IBotApiClient client, 
         SetWebhookParameters parameters, 
         CancellationToken cancellationToken = default)
-        => await client.ExecuteAsync<bool>(new ApiRequest("setWebhook", parameters), cancellationToken);
+        => client.ExecuteAsync<bool>(new ApiRequest("setWebhook", parameters), cancellationToken);
 
     /// <summary>
     /// Configures a webhook for receiving updates.
@@ -74,7 +74,7 @@ public static partial class BotApiClientExtensions
     /// <param name="secretToken">Optional secret token sent in the webhook header.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
-    public static async Task<bool> SetWebhookAsync(
+    public static Task<bool> SetWebhookAsync(
         this IBotApiClient client,
         string url,
         InputFile? certificate = null,
@@ -84,7 +84,7 @@ public static partial class BotApiClientExtensions
         bool? dropPendingUpdates = null,
         string? secretToken = null,
         CancellationToken cancellationToken = default)
-        => await client.SetWebhookAsync(new SetWebhookParameters
+        => client.SetWebhookAsync(new SetWebhookParameters
         { 
             Url = url,
             Certificate = certificate,
@@ -102,11 +102,11 @@ public static partial class BotApiClientExtensions
     /// <param name="parameters">Options controlling pending updates.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
-    public static async Task<bool> DeleteWebhookAsync(
+    public static Task<bool> DeleteWebhookAsync(
         this IBotApiClient client, 
         DeleteWebhookParameters parameters,
         CancellationToken cancellationToken = default)
-        => await client.ExecuteAsync<bool>(new ApiRequest("deleteWebhook", parameters), cancellationToken);
+        => client.ExecuteAsync<bool>(new ApiRequest("deleteWebhook", parameters), cancellationToken);
 
     /// <summary>
     /// Removes the current webhook and optionally discards pending updates.
@@ -115,11 +115,11 @@ public static partial class BotApiClientExtensions
     /// <param name="dropPendingUpdates">Whether to discard pending updates.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
-    public static async Task<bool> DeleteWebhookAsync(
+    public static Task<bool> DeleteWebhookAsync(
         this IBotApiClient client,
         bool? dropPendingUpdates = null,
         CancellationToken cancellationToken = default)
-        => await client.DeleteWebhookAsync(new DeleteWebhookParameters
+        => client.DeleteWebhookAsync(new DeleteWebhookParameters
         {
             DropPendingUpdates = dropPendingUpdates
         }, cancellationToken);
@@ -131,11 +131,11 @@ public static partial class BotApiClientExtensions
     /// <param name="parameters">The request has no parameters in the current Bot API version.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The current webhook status.</returns>
-    public static async Task<WebhookInfo> GetWebhookInfoAsync(
+    public static Task<WebhookInfo> GetWebhookInfoAsync(
         this IBotApiClient client, 
         GetWebhookInfoParameters parameters,
         CancellationToken cancellationToken = default)
-        => await client.ExecuteAsync<WebhookInfo>(new ApiRequest("getWebhookInfo", parameters), cancellationToken);
+        => client.ExecuteAsync<WebhookInfo>(new ApiRequest("getWebhookInfo", parameters), cancellationToken);
 
     /// <summary>
     /// Retrieves the current webhook configuration.
@@ -143,10 +143,10 @@ public static partial class BotApiClientExtensions
     /// <param name="client">The Bot API client.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The current webhook status.</returns>
-    public static async Task<WebhookInfo> GetWebhookInfoAsync(
+    public static Task<WebhookInfo> GetWebhookInfoAsync(
         this IBotApiClient client, 
         CancellationToken cancellationToken = default)
-        => await client.GetWebhookInfoAsync(new GetWebhookInfoParameters
+        => client.GetWebhookInfoAsync(new GetWebhookInfoParameters
         {
             // No parameters to set for GetWebhookInfo
         }, cancellationToken);

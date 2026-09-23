@@ -16,11 +16,11 @@ public static partial class BotApiClientExtensions
     /// <param name="parameters">Game message and delivery options.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The sent game message.</returns>
-    public static async Task<Message> SendGameAsync(
+    public static Task<Message> SendGameAsync(
         this IBotApiClient client, 
         SendGameParameters parameters, 
         CancellationToken cancellationToken = default)
-        => await client.ExecuteAsync<Message>(new ApiRequest("sendGame", parameters), cancellationToken);
+        => client.ExecuteAsync<Message>(new ApiRequest("sendGame", parameters), cancellationToken);
 
     /// <summary>
     /// Sends a game to a target chat.
@@ -38,7 +38,7 @@ public static partial class BotApiClientExtensions
     /// <param name="replyMarkup">Optional inline keyboard. If empty, Telegram shows a Play Game button.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The sent game message.</returns>
-    public static async Task<Message> SendGameAsync(
+    public static Task<Message> SendGameAsync(
         this IBotApiClient client,
         long chatId,
         string gameShortName,
@@ -51,7 +51,7 @@ public static partial class BotApiClientExtensions
         ReplyParameters? replyParameters = null,
         InlineKeyboardMarkup? replyMarkup = null,
         CancellationToken cancellationToken = default)
-        => await client.SendGameAsync(new SendGameParameters
+        => client.SendGameAsync(new SendGameParameters
         {
             BusinessConnectionId = businessConnectionId,
             ChatId = chatId,
@@ -75,11 +75,11 @@ public static partial class BotApiClientExtensions
     /// <param name="parameters">User, score and ordinary message identifiers.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The edited game message.</returns>
-    public static async Task<Message> SetGameScoreForMessageAsync(
+    public static Task<Message> SetGameScoreForMessageAsync(
         this IBotApiClient client, 
         SetGameScoreParameters parameters, 
         CancellationToken cancellationToken = default)
-        => await client.ExecuteAsync<Message>(new ApiRequest("setGameScore", parameters), cancellationToken);
+        => client.ExecuteAsync<Message>(new ApiRequest("setGameScore", parameters), cancellationToken);
 
     /// <summary>Sets the score of a user in an ordinary game message.</summary>
     /// <remarks>
@@ -96,7 +96,7 @@ public static partial class BotApiClientExtensions
     /// <param name="disableEditMessage">Whether to prevent automatic scoreboard updates.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The edited game message.</returns>
-    public static async Task<Message> SetGameScoreForMessageAsync(
+    public static Task<Message> SetGameScoreForMessageAsync(
         this IBotApiClient client,
         long userId,
         long chatId,
@@ -105,7 +105,7 @@ public static partial class BotApiClientExtensions
         bool? force = null,
         bool? disableEditMessage = null,
         CancellationToken cancellationToken = default)
-        => await client.SetGameScoreForMessageAsync(new SetGameScoreParameters
+        => client.SetGameScoreForMessageAsync(new SetGameScoreParameters
         {
             UserId = userId,
             ChatId = chatId,
@@ -125,11 +125,11 @@ public static partial class BotApiClientExtensions
     /// <param name="parameters">User, score and inline message identifier.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
-    public static async Task<bool> SetGameScoreForInlineMessageAsync(
+    public static Task<bool> SetGameScoreForInlineMessageAsync(
         this IBotApiClient client,
         SetGameScoreParameters parameters,
         CancellationToken cancellationToken = default)
-        => await client.ExecuteAsync<bool>(new ApiRequest("setGameScore", parameters), cancellationToken);
+        => client.ExecuteAsync<bool>(new ApiRequest("setGameScore", parameters), cancellationToken);
 
     /// <summary>Sets the score of a user in an inline game message.</summary>
     /// <remarks>
@@ -145,7 +145,7 @@ public static partial class BotApiClientExtensions
     /// <param name="disableEditMessage">Whether to prevent automatic scoreboard updates.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
-    public static async Task<bool> SetGameScoreForInlineMessageAsync(
+    public static Task<bool> SetGameScoreForInlineMessageAsync(
         this IBotApiClient client,
         long userId,
         string inlineMessageId,
@@ -153,7 +153,7 @@ public static partial class BotApiClientExtensions
         bool? force = null,
         bool? disableEditMessage = null,
         CancellationToken cancellationToken = default)
-        => await client.SetGameScoreForInlineMessageAsync(new SetGameScoreParameters
+        => client.SetGameScoreForInlineMessageAsync(new SetGameScoreParameters
         {
             UserId = userId,
             Score = score,
@@ -169,11 +169,11 @@ public static partial class BotApiClientExtensions
     /// <param name="parameters">Identifiers of the user and game message.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The requested rows from the game's high-score table.</returns>
-    public static async Task<IReadOnlyList<GameHighScore>> GetGameHighScoresAsync(
+    public static Task<IReadOnlyList<GameHighScore>> GetGameHighScoresAsync(
         this IBotApiClient client, 
         GetGameHighScoresParameters parameters, 
         CancellationToken cancellationToken = default)
-        => await client.ExecuteAsync<IReadOnlyList<GameHighScore>>(new ApiRequest("getGameHighScores", parameters), cancellationToken);
+        => client.ExecuteAsync<IReadOnlyList<GameHighScore>>(new ApiRequest("getGameHighScores", parameters), cancellationToken);
 
     /// <summary>
     /// Retrieves the specified user's score and nearby scores for a game.
@@ -185,14 +185,14 @@ public static partial class BotApiClientExtensions
     /// <param name="inlineMessageId">Inline message identifier, required when <paramref name="chatId"/> and <paramref name="messageId"/> are not specified.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The requested rows from the game's high-score table.</returns>
-    public static async Task<IReadOnlyList<GameHighScore>> GetGameHighScoresAsync(
+    public static Task<IReadOnlyList<GameHighScore>> GetGameHighScoresAsync(
         this IBotApiClient client,
         long userId,
         long? chatId = null,
         long? messageId = null,
         string? inlineMessageId = null,
         CancellationToken cancellationToken = default)
-        => await client.GetGameHighScoresAsync(new GetGameHighScoresParameters
+        => client.GetGameHighScoresAsync(new GetGameHighScoresParameters
         { 
             UserId = userId,
             ChatId = chatId, 

@@ -13,11 +13,11 @@ public static partial class BotApiClientExtensions
     /// <param name="parameters">Target chat, rich content and delivery options.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The sent message.</returns>
-    public static async Task<Message> SendRichMessageAsync(
+    public static Task<Message> SendRichMessageAsync(
         this IBotApiClient client,
         SendRichMessageParameters parameters,
         CancellationToken cancellationToken = default)
-        => await client.ExecuteAsync<Message>(new ApiRequest("sendRichMessage", parameters), cancellationToken);
+        => client.ExecuteAsync<Message>(new ApiRequest("sendRichMessage", parameters), cancellationToken);
 
     /// <summary>Sends a rich-formatted message.</summary>
     /// <param name="client">Bot API client used to send the request.</param>
@@ -36,7 +36,7 @@ public static partial class BotApiClientExtensions
     /// <param name="replyMarkup">Optional interface options such as an inline or reply keyboard.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The sent message.</returns>
-    public static async Task<Message> SendRichMessageAsync(
+    public static Task<Message> SendRichMessageAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
         InputRichMessage richMessage,
@@ -52,7 +52,7 @@ public static partial class BotApiClientExtensions
         ReplyParameters? replyParameters = null,
         ReplyMarkup? replyMarkup = null,
         CancellationToken cancellationToken = default)
-        => await client.SendRichMessageAsync(new SendRichMessageParameters
+        => client.SendRichMessageAsync(new SendRichMessageParameters
         {
             BusinessConnectionId = businessConnectionId,
             ChatId = chatId,
@@ -74,11 +74,11 @@ public static partial class BotApiClientExtensions
     /// <param name="parameters">Target private chat, draft identifier and partial rich content.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
-    public static async Task<bool> SendRichMessageDraftAsync(
+    public static Task<bool> SendRichMessageDraftAsync(
         this IBotApiClient client,
         SendRichMessageDraftParameters parameters,
         CancellationToken cancellationToken = default)
-        => await client.ExecuteAsync<bool>(new ApiRequest("sendRichMessageDraft", parameters), cancellationToken);
+        => client.ExecuteAsync<bool>(new ApiRequest("sendRichMessageDraft", parameters), cancellationToken);
 
     /// <summary>Streams a partial rich message while it is being generated.</summary>
     /// <param name="client">Bot API client used to send the request.</param>
@@ -90,7 +90,7 @@ public static partial class BotApiClientExtensions
     /// <param name="keepOnStop">Whether to keep the draft after the user stops generation.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
-    public static async Task<bool> SendRichMessageDraftAsync(
+    public static Task<bool> SendRichMessageDraftAsync(
         this IBotApiClient client,
         long chatId,
         long draftId,
@@ -99,7 +99,7 @@ public static partial class BotApiClientExtensions
         bool? canStop = null,
         bool? keepOnStop = null,
         CancellationToken cancellationToken = default)
-        => await client.SendRichMessageDraftAsync(new SendRichMessageDraftParameters
+        => client.SendRichMessageDraftAsync(new SendRichMessageDraftParameters
         {
             ChatId = chatId,
             MessageThreadId = messageThreadId,

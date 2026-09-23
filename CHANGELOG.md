@@ -7,6 +7,10 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
+### Changed
+
+- Compare the public API against the `1.0.0` NuGet package during pack.
+
 ## [1.0.0] - 2026-09-24
 
 ### Added

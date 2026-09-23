@@ -15,6 +15,7 @@
 
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<EnablePackageValidation>true</EnablePackageValidation>
+		<PackageValidationBaselineVersion>1.0.0</PackageValidationBaselineVersion>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<IsPackable>true</IsPackable>
 		<ImplicitUsings>disable</ImplicitUsings>

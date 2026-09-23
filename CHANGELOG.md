@@ -10,6 +10,8 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 ### Changed
 
 - Compare the public API against the `1.0.0` NuGet package during pack.
+- Detect uploaded files on custom <c>ApiRequestParameters</c> types outside
+  the library namespace so <c>RequestAsync</c> still uses multipart.
 
 ## [1.0.0] - 2026-09-24
 

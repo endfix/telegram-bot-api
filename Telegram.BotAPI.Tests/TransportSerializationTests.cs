@@ -1,5 +1,6 @@
 using FluentAssertions;
 using System.Text.Json;
+using CustomBot.Requests;
 using Endfix.Telegram.BotAPI.Parameters;
 using Endfix.Telegram.BotAPI.Protocol;
 using Endfix.Telegram.BotAPI.Tests.Infrastructure;
@@ -49,6 +50,46 @@ public sealed class TransportSerializationTests
         var photo = request.Parts.Should().ContainSingle(part => part.Name == "photo").Which;
         photo.FileName.Should().Be(System.IO.Path.GetFileName(file.Path));
         photo.Content.Should().Equal(0x01, 0x02, 0x03, 0xFF);
+    }
+
+    [Fact]
+    public async Task CustomParameters_WithInputFile_SendsMultipart()
+    {
+        var file = await TemporaryFile.CreateAsync([0x01, 0x02, 0x03, 0xFF]);
+        await using var _ = file;
+        using var context = new ClientContext();
+
+        await context.Client.RequestAsync<bool>(new ApiRequest("sendPhoto", new CustomPhotoParameters
+        {
+            ChatId = 123456789L,
+            Photo = new InputPhotoFile(file.Path)
+        }));
+
+        context.Handler.LastRequest.Should().NotBeNull();
+        var request = context.Handler.LastRequest!;
+        request.ContentType.Should().Be("multipart/form-data");
+        var photo = request.Parts.Should().ContainSingle(part => part.Name == "photo").Which;
+        photo.Content.Should().Equal(0x01, 0x02, 0x03, 0xFF);
+    }
+
+    [Fact]
+    public async Task CustomParameters_WithoutInputFile_SendsJson()
+    {
+        using var context = new ClientContext();
+
+        await context.Client.RequestAsync<bool>(new ApiRequest("sendMessage", new CustomTextParameters
+        {
+            ChatId = 123456789L,
+            Text = "Hello"
+        }));
+
+        context.Handler.LastRequest.Should().NotBeNull();
+        var request = context.Handler.LastRequest!;
+        request.ContentType.Should().Be("application/json");
+        request.Parts.Should().BeEmpty();
+        using var document = JsonDocument.Parse(request.Body!);
+        document.RootElement.GetProperty("chat_id").GetInt64().Should().Be(123456789L);
+        document.RootElement.GetProperty("text").GetString().Should().Be("Hello");
     }
 
     [Fact]

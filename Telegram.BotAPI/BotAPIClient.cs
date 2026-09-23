@@ -357,8 +357,7 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
             return ComputeTypeMayContainFiles(elementType, seen);
         }
 
-        if (type.Namespace is null ||
-            !type.Namespace.StartsWith("Endfix.Telegram.BotAPI", StringComparison.Ordinal))
+        if (IsFrameworkType(type))
         {
             return false;
         }
@@ -392,6 +391,20 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
         }
 
         return false;
+    }
+
+    private static bool IsFrameworkType(Type type)
+    {
+        var ns = type.Namespace;
+        if (ns is null)
+        {
+            return false;
+        }
+
+        return ns == "System" ||
+            ns.StartsWith("System.", StringComparison.Ordinal) ||
+            ns == "Microsoft" ||
+            ns.StartsWith("Microsoft.", StringComparison.Ordinal);
     }
 
     private static Type[] ExportedLibraryTypes

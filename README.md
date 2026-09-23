@@ -29,17 +29,16 @@ Use this package when you need explicit control over requests and serialization.
 If you want an application framework with routing or dialogs, see Telegram's
 list of community [.NET Bot API libraries](https://core.telegram.org/bots/samples#net).
 
-The project follows the Telegram Bot API release it targets. While the package
-remains below `1.0`, public contracts may still change to correct modeling
-issues while the stable contract is being finalized. After `1.0`, incompatible
-public API changes will require a major version.
+The project follows the Telegram Bot API release it targets. Version `1.0`
+freezes the public contract: incompatible changes require a major version.
+New Bot API methods and additive models are minor versions.
 
 See [CHANGELOG.md](CHANGELOG.md) for release notes and unreleased changes.
 
 ## Installation
 
 ```bash
-dotnet add package Endfix.Telegram.BotAPI --version 0.6.0
+dotnet add package Endfix.Telegram.BotAPI --version 1.0.0
 ```
 
 ## Quick start
@@ -191,12 +190,15 @@ the downloaded content.
 
 ## Production usage
 
-Use one singleton `IBotApiClient` per bot. In hosted applications, let a
-singleton `BackgroundService` own `StartPollingAsync`, subscribe when the
-service starts, unsubscribe in `finally`, and create a DI scope inside the
-event callback before resolving scoped handlers or database contexts. Never
-subscribe a scoped or transient object directly to the singleton client's
-`OnUpdate` event.
+Use one singleton `IBotApiClient` per bot. The interface exposes both
+`RequestAsync` (returns the Telegram envelope; API errors have `Ok = false`)
+and `ExecuteAsync` (throws `ApiRequestException` when `ok` is `false`), so
+custom requests use the same injected client as the typed helpers. In hosted
+applications, let a singleton `BackgroundService` own `StartPollingAsync`,
+subscribe when the service starts, unsubscribe in `finally`, and create a DI
+scope inside the event callback before resolving scoped handlers or database
+contexts. Never subscribe a scoped or transient object directly to the
+singleton client's `OnUpdate` event.
 
 A supplied `HttpClient` remains owned by the caller and should normally be
 reused for the application's lifetime. Configure

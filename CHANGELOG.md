@@ -7,6 +7,13 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-09-24
+
+### Added
+
+- Added <c>RequestAsync</c> to <c>IBotApiClient</c> so custom requests use the
+  same injected client as the typed helpers.
+
 ### Changed
 
 - Send parameterized requests without uploaded files as `application/json`.
@@ -16,7 +23,6 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
   scope-per-update, and hosted lifetime model as long polling.
 - Clarified that the package is a low-level Bot API client, not a bot
   framework.
-- Added <c>RequestAsync</c> to <c>IBotApiClient</c>.
 - Treat long-polling cancellation during parallel dispatch as a normal stop.
   `ExecuteAsync` and the polling loop no longer capture a synchronization
   context.
@@ -27,6 +33,9 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
   <c>ForMessage</c> (<c>Message</c>) and <c>ForInlineMessage</c> (<c>bool</c>)
   overloads. Telegram returns <c>true</c> for inline messages, which cannot
   deserialize as <c>Message</c>.
+
+The public contract is frozen. Incompatible API changes will require a major
+version. Additive Telegram Bot API coverage remains a minor version.
 
 ## [0.6.0] - 2026-09-15
 
@@ -94,6 +103,7 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - Preserved original input-source open exceptions.
 - Corrected `deleteStory` and user-gift response contracts.
 
-[Unreleased]: https://github.com/endfix/telegram-bot-api/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/endfix/telegram-bot-api/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/endfix/telegram-bot-api/compare/v0.6.0...v1.0.0
 [0.6.0]: https://github.com/endfix/telegram-bot-api/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/endfix/telegram-bot-api/compare/v0.4.0...v0.5.0

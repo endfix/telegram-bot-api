@@ -72,11 +72,21 @@ public sealed partial class BotApiClient
 
         async Task ProcessUpdateAsync(Update update)
         {
-            await throttling.WaitAsync(cancellationToken);
+            try
+            {
+                await throttling.WaitAsync(cancellationToken).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
 
             try
             {
                 await InvokeUpdateHandlersAsync(update, cancellationToken).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
             }
             catch (Exception e)
             {
@@ -109,7 +119,7 @@ public sealed partial class BotApiClient
                     {
                         if (maxParallel == 1)
                         {
-                            await ProcessUpdateAsync(update);
+                            await ProcessUpdateAsync(update).ConfigureAwait(false);
                         }
                         else
                         {

@@ -17,6 +17,9 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - Clarified that the package is a low-level Bot API client, not a bot
   framework.
 - Added <c>RequestAsync</c> to <c>IBotApiClient</c>.
+- Treat long-polling cancellation during parallel dispatch as a normal stop.
+  `ExecuteAsync` and the polling loop no longer capture a synchronization
+  context.
 
 ## [0.6.0] - 2026-09-15
 

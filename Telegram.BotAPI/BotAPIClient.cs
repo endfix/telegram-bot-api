@@ -204,7 +204,7 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
     /// <returns>The successful Telegram API result.</returns>
     public async Task<TResult> ExecuteAsync<TResult>(ApiRequest request, CancellationToken cancellationToken)
     {
-        var response = await RequestAsync<TResult>(request, cancellationToken);
+        var response = await RequestAsync<TResult>(request, cancellationToken).ConfigureAwait(false);
         if (!response.Ok)
         {
             throw new ApiRequestException(response.ErrorCode, response.Description, response.Parameters);

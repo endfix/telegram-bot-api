@@ -7,6 +7,8 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-09-24
+
 ### Changed
 
 - Give <c>BotApiClient.ExecuteAsync</c> the same optional cancellation token
@@ -117,7 +119,8 @@ version. Additive Telegram Bot API coverage remains a minor version.
 - Preserved original input-source open exceptions.
 - Corrected `deleteStory` and user-gift response contracts.
 
-[Unreleased]: https://github.com/endfix/telegram-bot-api/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/endfix/telegram-bot-api/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/endfix/telegram-bot-api/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/endfix/telegram-bot-api/compare/v0.6.0...v1.0.0
 [0.6.0]: https://github.com/endfix/telegram-bot-api/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/endfix/telegram-bot-api/compare/v0.4.0...v0.5.0

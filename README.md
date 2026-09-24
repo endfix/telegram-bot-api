@@ -38,7 +38,7 @@ See [CHANGELOG.md](CHANGELOG.md) for release notes and unreleased changes.
 ## Installation
 
 ```bash
-dotnet add package Endfix.Telegram.BotAPI --version 1.0.0
+dotnet add package Endfix.Telegram.BotAPI --version 1.0.1
 ```
 
 ## Quick start

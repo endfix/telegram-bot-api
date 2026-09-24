@@ -378,20 +378,21 @@ dotnet run --project Telegram.BotAPI.Benchmarks/Telegram.BotAPI.Benchmarks.cspro
 
 ### Latest benchmark snapshot
 
-The current reference snapshot was recorded on September 15, 2026 at commit
-`a229efd` (`v0.5.0-16-ga229efd`) on .NET 9.0.20, Windows 10 x64, and an Intel
+The current reference snapshot was recorded on September 24, 2026 at commit
+`cfaa5ce` (`v1.0.0-5-gcfaa5ce`) on .NET 9.0.20, Windows 10 x64, and an Intel
 Xeon E5-2690 v3. The benchmarks use local transports and exclude Telegram and
-network latency.
+network latency. No-file parameterized requests use a JSON body; that is why
+scalar `sendMessage` is cheaper than the September 15 multipart snapshot.
 
 | Scenario | Mean | Allocated |
 | --- | ---: | ---: |
-| Serialize parameters | 537.8 ns | 264 B |
-| Deserialize message | 1.310 us | 1,712 B |
-| Request and deserialize | 6.633 us | 5,264 B |
-| Request without parameters and deserialize | 3.278 us | 3,680 B |
-| Send scalar message | 4.626 us | 3,232 B |
-| Prepare one local-file photo | 219.252 us | 3,768 B |
-| Prepare 10-part path-backed media group | 2.047 ms | 28,249 B |
+| Serialize parameters | 523.8 ns | 264 B |
+| Deserialize message | 1.199 us | 1,712 B |
+| Request and deserialize | 4.413 us | 4,136 B |
+| Request without parameters and deserialize | 3.173 us | 3,680 B |
+| Send scalar message | 2.424 us | 2,104 B |
+| Prepare one local-file photo | 213.4 us | 3,816 B |
+| Prepare 10-part path-backed media group | 1.986 ms | 28,353 B |
 
 The complete environment, interpretation, all 82 measurements, focused repeats,
 and million-call stress profiles are in the [latest benchmark report](https://github.com/endfix/telegram-bot-api/blob/main/Telegram.BotAPI.Benchmarks/RESULTS.md), with normalized measurements in [`benchmark-data.json`](https://github.com/endfix/telegram-bot-api/blob/main/Telegram.BotAPI.Benchmarks/benchmark-data.json).

@@ -102,6 +102,7 @@ take precedence over User Secrets. Never commit tokens or real IDs.
 | `TELEGRAM_BOT_TEST_USER_ID` | Ordinary member used by membership and rollback-safe restriction tests |
 | `TELEGRAM_BOT_KEEP_MESSAGES` | Optional `true` value that keeps file-test messages for inspection |
 | `TELEGRAM_BOT_GROUP_STICKER_SET_ACCESS` | Optional `true` value enabling the group sticker-set test after `getChat` reports `can_set_sticker_set=true` |
+| `TELEGRAM_BOT_SET_MY_NAME_ACCESS` | Optional `true` value enabling `setMyName`. Telegram may rate-limit that method for many hours after a previous change |
 
 Media files used by multipart tests are versioned under `Fixtures/Media` and
 copied to the test output directory. No external media paths are required.
@@ -139,7 +140,8 @@ a complete Telegram catalog.
 | Area | Test | Secrets | Skip / note |
 | --- | --- | --- | --- |
 | Bot | `BotFatherCapabilities_AreEnabled` | token, chat | — |
-| Bot | `BotChatSettings_RollBack` | token, chat | Telegram may `429` `setMyName` for many hours after a previous run |
+| Bot | `BotChatSettings_RollBack` | token, chat | Menu button, commands, description. Does not call `setMyName` |
+| Bot | `BotName_RollBack` | token, chat | Opt-in: `TELEGRAM_BOT_SET_MY_NAME_ACCESS=true`. Telegram may `429` `setMyName` for many hours |
 | Bot | `BotDefaultAdministratorRights_RollBack` | token, chat | — |
 | Private chat | `PrivateChatStructuredMessages_AreDeliveredAndDeleted` | token, chat | drafts, venue, contact, stop poll |
 | Private chat | `OrdinaryChatMessageEdits_ReturnEditedMessage` | token, chat | `editMessageText` / `editMessageReplyMarkup` return `Message` |
@@ -188,6 +190,11 @@ disabled by default because Telegram exposes group sticker sets only for groups
 with at least 100 members; smaller groups omit `can_set_sticker_set` even when
 the bot can change chat information. Enable it only for an eligible supergroup
 by setting `TELEGRAM_BOT_GROUP_STICKER_SET_ACCESS=true`.
+
+`setMyName` is disabled by default for the same reason a repeated live run can
+fail: Telegram may reject the method with a long `retry_after`. Enable
+`BotName_RollBack` with `TELEGRAM_BOT_SET_MY_NAME_ACCESS=true` only when you
+intentionally want to change the bot name.
 
 Premium scenarios derive the user ID from `TELEGRAM_BOT_CHAT_ID` and verify the
 account through `getChatMember` before exercising Premium-dependent behavior.

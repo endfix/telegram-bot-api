@@ -42,12 +42,10 @@ public sealed class TelegramChatIntegrationTests : IDisposable
         var commandScope = new BotCommandScopeChat { ChatId = chatId };
         var originalMenuButton = await _client.GetChatMenuButtonAsync(chatId);
         var originalCommands = await _client.GetMyCommandsAsync(commandScope);
-        var originalName = await _client.GetMyNameAsync(languageCode);
         var originalDescription = await _client.GetMyDescriptionAsync(languageCode);
         var originalShortDescription = await _client.GetMyShortDescriptionAsync(languageCode);
         var menuChanged = false;
         var commandsChanged = false;
-        var nameChanged = false;
         var descriptionChanged = false;
         var shortDescriptionChanged = false;
         var suffix = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
@@ -82,10 +80,6 @@ public sealed class TelegramChatIntegrationTests : IDisposable
             var command = Assert.Single(commands);
             Assert.Equal("endfix_test", command.Command);
 
-            Assert.True(await _client.SetMyNameAsync($"Endfix integration {suffix}", languageCode));
-            nameChanged = true;
-            Assert.Equal($"Endfix integration {suffix}", (await _client.GetMyNameAsync(languageCode)).Name);
-
             Assert.True(await _client.SetMyDescriptionAsync(
                 $"Endfix integration description {suffix}",
                 languageCode));
@@ -118,11 +112,6 @@ public sealed class TelegramChatIntegrationTests : IDisposable
                     languageCode));
             }
 
-            if (nameChanged)
-            {
-                Assert.True(await _client.SetMyNameAsync(originalName.Name, languageCode));
-            }
-
             if (commandsChanged)
             {
                 if (originalCommands.Count == 0)
@@ -148,13 +137,37 @@ public sealed class TelegramChatIntegrationTests : IDisposable
             originalCommands.Select(command => (command.Command, command.Description, command.IsEphemeral)),
             (await _client.GetMyCommandsAsync(commandScope))
                 .Select(command => (command.Command, command.Description, command.IsEphemeral)));
-        Assert.Equal(originalName.Name, (await _client.GetMyNameAsync(languageCode)).Name);
         Assert.Equal(
             originalDescription.Description,
             (await _client.GetMyDescriptionAsync(languageCode)).Description);
         Assert.Equal(
             originalShortDescription.ShortDescription,
             (await _client.GetMyShortDescriptionAsync(languageCode)).ShortDescription);
+    }
+
+    [TelegramSetMyNameIntegrationFact]
+    public async Task BotName_RollBack()
+    {
+        const string languageCode = "eo";
+        var originalName = await _client.GetMyNameAsync(languageCode);
+        var suffix = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
+        var nameChanged = false;
+
+        try
+        {
+            Assert.True(await _client.SetMyNameAsync($"Endfix integration {suffix}", languageCode));
+            nameChanged = true;
+            Assert.Equal($"Endfix integration {suffix}", (await _client.GetMyNameAsync(languageCode)).Name);
+        }
+        finally
+        {
+            if (nameChanged)
+            {
+                Assert.True(await _client.SetMyNameAsync(originalName.Name, languageCode));
+            }
+        }
+
+        Assert.Equal(originalName.Name, (await _client.GetMyNameAsync(languageCode)).Name);
     }
 
     [TelegramIntegrationFact]

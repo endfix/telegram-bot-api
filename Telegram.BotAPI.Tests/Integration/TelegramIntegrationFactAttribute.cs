@@ -14,6 +14,7 @@ internal sealed class TelegramIntegrationFactAttribute : FactAttribute
     public const string KeepMessagesVariable = "TELEGRAM_BOT_KEEP_MESSAGES";
     public const string EmojiStatusAccessVariable = "TELEGRAM_BOT_EMOJI_STATUS_ACCESS";
     public const string GroupStickerSetAccessVariable = "TELEGRAM_BOT_GROUP_STICKER_SET_ACCESS";
+    public const string SetMyNameAccessVariable = "TELEGRAM_BOT_SET_MY_NAME_ACCESS";
 
     public TelegramIntegrationFactAttribute()
     {
@@ -102,6 +103,29 @@ internal sealed class TelegramGroupStickerIntegrationFactAttribute : FactAttribu
         {
             Skip = $"Use a group for which getChat returns can_set_sticker_set=true and set " +
                 $"{TelegramIntegrationFactAttribute.GroupStickerSetAccessVariable}=true to run this test.";
+        }
+    }
+}
+
+internal sealed class TelegramSetMyNameIntegrationFactAttribute : FactAttribute
+{
+    public TelegramSetMyNameIntegrationFactAttribute()
+    {
+        var missing = TelegramIntegrationSettings.Missing(
+            TelegramIntegrationFactAttribute.TokenVariable,
+            TelegramIntegrationFactAttribute.ChatIdVariable);
+        if (missing.Count > 0)
+        {
+            Skip = $"Set {string.Join(", ", missing)} to run the Telegram setMyName integration test.";
+            return;
+        }
+
+        if (!bool.TryParse(
+                TelegramIntegrationSettings.Get(TelegramIntegrationFactAttribute.SetMyNameAccessVariable),
+                out var accessGranted) || !accessGranted)
+        {
+            Skip = $"Set {TelegramIntegrationFactAttribute.SetMyNameAccessVariable}=true to run setMyName. " +
+                "Telegram may rate-limit this method for many hours after a previous change.";
         }
     }
 }

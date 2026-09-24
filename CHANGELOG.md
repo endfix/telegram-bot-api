@@ -17,7 +17,6 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - Include Telegram's error description when the API envelope is invalid.
 - Return the inner task from typed extension wrappers instead of wrapping
   each call in an extra async state machine.
-- Seal <c>GetMyNameParameters</c> like the other request parameter types.
 
 ## [1.0.0] - 2026-09-24
 

@@ -9,14 +9,17 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ### Changed
 
-- Compare the public API against the `1.0.0` NuGet package during pack.
-- Detect uploaded files on custom <c>ApiRequestParameters</c> types outside
-  the library namespace so <c>RequestAsync</c> still uses multipart.
 - Give <c>BotApiClient.ExecuteAsync</c> the same optional cancellation token
   as <c>IBotApiClient.ExecuteAsync</c>.
 - Include Telegram's error description when the API envelope is invalid.
 - Return the inner task from typed extension wrappers instead of wrapping
   each call in an extra async state machine.
+- Compare the public API against the `1.0.0` NuGet package during pack.
+
+### Fixed
+
+- Detect uploaded files on custom <c>ApiRequestParameters</c> types outside
+  the library namespace so <c>RequestAsync</c> still uses multipart.
 
 ## [1.0.0] - 2026-09-24
 

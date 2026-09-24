@@ -126,21 +126,57 @@ Run only file and multipart scenarios:
 dotnet test Telegram.BotAPI.Tests/Telegram.BotAPI.Tests.csproj --filter "FullyQualifiedName~TelegramFileIntegrationTests"
 ```
 
-Tests whose required secrets are absent are skipped. A fully configured run
-currently verifies bot capabilities, default chat permissions, rollback-safe
-member restrictions, channel/discussion linking, group/channel metadata and
-message lifecycle, private-chat actions, drafts, venues, contacts and poll
-stopping, per-chat bot settings, group, channel and paid subscription
-invite links, pins,
-reactions, member counts, channel-photo replacement and restoration, forum
-topics, member tags, administrator promotion and custom titles, and cross-chat
-copy and forwarding. Read-only channel coverage includes owned gifts and a
-user's chat boosts. It also restores the bot's suggested default administrator
-rights independently for groups and channels. File scenarios cover buffered and streaming downloads,
-profile-photo restore, sticker-set lifecycle, optional group sticker-set
-assignment, standalone media, media groups with typed thumbnail/cover files,
-paid media, nested poll media, nested rich-message uploads, reply-markup editing,
-and editing and stopping live locations.
+Tests whose required secrets are absent are skipped. CI does not run this
+suite. There is no timing snapshot: live duration is Telegram RTT and rate
+limits, not client CPU.
+
+### Live coverage matrix
+
+Required secrets are the minimum for that row. Extra opt-in flags are listed
+under Skip. Methods named in the tests are the Bot API methods exercised, not
+a complete Telegram catalog.
+
+| Area | Test | Secrets | Skip / note |
+| --- | --- | --- | --- |
+| Bot | `BotFatherCapabilities_AreEnabled` | token, chat | — |
+| Bot | `BotChatSettings_RollBack` | token, chat | Telegram may `429` `setMyName` for many hours after a previous run |
+| Bot | `BotDefaultAdministratorRights_RollBack` | token, chat | — |
+| Private chat | `PrivateChatStructuredMessages_AreDeliveredAndDeleted` | token, chat | drafts, venue, contact, stop poll |
+| Private chat | `OrdinaryChatMessageEdits_ReturnEditedMessage` | token, chat | `editMessageText` / `editMessageReplyMarkup` return `Message` |
+| Inline | `InlineMessageEdits_ReturnTrue` | token, chat | Interactive: tap the bot prompt (or `/start`) and choose the result. Skips after 3 minutes. Covers `editMessage*` `true` for inline |
+| Group | `GroupConfiguration_IsUsable` | token, group | — |
+| Group | `GroupDefaultPermissions_RollBack` | token, group | — |
+| Group | `GroupMetadataMessageAndInviteLink_RollBack` | token, group | Title/description restore treats Telegram `not modified` as success |
+| Channel | `ChannelConfiguration_IsUsable` | token, channel | — |
+| Channel | `ChannelMetadataAndMessage_RollBack` | token, channel | Empty `setMessageReaction` list can return `REACTION_EMPTY` |
+| Channel | `ChannelPhoto_RollBack` | token, channel | Restores bytes, not a cached file ID |
+| Routing | `ChannelAndGroup_AreLinkedForDiscussion` | token, chat, group, channel | — |
+| Routing | `ChannelReadOnlyCollections_Deserialize` | token, chat, group, channel | gifts, boosts |
+| Routing | `Messages_CopyAndForwardAcrossConfiguredChats` | token, chat, group, channel | — |
+| Forum | `ForumConfiguration_IsUsable` | token, forum | — |
+| Forum | `ForumTopicLifecycle_RollBack` | token, forum | — |
+| Moderation | `TestUser_IsVisibleInGroup` | token, group, test user | — |
+| Moderation | `TestUserRestriction_RollBack` | token, group, test user | No `banChatMember`/`unbanChatMember` |
+| Moderation | `TestUserTag_RollBack` | token, group, test user | Needs Manage Tags |
+| Moderation | `TestUserPromotionAndCustomTitle_RollBack` | token, group, test user | Needs Add New Admins |
+| Premium | `PremiumOwner_CustomEmojiButton_RoundTrips` | token, chat, group | Skips if `getChatMember` has no `is_premium` |
+| Premium | `PremiumUser_ReadOnlyProfileCollections_Deserialize` | token, chat, group | Same Premium skip |
+| Premium | `PremiumUser_EmojiStatus_MutationIsAcceptedAndRestored` | token, chat, group | Also needs Mini App grant and `TELEGRAM_BOT_EMOJI_STATUS_ACCESS=true` |
+| Files | `SendPhoto_UploadsLocalFile_ThenResendsByFileId` | token, chat | Path then file_id |
+| Files | `SendDocument_UploadsLocalFile_ThenResendsByFileId` | token, chat | — |
+| Files | `DownloadFile_StreamsTelegramDocumentAndLeavesDestinationOpen` | token, chat | — |
+| Files | `SendMediaGroup_UploadsFilesThroughAttachReferences` | token, chat | — |
+| Files | `SendMediaGroup_UploadsTypedVideoThumbnailAndCover` | token, chat | — |
+| Files | `SendPaidMedia_UploadsLocalPhoto_ThenResendsByFileId` | token, chat | — |
+| Files | `SendPoll_UploadsNestedOptionAndDescriptionMedia` | token, chat | — |
+| Files | `SendAdditionalStandaloneMedia_UploadsLocalFiles` | token, chat | — |
+| Files | `SendRichMessage_UploadsPhotoFromNestedBlock` | token, chat | — |
+| Files | `SetMyProfilePhoto_UploadsNestedPhoto_ThenRestoresPreviousPhoto` | token, chat | — |
+| Files | `UpdatingMethods_ForwardChatAndReplyMarkupParameters` | token, chat | Caption, media, live location, reply markup on ordinary messages |
+| Files | `StickerSetMethods_UploadNestedFiles` | token, chat | — |
+| Files | `ChatStickerSet_RollBack` | token, chat, group | Opt-in: group with 100+ members and `TELEGRAM_BOT_GROUP_STICKER_SET_ACCESS=true` |
+
+Not covered on purpose: payments/business live, webhooks, `banChatMember` followed by `unbanChatMember`. Local contract tests cover JSON vs multipart routing without Telegram.
 
 Live-test HTTP calls are spaced by 500 ms. Clients still disable automatic
 retries for Telegram `429` responses so a run reports the affected method and

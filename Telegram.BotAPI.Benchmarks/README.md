@@ -99,19 +99,67 @@ results over time, because GitHub-hosted hardware may change between runs.
 
 ## ARM stress run
 
-For a repeatable local-runtime check on a Linux ARM device, run the repository
-script from the project root:
+These results compare runtime behavior, retained memory and GC activity on a
+Linux ARM device. They must not be mixed into the x64 canonical table in
+`RESULTS.md` and must not be presented as Telegram throughput: the stress
+transport is local and contains no network or API rate-limit effects.
+
+On a device with 2 GB RAM, publish a self-contained `linux-arm64` build on a
+desktop and copy it to the board instead of restoring and compiling on the Pi:
+
+```powershell
+dotnet publish Telegram.BotAPI.Benchmarks\Telegram.BotAPI.Benchmarks.csproj `
+  -c Release -r linux-arm64 --self-contained -o .\artifacts\pi-stress
+```
+
+```bash
+./Telegram.BotAPI.Benchmarks --stress
+./Telegram.BotAPI.Benchmarks --stress-parallel 4
+```
+
+On a board with enough RAM to build, the repository script from the project
+root records host, governor, memory/swap and `vcgencmd` thermal bits, builds
+the solution, runs the non-integration tests, and executes the one-million-call
+stress test with 1, 2, 4 and 10 workers. `get_throttled` other than `0x0` means
+the run was power- or temperature-limited. Output is stored under
+`artifacts/arm-stress/<timestamp>/run.log`.
 
 ```bash
 bash scripts/run-arm-stress.sh
+bash scripts/run-arm-stress.sh --skip-build --skip-tests
+bash scripts/run-arm-stress.sh --binary ~/telegram-stress/Telegram.BotAPI.Benchmarks
 ```
 
-The script records the host and .NET runtime information, builds the solution,
-runs the non-integration tests, and executes the one-million-call stress test
-with 1, 2, 4 and 10 workers. The complete output is stored under
-`artifacts/arm-stress/<timestamp>/run.log`.
+### Snapshot: Raspberry Pi 4 Model B, 24 September 2026
 
-These results compare runtime behavior, retained memory and GC activity on the
-ARM device. They must not be presented as Telegram throughput: the stress
-transport is local and deliberately contains no network or API rate-limit
-effects.
+| Property | Value |
+| --- | --- |
+| Board | Raspberry Pi 4 Model B Rev 1.1 |
+| CPU | 4 × ARM Cortex-A72, 600–1500 MHz, 128 KiB L1d + 192 KiB L1i + 1 MiB L2 |
+| RAM | 1.8 GiB usable (2 GB SKU), 1.8 GiB swap unused |
+| Storage | microSD `/dev/mmcblk0p2`, 15 GB ext4 |
+| OS | Debian GNU/Linux 13 (trixie), kernel `6.18.50+rpt-rpi-v8` aarch64 |
+| Runtime | TFM `net9.0`, self-contained runtime **9.0.20**, Arm64 RyuJIT armv8.0-a |
+| GC | concurrent Workstation |
+| Cooling | No heatsink on the SoC; a 5 V fan above the board only |
+| Governor | `ondemand` |
+| Thermal | 41–51 °C during the worker sweep, `vcgencmd get_throttled=0x0`, ARM clock ~1500 MHz |
+| Harness | BenchmarkDotNet 0.15.8 host banner; stress runner `--stress` |
+
+One million local `sendMessage` calls:
+
+| Profile | Elapsed | Average | Allocated/op | Retained | Gen1 / Gen2 |
+| --- | ---: | ---: | ---: | ---: | --- |
+| Sequential | 29.68 s | 29.68 µs/op | 4064.0 B | +0.9 KB | 2 / 0 |
+| Parallel 4 | 12.67 s | 12.67 µs/op | 4064.0 B | +0.2 KB | 1 / 0 |
+| Parallel 10 | 13.38 s | 13.38 µs/op | 4064.1 B | +18.0 KB | 1 / 0 |
+
+Allocated bytes per operation match the x64 workstation snapshot (`4064.0 B`),
+which used the same runtime patch `9.0.20`. The project TFM is `net9.0`;
+`9.0.x` patches can still change JIT and GC, so later ARM runs should record
+the exact runtime version. Wall time is slower, as expected on Cortex-A72.
+Ten workers on four cores is intentional oversubscription: Parallel 10 is
+5.6% slower than Parallel 4, with the same allocated bytes per operation and
+about 18 KB more retained memory. That is CPU oversubscription, not a
+scalability win. Retained managed memory after a full GC stays near zero;
+there is no Gen2 collection.

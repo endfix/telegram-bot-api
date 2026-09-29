@@ -180,7 +180,7 @@ there is no Gen2 collection.
 | GC | concurrent Workstation |
 | Cooling | Passive heatsink on the SoC; no fan |
 | Governor | `schedutil` |
-| Thermal | `cpu-thermal` 48–55 °C during the worker sweep, ARM clock 1000 MHz throughout (max 1200 MHz) |
+| Thermal | `cpu-thermal` 48–55 °C during the worker sweep; passive trip 80 °C, cooling state 0. Edge `scaling_cur_freq` samples were 1000 MHz (`schedutil` before/after the process). 1200 MHz is a live OPP and a 4-thread busy-loop holds it. |
 | Harness | BenchmarkDotNet 0.15.8 host banner; stress runner `--stress` |
 
 One million local `sendMessage` calls:

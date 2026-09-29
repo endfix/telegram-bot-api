@@ -72,6 +72,20 @@ log_thermal() {
     fi
   else
     echo "vcgencmd is not available."
+    for z in /sys/class/thermal/thermal_zone*; do
+      [[ -d "${z}" ]] || continue
+      type="$(cat "${z}/type" 2>/dev/null || echo unknown)"
+      temp="$(cat "${z}/temp" 2>/dev/null || echo na)"
+      echo "${z} type=${type} temp=${temp}"
+    done
+    for c in /sys/devices/system/cpu/cpu[0-9]*; do
+      [[ -d "${c}/cpufreq" ]] || continue
+      gov="$(cat "${c}/cpufreq/scaling_governor" 2>/dev/null || echo na)"
+      cur="$(cat "${c}/cpufreq/scaling_cur_freq" 2>/dev/null || echo na)"
+      min="$(cat "${c}/cpufreq/scaling_min_freq" 2>/dev/null || echo na)"
+      max="$(cat "${c}/cpufreq/scaling_max_freq" 2>/dev/null || echo na)"
+      echo "$(basename "${c}") gov=${gov} cur=${cur} min=${min} max=${max}"
+    done
   fi
 }
 

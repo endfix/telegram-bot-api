@@ -105,7 +105,9 @@ Linux ARM device. They must not be mixed into the x64 canonical table in
 transport is local and contains no network or API rate-limit effects.
 
 On a device with 2 GB RAM, publish a self-contained `linux-arm64` build on a
-desktop and copy it to the board instead of restoring and compiling on the Pi:
+desktop and copy it to the board instead of restoring and compiling on the
+device. A minimal Armbian image may also need `libicu` (`libicu78` on Ubuntu
+26.04) before the host process starts.
 
 ```powershell
 dotnet publish Telegram.BotAPI.Benchmarks\Telegram.BotAPI.Benchmarks.csproj `
@@ -118,10 +120,11 @@ dotnet publish Telegram.BotAPI.Benchmarks\Telegram.BotAPI.Benchmarks.csproj `
 ```
 
 On a board with enough RAM to build, the repository script from the project
-root records host, governor, memory/swap and `vcgencmd` thermal bits, builds
-the solution, runs the non-integration tests, and executes the one-million-call
-stress test with 1, 2, 4 and 10 workers. `get_throttled` other than `0x0` means
-the run was power- or temperature-limited. Output is stored under
+root records host, governor, memory/swap and thermal bits (`vcgencmd` on a Pi,
+sysfs `cpu-thermal` and `cpufreq` otherwise), builds the solution, runs the
+non-integration tests, and executes the one-million-call stress test with 1, 2,
+4 and 10 workers. `get_throttled` other than `0x0` means the Pi run was power-
+or temperature-limited. Output is stored under
 `artifacts/arm-stress/<timestamp>/run.log`.
 
 ```bash
@@ -163,3 +166,37 @@ Ten workers on four cores is intentional oversubscription: Parallel 10 is
 about 18 KB more retained memory. That is CPU oversubscription, not a
 scalability win. Retained managed memory after a full GC stays near zero;
 there is no Gen2 collection.
+
+### Snapshot: Invin KM6 (Amlogic S905W), 29 September 2026
+
+| Property | Value |
+| --- | --- |
+| Board | Invin KM6, device-tree `Amlogic Meson GXL (S905W) P281 Development Board` (`amlogic,p281` / `amlogic,s905w`) |
+| CPU | 4 × ARM Cortex-A53, 100–1200 MHz, 128 KiB L1d + 128 KiB L1i + 512 KiB L2 |
+| RAM | 1.8 GiB usable, 896 MiB zram swap unused |
+| Storage | microSD `/dev/mmcblk1p2` (USDU1, 14.9 GB) is Armbian root; onboard eMMC `/dev/mmcblk2` (M8G1GC, 7.3 GB) still holds factory Android and stayed unmounted |
+| OS | Armbian OS 26.11.0 resolute (Ubuntu 26.04), kernel `6.12.107-ophub` aarch64 |
+| Runtime | TFM `net9.0`, self-contained runtime **9.0.20**, Arm64 RyuJIT armv8.0-a |
+| GC | concurrent Workstation |
+| Cooling | Passive heatsink on the SoC; no fan |
+| Governor | `schedutil` |
+| Thermal | `cpu-thermal` 48–55 °C during the worker sweep, ARM clock 1000 MHz throughout (max 1200 MHz) |
+| Harness | BenchmarkDotNet 0.15.8 host banner; stress runner `--stress` |
+
+One million local `sendMessage` calls:
+
+| Profile | Elapsed | Average | Allocated/op | Retained | Gen1 / Gen2 |
+| --- | ---: | ---: | ---: | ---: | --- |
+| Sequential | 62.40 s | 62.40 µs/op | 4064.0 B | -3.0 KB | 6 / 0 |
+| Parallel 4 | 31.94 s | 31.94 µs/op | 4064.0 B | -9.8 KB | 3 / 0 |
+| Parallel 10 | 40.59 s | 40.59 µs/op | 4064.1 B | +27.6 KB | 4 / 0 |
+
+Allocated bytes per operation match the Pi and x64 snapshots (`4064.0 B`) on
+runtime patch `9.0.20`. Wall time is slower than the Cortex-A72 Pi, as
+expected on Cortex-A53 at 1000 MHz. Ten workers on four cores is again
+oversubscription: Parallel 10 is 27% slower than Parallel 4, with the same
+allocated bytes per operation and +27.6 KB retained memory. There is no Gen2
+collection. The measured path is in-process local HTTP; after warm-up the
+working set stayed in RAM and zram swap stayed unused, so the SD-card root is
+the boot and install surface. These numbers stay in this ARM section; they
+are not mixed into `RESULTS.md`.

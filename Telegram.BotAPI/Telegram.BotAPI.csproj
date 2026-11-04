@@ -50,5 +50,10 @@
 	<ItemGroup>
 	  <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.3" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <InternalsVisibleTo Include="Telegram.BotAPI.Tests" />
+	  <InternalsVisibleTo Include="Telegram.BotAPI.NetFrameworkSmoke" />
+	</ItemGroup>
 	
 </Project>

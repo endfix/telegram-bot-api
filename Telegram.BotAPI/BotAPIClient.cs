@@ -54,8 +54,12 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
     private readonly Uri _baseAddress;
 
     private readonly int _maxRetryAttempts;
-    
+
     private readonly ILogger<IBotApiClient> _logger;
+
+    private readonly CancellationTokenSource _disposeCts = new();
+
+    private int _disposed;
 
     /// <summary>
     /// Creates a Telegram Bot API client.
@@ -100,9 +104,28 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
     /// </summary>
     public void Dispose()
     {
+        if (Interlocked.Exchange(ref _disposed, 1) != 0)
+        {
+            return;
+        }
+
+        // Stop an active long-polling session before the HTTP client goes away.
+        // The source is intentionally not disposed: a polling session may still
+        // be creating a linked token while disposal runs, and cancelling is enough
+        // to release the session.
+        _disposeCts.Cancel();
+
         if (_ownsHttpClient)
         {
             _httpClient.Dispose();
+        }
+    }
+
+    private void ThrowIfDisposed()
+    {
+        if (Volatile.Read(ref _disposed) != 0)
+        {
+            throw new ObjectDisposedException(nameof(BotApiClient));
         }
     }
 
@@ -138,6 +161,8 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
     /// <returns>The Telegram API response envelope.</returns>
     public async Task<ApiResponse<T>> RequestAsync<T>(ApiRequest request, CancellationToken cancellation = default)
     {
+        ThrowIfDisposed();
+
         if (request is null)
         {
             throw new ArgumentNullException(nameof(request));
@@ -242,6 +267,8 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
         Stream destination,
         CancellationToken cancellationToken = default)
     {
+        ThrowIfDisposed();
+
         if (string.IsNullOrWhiteSpace(filePath))
         {
             throw new ArgumentException("The file path cannot be null or empty.", nameof(filePath));
@@ -252,9 +279,11 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
             throw new ArgumentNullException(nameof(destination));
         }
 
+        var fileUri = BuildFileUri(filePath);
+
         using var response = await _httpClient
             .GetAsync(
-                new Uri(_baseAddress, $"./file/bot{_token}/{filePath}"),
+                fileUri,
                 HttpCompletionOption.ResponseHeadersRead,
                 cancellationToken)
             .ConfigureAwait(false);
@@ -262,6 +291,45 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
         response.EnsureSuccessStatusCode();
         using var source = await ReadContentStreamAsync(response.Content, cancellationToken).ConfigureAwait(false);
         await source.CopyToAsync(destination, 81920, cancellationToken).ConfigureAwait(false);
+    }
+
+    private Uri BuildFileUri(string filePath)
+    {
+        var decodedPath = Uri.UnescapeDataString(filePath);
+
+        if (HasParentDirectorySegment(decodedPath) ||
+            decodedPath.IndexOfAny(['?', '#', '\\']) >= 0 ||
+            decodedPath.StartsWith("/", StringComparison.Ordinal))
+        {
+            throw new ArgumentException(
+                "The file path must be relative and cannot contain parent-directory segments, " +
+                "query strings, fragments, or backslashes.",
+                nameof(filePath));
+        }
+
+        var fileUri = new Uri(_baseAddress, $"./file/bot{_token}/{filePath}");
+        var expectedPrefix = new Uri(_baseAddress, $"./file/bot{_token}/").AbsolutePath;
+
+        if (!fileUri.AbsolutePath.StartsWith(expectedPrefix, StringComparison.Ordinal))
+        {
+            throw new ArgumentException(
+                "The file path must stay within the Telegram file endpoint.",
+                nameof(filePath));
+        }
+
+        return fileUri;
+    }
+
+    private static bool HasParentDirectorySegment(string path)
+    {
+        if (path.Equals("..", StringComparison.Ordinal))
+        {
+            return true;
+        }
+
+        return path.StartsWith("../", StringComparison.Ordinal) ||
+            path.EndsWith("/..", StringComparison.Ordinal) ||
+            path.IndexOf("/../", StringComparison.Ordinal) >= 0;
     }
 
     private async Task<HttpResponseMessage> SendRequestAsync(

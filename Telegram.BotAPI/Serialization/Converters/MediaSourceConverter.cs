@@ -8,7 +8,14 @@ namespace Endfix.Telegram.BotAPI.Serialization.Converters;
 internal sealed class MediaSourceConverter : JsonConverter<MediaSource>
 {
     public override MediaSource Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        => reader.GetString()!;
+    {
+        if (reader.TokenType != JsonTokenType.String)
+        {
+            throw new JsonException($"Unexpected token type for MediaSource: {reader.TokenType}");
+        }
+
+        return reader.GetString()!;
+    }
 
     public override void Write(Utf8JsonWriter writer, MediaSource value, JsonSerializerOptions options)
     {

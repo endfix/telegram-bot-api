@@ -5,6 +5,7 @@ using Endfix.Telegram.BotAPI.Types;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,6 +15,8 @@ namespace Endfix.Telegram.BotAPI;
 public sealed partial class BotApiClient
 {
     private int _pollingStarted;
+
+    internal TimeSpan PollingRetryDelay { get; set; } = TimeSpan.FromSeconds(5);
 
     /// <summary>
     /// Starts best-effort long polling until cancellation is requested.
@@ -36,15 +39,53 @@ public sealed partial class BotApiClient
         int maxParallel = 1,
         CancellationToken cancellationToken = default)
     {
+        ThrowIfDisposed();
+
+        if (limit is < 1 or > 100)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(limit),
+                "The update limit must be between 1 and 100.");
+        }
+
+        if (timeout < 0)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(timeout),
+                "The long-polling timeout cannot be negative.");
+        }
+
         if (maxParallel < 1)
         {
             throw new ArgumentOutOfRangeException(nameof(maxParallel));
+        }
+
+        if (allowedUpdates is not null && allowedUpdates.Contains(UpdateType.Unknown))
+        {
+            throw new ArgumentException(
+                "Allowed updates cannot contain UpdateType.Unknown.",
+                nameof(allowedUpdates));
+        }
+
+        if (timeout > 0 &&
+            _httpClient.Timeout != Timeout.InfiniteTimeSpan &&
+            timeout >= _httpClient.Timeout.TotalSeconds)
+        {
+            _logger.LogWarning(
+                "Long polling timeout {Timeout}s is not less than HttpClient.Timeout {HttpTimeout}s; " +
+                "the HTTP client may cancel the polling request before Telegram responds.",
+                timeout,
+                _httpClient.Timeout.TotalSeconds);
         }
 
         if (Interlocked.CompareExchange(ref _pollingStarted, 1, 0) != 0)
         {
             throw new InvalidOperationException("Long polling is already running for this client.");
         }
+
+        using var linkedCancellation = CancellationTokenSource.CreateLinkedTokenSource(
+            cancellationToken,
+            _disposeCts.Token);
 
         try
         {
@@ -53,7 +94,7 @@ public sealed partial class BotApiClient
                 timeout,
                 allowedUpdates,
                 maxParallel,
-                cancellationToken).ConfigureAwait(false);
+                linkedCancellation.Token).ConfigureAwait(false);
         }
         finally
         {
@@ -135,22 +176,50 @@ public sealed partial class BotApiClient
                     }
                 }
             }
-            catch (ApiRequestException e)
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
             {
-                _logger.LogWarning("Long Polling: {Message}", e.Message);
-                if (!await WaitBeforePollingRetryAsync(cancellationToken).ConfigureAwait(false))
+                break;
+            }
+            catch (OperationCanceledException e)
+            {
+                _logger.LogWarning(
+                    e,
+                    "Long polling request was canceled by the HTTP client " +
+                    "(for example, by HttpClient.Timeout); retrying.");
+                if (!await WaitBeforePollingRetryAsync(PollingRetryDelay, cancellationToken).ConfigureAwait(false))
                 {
                     break;
                 }
             }
-            catch (OperationCanceledException)
+            catch (ApiRequestException e)
+            {
+                if (IsFatalPollingError(e.ErrorCode))
+                {
+                    _logger.LogError(
+                        e,
+                        "Long polling stopped by a non-retryable Telegram error {ErrorCode}.",
+                        e.ErrorCode);
+                    throw;
+                }
+
+                _logger.LogWarning("Long Polling: {Message}", e.Message);
+                var delay = e.Parameters?.RetryAfter is int retryAfter && retryAfter >= 0
+                    ? TimeSpan.FromSeconds(retryAfter)
+                    : PollingRetryDelay;
+
+                if (!await WaitBeforePollingRetryAsync(delay, cancellationToken).ConfigureAwait(false))
+                {
+                    break;
+                }
+            }
+            catch (ObjectDisposedException)
             {
                 break;
             }
             catch (Exception e)
             {
                 _logger.LogError(e, "Critical error loop of Long Polling");
-                if (!await WaitBeforePollingRetryAsync(cancellationToken).ConfigureAwait(false))
+                if (!await WaitBeforePollingRetryAsync(PollingRetryDelay, cancellationToken).ConfigureAwait(false))
                 {
                     break;
                 }
@@ -203,11 +272,19 @@ public sealed partial class BotApiClient
         }
     }
 
-    private static async Task<bool> WaitBeforePollingRetryAsync(CancellationToken cancellationToken)
+    private static bool IsFatalPollingError(int errorCode)
+        => errorCode >= 400 &&
+           errorCode < 500 &&
+           errorCode != 408 &&
+           errorCode != 429;
+
+    private static async Task<bool> WaitBeforePollingRetryAsync(
+        TimeSpan delay,
+        CancellationToken cancellationToken)
     {
         try
         {
-            await Task.Delay(5000, cancellationToken).ConfigureAwait(false);
+            await Task.Delay(delay, cancellationToken).ConfigureAwait(false);
             return true;
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)

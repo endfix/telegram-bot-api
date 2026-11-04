@@ -1,6 +1,8 @@
 using System.Collections.Concurrent;
 using System.Net;
 using System.Text;
+using Endfix.Telegram.BotAPI.Enums;
+using Endfix.Telegram.BotAPI.Exceptions;
 using Endfix.Telegram.BotAPI.Tests.Infrastructure;
 using Microsoft.Extensions.Logging;
 using Xunit;
@@ -240,7 +242,8 @@ public sealed class LongPollingBehaviorTests
 
         await polling.WaitAsync(TimeSpan.FromSeconds(2));
 
-        Assert.Equal(cancellation.Token, handlerToken);
+        Assert.True(handlerToken.CanBeCanceled);
+        Assert.True(handlerToken.IsCancellationRequested);
         Assert.True(polling.IsCompletedSuccessfully);
         Assert.DoesNotContain(logger.Entries, entry => entry.Level == LogLevel.Error);
     }
@@ -290,6 +293,111 @@ public sealed class LongPollingBehaviorTests
         {
             Assert.Equal(0, request.GetJsonInt64("offset"));
         });
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(101)]
+    public async Task StartPollingAsync_RejectsLimitOutsideTelegramRange(int limit)
+    {
+        using var context = new PollingContext(new RepeatingUpdateHandler());
+
+        var exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(
+            () => context.Client.StartPollingAsync(limit: limit));
+
+        Assert.Equal("limit", exception.ParamName);
+    }
+
+    [Fact]
+    public async Task StartPollingAsync_RejectsNegativeTimeout()
+    {
+        using var context = new PollingContext(new RepeatingUpdateHandler());
+
+        var exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(
+            () => context.Client.StartPollingAsync(timeout: -1));
+
+        Assert.Equal("timeout", exception.ParamName);
+    }
+
+    [Fact]
+    public async Task StartPollingAsync_RejectsUnknownAllowedUpdate()
+    {
+        using var context = new PollingContext(new RepeatingUpdateHandler());
+
+        var exception = await Assert.ThrowsAsync<ArgumentException>(
+            () => context.Client.StartPollingAsync(
+                allowedUpdates: [UpdateType.Message, UpdateType.Unknown]));
+
+        Assert.Equal("allowedUpdates", exception.ParamName);
+    }
+
+    [Fact]
+    public async Task PollingRetriesAfterHttpClientTimeout()
+    {
+        using var cancellation = new CancellationTokenSource();
+        var handler = new TimeoutThenEmptyHandler(cancellation);
+        using var context = new PollingContext(handler);
+        context.Client.PollingRetryDelay = TimeSpan.FromMilliseconds(10);
+
+        await context.Client
+            .StartPollingAsync(cancellationToken: cancellation.Token)
+            .WaitAsync(TimeSpan.FromSeconds(2));
+
+        Assert.Equal(2, handler.RequestCount);
+    }
+
+    [Fact]
+    public async Task PollingStopsOnFatalTelegramError()
+    {
+        var handler = new StaticJsonHandler(
+            """{"ok":false,"error_code":401,"description":"Unauthorized"}""");
+        using var context = new PollingContext(handler);
+
+        var exception = await Assert.ThrowsAsync<ApiRequestException>(
+            () => context.Client.StartPollingAsync());
+
+        Assert.Equal(401, exception.ErrorCode);
+        Assert.Equal(1, handler.RequestCount);
+    }
+
+    [Fact]
+    public async Task PollingRetriesRetryableTelegramErrorAfterRetryAfter()
+    {
+        using var cancellation = new CancellationTokenSource();
+        var handler = new RetryAfterThenEmptyHandler(cancellation);
+        using var context = new PollingContext(handler);
+        context.Client.PollingRetryDelay = TimeSpan.FromSeconds(30);
+
+        await context.Client
+            .StartPollingAsync(cancellationToken: cancellation.Token)
+            .WaitAsync(TimeSpan.FromSeconds(2));
+
+        Assert.Equal(2, handler.RequestCount);
+    }
+
+    [Fact]
+    public async Task Dispose_StopsActivePollingSession()
+    {
+        var handler = new BlockingPollingHandler();
+        using var context = new PollingContext(handler);
+
+        var polling = context.Client.StartPollingAsync();
+        await handler.RequestStarted.Task.WaitAsync(TimeSpan.FromSeconds(2));
+
+        context.Client.Dispose();
+        await polling.WaitAsync(TimeSpan.FromSeconds(2));
+
+        Assert.True(polling.IsCompletedSuccessfully);
+    }
+
+    [Fact]
+    public async Task StartPollingAsync_AfterDispose_ThrowsObjectDisposedException()
+    {
+        using var context = new PollingContext(new RepeatingUpdateHandler());
+        context.Client.Dispose();
+
+        await Assert.ThrowsAsync<ObjectDisposedException>(
+            () => context.Client.StartPollingAsync());
     }
 
     private sealed class PollingContext : IDisposable
@@ -411,6 +519,65 @@ public sealed class LongPollingBehaviorTests
             RequestStarted.TrySetResult();
             await Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
             throw new InvalidOperationException("The polling request should end through cancellation.");
+        }
+    }
+
+    private sealed class TimeoutThenEmptyHandler(CancellationTokenSource cancellation) : HttpMessageHandler
+    {
+        private int _requestCount;
+
+        public int RequestCount => Volatile.Read(ref _requestCount);
+
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken)
+        {
+            var requestNumber = Interlocked.Increment(ref _requestCount);
+            if (requestNumber == 1)
+            {
+                return Task.FromException<HttpResponseMessage>(
+                    new TaskCanceledException("simulated HttpClient timeout"));
+            }
+
+            cancellation.Cancel();
+            return Task.FromResult(JsonResponse("""{"ok":true,"result":[]}"""));
+        }
+    }
+
+    private sealed class StaticJsonHandler(string json) : HttpMessageHandler
+    {
+        private int _requestCount;
+
+        public int RequestCount => Volatile.Read(ref _requestCount);
+
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken)
+        {
+            Interlocked.Increment(ref _requestCount);
+            return Task.FromResult(JsonResponse(json));
+        }
+    }
+
+    private sealed class RetryAfterThenEmptyHandler(CancellationTokenSource cancellation) : HttpMessageHandler
+    {
+        private int _requestCount;
+
+        public int RequestCount => Volatile.Read(ref _requestCount);
+
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken)
+        {
+            var requestNumber = Interlocked.Increment(ref _requestCount);
+            if (requestNumber == 1)
+            {
+                return Task.FromResult(JsonResponse(
+                    """{"ok":false,"error_code":429,"description":"Too Many Requests","parameters":{"retry_after":0}}"""));
+            }
+
+            cancellation.Cancel();
+            return Task.FromResult(JsonResponse("""{"ok":true,"result":[]}"""));
         }
     }
 

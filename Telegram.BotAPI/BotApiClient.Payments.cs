@@ -23,6 +23,8 @@ public sealed partial class BotApiClient
     public async Task<IReadOnlyDictionary<string, Currency>> GetCurrenciesAsync(
         CancellationToken cancellationToken = default)
     {
+        ThrowIfDisposed();
+
         try
         {
             using var response = await _httpClient

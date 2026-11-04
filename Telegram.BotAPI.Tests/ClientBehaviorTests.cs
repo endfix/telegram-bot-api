@@ -289,6 +289,45 @@ public sealed class ClientBehaviorTests
             .WithParameterName("methodName");
     }
 
+    [Theory]
+    [InlineData("../getMe")]
+    [InlineData("get/Me")]
+    [InlineData("get Me")]
+    [InlineData("get-Me")]
+    [InlineData("get.Me")]
+    [InlineData("1getMe")]
+    [InlineData("getMe\n")]
+    [InlineData("gétMe")]
+    public void ApiRequest_RejectsUnsafeMethodNames(string methodName)
+    {
+        var action = () => new ApiRequest(methodName, parameters: null);
+
+        action.Should().Throw<ArgumentException>()
+            .WithParameterName("methodName");
+    }
+
+    [Theory]
+    [InlineData("..")]
+    [InlineData("../file.bin")]
+    [InlineData("documents/../../file.bin")]
+    [InlineData("documents/..")]
+    [InlineData("%2e%2e/file.bin")]
+    [InlineData("documents/%2e%2e/file.bin")]
+    [InlineData("/etc/passwd")]
+    [InlineData("documents/file.bin?token=leak")]
+    [InlineData("documents/file.bin#fragment")]
+    [InlineData("documents\\file.bin")]
+    public async Task DownloadFileAsync_RejectsUnsafePathsWithoutSendingRequest(string filePath)
+    {
+        using var context = new ClientContext();
+
+        var action = () => context.Client.DownloadFileAsync(filePath, Stream.Null);
+
+        await action.Should().ThrowAsync<ArgumentException>()
+            .WithParameterName("filePath");
+        context.Handler.RequestCount.Should().Be(0);
+    }
+
     [Fact]
     public async Task RequestAsync_RejectsNonTelegramHttpError()
     {
@@ -654,6 +693,17 @@ public sealed class ClientBehaviorTests
 
         var action = () => client.RequestAsync<User>(new ApiRequest("getMe", parameters: null));
         await action.Should().ThrowAsync<ObjectDisposedException>();
+    }
+
+    [Fact]
+    public void Dispose_IsIdempotent()
+    {
+        var client = new BotApiClient("test-token");
+
+        client.Dispose();
+        var action = () => client.Dispose();
+
+        action.Should().NotThrow();
     }
 
     [Fact]

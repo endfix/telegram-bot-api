@@ -59,6 +59,32 @@ public class JsonSerializerExtensionsTests
     }
 
     [Fact]
+    public void Serialize_DefaultChatIdSource_ThrowsJsonException()
+    {
+        var action = () => default(ChatIdSource).Serialize();
+
+        action.Should().Throw<JsonException>()
+            .WithMessage("*does not contain a value*");
+    }
+
+    [Fact]
+    public void Deserialize_NonStringMediaSource_ThrowsJsonException()
+    {
+        var action = () => "123".Deserialize<MediaSource>();
+
+        action.Should().Throw<JsonException>()
+            .WithMessage("*MediaSource*");
+    }
+
+    [Fact]
+    public void Deserialize_StringMediaSource_ReturnsValue()
+    {
+        var actual = "\"file-id\"".Deserialize<MediaSource>();
+
+        actual.Value.Should().Be("file-id");
+    }
+
+    [Fact]
     public void VcardProperties_UseTelegramWireName()
     {
         object[] values =

@@ -47,7 +47,10 @@ internal sealed class ChatIdSourceConverter : JsonConverter<ChatIdSource>
         }
         else
         {
-            throw new JsonException($"Unsupported type for ChatIdSource: {innerValue.GetType().Name}");
+            throw new JsonException(
+                innerValue is null
+                    ? "ChatIdSource does not contain a value."
+                    : $"Unsupported type for ChatIdSource: {innerValue.GetType().Name}");
         }
     }
 }

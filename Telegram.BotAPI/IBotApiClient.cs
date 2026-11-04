@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
@@ -35,6 +36,8 @@ public interface IBotApiClient
     /// <param name="request">The request to send.</param>
     /// <param name="cancellation">Token used to cancel the request.</param>
     /// <returns>The Telegram API response envelope.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ObjectDisposedException">The client has been disposed.</exception>
     Task<ApiResponse<T>> RequestAsync<T>(ApiRequest request, CancellationToken cancellation = default);
 
     /// <summary>
@@ -53,6 +56,8 @@ public interface IBotApiClient
     /// <param name="filePath">Relative file path returned by <c>getFile</c>.</param>
     /// <param name="cancellation">Token used to cancel the download.</param>
     /// <returns>A byte array containing the complete file.</returns>
+    /// <exception cref="ArgumentException"><paramref name="filePath"/> is empty or is not a safe relative path.</exception>
+    /// <exception cref="ObjectDisposedException">The client has been disposed.</exception>
     Task<byte[]> GetFileBytesAsync(string filePath, CancellationToken cancellation = default);
 
     /// <summary>
@@ -63,6 +68,9 @@ public interface IBotApiClient
     /// <param name="destination">Writable stream that receives the file content.</param>
     /// <param name="cancellationToken">Token used to cancel the download.</param>
     /// <returns>A task that completes when the file has been written to the destination.</returns>
+    /// <exception cref="ArgumentException"><paramref name="filePath"/> is empty or is not a safe relative path.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="destination"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ObjectDisposedException">The client has been disposed.</exception>
     Task DownloadFileAsync(
         string filePath,
         Stream destination,
@@ -77,6 +85,7 @@ public interface IBotApiClient
     /// </remarks>
     /// <param name="cancellationToken">Token used to cancel the download.</param>
     /// <returns>A dictionary of supported currencies keyed by ISO 4217 currency code.</returns>
+    /// <exception cref="ObjectDisposedException">The client has been disposed.</exception>
     Task<IReadOnlyDictionary<string, Currency>> GetCurrenciesAsync(
         CancellationToken cancellationToken = default);
 
@@ -86,12 +95,30 @@ public interface IBotApiClient
     /// if polling stops before a later request advances the offset. Only one polling
     /// session can run on a client instance at a time.
     /// </summary>
+    /// <remarks>
+    /// Transient request timeouts and retryable Telegram errors are retried.
+    /// Non-retryable <c>4xx</c> errors stop polling and are rethrown as
+    /// <see cref="Exceptions.ApiRequestException"/>. Disposing the client also stops
+    /// the session.
+    /// </remarks>
     /// <param name="limit">Maximum number of updates retrieved per request, from 1 to 100.</param>
-    /// <param name="timeout">Long-polling timeout in seconds.</param>
-    /// <param name="allowedUpdates">Update types to receive, or <see langword="null"/> to use Telegram's current setting.</param>
-    /// <param name="maxParallel">Maximum number of updates processed concurrently.</param>
-    /// <param name="cancellationToken">Token used to stop polling.</param>
+    /// <param name="timeout">
+    /// Long-polling timeout in seconds; must be non-negative. Values not less than
+    /// <c>HttpClient.Timeout</c> may be canceled by the HTTP client first.
+    /// </param>
+    /// <param name="allowedUpdates">
+    /// Update types to receive, or <see langword="null"/> to use Telegram's current
+    /// setting. <see cref="UpdateType.Unknown"/> is not allowed.
+    /// </param>
+    /// <param name="maxParallel">Maximum number of updates processed concurrently; must be at least 1.</param>
+    /// <param name="cancellationToken">Token used to stop polling. Disposing the client also stops the session.</param>
     /// <returns>A task that completes when polling stops.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="limit"/>, <paramref name="timeout"/>, or <paramref name="maxParallel"/> is out of range.
+    /// </exception>
+    /// <exception cref="ArgumentException"><paramref name="allowedUpdates"/> contains <see cref="UpdateType.Unknown"/>.</exception>
+    /// <exception cref="InvalidOperationException">Another polling session is already running.</exception>
+    /// <exception cref="ObjectDisposedException">The client has been disposed.</exception>
     Task StartPollingAsync(
         int limit = 1,
         int timeout = 20,

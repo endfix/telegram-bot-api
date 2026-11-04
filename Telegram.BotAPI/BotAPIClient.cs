@@ -99,9 +99,13 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
     }
 
     /// <summary>
-    /// Releases the HTTP client created internally by this instance.
-    /// A client supplied to the constructor is not disposed.
+    /// Stops an active long-polling session and releases the HTTP client created
+    /// internally by this instance. A client supplied to the constructor is not
+    /// disposed. Calling this method more than once has no effect.
     /// </summary>
+    /// <remarks>
+    /// Requests started after disposal fail with <see cref="ObjectDisposedException"/>.
+    /// </remarks>
     public void Dispose()
     {
         if (Interlocked.Exchange(ref _disposed, 1) != 0)
@@ -159,6 +163,8 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
     /// <param name="request">The request to send.</param>
     /// <param name="cancellation">Token used to cancel the request.</param>
     /// <returns>The Telegram API response envelope.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ObjectDisposedException">The client has been disposed.</exception>
     public async Task<ApiResponse<T>> RequestAsync<T>(ApiRequest request, CancellationToken cancellation = default)
     {
         ThrowIfDisposed();
@@ -247,6 +253,8 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
     /// <param name="filePath">Relative file path returned by <c>getFile</c>.</param>
     /// <param name="cancellation">Token used to cancel the download.</param>
     /// <returns>A byte array containing the complete file.</returns>
+    /// <exception cref="ArgumentException"><paramref name="filePath"/> is empty or is not a safe relative path.</exception>
+    /// <exception cref="ObjectDisposedException">The client has been disposed.</exception>
     public async Task<byte[]> GetFileBytesAsync(string filePath, CancellationToken cancellation = default)
     {
         using var destination = new MemoryStream();
@@ -262,6 +270,9 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
     /// <param name="destination">Writable stream that receives the file content.</param>
     /// <param name="cancellationToken">Token used to cancel the download.</param>
     /// <returns>A task that completes when the file has been written to the destination.</returns>
+    /// <exception cref="ArgumentException"><paramref name="filePath"/> is empty or is not a safe relative path.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="destination"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ObjectDisposedException">The client has been disposed.</exception>
     public async Task DownloadFileAsync(
         string filePath,
         Stream destination,

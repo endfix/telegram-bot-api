@@ -26,12 +26,29 @@ public sealed partial class BotApiClient
     /// is persisted across polling sessions. Only one polling session can run on
     /// a client instance at a time.
     /// </summary>
+    /// <remarks>
+    /// Transient request timeouts and retryable Telegram errors are retried.
+    /// Non-retryable <c>4xx</c> errors stop polling and are rethrown as
+    /// <see cref="ApiRequestException"/>. Disposing the client also stops the session.
+    /// </remarks>
     /// <param name="limit">Maximum number of updates retrieved per request, from 1 to 100.</param>
-    /// <param name="timeout">Long-polling timeout in seconds.</param>
-    /// <param name="allowedUpdates">Update types to receive, or <see langword="null"/> to use Telegram's current setting.</param>
-    /// <param name="maxParallel">Maximum number of updates processed concurrently.</param>
-    /// <param name="cancellationToken">Token used to stop polling.</param>
+    /// <param name="timeout">
+    /// Long-polling timeout in seconds; must be non-negative. Values not less than
+    /// <c>HttpClient.Timeout</c> may be canceled by the HTTP client first.
+    /// </param>
+    /// <param name="allowedUpdates">
+    /// Update types to receive, or <see langword="null"/> to use Telegram's current
+    /// setting. <see cref="UpdateType.Unknown"/> is not allowed.
+    /// </param>
+    /// <param name="maxParallel">Maximum number of updates processed concurrently; must be at least 1.</param>
+    /// <param name="cancellationToken">Token used to stop polling. Disposing the client also stops the session.</param>
     /// <returns>A task that completes when polling stops.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="limit"/>, <paramref name="timeout"/>, or <paramref name="maxParallel"/> is out of range.
+    /// </exception>
+    /// <exception cref="ArgumentException"><paramref name="allowedUpdates"/> contains <see cref="UpdateType.Unknown"/>.</exception>
+    /// <exception cref="InvalidOperationException">Another polling session is already running.</exception>
+    /// <exception cref="ObjectDisposedException">The client has been disposed.</exception>
     public async Task StartPollingAsync(
         int limit = 1,
         int timeout = 20,

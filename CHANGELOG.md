@@ -7,6 +7,29 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
+### Added
+
+- Added a `net48` smoke harness under `eng/NetFrameworkSmoke` that exercises the
+  `netstandard2.0` asset and optional live Telegram calls.
+
+### Changed
+
+- Long polling now validates `limit`, `timeout`, `maxParallel`, and
+  `allowedUpdates`, retries transient `HttpClient` timeouts, honors
+  `retry_after` for retryable Telegram errors, and stops on non-retryable
+  `4xx` errors.
+- `BotApiClient.Dispose` now cancels an active polling session and is
+  idempotent; requests after disposal throw `ObjectDisposedException`.
+- `ApiRequest` rejects method names outside ASCII letters, digits, and
+  underscores. `DownloadFileAsync` rejects parent-directory segments, absolute
+  paths, query strings, fragments, and backslashes.
+
+### Fixed
+
+- `ChatIdSource` serialization now throws `JsonException` for a default value
+  instead of `NullReferenceException`.
+- `MediaSource` deserialization now rejects non-string JSON tokens.
+
 ## [1.0.1] - 2026-09-24
 
 ### Changed

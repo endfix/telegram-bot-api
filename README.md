@@ -188,6 +188,72 @@ await api.DownloadFileAsync(file.FilePath!, destination);
 `DownloadFileAsync` leaves the destination stream open and positioned after
 the downloaded content.
 
+## Custom requests
+
+The typed helpers cover the Bot API methods exposed by the package. For a method
+or parameter shape that is not wrapped yet, derive from `ApiRequestParameters`
+and send it through `RequestAsync` or `ExecuteAsync`:
+
+```cs
+using Endfix.Telegram.BotAPI.Protocol;
+using Endfix.Telegram.BotAPI.Types;
+
+public sealed class CustomSendMessageParameters : ApiRequestParameters
+{
+    public required ChatIdSource ChatId { get; init; }
+    public required string Text { get; init; }
+    public string? ParseMode { get; init; }
+}
+
+var response = await api.RequestAsync<Message>(new ApiRequest(
+    "sendMessage",
+    new CustomSendMessageParameters
+    {
+        ChatId = 123456789L,
+        Text = "Hello from custom parameters",
+        ParseMode = "HTML"
+    }));
+
+if (!response.Ok)
+{
+    Console.WriteLine($"{response.ErrorCode}: {response.Description}");
+}
+```
+
+Properties use the same snake-case policy and converters as the built-in
+parameter types: `ChatId` becomes `chat_id`, null values are omitted, and
+`[JsonPropertyName]` is not required. Use `ExecuteAsync` instead of
+`RequestAsync` when an unsuccessful response should throw
+`ApiRequestException`.
+
+An `InputFile` or `IFileSource` anywhere in the parameter object graph switches
+the request to `multipart/form-data`. A top-level file property is attached
+under its field name; nested files inside objects or arrays are replaced with
+`attach://` references automatically:
+
+```cs
+public sealed class CustomSendPhotoParameters : ApiRequestParameters
+{
+    public required ChatIdSource ChatId { get; init; }
+    public required PhotoSource Photo { get; init; }
+    public string? Caption { get; init; }
+}
+
+await api.ExecuteAsync<Message>(new ApiRequest(
+    "sendPhoto",
+    new CustomSendPhotoParameters
+    {
+        ChatId = 123456789L,
+        Photo = new InputPhotoFile("photo.jpg"),
+        Caption = "Custom upload"
+    }));
+```
+
+The method name passed to `ApiRequest` must start with an ASCII letter and
+contain only ASCII letters, digits, and underscores. `required` members need
+C# 11 or later and `init` accessors need C# 9; use ordinary `get`/`set`
+accessors on older compilers.
+
 ## Production usage
 
 Use one singleton `IBotApiClient` per bot. The interface exposes both
@@ -240,12 +306,14 @@ should update both the tests and this documentation.
 | --- | --- |
 | Telegram API errors | `RequestAsync` returns the response; `ExecuteAsync` throws `ApiRequestException` when `ok` is `false`. |
 | Rate limits | Error `429` is retried after Telegram's `retry_after`, up to six retries by default. |
-| Other failures | Timeouts, cancellation, transport failures and non-429 API errors are not retried automatically. |
-| Polling session | Only one session can run per client instance; the client can be started again after that session stops. |
+| Other request failures | Timeouts, cancellation, transport failures and non-429 API errors are not retried automatically by `RequestAsync`. |
+| Polling session | Only one session can run per client instance; the client can be started again after that session stops unless it was disposed. |
+| Polling retries | Transient request timeouts and retryable Telegram errors are retried; non-retryable `4xx` errors stop polling and are rethrown. |
 | Update ordering | `maxParallel = 1` is sequential and FIFO; parallel mode does not guarantee update start or completion order. |
 | Update handlers | Subscribers run in registration order for each update and each returned task is awaited. A failing subscriber does not prevent later subscribers from running. |
 | Delivery | Long polling is best effort. Handler failures are not retried and interrupted sessions may receive an update again. |
-| Cancellation | The polling token is forwarded to handlers. Caller cancellation and standard timeout or transport exception types are preserved. |
+| Cancellation | Handlers receive the polling session token, which is canceled by the caller or by `Dispose`. |
+| Disposal | `Dispose` stops an active polling session, is idempotent, and rejects new requests with `ObjectDisposedException`. |
 | External `HttpClient` | Remains owned by the caller and is never disposed by `BotApiClient`. |
 | Internal `HttpClient` | Is owned by `BotApiClient` and disposed with it. |
 | Upload source | A fresh stream is opened for each attempt and disposed by the request. |
@@ -253,12 +321,13 @@ should update both the tests and this documentation.
 
 ### Requests and retries
 
-The client automatically retries Telegram responses with error code `429`,
-waiting for the server-provided `retry_after` interval before the next attempt.
-It makes at most six retries by default; configure `maxRetryAttempts` in the
-constructor or set it to `0` to disable automatic retries. Timeouts,
-cancellations and other transport failures are not retried automatically
-because the client cannot know whether Telegram processed the original request.
+For `RequestAsync`, the client automatically retries Telegram responses with
+error code `429`, waiting for the server-provided `retry_after` interval before
+the next attempt. It makes at most six retries by default; configure
+`maxRetryAttempts` in the constructor or set it to `0` to disable automatic
+retries. For API requests, timeouts, cancellations and other transport failures
+are not retried automatically because the client cannot know whether Telegram
+processed the original request.
 
 `RequestAsync` returns Telegram API responses, while `ExecuteAsync` throws
 `ApiRequestException` when Telegram returns `ok = false`. Argument errors,
@@ -269,7 +338,10 @@ responses retain their standard .NET exception types.
 
 Only one `StartPollingAsync` session can run on a client instance at a time. A
 concurrent start fails with `InvalidOperationException`; after the active
-session stops, the same client can be started again.
+session stops, the same client can be started again unless it was disposed.
+`StartPollingAsync` validates `limit` (1-100), `timeout` (non-negative),
+`maxParallel` (at least 1), and rejects `UpdateType.Unknown` in
+`allowedUpdates`.
 
 All `OnUpdate` subscribers are invoked in registration order and each returned
 task is awaited before processing for that update completes. Handlers receive
@@ -277,6 +349,11 @@ the polling session's cancellation token so long-running work can stop
 cooperatively. A failing subscriber is logged without preventing later
 subscribers from running; cancellation caused by the polling token is treated
 as a normal shutdown.
+
+Transient request timeouts and retryable Telegram errors are retried with a
+short backoff; non-retryable `4xx` errors stop the session and are rethrown as
+`ApiRequestException`. `Dispose` cancels an active session, so a hosted service
+can stop polling by disposing its client.
 
 `StartPollingAsync` uses best-effort delivery. Handler failures are logged and
 are not retried; a failed update is confirmed if the polling loop later sends a
@@ -295,8 +372,9 @@ equivalent content. The library disposes streams returned to an API request;
 code that calls `InputFile.GetStream()` directly owns that returned stream.
 
 The client never disposes a supplied `HttpClient`. If no client is supplied,
-`BotApiClient` creates one and disposes it with the bot client. Streaming file
-downloads never dispose the caller's destination stream.
+`BotApiClient` creates one and disposes it with the bot client; `Dispose` first
+cancels an active polling session. Streaming file downloads never dispose the
+caller's destination stream.
 
 ## Runtime compatibility
 

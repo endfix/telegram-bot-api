@@ -20,6 +20,7 @@ public sealed partial class BotApiClient
     /// </remarks>
     /// <param name="cancellationToken">Token used to cancel the download.</param>
     /// <returns>A dictionary of supported currencies keyed by ISO 4217 currency code.</returns>
+    /// <exception cref="ObjectDisposedException">The client has been disposed.</exception>
     public async Task<IReadOnlyDictionary<string, Currency>> GetCurrenciesAsync(
         CancellationToken cancellationToken = default)
     {

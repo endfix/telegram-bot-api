@@ -13,10 +13,11 @@ Run tests that do not contact Telegram:
 dotnet test Telegram.BotAPI.Tests/Telegram.BotAPI.Tests.csproj --filter "Category!=Integration"
 ```
 
-The local suite covers JSON contracts, polymorphic serialization, JSON request
-bodies for methods without files, multipart transport for path, memory and
-stream-factory file sources, stream disposal and retry behavior, error
-behavior, and long-polling ordering.
+The local suite covers JSON contracts, polymorphic serialization, converter
+hardening, JSON request bodies for methods without files, multipart transport
+for path, memory and stream-factory file sources, stream disposal and retry
+behavior, URL path validation, error behavior, and long-polling ordering,
+retry, fatal-error, and disposal behavior.
 
 ## Live test topology
 

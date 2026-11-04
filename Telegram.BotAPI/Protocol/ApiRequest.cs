@@ -12,6 +12,11 @@ public sealed class ApiRequest
     /// </summary>
     /// <param name="methodName">The Telegram Bot API method name.</param>
     /// <param name="parameters">The method parameters, or <see langword="null"/> for a parameterless request.</param>
+    /// <exception cref="ArgumentException">
+    /// <paramref name="methodName"/> is null, empty, contains white-space characters,
+    /// does not start with an ASCII letter, or contains characters other than ASCII
+    /// letters, digits, and underscores.
+    /// </exception>
     public ApiRequest(string methodName, ApiRequestParameters? parameters)
     {
         if (string.IsNullOrWhiteSpace(methodName))
@@ -22,7 +27,8 @@ public sealed class ApiRequest
         if (!IsValidMethodName(methodName))
         {
             throw new ArgumentException(
-                "The API method name may contain only ASCII letters, digits, and underscores.",
+                "The API method name must start with an ASCII letter and contain only " +
+                "ASCII letters, digits, and underscores.",
                 nameof(methodName));
         }
 

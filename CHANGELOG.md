@@ -20,9 +20,10 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
   `4xx` errors.
 - `BotApiClient.Dispose` now cancels an active polling session and is
   idempotent; requests after disposal throw `ObjectDisposedException`.
-- `ApiRequest` rejects method names outside ASCII letters, digits, and
-  underscores. `DownloadFileAsync` rejects parent-directory segments, absolute
-  paths, query strings, fragments, and backslashes.
+- `ApiRequest` requires a method name that starts with an ASCII letter and
+  contains only ASCII letters, digits, and underscores. `DownloadFileAsync`
+  rejects parent-directory segments, absolute paths, query strings, fragments,
+  and backslashes.
 
 ### Fixed
 

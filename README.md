@@ -186,7 +186,8 @@ await api.DownloadFileAsync(file.FilePath!, destination);
 ```
 
 `DownloadFileAsync` leaves the destination stream open and positioned after
-the downloaded content.
+the downloaded content. Both download methods reject absolute paths,
+parent-directory segments, query strings, fragments, and backslashes.
 
 ## Custom requests
 
@@ -318,6 +319,7 @@ should update both the tests and this documentation.
 | Internal `HttpClient` | Is owned by `BotApiClient` and disposed with it. |
 | Upload source | A fresh stream is opened for each attempt and disposed by the request. |
 | Download destination | Remains open and positioned after the downloaded content. |
+| Download path | `DownloadFileAsync` and `GetFileBytesAsync` reject absolute paths, parent-directory segments, query strings, fragments, and backslashes. |
 
 ### Requests and retries
 

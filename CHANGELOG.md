@@ -5,7 +5,7 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.0.2] - 2026-11-05
 
 ### Added
 
@@ -143,7 +143,8 @@ version. Additive Telegram Bot API coverage remains a minor version.
 - Preserved original input-source open exceptions.
 - Corrected `deleteStory` and user-gift response contracts.
 
-[Unreleased]: https://github.com/endfix/telegram-bot-api/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/endfix/telegram-bot-api/compare/v1.0.2...HEAD
+[1.0.2]: https://github.com/endfix/telegram-bot-api/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/endfix/telegram-bot-api/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/endfix/telegram-bot-api/compare/v0.6.0...v1.0.0
 [0.6.0]: https://github.com/endfix/telegram-bot-api/compare/v0.5.0...v0.6.0

@@ -24,16 +24,7 @@ jobs:
             8.0.x
             9.0.317
 
-      - name: Restore
-        run: dotnet restore Telegram.BotAPI.sln
-
-      - name: Build
-        run: dotnet build Telegram.BotAPI.sln --configuration Release --no-restore
-
-      - name: Test
-        run: dotnet test Telegram.BotAPI.sln --configuration Release --no-build
-
-      - name: Pack
+      - name: Resolve version
         shell: bash
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
@@ -41,6 +32,23 @@ jobs:
             echo "Invalid release tag: $GITHUB_REF_NAME"
             exit 1
           fi
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
+      - name: Restore
+        run: dotnet restore Telegram.BotAPI.sln
+
+      - name: Build
+        # Keep AssemblyVersion stable at 1.0.0.0; only the informational version
+        # tracks the release tag. Pack runs with --no-build, so this is where the
+        # version has to reach the compiled assembly.
+        run: dotnet build Telegram.BotAPI.sln --configuration Release --no-restore -p:InformationalVersion="$VERSION"
+
+      - name: Test
+        run: dotnet test Telegram.BotAPI.sln --configuration Release --no-build
+
+      - name: Pack
+        shell: bash
+        run: |
           dotnet pack Telegram.BotAPI/Telegram.BotAPI.csproj \
             --configuration Release \
             --no-build \

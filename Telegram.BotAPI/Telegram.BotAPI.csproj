@@ -15,8 +15,16 @@
 
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<EnablePackageValidation>true</EnablePackageValidation>
-		<PackageValidationBaselineVersion>1.0.0</PackageValidationBaselineVersion>
+		<!--
+		  No baseline during the 2.0.0 major release: the ParseMode enum, the
+		  StoryAreaPosition -> AreaPosition rename, and the optional chat_id
+		  fields are intentional breaking changes. Restore
+		  <PackageValidationBaselineVersion>2.0.0</PackageValidationBaselineVersion>
+		  after 2.0.0 is published so that later releases keep the compatibility
+		  check.
+		-->
 		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageIcon>icon.png</PackageIcon>
 		<IsPackable>true</IsPackable>
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
@@ -26,6 +34,10 @@
 
 	<ItemGroup>
 	  <None Include="..\README.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	  <None Include="..\icon.png">
 	    <Pack>True</Pack>
 	    <PackagePath>\</PackagePath>
 	  </None>
@@ -55,5 +67,5 @@
 	  <InternalsVisibleTo Include="Telegram.BotAPI.Tests" />
 	  <InternalsVisibleTo Include="Telegram.BotAPI.NetFrameworkSmoke" />
 	</ItemGroup>
-	
+
 </Project>

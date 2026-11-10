@@ -52,6 +52,12 @@ public sealed class Update
     /// <summary>New incoming callback query, if present.</summary>
     public CallbackQuery? CallbackQuery { get; init; }
 
+    /// <summary>New incoming query from a widget in a message sent by the bot or through the bot.</summary>
+    public WidgetQuery? WidgetQuery { get; init; }
+
+    /// <summary>New incoming query from a forwarded message with a shared widget.</summary>
+    public SharedWidgetQuery? SharedWidgetQuery { get; init; }
+
     /// <summary>New incoming shipping query, if present.</summary>
     public ShippingQuery? ShippingQuery { get; init; }
 
@@ -110,6 +116,8 @@ public sealed class Update
         { InlineQuery: not null } => UpdateType.InlineQuery,
         { ChosenInlineResult: not null } => UpdateType.ChosenInlineResult,
         { CallbackQuery: not null } => UpdateType.CallbackQuery,
+        { WidgetQuery: not null } => UpdateType.WidgetQuery,
+        { SharedWidgetQuery: not null } => UpdateType.SharedWidgetQuery,
         { ShippingQuery: not null } => UpdateType.ShippingQuery,
         { PreCheckoutQuery: not null } => UpdateType.PreCheckoutQuery,
         { PurchasedPaidMedia: not null } => UpdateType.PurchasedPaidMedia,

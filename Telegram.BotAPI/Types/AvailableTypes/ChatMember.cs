@@ -158,7 +158,7 @@ public sealed class ChatMemberRestricted : ChatMember
     /// <summary>Indicates whether the member can send polls.</summary>
     public required bool CanSendPolls { get; init; }
 
-    /// <summary>Indicates whether the member can send other messages.</summary>
+    /// <summary>Indicates whether the member can send other messages, such as stickers, animations, games, inline bots or widgets.</summary>
     public required bool CanSendOtherMessages { get; init; }
 
     /// <summary>Indicates whether the member can add web page previews to messages.</summary>

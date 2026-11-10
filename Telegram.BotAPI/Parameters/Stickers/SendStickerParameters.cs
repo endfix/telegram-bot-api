@@ -11,8 +11,8 @@ public sealed class SendStickerParameters : ApiRequestParameters
     /// <summary>Unique identifier of the business connection.</summary>
     public string? BusinessConnectionId { get; init; }
 
-    /// <summary>Target chat.</summary>
-    public required ChatIdSource ChatId { get; init; }
+    /// <summary>Target chat; optional only for an ephemeral reply to a callback query.</summary>
+    public ChatIdSource? ChatId { get; init; }
 
     /// <summary>Target message thread.</summary>
     public long? MessageThreadId { get; init; }

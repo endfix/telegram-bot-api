@@ -1,10 +1,10 @@
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using Endfix.Telegram.BotAPI.Enums;
 using Endfix.Telegram.BotAPI.Parameters;
 using Endfix.Telegram.BotAPI.Protocol;
 using Endfix.Telegram.BotAPI.Types;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Endfix.Telegram.BotAPI.Extensions;
 
@@ -112,13 +112,13 @@ public static partial class BotApiClientExtensions
     /// <returns>The sent message.</returns>
     public static Task<Message> SendMessageAsync(
         this IBotApiClient client,
-        ChatIdSource chatId,
+        ChatIdSource? chatId,
         string text,
         string? businessConnectionId = null,
         long? messageThreadId = null,
         long? directMessagesTopicId = null,
         EphemeralMessageParameters? ephemeralMessageParameters = null,
-        string? parseMode = null,
+        ParseMode? parseMode = null,
         IReadOnlyList<MessageEntity>? entities = null,
         LinkPreviewOptions? linkPreviewOptions = null,
         bool? disableNotification = null,
@@ -281,7 +281,7 @@ public static partial class BotApiClientExtensions
         long? directMessagesTopicId = null,
         int? videoStartTimestamp = null,
         string? caption = null,
-        string? parseMode = null,
+        ParseMode? parseMode = null,
         IReadOnlyList<MessageEntity>? captionEntities = null,
         bool? showCaptionAboveMedia = null,
         bool? disableNotification = null,
@@ -392,14 +392,14 @@ public static partial class BotApiClientExtensions
     /// <returns>The sent message.</returns>
     public static Task<Message> SendPhotoAsync(
         this IBotApiClient client,
-        ChatIdSource chatId,
+        ChatIdSource? chatId,
         PhotoSource photo,
         string? businessConnectionId = null,
         long? messageThreadId = null,
         long? directMessagesTopicId = null,
         EphemeralMessageParameters? ephemeralMessageParameters = null,
         string? caption = null,
-        string? parseMode = null,
+        ParseMode? parseMode = null,
         IReadOnlyList<MessageEntity>? CaptionEntities = null,
         bool? showCaptionAboveMedia = null,
         bool? hasSpoiler = null,
@@ -439,8 +439,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The sent message.</returns>
     public static Task<Message> SendLivePhotoAsync(
-        this IBotApiClient client, 
-        SendLivePhotoParameters parameters, 
+        this IBotApiClient client,
+        SendLivePhotoParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<Message>(new ApiRequest("sendLivePhoto", parameters), cancellationToken);
 
@@ -467,7 +467,7 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The sent message.</returns>
     public static Task<Message> SendLivePhotoAsync(
-        this IBotApiClient client,    
+        this IBotApiClient client,
         ChatIdSource chatId,
         MediaSource livePhoto,
         MediaSource photo,
@@ -475,7 +475,7 @@ public static partial class BotApiClientExtensions
         long? messageThreadId = null,
         long? directMessagesTopicId = null,
         string? caption = null,
-        string? parseMode = null,
+        ParseMode? parseMode = null,
         IReadOnlyList<MessageEntity>? captionEntities = null,
         bool? showCaptionAboveMedia = null,
         bool? hasSpoiler = null,
@@ -515,8 +515,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The sent message.</returns>
     public static Task<Message> SendAudioAsync(
-        this IBotApiClient client, 
-        SendAudioParameters parameters, 
+        this IBotApiClient client,
+        SendAudioParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<Message>(new ApiRequest("sendAudio", parameters), cancellationToken);
 
@@ -546,14 +546,14 @@ public static partial class BotApiClientExtensions
     /// <returns>The sent message.</returns>
     public static Task<Message> SendAudioAsync(
         this IBotApiClient client,
-        ChatIdSource chatId,
+        ChatIdSource? chatId,
         AudioSource audio,
-        string? businessConnectionId = null,    
+        string? businessConnectionId = null,
         long? messageThreadId = null,
         long? directMessagesTopicId = null,
         EphemeralMessageParameters? ephemeralMessageParameters = null,
         string? caption = null,
-        string? parseMode = null,
+        ParseMode? parseMode = null,
         IReadOnlyList<MessageEntity>? captionEntities = null,
         int? duration = null,
         string? performer = null,
@@ -597,8 +597,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The sent message.</returns>
     public static Task<Message> SendDocumentAsync(
-        this IBotApiClient client, 
-        SendDocumentParameters parameters, 
+        this IBotApiClient client,
+        SendDocumentParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<Message>(new ApiRequest("sendDocument", parameters), cancellationToken);
 
@@ -626,7 +626,7 @@ public static partial class BotApiClientExtensions
     /// <returns>The sent message.</returns>
     public static Task<Message> SendDocumentAsync(
         this IBotApiClient client,
-        ChatIdSource chatId,
+        ChatIdSource? chatId,
         DocumentSource document,
         string? businessConnectionId = null,
         long? messageThreadId = null,
@@ -634,7 +634,7 @@ public static partial class BotApiClientExtensions
         EphemeralMessageParameters? ephemeralMessageParameters = null,
         ThumbnailSource? thumbnail = null,
         string? caption = null,
-        string? parseMode = null,
+        ParseMode? parseMode = null,
         IReadOnlyList<MessageEntity>? captionEntities = null,
         bool? disableContentTypeDetection = null,
         bool? disableNotification = null,
@@ -673,8 +673,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The sent message.</returns>
     public static Task<Message> SendVideoAsync(
-        this IBotApiClient client, 
-        SendVideoParameters parameters, 
+        this IBotApiClient client,
+        SendVideoParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<Message>(new ApiRequest("sendVideo", parameters), cancellationToken);
 
@@ -708,7 +708,7 @@ public static partial class BotApiClientExtensions
     /// <returns>The sent message.</returns>
     public static Task<Message> SendVideoAsync(
         this IBotApiClient client,
-        ChatIdSource chatId,
+        ChatIdSource? chatId,
         VideoSource video,
         string? businessConnectionId = null,
         long? messageThreadId = null,
@@ -721,7 +721,7 @@ public static partial class BotApiClientExtensions
         CoverSource? cover = null,
         int? startTimestamp = null,
         string? caption = null,
-        string? parseMode = null,
+        ParseMode? parseMode = null,
         IReadOnlyList<MessageEntity>? captionEntities = null,
         bool? showCaptionAboveMedia = null,
         bool? hasSpoiler = null,
@@ -767,8 +767,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The sent message.</returns>
     public static Task<Message> SendAnimationAsync(
-        this IBotApiClient client, 
-        SendAnimationParameters parameters, 
+        this IBotApiClient client,
+        SendAnimationParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<Message>(new ApiRequest("sendAnimation", parameters), cancellationToken);
 
@@ -800,7 +800,7 @@ public static partial class BotApiClientExtensions
     /// <returns>The sent message.</returns>
     public static Task<Message> SendAnimationAsync(
         this IBotApiClient client,
-        ChatIdSource chatId,
+        ChatIdSource? chatId,
         AnimationSource animation,
         string? businessConnectionId = null,
         long? messageThreadId = null,
@@ -811,7 +811,7 @@ public static partial class BotApiClientExtensions
         int? height = null,
         ThumbnailSource? thumbnail = null,
         string? caption = null,
-        string? parseMode = null,
+        ParseMode? parseMode = null,
         IReadOnlyList<MessageEntity>? captionEntities = null,
         bool? showCaptionAboveMedia = null,
         bool? hasSpoiler = null,
@@ -855,8 +855,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The sent message.</returns>
     public static Task<Message> SendVoiceAsync(
-        this IBotApiClient client, 
-        SendVoiceParameters parameters, 
+        this IBotApiClient client,
+        SendVoiceParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<Message>(new ApiRequest("sendVoice", parameters), cancellationToken);
 
@@ -883,14 +883,14 @@ public static partial class BotApiClientExtensions
     /// <returns>The sent message.</returns>
     public static Task<Message> SendVoiceAsync(
         this IBotApiClient client,
-        ChatIdSource chatId,
+        ChatIdSource? chatId,
         VoiceSource voice,
         string? businessConnectionId = null,
         long? messageThreadId = null,
         long? directMessagesTopicId = null,
         EphemeralMessageParameters? ephemeralMessageParameters = null,
         string? caption = null,
-        string? parseMode = null,
+        ParseMode? parseMode = null,
         IReadOnlyList<MessageEntity>? captionEntities = null,
         int? duration = null,
         bool? disableNotification = null,
@@ -928,8 +928,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The sent message.</returns>
     public static Task<Message> SendVideoNoteAsync(
-        this IBotApiClient client, 
-        SendVideoNoteParameters parameters, 
+        this IBotApiClient client,
+        SendVideoNoteParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<Message>(new ApiRequest("sendVideoNote", parameters), cancellationToken);
 
@@ -955,7 +955,7 @@ public static partial class BotApiClientExtensions
     /// <returns>The sent message.</returns>
     public static Task<Message> SendVideoNoteAsync(
         this IBotApiClient client,
-        ChatIdSource chatId,
+        ChatIdSource? chatId,
         VideoNoteSource videoNote,
         string? businessConnectionId = null,
         long? messageThreadId = null,
@@ -992,14 +992,173 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Sends a message with an HTML widget.</summary>
+    /// <remarks>
+    /// Widgets can be sent only to private chats in the production environment. Sent widgets have
+    /// protected content and cannot be forwarded.
+    /// </remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
+    public static Task<Message> SendWidgetAsync(
+        this IBotApiClient client,
+        SendWidgetParameters parameters,
+        CancellationToken cancellationToken = default)
+        => client.ExecuteAsync<Message>(new ApiRequest("sendWidget", parameters), cancellationToken);
+
+    /// <summary>Sends a message with an HTML widget.</summary>
+    /// <remarks>
+    /// Widgets can be sent only to private chats in the production environment. Sent widgets have
+    /// protected content and cannot be forwarded.
+    /// </remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat.</param>
+    /// <param name="html">HTML code of the widget, from 1 through 32768 bytes.</param>
+    /// <param name="messageThreadId">Target message thread.</param>
+    /// <param name="width">Width of the widget in logical pixels, from 200 through the maximum bubble width; omit it to use the full width of the message bubble.</param>
+    /// <param name="height">Height of the widget in logical pixels, from 50 through 600; omit it if the height is not fixed.</param>
+    /// <param name="publicData">Public data of the widget, from 0 through 1024 bytes, available wherever the widget is shown.</param>
+    /// <param name="chatData">Data of the widget that is specific to the message, from 0 through 1024 bytes.</param>
+    /// <param name="caption">Widget caption, from 0 through 1024 characters after entity parsing.</param>
+    /// <param name="parseMode">Mode for parsing entities in the widget caption.</param>
+    /// <param name="captionEntities">Explicit entities in the widget caption.</param>
+    /// <param name="showCaptionAboveMedia">Whether to show the caption above the widget.</param>
+    /// <param name="allowQueries">Whether to allow the widget to send queries to the bot.</param>
+    /// <param name="isShared">Whether to create a shared widget that can be sent again with <c>sendSharedWidget</c>.</param>
+    /// <param name="disableNotification">Sends the message silently when <see langword="true"/>.</param>
+    /// <param name="protectContent">Protects the message from forwarding and saving when <see langword="true"/>.</param>
+    /// <param name="allowPaidBroadcast">Allows paid broadcasts using Telegram Stars.</param>
+    /// <param name="messageEffectId">Unique identifier of a message effect.</param>
+    /// <param name="replyParameters">Description of the message to reply to.</param>
+    /// <param name="replyMarkup">Inline or reply keyboard attached to the message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
+    public static Task<Message> SendWidgetAsync(
+        this IBotApiClient client,
+        ChatIdSource chatId,
+        string html,
+        long? messageThreadId = null,
+        int? width = null,
+        int? height = null,
+        string? publicData = null,
+        string? chatData = null,
+        string? caption = null,
+        ParseMode? parseMode = null,
+        IReadOnlyList<MessageEntity>? captionEntities = null,
+        bool? showCaptionAboveMedia = null,
+        bool? allowQueries = null,
+        bool? isShared = null,
+        bool? disableNotification = null,
+        bool? protectContent = null,
+        bool? allowPaidBroadcast = null,
+        string? messageEffectId = null,
+        ReplyParameters? replyParameters = null,
+        ReplyMarkup? replyMarkup = null,
+        CancellationToken cancellationToken = default)
+        => client.SendWidgetAsync(new SendWidgetParameters
+        {
+            ChatId = chatId,
+            MessageThreadId = messageThreadId,
+            Html = html,
+            Width = width,
+            Height = height,
+            PublicData = publicData,
+            ChatData = chatData,
+            Caption = caption,
+            ParseMode = parseMode,
+            CaptionEntities = captionEntities,
+            ShowCaptionAboveMedia = showCaptionAboveMedia,
+            AllowQueries = allowQueries,
+            IsShared = isShared,
+            DisableNotification = disableNotification,
+            ProtectContent = protectContent,
+            AllowPaidBroadcast = allowPaidBroadcast,
+            MessageEffectId = messageEffectId,
+            ReplyParameters = replyParameters,
+            ReplyMarkup = replyMarkup
+        }, cancellationToken);
+
+    /// <summary>Sends a shared widget created by the bot again.</summary>
+    /// <remarks>
+    /// Widgets can be sent only to private chats in the production environment. Sent widgets have
+    /// protected content and cannot be forwarded.
+    /// </remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
+    public static Task<Message> SendSharedWidgetAsync(
+        this IBotApiClient client,
+        SendSharedWidgetParameters parameters,
+        CancellationToken cancellationToken = default)
+        => client.ExecuteAsync<Message>(new ApiRequest("sendSharedWidget", parameters), cancellationToken);
+
+    /// <summary>Sends a shared widget created by the bot again.</summary>
+    /// <remarks>
+    /// Widgets can be sent only to private chats in the production environment. Sent widgets have
+    /// protected content and cannot be forwarded.
+    /// </remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat.</param>
+    /// <param name="widgetId">Unique identifier of the shared widget.</param>
+    /// <param name="messageThreadId">Target message thread.</param>
+    /// <param name="chatData">Data of the widget that is specific to the message, from 0 through 1024 bytes.</param>
+    /// <param name="caption">Widget caption, from 0 through 1024 characters after entity parsing.</param>
+    /// <param name="parseMode">Mode for parsing entities in the widget caption.</param>
+    /// <param name="captionEntities">Explicit entities in the widget caption.</param>
+    /// <param name="showCaptionAboveMedia">Whether to show the caption above the widget.</param>
+    /// <param name="disableNotification">Sends the message silently when <see langword="true"/>.</param>
+    /// <param name="protectContent">Protects the message from forwarding and saving when <see langword="true"/>.</param>
+    /// <param name="allowPaidBroadcast">Allows paid broadcasts using Telegram Stars.</param>
+    /// <param name="messageEffectId">Unique identifier of a message effect.</param>
+    /// <param name="replyParameters">Description of the message to reply to.</param>
+    /// <param name="replyMarkup">Inline or reply keyboard attached to the message.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The sent message.</returns>
+    public static Task<Message> SendSharedWidgetAsync(
+        this IBotApiClient client,
+        ChatIdSource chatId,
+        string widgetId,
+        long? messageThreadId = null,
+        string? chatData = null,
+        string? caption = null,
+        ParseMode? parseMode = null,
+        IReadOnlyList<MessageEntity>? captionEntities = null,
+        bool? showCaptionAboveMedia = null,
+        bool? disableNotification = null,
+        bool? protectContent = null,
+        bool? allowPaidBroadcast = null,
+        string? messageEffectId = null,
+        ReplyParameters? replyParameters = null,
+        ReplyMarkup? replyMarkup = null,
+        CancellationToken cancellationToken = default)
+        => client.SendSharedWidgetAsync(new SendSharedWidgetParameters
+        {
+            ChatId = chatId,
+            MessageThreadId = messageThreadId,
+            WidgetId = widgetId,
+            ChatData = chatData,
+            Caption = caption,
+            ParseMode = parseMode,
+            CaptionEntities = captionEntities,
+            ShowCaptionAboveMedia = showCaptionAboveMedia,
+            DisableNotification = disableNotification,
+            ProtectContent = protectContent,
+            AllowPaidBroadcast = allowPaidBroadcast,
+            MessageEffectId = messageEffectId,
+            ReplyParameters = replyParameters,
+            ReplyMarkup = replyMarkup
+        }, cancellationToken);
+
     /// <summary>Sends paid media that recipients can access after paying Telegram Stars.</summary>
     /// <param name="client">Bot API client used to send the request.</param>
     /// <param name="parameters">Star price, paid media and optional caption.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The sent message.</returns>
     public static Task<Message> SendPaidMediaAsync(
-        this IBotApiClient client, 
-        SendPaidMediaParameters parameters, 
+        this IBotApiClient client,
+        SendPaidMediaParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<Message>(new ApiRequest("sendPaidMedia", parameters), cancellationToken);
 
@@ -1034,7 +1193,7 @@ public static partial class BotApiClientExtensions
         long? directMessagesTopicId = null,
         string? payload = null,
         string? caption = null,
-        string? parseMode = null,
+        ParseMode? parseMode = null,
         IReadOnlyList<MessageEntity>? captionEntities = null,
         bool? showCaptionAboveMedia = null,
         bool? disableNotification = null,
@@ -1071,8 +1230,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The messages sent as the album.</returns>
     public static Task<IReadOnlyList<Message>> SendMediaGroupAsync(
-        this IBotApiClient client, 
-        SendMediaGroupParameters parameters, 
+        this IBotApiClient client,
+        SendMediaGroupParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<IReadOnlyList<Message>>(new ApiRequest("sendMediaGroup", parameters), cancellationToken);
 
@@ -1152,7 +1311,7 @@ public static partial class BotApiClientExtensions
     /// <returns>The sent message.</returns>
     public static Task<Message> SendLocationAsync(
         this IBotApiClient client,
-        ChatIdSource chatId,
+        ChatIdSource? chatId,
         double latitude,
         double longitude,
         string? businessConnectionId = null,
@@ -1230,7 +1389,7 @@ public static partial class BotApiClientExtensions
     /// <returns>The sent message.</returns>
     public static Task<Message> SendVenueAsync(
         this IBotApiClient client,
-        ChatIdSource chatId,
+        ChatIdSource? chatId,
         double latitude,
         double longitude,
         string title,
@@ -1308,7 +1467,7 @@ public static partial class BotApiClientExtensions
     /// <returns>The sent message.</returns>
     public static Task<Message> SendContactAsync(
         this IBotApiClient client,
-        ChatIdSource chatId,
+        ChatIdSource? chatId,
         string phoneNumber,
         string firstName,
         long? messageThreadId = null,
@@ -1401,7 +1560,7 @@ public static partial class BotApiClientExtensions
         IReadOnlyList<InputPollOption> options,
         string? businessConnectionId = null,
         long? messageThreadId = null,
-        string? questionParseMode = null,
+        ParseMode? questionParseMode = null,
         IReadOnlyList<MessageEntity>? questionEntities = null,
         bool? isAnonymous = null,
         PollType? type = null,
@@ -1414,14 +1573,14 @@ public static partial class BotApiClientExtensions
         IReadOnlyList<string>? countryCodes = null,
         IReadOnlyList<int>? correctOptionIds = null,
         string? explanation = null,
-        string? explanationParseMode = null,
+        ParseMode? explanationParseMode = null,
         IReadOnlyList<MessageEntity>? explanationEntities = null,
         IInputPollMedia? explanationMedia = null,
         int? openPeriod = null,
         int? closeDate = null,
         bool? isClosed = null,
         string? description = null,
-        string? descriptionParseMode = null,
+        ParseMode? descriptionParseMode = null,
         IReadOnlyList<MessageEntity>? descriptionEntities = null,
         IInputPollMedia? media = null,
         bool? disableNotification = null,
@@ -1604,7 +1763,7 @@ public static partial class BotApiClientExtensions
         long draftId,
         long? messageThreadId = null,
         string? text = null,
-        string? parseMode = null,
+        ParseMode? parseMode = null,
         IReadOnlyList<MessageEntity>? entities = null,
         bool? canStop = null,
         bool? keepOnStop = null,
@@ -2787,6 +2946,26 @@ public static partial class BotApiClientExtensions
             UserId = userId
         }, cancellationToken);
 
+    /// <summary>Gets the backdrops that can be used as a chat share theme background.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The available backdrops.</returns>
+    public static Task<ChatShareThemeBackdrops> GetChatShareThemeBackdropsAsync(
+        this IBotApiClient client,
+        GetChatShareThemeBackdropsParameters? parameters = null,
+        CancellationToken cancellationToken = default)
+        => client.ExecuteAsync<ChatShareThemeBackdrops>(new ApiRequest("getChatShareThemeBackdrops", parameters), cancellationToken);
+
+    /// <summary>Gets the backdrops that can be used as a chat share theme background.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The available backdrops.</returns>
+    public static Task<ChatShareThemeBackdrops> GetChatShareThemeBackdropsAsync(
+        this IBotApiClient client,
+        CancellationToken cancellationToken = default)
+        => client.GetChatShareThemeBackdropsAsync(new GetChatShareThemeBackdropsParameters(), cancellationToken);
+
     /// <summary>Returns recent messages from the personal chat displayed on a user's profile.</summary>
     /// <param name="client">Bot API client used to send the request.</param>
     /// <param name="parameters">Parameters for the request.</param>
@@ -3263,6 +3442,44 @@ public static partial class BotApiClientExtensions
             ShowAlert = showAlert,
             Url = url,
             CacheTime = cacheTime
+        }, cancellationToken);
+
+    /// <summary>Answers a query from a widget.</summary>
+    /// <remarks>
+    /// The query must be answered within 15 seconds. The answer is received only by the widget
+    /// that sent the query and does not change widget data; use <c>editMessageWidgetData</c> or
+    /// <c>editSharedWidgetData</c> to change it.
+    /// </remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
+    public static Task<bool> AnswerWidgetQueryAsync(
+        this IBotApiClient client,
+        AnswerWidgetQueryParameters parameters,
+        CancellationToken cancellationToken = default)
+        => client.ExecuteAsync<bool>(new ApiRequest("answerWidgetQuery", parameters), cancellationToken);
+
+    /// <summary>Answers a query from a widget.</summary>
+    /// <remarks>
+    /// The query must be answered within 15 seconds. The answer is received only by the widget
+    /// that sent the query and does not change widget data; use <c>editMessageWidgetData</c> or
+    /// <c>editSharedWidgetData</c> to change it.
+    /// </remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="widgetQueryId">Unique identifier of the query to answer.</param>
+    /// <param name="data">Data to return to the widget, from 0 through 1024 bytes.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
+    public static Task<bool> AnswerWidgetQueryAsync(
+        this IBotApiClient client,
+        string widgetQueryId,
+        string? data = null,
+        CancellationToken cancellationToken = default)
+        => client.AnswerWidgetQueryAsync(new AnswerWidgetQueryParameters
+        {
+            WidgetQueryId = widgetQueryId,
+            Data = data
         }, cancellationToken);
 
     /// <summary>Replies to a received guest message.</summary>
@@ -3912,7 +4129,7 @@ public static partial class BotApiClientExtensions
         string giftId,
         bool? payForUpgrade,
         string? text,
-        string? textParseMode,
+        ParseMode? textParseMode,
         IReadOnlyList<MessageEntity>? textEntities,
         CancellationToken cancellationToken = default)
         => client.SendGiftAsync(new SendGiftParameters
@@ -3953,7 +4170,7 @@ public static partial class BotApiClientExtensions
         int monthCount,
         int starCount,
         string? text = null,
-        string? textParseMode = null,
+        ParseMode? textParseMode = null,
         IReadOnlyList<MessageEntity>? textEntities = null,
         CancellationToken cancellationToken = default)
         => client.GiftPremiumSubscriptionAsync(new GiftPremiumSubscriptionParameters
@@ -3981,17 +4198,23 @@ public static partial class BotApiClientExtensions
     /// <param name="client">Bot API client used to send the request.</param>
     /// <param name="userId">Target user identifier.</param>
     /// <param name="customDescription">Verification description, from 0 through 70 characters. Must be empty unless the organization may provide one.</param>
+    /// <param name="customDescriptionParseMode">Mode for parsing entities in the custom description. Only <c>text_link</c> entities are supported.</param>
+    /// <param name="customDescriptionEntities">Explicit entities in the custom description; can be specified instead of <paramref name="customDescriptionParseMode"/>. Only <c>text_link</c> entities are supported.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> VerifyUserAsync(
         this IBotApiClient client,
         long userId,
         string? customDescription = null,
+        ParseMode? customDescriptionParseMode = null,
+        IReadOnlyList<MessageEntity>? customDescriptionEntities = null,
         CancellationToken cancellationToken = default)
         => client.VerifyUserAsync(new VerifyUserParameters
         {
             UserId = userId,
-            CustomDescription = customDescription
+            CustomDescription = customDescription,
+            CustomDescriptionParseMode = customDescriptionParseMode,
+            CustomDescriptionEntities = customDescriptionEntities
         }, cancellationToken);
 
     /// <summary>Verifies a chat on behalf of the organization represented by the bot.</summary>
@@ -4009,17 +4232,23 @@ public static partial class BotApiClientExtensions
     /// <param name="client">Bot API client used to send the request.</param>
     /// <param name="chatId">Target bot, supergroup or channel identifier or username. Channel direct messages cannot be verified.</param>
     /// <param name="customDescription">Verification description, from 0 through 70 characters. Must be empty unless the organization may provide one.</param>
+    /// <param name="customDescriptionParseMode">Mode for parsing entities in the custom description. Only <c>text_link</c> entities are supported.</param>
+    /// <param name="customDescriptionEntities">Explicit entities in the custom description; can be specified instead of <paramref name="customDescriptionParseMode"/>. Only <c>text_link</c> entities are supported.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> VerifyChatAsync(
         this IBotApiClient client,
         ChatIdSource chatId,
         string? customDescription = null,
+        ParseMode? customDescriptionParseMode = null,
+        IReadOnlyList<MessageEntity>? customDescriptionEntities = null,
         CancellationToken cancellationToken = default)
         => client.VerifyChatAsync(new VerifyChatParameters
         {
             ChatId = chatId,
-            CustomDescription = customDescription
+            CustomDescription = customDescription,
+            CustomDescriptionParseMode = customDescriptionParseMode,
+            CustomDescriptionEntities = customDescriptionEntities
         }, cancellationToken);
 
     /// <summary>Removes a verification assigned to a user by the bot's organization.</summary>
@@ -4542,6 +4771,31 @@ public static partial class BotApiClientExtensions
             Limit = limit
         }, cancellationToken);
 
+    /// <summary>Gets information about a unique gift by its name.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The unique gift.</returns>
+    public static Task<UniqueGift> GetUniqueGiftAsync(
+        this IBotApiClient client,
+        GetUniqueGiftParameters parameters,
+        CancellationToken cancellationToken = default)
+        => client.ExecuteAsync<UniqueGift>(new ApiRequest("getUniqueGift", parameters), cancellationToken);
+
+    /// <summary>Gets information about a unique gift by its name.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="name">Unique name of the gift.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns>The unique gift.</returns>
+    public static Task<UniqueGift> GetUniqueGiftAsync(
+        this IBotApiClient client,
+        string name,
+        CancellationToken cancellationToken = default)
+        => client.GetUniqueGiftAsync(new GetUniqueGiftParameters
+        {
+            Name = name
+        }, cancellationToken);
+
     /// <summary>Converts a regular gift owned by a business account to Telegram Stars.</summary>
     /// <remarks>Requires the <c>can_convert_gifts_to_stars</c> business bot right.</remarks>
     /// <param name="client">Bot API client used to send the request.</param>
@@ -4644,6 +4898,42 @@ public static partial class BotApiClientExtensions
             StarCount = starCount
         }, cancellationToken);
 
+    /// <summary>Deletes a regular gift owned by a managed business account without receiving Telegram Stars for it.</summary>
+    /// <remarks>
+    /// Requires the <c>can_convert_gifts_to_stars</c> business bot right. The gift can be deleted
+    /// only if it is not limited (<see cref="Gift.TotalCount"/> is omitted) and was not refunded.
+    /// </remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
+    public static Task<bool> DeleteBusinessAccountGiftAsync(
+        this IBotApiClient client,
+        DeleteBusinessAccountGiftParameters parameters,
+        CancellationToken cancellationToken = default)
+        => client.ExecuteAsync<bool>(new ApiRequest("deleteBusinessAccountGift", parameters), cancellationToken);
+
+    /// <summary>Deletes a regular gift owned by a managed business account without receiving Telegram Stars for it.</summary>
+    /// <remarks>
+    /// Requires the <c>can_convert_gifts_to_stars</c> business bot right. The gift can be deleted
+    /// only if it is not limited (<see cref="Gift.TotalCount"/> is omitted) and was not refunded.
+    /// </remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="businessConnectionId">Unique identifier of the business connection.</param>
+    /// <param name="ownedGiftId">Unique identifier of the regular gift to delete.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
+    public static Task<bool> DeleteBusinessAccountGiftAsync(
+        this IBotApiClient client,
+        string businessConnectionId,
+        string ownedGiftId,
+        CancellationToken cancellationToken = default)
+        => client.DeleteBusinessAccountGiftAsync(new DeleteBusinessAccountGiftParameters
+        {
+            BusinessConnectionId = businessConnectionId,
+            OwnedGiftId = ownedGiftId
+        }, cancellationToken);
+
     /// <summary>Posts a story on behalf of a managed business account.</summary>
     /// <remarks>Requires the <c>can_manage_stories</c> business bot right.</remarks>
     /// <param name="client">Bot API client used to send the request.</param>
@@ -4675,7 +4965,7 @@ public static partial class BotApiClientExtensions
         InputStoryContent content,
         int activePeriod,
         string? caption = null,
-        string? parseMode = null,
+        ParseMode? parseMode = null,
         IReadOnlyList<MessageEntity>? captionEntities = null,
         IReadOnlyList<StoryArea>? areas = null,
         bool? postToChatPage = null,
@@ -4766,7 +5056,7 @@ public static partial class BotApiClientExtensions
         int storyId,
         InputStoryContent content,
         string? caption = null,
-        string? parseMode = null,
+        ParseMode? parseMode = null,
         IReadOnlyList<MessageEntity>? captionEntities = null,
         IReadOnlyList<StoryArea>? areas = null,
         CancellationToken cancellationToken = default)

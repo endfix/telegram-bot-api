@@ -23,7 +23,7 @@ public sealed class SendPollParameters : ApiRequestParameters
     public required string Question { get; init; }
 
     /// <summary>Mode for parsing entities in the question; currently only custom emoji entities are allowed.</summary>
-    public string? QuestionParseMode { get; init; }
+    public ParseMode? QuestionParseMode { get; init; }
 
     /// <summary>Special entities in the question; can be specified instead of <see cref="QuestionParseMode"/>.</summary>
     public IReadOnlyList<MessageEntity>? QuestionEntities { get; init; }
@@ -65,7 +65,7 @@ public sealed class SendPollParameters : ApiRequestParameters
     public string? Explanation { get; init; }
 
     /// <summary>Mode for parsing entities in the quiz explanation.</summary>
-    public string? ExplanationParseMode { get; init; }
+    public ParseMode? ExplanationParseMode { get; init; }
 
     /// <summary>Special entities in the quiz explanation; can be specified instead of <see cref="ExplanationParseMode"/>.</summary>
     public IReadOnlyList<MessageEntity>? ExplanationEntities { get; init; }
@@ -86,7 +86,7 @@ public sealed class SendPollParameters : ApiRequestParameters
     public string? Description { get; init; }
 
     /// <summary>Mode for parsing entities in the poll description.</summary>
-    public string? DescriptionParseMode { get; init; }
+    public ParseMode? DescriptionParseMode { get; init; }
 
     /// <summary>Special entities in the poll description; can be specified instead of <see cref="DescriptionParseMode"/>.</summary>
     public IReadOnlyList<MessageEntity>? DescriptionEntities { get; init; }

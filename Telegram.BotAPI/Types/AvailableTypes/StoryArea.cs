@@ -8,7 +8,7 @@ public sealed class StoryArea
     /// <summary>
     /// The position of the area.
     /// </summary>
-    public required StoryAreaPosition Position { get; init; }
+    public required AreaPosition Position { get; init; }
 
     /// <summary>
     /// The type of the area.

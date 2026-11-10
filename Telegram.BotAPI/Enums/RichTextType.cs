@@ -54,5 +54,7 @@ public enum RichTextType
     /// <summary>A named reference.</summary>
     Reference,
     /// <summary>A link to a named reference.</summary>
-    ReferenceLink
+    ReferenceLink,
+    /// <summary>An address in the TON blockchain.</summary>
+    TonAddress
 }

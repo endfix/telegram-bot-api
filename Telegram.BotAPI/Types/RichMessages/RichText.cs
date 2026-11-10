@@ -314,3 +314,16 @@ public sealed class RichTextReferenceLink : RichText
     /// <summary>Name of the target reference.</summary>
     public required string ReferenceName { get; init; }
 }
+
+/// <summary>Describes an address in the TON blockchain.</summary>
+public sealed class RichTextTonAddress : RichText
+{
+    /// <summary>Type of the rich text, always <c>ton_address</c>.</summary>
+    public override RichTextType Type => RichTextType.TonAddress;
+
+    /// <summary>Text of the address.</summary>
+    public required RichText Text { get; init; }
+
+    /// <summary>The address.</summary>
+    public required string Address { get; init; }
+}

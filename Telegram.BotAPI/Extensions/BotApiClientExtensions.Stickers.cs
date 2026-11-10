@@ -16,8 +16,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The sent message.</returns>
     public static Task<Message> SendStickerAsync(
-        this IBotApiClient client, 
-        SendStickerParameters parameters, 
+        this IBotApiClient client,
+        SendStickerParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<Message>(new ApiRequest("sendSticker", parameters), cancellationToken);
 
@@ -41,7 +41,7 @@ public static partial class BotApiClientExtensions
     /// <returns>The sent message.</returns>
     public static Task<Message> SendStickerAsync(
         this IBotApiClient client,
-        ChatIdSource chatId,
+        ChatIdSource? chatId,
         StickerSource sticker,
         string? businessConnectionId = null,
         long? messageThreadId = null,
@@ -80,8 +80,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The sticker set.</returns>
     public static Task<StickerSet> GetStickerSetAsync(
-        this IBotApiClient client, 
-        GetStickerSetParameters parameters, 
+        this IBotApiClient client,
+        GetStickerSetParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<StickerSet>(new ApiRequest("getStickerSet", parameters), cancellationToken);
 
@@ -105,8 +105,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The matching stickers.</returns>
     public static Task<IReadOnlyList<Sticker>> GetCustomEmojiStickersAsync(
-        this IBotApiClient client, 
-        GetCustomEmojiStickersParameters parameters, 
+        this IBotApiClient client,
+        GetCustomEmojiStickersParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<IReadOnlyList<Sticker>>(new ApiRequest("getCustomEmojiStickers", parameters), cancellationToken);
 
@@ -130,8 +130,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The uploaded file descriptor.</returns>
     public static Task<FileStruct> UploadStickerFileAsync(
-        this IBotApiClient client, 
-        UploadStickerFileParameters parameters, 
+        this IBotApiClient client,
+        UploadStickerFileParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<FileStruct>(new ApiRequest("uploadStickerFile", parameters), cancellationToken);
 
@@ -161,8 +161,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> CreateNewStickerSetAsync(
-        this IBotApiClient client, 
-        CreateNewStickerSetParameters parameters, 
+        this IBotApiClient client,
+        CreateNewStickerSetParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("createNewStickerSet", parameters), cancellationToken);
 
@@ -201,8 +201,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> AddStickerToSetAsync(
-        this IBotApiClient client, 
-        AddStickerToSetParameters parameters, 
+        this IBotApiClient client,
+        AddStickerToSetParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("addStickerToSet", parameters), cancellationToken);
 
@@ -221,8 +221,8 @@ public static partial class BotApiClientExtensions
         CancellationToken cancellationToken = default)
         => client.AddStickerToSetAsync(new AddStickerToSetParameters
         {
-            UserId = userId, 
-            Name = name, 
+            UserId = userId,
+            Name = name,
             Sticker = sticker
         }, cancellationToken);
 
@@ -232,8 +232,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> SetStickerPositionInSetAsync(
-        this IBotApiClient client, 
-        SetStickerPositionInSetParameters parameters, 
+        this IBotApiClient client,
+        SetStickerPositionInSetParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("setStickerPositionInSet", parameters), cancellationToken);
 
@@ -260,8 +260,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> DeleteStickerFromSetAsync(
-        this IBotApiClient client, 
-        DeleteStickerFromSetParameters parameters, 
+        this IBotApiClient client,
+        DeleteStickerFromSetParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("deleteStickerFromSet", parameters), cancellationToken);
 
@@ -285,8 +285,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> ReplaceStickerInSetAsync(
-        this IBotApiClient client, 
-        ReplaceStickerInSetParameters parameters, 
+        this IBotApiClient client,
+        ReplaceStickerInSetParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("replaceStickerInSet", parameters), cancellationToken);
 
@@ -307,9 +307,9 @@ public static partial class BotApiClientExtensions
         CancellationToken cancellationToken = default)
         => client.ReplaceStickerInSetAsync(new ReplaceStickerInSetParameters
         {
-            UserId = userId, 
-            Name = name, 
-            OldSticker = oldSticker, 
+            UserId = userId,
+            Name = name,
+            OldSticker = oldSticker,
             Sticker = sticker
         }, cancellationToken);
 
@@ -319,8 +319,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> SetStickerEmojiListAsync
-        (this IBotApiClient client, 
-        SetStickerEmojiListParameters parameters, 
+        (this IBotApiClient client,
+        SetStickerEmojiListParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("setStickerEmojiList", parameters), cancellationToken);
 
@@ -347,8 +347,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> SetStickerKeywordsAsync(
-        this IBotApiClient client, 
-        SetStickerKeywordsParameters parameters, 
+        this IBotApiClient client,
+        SetStickerKeywordsParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("setStickerKeywords", parameters), cancellationToken);
 
@@ -375,8 +375,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> SetStickerMaskPositionAsync(
-        this IBotApiClient client, 
-        SetStickerMaskPositionParameters parameters, 
+        this IBotApiClient client,
+        SetStickerMaskPositionParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("setStickerMaskPosition", parameters), cancellationToken);
 
@@ -403,8 +403,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> SetStickerSetTitleAsync(
-        this IBotApiClient client, 
-        SetStickerSetTitleParameters parameters, 
+        this IBotApiClient client,
+        SetStickerSetTitleParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("setStickerSetTitle", parameters), cancellationToken);
 
@@ -431,8 +431,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> SetStickerSetThumbnailAsync(
-        this IBotApiClient client, 
-        SetStickerSetThumbnailParameters parameters, 
+        this IBotApiClient client,
+        SetStickerSetThumbnailParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("setStickerSetThumbnail", parameters), cancellationToken);
 
@@ -465,8 +465,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> SetCustomEmojiStickerSetThumbnailAsync(
-        this IBotApiClient client, 
-        SetCustomEmojiStickerSetThumbnailParameters parameters, 
+        this IBotApiClient client,
+        SetCustomEmojiStickerSetThumbnailParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("setCustomEmojiStickerSetThumbnail", parameters), cancellationToken);
 
@@ -493,8 +493,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> DeleteStickerSetAsync(
-        this IBotApiClient client, 
-        DeleteStickerSetParameters parameters, 
+        this IBotApiClient client,
+        DeleteStickerSetParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("deleteStickerSet", parameters), cancellationToken);
 

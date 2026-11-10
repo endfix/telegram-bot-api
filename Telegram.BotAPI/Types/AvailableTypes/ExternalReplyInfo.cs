@@ -50,6 +50,11 @@ public sealed class ExternalReplyInfo
     /// <summary>Information about the voice file when the original message is a voice message.</summary>
     public Voice? Voice { get; init; }
 
+    /// <summary>
+    /// Information about the HTML widget when the original message is a widget message.
+    /// </summary>
+    public Widget? Widget { get; init; }
+
     /// <summary>Indicates whether the original message media is covered by a spoiler animation.</summary>
     public bool? HasMediaSpoiler { get; init; }
 

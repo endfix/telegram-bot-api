@@ -61,5 +61,11 @@ public enum MessageEntityType
     CustomEmoji,
 
     /// <summary>A formatted date and time.</summary>
-    DateTime
+    DateTime,
+
+    /// <summary>A bank card number.</summary>
+    BankCardNumber,
+
+    /// <summary>An address in the TON blockchain.</summary>
+    TonAddress
 }

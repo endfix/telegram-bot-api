@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Endfix.Telegram.BotAPI.Enums;
 using Endfix.Telegram.BotAPI.Protocol;
 using Endfix.Telegram.BotAPI.Types;
 
@@ -20,9 +21,9 @@ public sealed class PostStoryParameters : ApiRequestParameters
 
     /// <summary>Caption for the story, containing up to 2048 characters after entity parsing.</summary>
     public string? Caption { get; init; }
-    
+
     /// <summary>Mode used to parse entities in <see cref="Caption"/>.</summary>
-    public string? ParseMode { get; init; }
+    public ParseMode? ParseMode { get; init; }
 
     /// <summary>Special entities in the caption, specified instead of <see cref="ParseMode"/>.</summary>
     public IReadOnlyList<MessageEntity>? CaptionEntities { get; init; }

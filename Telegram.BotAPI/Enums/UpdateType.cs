@@ -85,5 +85,11 @@ public enum UpdateType
     Subscription,
 
     /// <summary>A user stopped message generation.</summary>
-    StoppedMessageGeneration
+    StoppedMessageGeneration,
+
+    /// <summary>A new query from a widget in a message sent by the bot or through the bot.</summary>
+    WidgetQuery,
+
+    /// <summary>A new query from a forwarded message with a shared widget.</summary>
+    SharedWidgetQuery
 }

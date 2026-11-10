@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Endfix.Telegram.BotAPI.Enums;
 using Endfix.Telegram.BotAPI.Protocol;
 using Endfix.Telegram.BotAPI.Types;
 
@@ -12,8 +13,8 @@ public sealed class SendMessageParameters : ApiRequestParameters
     /// <summary>Unique identifier of the business connection.</summary>
     public string? BusinessConnectionId { get; init; }
 
-    /// <summary>Target chat.</summary>
-    public required ChatIdSource ChatId { get; init; }
+    /// <summary>Target chat; optional only for an ephemeral reply to a callback query.</summary>
+    public ChatIdSource? ChatId { get; init; }
 
     /// <summary>Target message thread.</summary>
     public long? MessageThreadId { get; init; }
@@ -28,7 +29,7 @@ public sealed class SendMessageParameters : ApiRequestParameters
     public required string Text { get; init; }
 
     /// <summary>Mode for parsing entities in the message text.</summary>
-    public string? ParseMode { get; init; }
+    public ParseMode? ParseMode { get; init; }
 
     /// <summary>Explicit entities in the message text.</summary>
     public IReadOnlyList<MessageEntity>? Entities { get; init; }

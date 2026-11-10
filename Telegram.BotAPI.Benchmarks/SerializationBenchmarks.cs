@@ -1,3 +1,4 @@
+using Endfix.Telegram.BotAPI.Enums;
 using System.Collections.Generic;
 using BenchmarkDotNet.Attributes;
 using Endfix.Telegram.BotAPI.Extensions;
@@ -26,7 +27,7 @@ public class SerializationBenchmarks
             ChatId = 989722390L,
             MessageThreadId = 42,
             Text = "Benchmark message",
-            ParseMode = "HTML",
+            ParseMode = ParseMode.HTML,
             DisableNotification = true
         };
 

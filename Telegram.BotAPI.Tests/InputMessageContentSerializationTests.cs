@@ -1,5 +1,6 @@
 using System.Text.Json;
 using FluentAssertions;
+using Endfix.Telegram.BotAPI.Enums;
 using Endfix.Telegram.BotAPI.Extensions;
 using Endfix.Telegram.BotAPI.Types;
 using Xunit;
@@ -13,7 +14,7 @@ public class InputMessageContentSerializationTests
         new InputTextMessageContent
         {
             MessageText = "Inline response",
-            ParseMode = "HTML"
+            ParseMode = ParseMode.HTML
         },
         new InputRichMessageContent
         {
@@ -22,6 +23,24 @@ public class InputMessageContentSerializationTests
                 Markdown = "**Rich inline response**",
                 IsRtl = false
             }
+        },
+        new InputWidgetMessageContent
+        {
+            Html = "<div>Widget</div>",
+            Width = 320,
+            Height = 480,
+            PublicData = "public",
+            ChatData = "chat",
+            Caption = "Widget caption",
+            ParseMode = ParseMode.HTML,
+            AllowQueries = true,
+            IsShared = true
+        },
+        new InputSharedWidgetMessageContent
+        {
+            WidgetId = "shared-widget-id",
+            ChatData = "chat",
+            Caption = "Shared widget caption"
         },
         new InputLocationMessageContent
         {
@@ -75,5 +94,37 @@ public class InputMessageContentSerializationTests
         var act = () => "{}".Deserialize<InputMessageContent>();
 
         act.Should().Throw<JsonException>();
+    }
+
+    [Fact]
+    public void InputWidgetMessageContent_Serializes_Html()
+    {
+        var content = new InputWidgetMessageContent
+        {
+            Html = "<div>Widget</div>"
+        };
+
+        using var document = JsonDocument.Parse(content.Serialize());
+
+        document.RootElement.GetProperty("html").GetString().Should().Be("<div>Widget</div>");
+        "{\"html\":\"<div>Widget</div>\"}".Deserialize<InputMessageContent>()
+            .Should()
+            .BeOfType<InputWidgetMessageContent>();
+    }
+
+    [Fact]
+    public void InputSharedWidgetMessageContent_Serializes_WidgetId()
+    {
+        var content = new InputSharedWidgetMessageContent
+        {
+            WidgetId = "shared-widget-id"
+        };
+
+        using var document = JsonDocument.Parse(content.Serialize());
+
+        document.RootElement.GetProperty("widget_id").GetString().Should().Be("shared-widget-id");
+        "{\"widget_id\":\"shared-widget-id\"}".Deserialize<InputMessageContent>()
+            .Should()
+            .BeOfType<InputSharedWidgetMessageContent>();
     }
 }

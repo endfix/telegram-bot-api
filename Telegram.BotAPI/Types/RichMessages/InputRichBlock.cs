@@ -310,7 +310,7 @@ public sealed class InputRichBlockVoiceNote : InputRichBlock
     public RichBlockCaption? Caption { get; init; }
 }
 
-/// <summary>A “Thinking...” placeholder block for streamed rich message drafts.</summary>
+/// <summary>A "Thinking..." placeholder block for streamed rich message drafts.</summary>
 public sealed class InputRichBlockThinking : InputRichBlock
 {
     /// <inheritdoc/>

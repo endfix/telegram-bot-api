@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Endfix.Telegram.BotAPI.Enums;
 
 namespace Endfix.Telegram.BotAPI.Types;
 
@@ -15,7 +16,7 @@ public sealed class InputTextMessageContent : InputMessageContent
     public required string MessageText { get; init; }
 
     /// <summary>Mode used to parse entities in the message text.</summary>
-    public string? ParseMode { get; init; }
+    public ParseMode? ParseMode { get; init; }
 
     /// <summary>Explicit entities in the message text.</summary>
     public IReadOnlyList<MessageEntity>? Entities { get; init; }

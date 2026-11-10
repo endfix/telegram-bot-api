@@ -11,8 +11,8 @@ public sealed class SendRichMessageParameters : ApiRequestParameters
     /// <summary>Optional business connection identifier on behalf of which the message is sent.</summary>
     public string? BusinessConnectionId { get; init; }
 
-    /// <summary>Target chat identifier.</summary>
-    public required ChatIdSource ChatId { get; init; }
+    /// <summary>Target chat; optional only for an ephemeral reply to a callback query.</summary>
+    public ChatIdSource? ChatId { get; init; }
 
     /// <summary>Optional target forum topic identifier.</summary>
     public long? MessageThreadId { get; init; }

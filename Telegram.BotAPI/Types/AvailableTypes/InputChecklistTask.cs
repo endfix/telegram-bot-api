@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Endfix.Telegram.BotAPI.Enums;
 
 namespace Endfix.Telegram.BotAPI.Types;
 
@@ -11,9 +12,9 @@ public sealed class InputChecklistTask
     /// <summary>Text of the task; 1-100 characters after entity parsing.</summary>
     public required string Text { get; init; }
 
-    /// <summary>Optional. Mode for parsing entities in the task text.</summary>
-    public string? ParseMode { get; init; }
+    /// <summary>Mode for parsing entities in the task text.</summary>
+    public ParseMode? ParseMode { get; init; }
 
-    /// <summary>Optional. Special entities in the task text, specified instead of <see cref="ParseMode"/>. Only bold, italic, underline, strikethrough, spoiler, custom emoji and date-time entities are allowed.</summary>
+    /// <summary>Special entities in the task text; can be specified instead of <see cref="ParseMode"/>. Only bold, italic, underline, strikethrough, spoiler, custom emoji and date-time entities are allowed.</summary>
     public IReadOnlyList<MessageEntity>? TextEntities { get; init; }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Endfix.Telegram.BotAPI.Enums;
 
 namespace Endfix.Telegram.BotAPI.Types;
 
@@ -11,7 +12,7 @@ public sealed class InputPollOption
     public required string Text { get; init; }
 
     /// <summary>Optional mode for parsing entities in the option text.</summary>
-    public string? TextParseMode { get; init; }
+    public ParseMode? TextParseMode { get; init; }
 
     /// <summary>Optional special entities that appear in the option text.</summary>
     public IReadOnlyList<MessageEntity>? TextEntities { get; init; }

@@ -22,6 +22,7 @@ public static class JsonSerializerExtensions
         PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
         NumberHandling = JsonNumberHandling.AllowReadingFromString,
         Converters = {
+            new ParseModeConverter(),
             new JsonStringEnumConverter(namingPolicy: JsonNamingPolicy.SnakeCaseLower),
             new ChatIdSourceConverter(),
             new MediaSourceConverter(),
@@ -56,7 +57,10 @@ public static class JsonSerializerExtensions
             new InputPaidMediaConverter(),
             new InputRichBlockConverter(),
             new InputPollMediaConverter(),
-            new InputPollOptionMediaConverter()
+            new InputPollOptionMediaConverter(),
+            new WidgetQueryTypeConverter(),
+            new ChatShareThemeConverter(),
+            new EmojiTypeConverter()
         }
     };
 
@@ -79,7 +83,7 @@ public static class JsonSerializerExtensions
     /// <typeparam name="T">Type of value to deserialize.</typeparam>
     /// <param name="json">JSON text to deserialize.</param>
     /// <returns>The deserialized value, or the default value when <paramref name="json"/> is null or empty.</returns>
-    public static T? Deserialize<T>(this string json) 
+    public static T? Deserialize<T>(this string json)
         => string.IsNullOrEmpty(json) ? default : JsonSerializer.Deserialize<T>(json, Options);
 
     /// <summary>Asynchronously deserializes JSON from a stream using the Telegram Bot API serializer options.</summary>
@@ -96,6 +100,6 @@ public static class JsonSerializerExtensions
     /// <param name="obj">Value to serialize.</param>
     /// <param name="writeIndented">Whether to format the JSON with indentation.</param>
     /// <returns>The serialized JSON, or an empty string when <paramref name="obj"/> is null.</returns>
-    public static string Serialize(this object obj, bool writeIndented = false) 
+    public static string Serialize(this object obj, bool writeIndented = false)
         => obj is null ? string.Empty : JsonSerializer.Serialize(obj, writeIndented ? IndentedOptions : Options);
 }

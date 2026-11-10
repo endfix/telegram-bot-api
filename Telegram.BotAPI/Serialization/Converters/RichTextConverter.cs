@@ -47,6 +47,7 @@ internal sealed class RichTextConverter : JsonConverter<RichText>
             RichTextType.AnchorLink => root.Deserialize<RichTextAnchorLink>(options),
             RichTextType.Reference => root.Deserialize<RichTextReference>(options),
             RichTextType.ReferenceLink => root.Deserialize<RichTextReferenceLink>(options),
+            RichTextType.TonAddress => root.Deserialize<RichTextTonAddress>(options),
             _ => throw new JsonException($"Unknown RichText type: {typeProperty.GetString()}")
         };
     }

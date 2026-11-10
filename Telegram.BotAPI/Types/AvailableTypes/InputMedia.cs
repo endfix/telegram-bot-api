@@ -24,7 +24,7 @@ public abstract class InputMediaCaptionedFile : InputMediaFile
     public virtual string? Caption { get; init; }
 
     /// <summary>Mode used to parse entities in the caption, if supplied.</summary>
-    public virtual string? ParseMode { get; init; }
+    public virtual ParseMode? ParseMode { get; init; }
 
     /// <summary>Explicit entities in the caption, if supplied instead of a parse mode.</summary>
     public virtual IReadOnlyList<MessageEntity>? CaptionEntities { get; init; }

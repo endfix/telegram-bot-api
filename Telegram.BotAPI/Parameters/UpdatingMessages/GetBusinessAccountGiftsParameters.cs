@@ -5,7 +5,7 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// <summary>
 /// Parameters for the <c>getBusinessAccountGifts</c> method.
 /// </summary>
-public class GetBusinessAccountGiftsParameters : ApiRequestParameters
+public sealed class GetBusinessAccountGiftsParameters : ApiRequestParameters
 {
     /// <summary>Identifier of the business connection.</summary>
     public required string BusinessConnectionId { get; init; }

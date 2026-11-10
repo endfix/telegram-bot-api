@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Endfix.Telegram.BotAPI.Enums;
 using Endfix.Telegram.BotAPI.Protocol;
 using Endfix.Telegram.BotAPI.Types;
 
@@ -28,7 +29,7 @@ public sealed class SendGiftParameters : ApiRequestParameters
     /// Mode for parsing entities in <see cref="Text"/>. Entities other than bold, italic, underline,
     /// strikethrough, spoiler, custom emoji, and date-time entities are ignored.
     /// </summary>
-    public string? TextParseMode { get; init; }
+    public ParseMode? TextParseMode { get; init; }
 
     /// <summary>
     /// Special entities in the gift text; can be specified instead of <see cref="TextParseMode"/>.

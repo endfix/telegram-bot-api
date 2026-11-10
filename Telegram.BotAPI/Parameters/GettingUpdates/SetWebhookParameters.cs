@@ -8,7 +8,7 @@ namespace Endfix.Telegram.BotAPI.Parameters;
 /// <summary>
 /// Parameters for configuring an outgoing webhook with the <c>setWebhook</c> method.
 /// </summary>
-public class SetWebhookParameters : ApiRequestParameters
+public sealed class SetWebhookParameters : ApiRequestParameters
 {
     /// <summary>
     /// HTTPS URL where Telegram sends incoming updates. Set an empty string to remove the webhook.

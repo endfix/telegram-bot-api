@@ -319,7 +319,7 @@ public sealed class RichBlockVoiceNote : RichBlock
     public RichBlockCaption? Caption { get; init; }
 }
 
-/// <summary>A “Thinking...” placeholder block used in streamed rich message drafts.</summary>
+/// <summary>A "Thinking..." placeholder block used in streamed rich message drafts.</summary>
 public sealed class RichBlockThinking : RichBlock
 {
     /// <inheritdoc/>

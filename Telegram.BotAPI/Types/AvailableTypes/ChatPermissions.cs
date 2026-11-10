@@ -27,7 +27,7 @@ public sealed class ChatPermissions
     /// <summary>Indicates whether users can send polls.</summary>
     public bool? CanSendPolls { get; init; }
 
-    /// <summary>Indicates whether users can send other messages, such as stickers, animations, games or inline bots.</summary>
+    /// <summary>Indicates whether users can send other messages, such as stickers, animations, games, inline bots or widgets.</summary>
     public bool? CanSendOtherMessages { get; init; }
 
     /// <summary>Indicates whether users can add web page previews to their messages.</summary>

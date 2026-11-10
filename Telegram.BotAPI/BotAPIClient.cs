@@ -72,9 +72,9 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
     /// <param name="maxRetryAttempts">The maximum number of automatic retries for Telegram rate-limit responses.</param>
     /// <param name="logger">An optional client logger.</param>
     public BotApiClient(
-        string token, 
-        HttpClient? httpClient = null, 
-        string? url = null, 
+        string token,
+        HttpClient? httpClient = null,
+        string? url = null,
         int maxRetryAttempts = 6,
         ILogger<IBotApiClient>? logger = null)
     {
@@ -147,7 +147,7 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
 
         return builder.Uri;
     }
-    
+
     /// <summary>
     /// Sends a request and returns the Telegram API response envelope.
     /// </summary>
@@ -161,11 +161,11 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
     /// </remarks>
     /// <typeparam name="T">The expected result type.</typeparam>
     /// <param name="request">The request to send.</param>
-    /// <param name="cancellation">Token used to cancel the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The Telegram API response envelope.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">The client has been disposed.</exception>
-    public async Task<ApiResponse<T>> RequestAsync<T>(ApiRequest request, CancellationToken cancellation = default)
+    public async Task<ApiResponse<T>> RequestAsync<T>(ApiRequest request, CancellationToken cancellationToken = default)
     {
         ThrowIfDisposed();
 
@@ -176,14 +176,14 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
 
         for (var retryCount = 0; ; retryCount++)
         {
-            using var responseMessage = await SendRequestAsync(request, cancellation).ConfigureAwait(false);
+            using var responseMessage = await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
 
             ApiResponse<T>? apiResponse;
             try
             {
-                using var responseStream = await ReadContentStreamAsync(responseMessage.Content, cancellation)
+                using var responseStream = await ReadContentStreamAsync(responseMessage.Content, cancellationToken)
                     .ConfigureAwait(false);
-                apiResponse = await responseStream.DeserializeAsync<ApiResponse<T>>(cancellation).ConfigureAwait(false);
+                apiResponse = await responseStream.DeserializeAsync<ApiResponse<T>>(cancellationToken).ConfigureAwait(false);
             }
             catch (JsonException) when (!responseMessage.IsSuccessStatusCode)
             {
@@ -224,7 +224,7 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
                 retryCount + 1,
                 _maxRetryAttempts);
 
-            await Task.Delay(TimeSpan.FromSeconds(retryAfter), cancellation).ConfigureAwait(false);
+            await Task.Delay(TimeSpan.FromSeconds(retryAfter), cancellationToken).ConfigureAwait(false);
         }
     }
 
@@ -251,14 +251,14 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
     /// Downloads a Telegram file and rejects unsuccessful HTTP responses.
     /// </summary>
     /// <param name="filePath">Relative file path returned by <c>getFile</c>.</param>
-    /// <param name="cancellation">Token used to cancel the download.</param>
+    /// <param name="cancellationToken">Token used to cancel the download.</param>
     /// <returns>A byte array containing the complete file.</returns>
     /// <exception cref="ArgumentException"><paramref name="filePath"/> is empty or is not a safe relative path.</exception>
     /// <exception cref="ObjectDisposedException">The client has been disposed.</exception>
-    public async Task<byte[]> GetFileBytesAsync(string filePath, CancellationToken cancellation = default)
+    public async Task<byte[]> GetFileBytesAsync(string filePath, CancellationToken cancellationToken = default)
     {
         using var destination = new MemoryStream();
-        await DownloadFileAsync(filePath, destination, cancellation).ConfigureAwait(false);
+        await DownloadFileAsync(filePath, destination, cancellationToken).ConfigureAwait(false);
         return destination.ToArray();
     }
 

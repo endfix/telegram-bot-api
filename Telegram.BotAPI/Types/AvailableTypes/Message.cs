@@ -161,13 +161,18 @@ public sealed class Message : MaybeInaccessibleMessage
     /// <summary>Voice message contained in the message.</summary>
     public Voice? Voice { get; init; }
 
-    /// <summary>Caption for an animation, audio, document, paid media, photo, video, or voice message.</summary>
+    /// <summary>
+    /// Information about the HTML widget, if the message is a widget message.
+    /// </summary>
+    public Widget? Widget { get; init; }
+
+    /// <summary>Caption for an animation, audio, document, paid media, photo, video, voice or widget message.</summary>
     public string? Caption { get; init; }
 
     /// <summary>Special entities, such as usernames, URLs, and bot commands, that appear in <see cref="Caption"/>.</summary>
     public IReadOnlyList<MessageEntity>? CaptionEntities { get; init; }
 
-    /// <summary><see langword="true"/> when the caption is shown above the message media.</summary>
+    /// <summary><see langword="true"/> when the caption is shown above the message media or the widget.</summary>
     public bool? ShowCaptionAboveMedia { get; init; }
 
     /// <summary><see langword="true"/> when the message media is covered by a spoiler animation.</summary>
@@ -338,6 +343,12 @@ public sealed class Message : MaybeInaccessibleMessage
     /// <summary>Information from a service message about a change to the chat's paid-message price.</summary>
     public PaidMessagePriceChanged? PaidMessagePriceChanged { get; init; }
 
+    /// <summary>
+    /// Information about a service message indicating that the sender used a link that allows
+    /// messaging the user without paying Telegram Stars.
+    /// </summary>
+    public PaidMessagesWaived? PaidMessagesWaived { get; init; }
+
     /// <summary>Information from a service message about an answer option added to a poll.</summary>
     public PollOptionAdded? PollOptionAdded { get; init; }
 
@@ -358,6 +369,11 @@ public sealed class Message : MaybeInaccessibleMessage
 
     /// <summary>Information from a service message indicating that payment for a suggested post was refunded.</summary>
     public SuggestedPostRefunded? SuggestedPostRefunded { get; init; }
+
+    /// <summary>
+    /// Information about a service message for a transfer with a TON wallet.
+    /// </summary>
+    public TonWalletTransfer? TonWalletTransfer { get; init; }
 
     /// <summary>Information from a service message about a scheduled video chat.</summary>
     public VideoChatScheduled? VideoChatScheduled { get; init; }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Endfix.Telegram.BotAPI.Enums;
 using Endfix.Telegram.BotAPI.Protocol;
 using Endfix.Telegram.BotAPI.Types;
 
@@ -22,7 +23,7 @@ public sealed class SendMessageDraftParameters : ApiRequestParameters
     public string? Text { get; init; }
 
     /// <summary>Mode for parsing entities in <see cref="Text"/>.</summary>
-    public string? ParseMode { get; init; }
+    public ParseMode? ParseMode { get; init; }
 
     /// <summary>Special entities in <see cref="Text"/>; can be specified instead of <see cref="ParseMode"/>.</summary>
     public IReadOnlyList<MessageEntity>? Entities { get; init; }

@@ -164,4 +164,15 @@ public sealed class ChatFullInfo
 
     /// <summary>Community to which the chat belongs.</summary>
     public Community? Community { get; init; }
+
+    /// <summary>
+    /// For private chats, the TON wallet card of the user, which is shown on their profile page.
+    /// </summary>
+    public TonWalletCard? TonWalletCard { get; init; }
+
+    /// <summary>
+    /// For private chats, supergroups and channels, the theme of the screen for sharing a link to
+    /// the user or the chat; omitted if the default theme is used.
+    /// </summary>
+    public ChatShareTheme? ShareTheme { get; init; }
 }

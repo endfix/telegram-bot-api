@@ -11,8 +11,8 @@ public sealed class SendContactParameters : ApiRequestParameters
     /// <summary>Identifier of the business connection on whose behalf the message is sent.</summary>
     public string? BusinessConnectionId { get; init; }
 
-    /// <summary>Target chat identifier or username.</summary>
-    public required ChatIdSource ChatId { get; init; }
+    /// <summary>Target chat; optional only for an ephemeral reply to a callback query.</summary>
+    public ChatIdSource? ChatId { get; init; }
 
     /// <summary>Target message thread identifier.</summary>
     public long? MessageThreadId { get; init; }

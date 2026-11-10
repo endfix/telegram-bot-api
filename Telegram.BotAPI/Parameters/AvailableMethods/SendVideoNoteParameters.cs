@@ -11,8 +11,8 @@ public sealed class SendVideoNoteParameters : ApiRequestParameters
     /// <summary>Unique identifier of the business connection.</summary>
     public string? BusinessConnectionId { get; init; }
 
-    /// <summary>Target chat.</summary>
-    public required ChatIdSource ChatId { get; init; }
+    /// <summary>Target chat; optional only for an ephemeral reply to a callback query.</summary>
+    public ChatIdSource? ChatId { get; init; }
 
     /// <summary>Unique identifier of the target forum topic; for forum supergroups and private chats with forum topic mode enabled only.</summary>
     public long? MessageThreadId { get; init; }

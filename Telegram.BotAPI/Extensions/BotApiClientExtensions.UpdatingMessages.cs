@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Endfix.Telegram.BotAPI.Enums;
 using Endfix.Telegram.BotAPI.Parameters;
 using Endfix.Telegram.BotAPI.Protocol;
 using Endfix.Telegram.BotAPI.Types;
@@ -29,7 +30,7 @@ public static partial class BotApiClientExtensions
     /// <remarks>
     /// Maps to Telegram's <c>editMessageText</c> for a chat message identified by
     /// <c>chat_id</c> and <c>message_id</c>. For an inline message, call
-    /// <see cref="EditMessageTextForInlineMessageAsync(IBotApiClient, string, string, string?, string?, IReadOnlyList{MessageEntity}?, LinkPreviewOptions?, InputRichMessage?, InlineKeyboardMarkup?, CancellationToken)"/>.
+    /// <see cref="EditMessageTextForInlineMessageAsync(IBotApiClient, string, string, string?, ParseMode?, IReadOnlyList{MessageEntity}, LinkPreviewOptions, InputRichMessage, InlineKeyboardMarkup, CancellationToken)"/>.
     /// </remarks>
     /// <param name="client">Bot API client used to send the request.</param>
     /// <param name="chatId">Chat containing the ordinary message.</param>
@@ -49,7 +50,7 @@ public static partial class BotApiClientExtensions
         long messageId,
         string text,
         string? businessConnectionId = null,
-        string? parseMode = null,
+        ParseMode? parseMode = null,
         IReadOnlyList<MessageEntity>? entities = null,
         LinkPreviewOptions? linkPreviewOptions = null,
         InputRichMessage? richMessage = null,
@@ -90,7 +91,7 @@ public static partial class BotApiClientExtensions
     /// Maps to Telegram's <c>editMessageText</c> for an inline message identified by
     /// <c>inline_message_id</c>. Telegram returns <c>true</c> rather than a
     /// <see cref="Message"/>. For an ordinary chat message, call
-    /// <see cref="EditMessageTextForMessageAsync(IBotApiClient, ChatIdSource, long, string, string?, string?, IReadOnlyList{MessageEntity}?, LinkPreviewOptions?, InputRichMessage?, InlineKeyboardMarkup?, CancellationToken)"/>.
+    /// <see cref="EditMessageTextForMessageAsync(IBotApiClient, ChatIdSource, long, string, string?, ParseMode?, IReadOnlyList{MessageEntity}, LinkPreviewOptions, InputRichMessage, InlineKeyboardMarkup, CancellationToken)"/>.
     /// </remarks>
     /// <param name="client">Bot API client used to send the request.</param>
     /// <param name="inlineMessageId">Identifier of the inline message.</param>
@@ -108,7 +109,7 @@ public static partial class BotApiClientExtensions
         string inlineMessageId,
         string text,
         string? businessConnectionId = null,
-        string? parseMode = null,
+        ParseMode? parseMode = null,
         IReadOnlyList<MessageEntity>? entities = null,
         LinkPreviewOptions? linkPreviewOptions = null,
         InputRichMessage? richMessage = null,
@@ -146,7 +147,7 @@ public static partial class BotApiClientExtensions
     /// <remarks>
     /// Maps to Telegram's <c>editMessageCaption</c> for a chat message identified by
     /// <c>chat_id</c> and <c>message_id</c>. For an inline message, call
-    /// <see cref="EditMessageCaptionForInlineMessageAsync(IBotApiClient, string, string?, string?, string?, IReadOnlyList{MessageEntity}?, bool?, InlineKeyboardMarkup?, CancellationToken)"/>.
+    /// <see cref="EditMessageCaptionForInlineMessageAsync(IBotApiClient, string, string?, string?, ParseMode?, IReadOnlyList{MessageEntity}, bool?, InlineKeyboardMarkup, CancellationToken)"/>.
     /// </remarks>
     /// <param name="client">Bot API client used to send the request.</param>
     /// <param name="chatId">Chat containing the ordinary message.</param>
@@ -165,7 +166,7 @@ public static partial class BotApiClientExtensions
         long messageId,
         string? caption = null,
         string? businessConnectionId = null,
-        string? parseMode = null,
+        ParseMode? parseMode = null,
         IReadOnlyList<MessageEntity>? captionEntities = null,
         bool? showCaptionAboveMedia = null,
         InlineKeyboardMarkup? replyMarkup = null,
@@ -204,7 +205,7 @@ public static partial class BotApiClientExtensions
     /// Maps to Telegram's <c>editMessageCaption</c> for an inline message identified by
     /// <c>inline_message_id</c>. Telegram returns <c>true</c> rather than a
     /// <see cref="Message"/>. For an ordinary chat message, call
-    /// <see cref="EditMessageCaptionForMessageAsync(IBotApiClient, ChatIdSource, long, string?, string?, string?, IReadOnlyList{MessageEntity}?, bool?, InlineKeyboardMarkup?, CancellationToken)"/>.
+    /// <see cref="EditMessageCaptionForMessageAsync(IBotApiClient, ChatIdSource, long, string?, string?, ParseMode?, IReadOnlyList{MessageEntity}, bool?, InlineKeyboardMarkup, CancellationToken)"/>.
     /// </remarks>
     /// <param name="client">Bot API client used to send the request.</param>
     /// <param name="inlineMessageId">Identifier of the inline message.</param>
@@ -221,7 +222,7 @@ public static partial class BotApiClientExtensions
         string inlineMessageId,
         string? caption = null,
         string? businessConnectionId = null,
-        string? parseMode = null,
+        ParseMode? parseMode = null,
         IReadOnlyList<MessageEntity>? captionEntities = null,
         bool? showCaptionAboveMedia = null,
         InlineKeyboardMarkup? replyMarkup = null,
@@ -546,8 +547,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The edited message.</returns>
     public static Task<Message> EditMessageChecklistAsync(
-        this IBotApiClient client, 
-        EditMessageChecklistParameters parameters, 
+        this IBotApiClient client,
+        EditMessageChecklistParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<Message>(new ApiRequest("editMessageChecklist", parameters), cancellationToken);
 
@@ -575,6 +576,45 @@ public static partial class BotApiClientExtensions
             MessageId = messageId,
             Checklist = checklist,
             ReplyMarkup = replyMarkup
+        }, cancellationToken);
+
+    /// <summary>Edits widget data in a message sent by the bot or through the bot.</summary>
+    /// <remarks>A shared widget's public data can be changed at most once per second.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
+    public static Task<bool> EditMessageWidgetDataAsync(
+        this IBotApiClient client,
+        EditMessageWidgetDataParameters parameters,
+        CancellationToken cancellationToken = default)
+        => client.ExecuteAsync<bool>(new ApiRequest("editMessageWidgetData", parameters), cancellationToken);
+
+    /// <summary>Edits widget data in a message sent by the bot or through the bot.</summary>
+    /// <remarks>A shared widget's public data can be changed at most once per second.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="chatId">Target chat; required if <paramref name="inlineMessageId"/> is not specified.</param>
+    /// <param name="messageId">Identifier of the message with the widget; required if <paramref name="inlineMessageId"/> is not specified.</param>
+    /// <param name="inlineMessageId">Identifier of the inline message; required if <paramref name="chatId"/> and <paramref name="messageId"/> are not specified.</param>
+    /// <param name="publicData">New public data of the widget, from 0 through 1024 bytes; pass an empty string to remove the data. The current data is kept when omitted.</param>
+    /// <param name="chatData">New data of the widget that is specific to the message, from 0 through 1024 bytes; pass an empty string to remove the data. The current data is kept when omitted.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
+    public static Task<bool> EditMessageWidgetDataAsync(
+        this IBotApiClient client,
+        ChatIdSource? chatId = null,
+        long? messageId = null,
+        string? inlineMessageId = null,
+        string? publicData = null,
+        string? chatData = null,
+        CancellationToken cancellationToken = default)
+        => client.EditMessageWidgetDataAsync(new EditMessageWidgetDataParameters
+        {
+            ChatId = chatId,
+            MessageId = messageId,
+            InlineMessageId = inlineMessageId,
+            PublicData = publicData,
+            ChatData = chatData
         }, cancellationToken);
 
     /// <summary>Edits the inline keyboard of an ordinary chat message.</summary>
@@ -670,8 +710,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The stopped poll.</returns>
     public static Task<Poll> StopPollAsync(
-        this IBotApiClient client, 
-        StopPollParameters parameters, 
+        this IBotApiClient client,
+        StopPollParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<Poll>(new ApiRequest("stopPoll", parameters), cancellationToken);
 
@@ -704,8 +744,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> EditEphemeralMessageTextAsync(
-        this IBotApiClient client, 
-        EditEphemeralMessageTextParameters parameters, 
+        this IBotApiClient client,
+        EditEphemeralMessageTextParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("editEphemeralMessageText", parameters), cancellationToken);
 
@@ -727,7 +767,7 @@ public static partial class BotApiClientExtensions
         long receiverUserId,
         long ephemeralMessageId,
         string text,
-        string? parseMode = null,
+        ParseMode? parseMode = null,
         IReadOnlyList<MessageEntity>? entities = null,
         LinkPreviewOptions? linkPreviewOptions = null,
         InlineKeyboardMarkup? replyMarkup = null,
@@ -750,8 +790,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> EditEphemeralMessageMediaAsync(
-        this IBotApiClient client, 
-        EditEphemeralMessageMediaParameters parameters, 
+        this IBotApiClient client,
+        EditEphemeralMessageMediaParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("editEphemeralMessageMedia", parameters), cancellationToken);
 
@@ -787,8 +827,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> EditEphemeralMessageCaptionAsync(
-        this IBotApiClient client, 
-        EditEphemeralMessageCaptionParameters parameters, 
+        this IBotApiClient client,
+        EditEphemeralMessageCaptionParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("editEphemeralMessageCaption", parameters), cancellationToken);
 
@@ -810,7 +850,7 @@ public static partial class BotApiClientExtensions
         long receiverUserId,
         long ephemeralMessageId,
         string? caption = null,
-        string? parseMode = null,
+        ParseMode? parseMode = null,
         IReadOnlyList<MessageEntity>? captionEntities = null,
         bool? showCaptionAboveMedia = null,
         InlineKeyboardMarkup? replyMarkup = null,
@@ -827,14 +867,47 @@ public static partial class BotApiClientExtensions
             ReplyMarkup = replyMarkup
         }, cancellationToken);
 
+    /// <summary>Edits public data of a shared widget created by the bot.</summary>
+    /// <remarks>A shared widget can be edited at most once per second.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
+    public static Task<bool> EditSharedWidgetDataAsync(
+        this IBotApiClient client,
+        EditSharedWidgetDataParameters parameters,
+        CancellationToken cancellationToken = default)
+        => client.ExecuteAsync<bool>(new ApiRequest("editSharedWidgetData", parameters), cancellationToken);
+
+    /// <summary>Edits public data of a shared widget created by the bot.</summary>
+    /// <remarks>A shared widget can be edited at most once per second.</remarks>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="widgetId">Unique identifier of the shared widget.</param>
+    /// <param name="publicData">New public data of the widget, from 0 through 1024 bytes; pass an empty string to remove the data.</param>
+    /// <param name="cacheTime">Maximum time in seconds that clients may cache the public data of the widget, from 5 through 3600. The current value, 30 by default, is kept when omitted.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
+    public static Task<bool> EditSharedWidgetDataAsync(
+        this IBotApiClient client,
+        string widgetId,
+        string publicData,
+        int? cacheTime = null,
+        CancellationToken cancellationToken = default)
+        => client.EditSharedWidgetDataAsync(new EditSharedWidgetDataParameters
+        {
+            WidgetId = widgetId,
+            PublicData = publicData,
+            CacheTime = cacheTime
+        }, cancellationToken);
+
     /// <summary>Edits the inline keyboard of an ephemeral message.</summary>
     /// <param name="client">Bot API client used to send the request.</param>
     /// <param name="parameters">Ephemeral message identifier and replacement keyboard.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> EditEphemeralMessageReplyMarkupAsync(
-        this IBotApiClient client, 
-        EditEphemeralMessageReplyMarkupParameters parameters, 
+        this IBotApiClient client,
+        EditEphemeralMessageReplyMarkupParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("editEphemeralMessageReplyMarkup", parameters), cancellationToken);
 
@@ -867,7 +940,7 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> ApproveSuggestedPostAsync(
-        this IBotApiClient client, 
+        this IBotApiClient client,
         ApproveSuggestedPostParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("approveSuggestedPost", parameters), cancellationToken);
@@ -898,8 +971,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> DeclineSuggestedPostAsync(
-        this IBotApiClient client, 
-        DeclineSuggestedPostParameters parameters, 
+        this IBotApiClient client,
+        DeclineSuggestedPostParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("declineSuggestedPost", parameters), cancellationToken);
 
@@ -929,7 +1002,7 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> DeleteMessageAsync(
-        this IBotApiClient client, DeleteMessageParameters parameters, 
+        this IBotApiClient client, DeleteMessageParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("deleteMessage", parameters), cancellationToken);
 
@@ -956,8 +1029,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> DeleteMessagesAsync(
-        this IBotApiClient client, 
-        DeleteMessagesParameters parameters, 
+        this IBotApiClient client,
+        DeleteMessagesParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("deleteMessages", parameters), cancellationToken);
 
@@ -984,8 +1057,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> DeleteEphemeralMessageAsync(
-        this IBotApiClient client, 
-        DeleteEphemeralMessageParameters parameters, 
+        this IBotApiClient client,
+        DeleteEphemeralMessageParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("deleteEphemeralMessage", parameters), cancellationToken);
 
@@ -1015,8 +1088,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> DeleteMessageReactionAsync(
-        this IBotApiClient client, 
-        DeleteMessageReactionParameters parameters, 
+        this IBotApiClient client,
+        DeleteMessageReactionParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("deleteMessageReaction", parameters), cancellationToken);
 
@@ -1049,8 +1122,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> DeleteAllMessageReactionsAsync(
-        this IBotApiClient client, 
-        DeleteAllMessageReactionsParameters parameters, 
+        this IBotApiClient client,
+        DeleteAllMessageReactionsParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("deleteAllMessageReactions", parameters), cancellationToken);
 

@@ -17,6 +17,16 @@ internal sealed class InputMessageContentConverter : JsonConverter<InputMessageC
             return root.Deserialize<InputRichMessageContent>(options);
         }
 
+        if (root.TryGetProperty("widget_id", out _))
+        {
+            return root.Deserialize<InputSharedWidgetMessageContent>(options);
+        }
+
+        if (root.TryGetProperty("html", out _))
+        {
+            return root.Deserialize<InputWidgetMessageContent>(options);
+        }
+
         if (root.TryGetProperty("message_text", out _))
         {
             return root.Deserialize<InputTextMessageContent>(options);

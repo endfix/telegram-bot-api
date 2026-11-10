@@ -71,7 +71,7 @@ public sealed class InlineQueryResultPhoto : InlineQueryResult
     public string? Caption { get; init; }
 
     /// <summary>Mode for parsing entities in <see cref="Caption"/>.</summary>
-    public string? ParseMode { get; init; }
+    public ParseMode? ParseMode { get; init; }
 
     /// <summary>Special entities in <see cref="Caption"/>; can be specified instead of <see cref="ParseMode"/>.</summary>
     public MessageEntity[]? CaptionEntities { get; init; }
@@ -117,7 +117,7 @@ public sealed class InlineQueryResultGif : InlineQueryResult
     public string? Caption { get; init; }
 
     /// <summary>Mode for parsing entities in <see cref="Caption"/>.</summary>
-    public string? ParseMode { get; init; }
+    public ParseMode? ParseMode { get; init; }
 
     /// <summary>Special entities in <see cref="Caption"/>; can be specified instead of <see cref="ParseMode"/>.</summary>
     public MessageEntity[]? CaptionEntities { get; init; }
@@ -163,7 +163,7 @@ public sealed class InlineQueryResultMpeg4Gif : InlineQueryResult
     public string? Caption { get; init; }
 
     /// <summary>Mode for parsing entities in <see cref="Caption"/>.</summary>
-    public string? ParseMode { get; init; }
+    public ParseMode? ParseMode { get; init; }
 
     /// <summary>Special entities in <see cref="Caption"/>; can be specified instead of <see cref="ParseMode"/>.</summary>
     public MessageEntity[]? CaptionEntities { get; init; }
@@ -200,7 +200,7 @@ public sealed class InlineQueryResultVideo : InlineQueryResult
     public string? Caption { get; init; }
 
     /// <summary>Mode for parsing entities in <see cref="Caption"/>.</summary>
-    public string? ParseMode { get; init; }
+    public ParseMode? ParseMode { get; init; }
 
     /// <summary>Special entities in <see cref="Caption"/>; can be specified instead of <see cref="ParseMode"/>.</summary>
     public MessageEntity[]? CaptionEntities { get; init; }
@@ -243,7 +243,7 @@ public sealed class InlineQueryResultAudio : InlineQueryResult
     public string? Caption { get; init; }
 
     /// <summary>Mode for parsing entities in <see cref="Caption"/>.</summary>
-    public string? ParseMode { get; init; }
+    public ParseMode? ParseMode { get; init; }
 
     /// <summary>Special entities in <see cref="Caption"/>; can be specified instead of <see cref="ParseMode"/>.</summary>
     public MessageEntity[]? CaptionEntities { get; init; }
@@ -277,7 +277,7 @@ public sealed class InlineQueryResultVoice : InlineQueryResult
     public string? Caption { get; init; }
 
     /// <summary>Mode for parsing entities in <see cref="Caption"/>.</summary>
-    public string? ParseMode { get; init; }
+    public ParseMode? ParseMode { get; init; }
 
     /// <summary>Special entities in <see cref="Caption"/>; can be specified instead of <see cref="ParseMode"/>.</summary>
     public MessageEntity[]? CaptionEntities { get; init; }
@@ -305,7 +305,7 @@ public sealed class InlineQueryResultDocument : InlineQueryResult
     public string? Caption { get; init; }
 
     /// <summary>Mode for parsing entities in <see cref="Caption"/>.</summary>
-    public string? ParseMode { get; init; }
+    public ParseMode? ParseMode { get; init; }
 
     /// <summary>Special entities in <see cref="Caption"/>; can be specified instead of <see cref="ParseMode"/>.</summary>
     public MessageEntity[]? CaptionEntities { get; init; }
@@ -490,7 +490,7 @@ public sealed class InlineQueryResultCachedPhoto : InlineQueryResult
     public string? Caption { get; init; }
 
     /// <summary>Mode for parsing entities in <see cref="Caption"/>.</summary>
-    public string? ParseMode { get; init; }
+    public ParseMode? ParseMode { get; init; }
 
     /// <summary>Special entities in <see cref="Caption"/>; can be specified instead of <see cref="ParseMode"/>.</summary>
     public MessageEntity[]? CaptionEntities { get; init; }
@@ -521,7 +521,7 @@ public sealed class InlineQueryResultCachedGif : InlineQueryResult
     public string? Caption { get; init; }
 
     /// <summary>Mode for parsing entities in <see cref="Caption"/>.</summary>
-    public string? ParseMode { get; init; }
+    public ParseMode? ParseMode { get; init; }
 
     /// <summary>Special entities in <see cref="Caption"/>; can be specified instead of <see cref="ParseMode"/>.</summary>
     public MessageEntity[]? CaptionEntities { get; init; }
@@ -552,7 +552,7 @@ public sealed class InlineQueryResultCachedMpeg4Gif : InlineQueryResult
     public string? Caption { get; init; }
 
     /// <summary>Mode for parsing entities in <see cref="Caption"/>.</summary>
-    public string? ParseMode { get; init; }
+    public ParseMode? ParseMode { get; init; }
 
     /// <summary>Special entities in <see cref="Caption"/>; can be specified instead of <see cref="ParseMode"/>.</summary>
     public MessageEntity[]? CaptionEntities { get; init; }
@@ -602,7 +602,7 @@ public sealed class InlineQueryResultCachedDocument : InlineQueryResult
     public string? Caption { get; init; }
 
     /// <summary>Mode for parsing entities in <see cref="Caption"/>.</summary>
-    public string? ParseMode { get; init; }
+    public ParseMode? ParseMode { get; init; }
 
     /// <summary>Special entities in <see cref="Caption"/>; can be specified instead of <see cref="ParseMode"/>.</summary>
     public MessageEntity[]? CaptionEntities { get; init; }
@@ -633,7 +633,7 @@ public sealed class InlineQueryResultCachedVideo : InlineQueryResult
     public string? Caption { get; init; }
 
     /// <summary>Mode for parsing entities in <see cref="Caption"/>.</summary>
-    public string? ParseMode { get; init; }
+    public ParseMode? ParseMode { get; init; }
 
     /// <summary>Special entities in <see cref="Caption"/>; can be specified instead of <see cref="ParseMode"/>.</summary>
     public MessageEntity[]? CaptionEntities { get; init; }
@@ -664,7 +664,7 @@ public sealed class InlineQueryResultCachedVoice : InlineQueryResult
     public string? Caption { get; init; }
 
     /// <summary>Mode for parsing entities in <see cref="Caption"/>.</summary>
-    public string? ParseMode { get; init; }
+    public ParseMode? ParseMode { get; init; }
 
     /// <summary>Special entities in <see cref="Caption"/>; can be specified instead of <see cref="ParseMode"/>.</summary>
     public MessageEntity[]? CaptionEntities { get; init; }
@@ -689,7 +689,7 @@ public sealed class InlineQueryResultCachedAudio : InlineQueryResult
     public string? Caption { get; init; }
 
     /// <summary>Mode for parsing entities in <see cref="Caption"/>.</summary>
-    public string? ParseMode { get; init; }
+    public ParseMode? ParseMode { get; init; }
 
     /// <summary>Special entities in <see cref="Caption"/>; can be specified instead of <see cref="ParseMode"/>.</summary>
     public MessageEntity[]? CaptionEntities { get; init; }

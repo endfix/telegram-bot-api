@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Endfix.Telegram.BotAPI.Enums;
 using Endfix.Telegram.BotAPI.Protocol;
 using Endfix.Telegram.BotAPI.Types;
 
@@ -22,7 +23,7 @@ public sealed class EditEphemeralMessageTextParameters : ApiRequestParameters
     public required string Text { get; init; }
 
     /// <summary>Mode for parsing entities in the message text.</summary>
-    public string? ParseMode { get; init; }
+    public ParseMode? ParseMode { get; init; }
 
     /// <summary>Explicit entities in the message text.</summary>
     public IReadOnlyList<MessageEntity>? Entities { get; init; }

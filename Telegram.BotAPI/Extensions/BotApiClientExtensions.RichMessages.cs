@@ -38,7 +38,7 @@ public static partial class BotApiClientExtensions
     /// <returns>The sent message.</returns>
     public static Task<Message> SendRichMessageAsync(
         this IBotApiClient client,
-        ChatIdSource chatId,
+        ChatIdSource? chatId,
         InputRichMessage richMessage,
         string? businessConnectionId = null,
         long? messageThreadId = null,

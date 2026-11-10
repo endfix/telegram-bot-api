@@ -34,11 +34,11 @@ public interface IBotApiClient
     /// </remarks>
     /// <typeparam name="T">The expected result type.</typeparam>
     /// <param name="request">The request to send.</param>
-    /// <param name="cancellation">Token used to cancel the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The Telegram API response envelope.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/>.</exception>
     /// <exception cref="ObjectDisposedException">The client has been disposed.</exception>
-    Task<ApiResponse<T>> RequestAsync<T>(ApiRequest request, CancellationToken cancellation = default);
+    Task<ApiResponse<T>> RequestAsync<T>(ApiRequest request, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Sends a request and returns its result, throwing <see cref="Exceptions.ApiRequestException"/>
@@ -54,11 +54,11 @@ public interface IBotApiClient
     /// Downloads a Telegram file and rejects unsuccessful HTTP responses.
     /// </summary>
     /// <param name="filePath">Relative file path returned by <c>getFile</c>.</param>
-    /// <param name="cancellation">Token used to cancel the download.</param>
+    /// <param name="cancellationToken">Token used to cancel the download.</param>
     /// <returns>A byte array containing the complete file.</returns>
     /// <exception cref="ArgumentException"><paramref name="filePath"/> is empty or is not a safe relative path.</exception>
     /// <exception cref="ObjectDisposedException">The client has been disposed.</exception>
-    Task<byte[]> GetFileBytesAsync(string filePath, CancellationToken cancellation = default);
+    Task<byte[]> GetFileBytesAsync(string filePath, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Downloads a Telegram file into a destination stream without buffering the complete file in memory.

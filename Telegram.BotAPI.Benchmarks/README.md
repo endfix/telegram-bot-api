@@ -200,3 +200,41 @@ collection. The measured path is in-process local HTTP; after warm-up the
 working set stayed in RAM and zram swap stayed unused, so the SD-card root is
 the boot and install surface. These numbers stay in this ARM section; they
 are not mixed into `RESULTS.md`.
+
+### Snapshot: Raspberry Pi 4 Model B, 10 November 2026 (`v2.0.0`)
+
+Same board as the 24 September snapshot, re-run for the `2.0.0` release on a
+self-contained `linux-arm64` build of commit `bb633f5`.
+
+| Property | Value |
+| --- | --- |
+| Board | Raspberry Pi 4 Model B Rev 1.1 |
+| CPU | 4 × ARM Cortex-A72, 600–1500 MHz, 128 KiB L1d + 192 KiB L1i + 1 MiB L2 |
+| RAM | 1.8 GiB usable (2 GB SKU), 1.8 GiB swap unused |
+| Storage | microSD `/dev/mmcblk0p2`, 15 GB ext4 |
+| OS | Debian GNU/Linux 13 (trixie), kernel `6.18.50+rpt-rpi-v8` aarch64 |
+| Runtime | TFM `net9.0`, self-contained runtime **9.0.22**, Arm64 RyuJIT armv8.0-a |
+| GC | concurrent Workstation |
+| Cooling | No heatsink on the SoC; a 5 V fan above the board only |
+| Governor | `ondemand` |
+| Thermal | 77.9 °C at the end of the sweep, `vcgencmd get_throttled=0x0`, ARM clock ~1500 MHz |
+| Harness | BenchmarkDotNet 0.15.8 host banner; stress runner `--stress` |
+
+One million local `sendMessage` calls:
+
+| Profile | Elapsed | Average | Allocated/op | Retained | Gen1 / Gen2 |
+| --- | ---: | ---: | ---: | ---: | --- |
+| Sequential 1 | 29.63 s | 29.63 µs/op | 4088.0 B | +0.9 KB | 2 / 0 |
+| Sequential 2 | 29.94 s | 29.94 µs/op | 4088.0 B | +0.9 KB | 2 / 0 |
+| Sequential 3 | 30.48 s | 30.48 µs/op | 4088.0 B | −7.1 KB | 3 / 0 |
+| Parallel 4 (1) | 12.78 s | 12.78 µs/op | 4088.0 B | +0.2 KB | 1 / 0 |
+| Parallel 4 (2) | 13.07 s | 13.07 µs/op | 4088.0 B | +0.2 KB | 1 / 0 |
+| Parallel 4 (3) | 12.85 s | 12.85 µs/op | 4088.0 B | −0.5 KB | 1 / 0 |
+
+Allocated bytes per operation are `4088.0 B` instead of the `4064.0 B` seen on
+this board in September. The difference is exactly the `Message` growth in
+`2.0.0`: three new reference properties add 24 B on arm64 as well, and the
+same `+24 B` appears on x64. No Gen2 collection occurs in a million calls and
+retained managed memory stays within ±8 KB. Wall time is unchanged within the
+board's run-to-run scatter (September sequential was 29.68 s; the `2.0.0`
+runs are 29.63–30.48 s).

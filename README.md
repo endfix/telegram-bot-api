@@ -1,5 +1,9 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/endfix/telegram-bot-api/main/icon.png" width="128" alt="Telegram Bot API (C#)"/>
+</p>
+
 # Telegram Bot API (C#)
-[![Bot%20API](https://img.shields.io/badge/Bot%20API-10.3-26A5E4.svg?logo=telegram&logoColor=white)](https://core.telegram.org/bots/api#august-24-2026)
+[![Bot%20API](https://img.shields.io/badge/Bot%20API-10.4-26A5E4.svg?logo=telegram&logoColor=white)](https://core.telegram.org/bots/api#november-9-2026)
 [![Targets](https://img.shields.io/badge/targets-net8.0%20%7C%20netstandard2.0-512BD4.svg?logo=dotnet&logoColor=white)](#runtime-compatibility)
 [![NuGet](https://img.shields.io/nuget/v/Endfix.Telegram.BotAPI.svg?logo=nuget&logoColor=white&color=004880)](https://www.nuget.org/packages/Endfix.Telegram.BotAPI/)
 
@@ -29,16 +33,40 @@ Use this package when you need explicit control over requests and serialization.
 If you want an application framework with routing or dialogs, see Telegram's
 list of community [.NET Bot API libraries](https://core.telegram.org/bots/samples#net).
 
-The project follows the Telegram Bot API release it targets. Version `1.0`
+The project follows the Telegram Bot API release it targets. Version `2.0`
 freezes the public contract: incompatible changes require a major version.
 New Bot API methods and additive models are minor versions.
 
 See [CHANGELOG.md](CHANGELOG.md) for release notes and unreleased changes.
 
+## Migrating from 1.x to 2.0
+
+Version `2.0` targets Bot API `10.4` and contains intentional source and binary
+breaking changes that were deferred from the `1.x` line:
+
+- `ParseMode` is now an enum in `Endfix.Telegram.BotAPI.Enums` instead of a class
+  of string constants. Every `parse_mode` property and parameter uses
+  `ParseMode?`. Add `using Endfix.Telegram.BotAPI.Enums;` and replace
+  `ParseMode = "HTML"` with `ParseMode = ParseMode.HTML`. The wire values stay
+  `MarkdownV2`, `HTML`, and `Markdown`.
+- `StoryAreaPosition` was renamed to `AreaPosition`; update type references.
+- The send-message convenience overloads accept `ChatIdSource? chatId`, and the
+  matching send parameters no longer require `ChatId`. Pass a chat for a regular
+  send; omit it only for an ephemeral reply to a callback query.
+- `EphemeralMessageParameters.ReceiverUserId` is optional when the message is an
+  ephemeral reply to a callback query.
+- `GetMyNameParameters`, `SetWebhookParameters`, and
+  `GetBusinessAccountGiftsParameters` are sealed.
+- `RequestAsync` and `GetFileBytesAsync` renamed the `cancellation` parameter to
+  `cancellationToken` on `BotApiClient` and `IBotApiClient`. Update named
+  arguments that use `cancellation:`.
+- Package validation has no baseline for `2.0.0`; the compatibility check
+  against `2.0.0` resumes with the next release.
+
 ## Installation
 
 ```bash
-dotnet add package Endfix.Telegram.BotAPI --version 1.0.2
+dotnet add package Endfix.Telegram.BotAPI --version 2.0.0
 ```
 
 ## Quick start
@@ -196,6 +224,7 @@ or parameter shape that is not wrapped yet, derive from `ApiRequestParameters`
 and send it through `RequestAsync` or `ExecuteAsync`:
 
 ```cs
+using Endfix.Telegram.BotAPI.Enums;
 using Endfix.Telegram.BotAPI.Protocol;
 using Endfix.Telegram.BotAPI.Types;
 
@@ -203,7 +232,7 @@ public sealed class CustomSendMessageParameters : ApiRequestParameters
 {
     public required ChatIdSource ChatId { get; init; }
     public required string Text { get; init; }
-    public string? ParseMode { get; init; }
+    public ParseMode? ParseMode { get; init; }
 }
 
 var response = await api.RequestAsync<Message>(new ApiRequest(
@@ -212,7 +241,7 @@ var response = await api.RequestAsync<Message>(new ApiRequest(
     {
         ChatId = 123456789L,
         Text = "Hello from custom parameters",
-        ParseMode = "HTML"
+        ParseMode = ParseMode.HTML
     }));
 
 if (!response.Ok)
@@ -481,7 +510,7 @@ and million-call stress profiles are in the [latest benchmark report](https://gi
 
 Descriptions of Telegram objects, fields and method parameters are aligned with
 the [official Bot API documentation](https://core.telegram.org/bots/api). The
-current repository snapshot targets Bot API `10.3` (published August 24, 2026).
+current repository snapshot targets Bot API `10.4` (published November 9, 2026).
 Telegram may clarify or extend descriptions without changing a .NET type, so
 the source version and date should be reviewed when updating XML documentation.
 Library-specific behavior, such as stream ownership, retryability and polling

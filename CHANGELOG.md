@@ -7,11 +7,80 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
-### Fixed
+## [2.0.0] - 2026-11-10
 
+Targets Bot API 10.4 (November 9, 2026). This is a major release with the
+intentional breaking changes listed under **Changed**.
+
+### Added
+
+- Bot API 10.4 widgets: `Widget`, `Message.Widget`,
+  `ExternalReplyInfo.Widget`, `SendWidgetAsync`, `SendSharedWidgetAsync`,
+  `WidgetQuery`, `SharedWidgetQuery`, `Update.WidgetQuery`,
+  `Update.SharedWidgetQuery`, `WidgetQueryType` with `WidgetQueryTypeData`,
+  `WidgetQueryTypeSignData`, `WidgetQueryTypeSentTransaction`, and
+  `WidgetQueryWallet`, plus `AnswerWidgetQueryAsync`, `EditMessageWidgetDataAsync`,
+  `EditSharedWidgetDataAsync`, `InputWidgetMessageContent`, and
+  `InputSharedWidgetMessageContent`.
+- Bot API 10.4 ephemeral callback replies: `chat_id` and
+  `EphemeralMessageParameters.ReceiverUserId` are now optional.
+- Bot API 10.4 quotes from rich messages: `TextQuote.RichTexts` and
+  `ReplyParameters.QuoteRichTexts`.
+- Bot API 10.4 TON wallet support: `TonWalletCard`,
+  `TonWalletCardSticker`, `TonNft`, `TonNftAttribute`,
+  `ChatFullInfo.TonWalletCard`, `TonWalletTransfer`, and
+  `Message.TonWalletTransfer`.
+- Bot API 10.4 chat share themes: `ChatShareTheme`,
+  `ChatShareThemeEmoji`, `ChatShareThemeUniqueGift`,
+  `ChatFullInfo.ShareTheme`, `EmojiType`, `EmojiTypeEmoji`,
+  `EmojiTypeCustomEmoji`, `ChatShareThemeBackdrop`,
+  `ChatShareThemeBackdrops`, and `GetChatShareThemeBackdropsAsync`.
+- Bot API 10.4 gifts: `GetUniqueGiftAsync` for `getUniqueGift` and
+  `DeleteBusinessAccountGiftAsync` for `deleteBusinessAccountGift`.
+- Bot API 10.4 general coverage: `RichTextTonAddress`,
+  `RichTextType.TonAddress`, `MessageEntityType.TonAddress`,
+  `MessageEntityType.BankCardNumber`,
+  `KeyboardButtonRequestManagedBot.SuggestedUsername`,
+  `custom_description_parse_mode` and `custom_description_entities` on
+  `VerifyUserAsync` and `VerifyChatAsync`, and `PaidMessagesWaived` with
+  `Message.PaidMessagesWaived`.
+- Tests for the 10.4 serialization contract, `ParseMode` wire values, and the
+  widget inline message content shapes.
+- A package icon for NuGet and GitHub.
+
+### Changed
+
+- **Breaking:** `ParseMode` is an enum instead of a class of string
+  constants. All `parse_mode` properties and parameters now use `ParseMode?`;
+  the wire values remain `MarkdownV2`, `HTML`, and `Markdown`.
+- **Breaking:** renamed `StoryAreaPosition` to `AreaPosition` because Telegram
+  now also uses it for TON wallet card stickers.
+- **Breaking:** `ChatId` is optional in the send parameters for `sendMessage`,
+  `sendAnimation`, `sendAudio`, `sendContact`, `sendDocument`, `sendLivePhoto`,
+  `sendLocation`, `sendPhoto`, `sendSticker`, `sendVenue`, `sendVideo`,
+  `sendVideoNote`, `sendVoice`, and `sendRichMessage`, and the matching
+  convenience overloads accept `ChatIdSource?`. A chat is still required except
+  for an ephemeral reply to a callback query.
+- **Breaking:** sealed `GetMyNameParameters`, `SetWebhookParameters`, and
+  `GetBusinessAccountGiftsParameters`.
+- **Breaking:** renamed the `cancellation` parameter to `cancellationToken` in
+  `RequestAsync` and `GetFileBytesAsync` on `BotApiClient` and
+  `IBotApiClient`.
+- Package validation has no baseline for `2.0.0`; restore the `2.0.0` baseline
+  after this release is published.
 - The publish workflow now stamps the release tag into
   `AssemblyInformationalVersion`, so the packaged assembly reports the released
   version instead of the default `1.0.0`.
+
+### Fixed
+
+- `InputWidgetMessageContent` and `InputSharedWidgetMessageContent` now derive
+  from `InputMessageContent`, and the inline content converter recognizes the
+  `html` and `widget_id` shapes.
+- Corrected stale XML documentation references and descriptions for the renamed
+  types and methods.
+- Removed a stray `Enums` using from `KeyboardButtonRequestManagedBot` and
+  repaired corrupted quotation characters in XML documentation.
 
 ## [1.0.2] - 2026-11-05
 

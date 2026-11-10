@@ -12,7 +12,7 @@ public class GettingUpdatesSerializationTests
         Utils.AssertRoundtrip(new Update
         {
             UpdateId = 1001,
-            Message = new() { 
+            Message = new() {
                 MessageId = 2002,
                 MessageThreadId = 3003,
                 Chat = new()

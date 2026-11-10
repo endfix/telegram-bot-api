@@ -18,7 +18,7 @@ internal sealed class MessageOriginConverter : JsonConverter<MessageOrigin>
         {
             throw new JsonException("Missing discriminator 'type' in MessageOrigin");
         }
-        
+
         return type switch
         {
             MessageOriginType.User => root.Deserialize<MessageOriginUser>(options),

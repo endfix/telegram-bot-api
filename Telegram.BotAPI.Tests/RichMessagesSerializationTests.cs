@@ -38,8 +38,8 @@ public class RichMessagesSerializationTests
                 new RichBlockTable
                 {
                     Cells = [[ new RichBlockTableCell { Text = "Header", IsHeader = true, Colspan = 1, Rowspan = 1, Align = Enums.RichBlockTableCellAlign.Center, Valign = Enums.RichBlockTableCellVAlign.Middle } ]],
-                    IsBordered = true, 
-                    IsStriped = true, 
+                    IsBordered = true,
+                    IsStriped = true,
                     Caption = "Table caption"
                 },
                 new RichBlockDetails
@@ -51,7 +51,7 @@ public class RichMessagesSerializationTests
                 GetRichBlockMap(),
                 new RichBlockAnimation
                 {
-                    Animation = new Animation 
+                    Animation = new Animation
                     {
                         FileId = "animation-file-id",
                         FileUniqueId = "animation-unique-id",
@@ -92,7 +92,7 @@ public class RichMessagesSerializationTests
                 },
                 new RichBlockVoiceNote
                 {
-                    VoiceNote = new Voice 
+                    VoiceNote = new Voice
                     {
                         FileId = "voice-file-id",
                         FileUniqueId = "voice-unique-id",
@@ -153,14 +153,14 @@ public class RichMessagesSerializationTests
         => new() { Text = "Media caption", Credit = "Author" };
 
     private  static RichBlockMap GetRichBlockMap()
-        => new() { 
+        => new() {
             Location = new Location
             {
                 Latitude = 55.7558,
                 Longitude = 37.6173
-            }, 
-            Width = 100, 
-            Height = 100, 
-            Zoom = 1 
+            },
+            Width = 100,
+            Height = 100,
+            Zoom = 1
         };
 }

@@ -9,7 +9,7 @@ namespace Endfix.Telegram.BotAPI.Exceptions;
 /// <param name="errorCode">The Telegram API error code.</param>
 /// <param name="description">The error description returned by Telegram.</param>
 /// <param name="parameters">Optional response parameters supplied by Telegram.</param>
-public sealed class ApiRequestException(int errorCode, string? description, ApiResponseParameters? parameters = null) 
+public sealed class ApiRequestException(int errorCode, string? description, ApiResponseParameters? parameters = null)
     : Exception(description ?? $"API Error {errorCode}")
 {
     /// <summary>

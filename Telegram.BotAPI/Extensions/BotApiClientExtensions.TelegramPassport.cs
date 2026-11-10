@@ -17,8 +17,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> SetPassportDataErrorsAsync(
-        this IBotApiClient client, 
-        SetPassportDataErrorsParameters parameters, 
+        this IBotApiClient client,
+        SetPassportDataErrorsParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("setPassportDataErrors", parameters), cancellationToken);
 

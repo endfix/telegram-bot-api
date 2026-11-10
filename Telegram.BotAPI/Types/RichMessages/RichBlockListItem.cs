@@ -18,7 +18,7 @@ public sealed class RichBlockListItem
 
     /// <summary>True if the item's checkbox is checked.</summary>
     public bool? IsChecked { get; init; }
-    
+
     /// <summary>Optional numeric value associated with the item.</summary>
     public int? Value { get; init; }
 

@@ -17,8 +17,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The sent game message.</returns>
     public static Task<Message> SendGameAsync(
-        this IBotApiClient client, 
-        SendGameParameters parameters, 
+        this IBotApiClient client,
+        SendGameParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<Message>(new ApiRequest("sendGame", parameters), cancellationToken);
 
@@ -76,8 +76,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The edited game message.</returns>
     public static Task<Message> SetGameScoreForMessageAsync(
-        this IBotApiClient client, 
-        SetGameScoreParameters parameters, 
+        this IBotApiClient client,
+        SetGameScoreParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<Message>(new ApiRequest("setGameScore", parameters), cancellationToken);
 
@@ -170,8 +170,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The requested rows from the game's high-score table.</returns>
     public static Task<IReadOnlyList<GameHighScore>> GetGameHighScoresAsync(
-        this IBotApiClient client, 
-        GetGameHighScoresParameters parameters, 
+        this IBotApiClient client,
+        GetGameHighScoresParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<IReadOnlyList<GameHighScore>>(new ApiRequest("getGameHighScores", parameters), cancellationToken);
 
@@ -193,9 +193,9 @@ public static partial class BotApiClientExtensions
         string? inlineMessageId = null,
         CancellationToken cancellationToken = default)
         => client.GetGameHighScoresAsync(new GetGameHighScoresParameters
-        { 
+        {
             UserId = userId,
-            ChatId = chatId, 
+            ChatId = chatId,
             MessageId = messageId,
             InlineMessageId = inlineMessageId
         }, cancellationToken);

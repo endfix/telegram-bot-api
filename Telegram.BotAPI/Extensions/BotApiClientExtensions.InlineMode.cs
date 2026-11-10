@@ -15,8 +15,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> AnswerInlineQueryAsync(
-        this IBotApiClient client, 
-        AnswerInlineQueryParameters parameters, 
+        this IBotApiClient client,
+        AnswerInlineQueryParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("answerInlineQuery", parameters), cancellationToken);
 
@@ -55,8 +55,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The message sent on behalf of the user.</returns>
     public static Task<SentWebAppMessage> AnswerWebAppQueryAsync(
-        this IBotApiClient client, 
-        AnswerWebAppQueryParameters parameters, 
+        this IBotApiClient client,
+        AnswerWebAppQueryParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<SentWebAppMessage>(new ApiRequest("answerWebAppQuery", parameters), cancellationToken);
 
@@ -83,8 +83,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The prepared inline message.</returns>
     public static Task<PreparedInlineMessage> SavePreparedInlineMessageAsync(
-        this IBotApiClient client, 
-        SavePreparedInlineMessageParameters parameters, 
+        this IBotApiClient client,
+        SavePreparedInlineMessageParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<PreparedInlineMessage>(new ApiRequest("savePreparedInlineMessage", parameters), cancellationToken);
 
@@ -123,8 +123,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The prepared keyboard button.</returns>
     public static Task<PreparedKeyboardButton> SavePreparedKeyboardButtonAsync(
-        this IBotApiClient client, 
-        SavePreparedKeyboardButtonParameters parameters, 
+        this IBotApiClient client,
+        SavePreparedKeyboardButtonParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<PreparedKeyboardButton>(new ApiRequest("savePreparedKeyboardButton", parameters), cancellationToken);
 

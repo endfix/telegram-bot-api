@@ -15,8 +15,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The message containing the invoice.</returns>
     public static Task<Message> SendInvoiceAsync(
-        this IBotApiClient client, 
-        SendInvoiceParameters parameters, 
+        this IBotApiClient client,
+        SendInvoiceParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<Message>(new ApiRequest("sendInvoice", parameters), cancellationToken);
 
@@ -130,8 +130,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The created invoice link.</returns>
     public static Task<string> CreateInvoiceLinkAsync(
-        this IBotApiClient client, 
-        CreateInvoiceLinkParameters parameters, 
+        this IBotApiClient client,
+        CreateInvoiceLinkParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<string>(new ApiRequest("createInvoiceLink", parameters), cancellationToken);
 
@@ -218,8 +218,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> AnswerShippingQueryAsync(
-        this IBotApiClient client, 
-        AnswerShippingQueryParameters parameters, 
+        this IBotApiClient client,
+        AnswerShippingQueryParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("answerShippingQuery", parameters), cancellationToken);
 
@@ -252,8 +252,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> AnswerPreCheckoutQueryAsync(
-        this IBotApiClient client, 
-        AnswerPreCheckoutQueryParameters parameters, 
+        this IBotApiClient client,
+        AnswerPreCheckoutQueryParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("answerPreCheckoutQuery", parameters), cancellationToken);
 
@@ -283,8 +283,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The bot's current Telegram Stars balance.</returns>
     public static Task<StarAmount> GetMyStarBalanceAsync(
-        this IBotApiClient client, 
-        GetMyStarBalanceParameters parameters, 
+        this IBotApiClient client,
+        GetMyStarBalanceParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<StarAmount>(new ApiRequest("getMyStarBalance", parameters), cancellationToken);
 
@@ -293,7 +293,7 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The bot's current Telegram Stars balance.</returns>
     public static Task<StarAmount> GetMyStarBalanceAsync(
-        this IBotApiClient client, 
+        this IBotApiClient client,
         CancellationToken cancellationToken = default)
         => client.GetMyStarBalanceAsync(new GetMyStarBalanceParameters
         {
@@ -306,8 +306,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The bot's Telegram Stars transactions.</returns>
     public static Task<StarTransactions> GetStarTransactionsAsync(
-        this IBotApiClient client, 
-        GetStarTransactionsParameters parameters, 
+        this IBotApiClient client,
+        GetStarTransactionsParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<StarTransactions>(new ApiRequest("getStarTransactions", parameters), cancellationToken);
 
@@ -334,8 +334,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> RefundStarPaymentAsync(
-        this IBotApiClient client, 
-        RefundStarPaymentParameters parameters, 
+        this IBotApiClient client,
+        RefundStarPaymentParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("refundStarPayment", parameters), cancellationToken);
 
@@ -362,8 +362,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> EditUserStarSubscriptionAsync(
-        this IBotApiClient client, 
-        EditUserStarSubscriptionParameters parameters, 
+        this IBotApiClient client,
+        EditUserStarSubscriptionParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("editUserStarSubscription", parameters), cancellationToken);
 

@@ -18,7 +18,7 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The available updates, or an empty collection when no updates are available.</returns>
     public static Task<IReadOnlyList<Update>?> GetUpdatesAsync(
-        this IBotApiClient client, 
+        this IBotApiClient client,
         GetUpdatesParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<IReadOnlyList<Update>?>(new ApiRequest("getUpdates", parameters), cancellationToken);
@@ -56,8 +56,8 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> SetWebhookAsync(
-        this IBotApiClient client, 
-        SetWebhookParameters parameters, 
+        this IBotApiClient client,
+        SetWebhookParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("setWebhook", parameters), cancellationToken);
 
@@ -85,7 +85,7 @@ public static partial class BotApiClientExtensions
         string? secretToken = null,
         CancellationToken cancellationToken = default)
         => client.SetWebhookAsync(new SetWebhookParameters
-        { 
+        {
             Url = url,
             Certificate = certificate,
             IpAddress = ipAddress,
@@ -103,7 +103,7 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns><see langword="true"/> on success.</returns>
     public static Task<bool> DeleteWebhookAsync(
-        this IBotApiClient client, 
+        this IBotApiClient client,
         DeleteWebhookParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<bool>(new ApiRequest("deleteWebhook", parameters), cancellationToken);
@@ -132,7 +132,7 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The current webhook status.</returns>
     public static Task<WebhookInfo> GetWebhookInfoAsync(
-        this IBotApiClient client, 
+        this IBotApiClient client,
         GetWebhookInfoParameters parameters,
         CancellationToken cancellationToken = default)
         => client.ExecuteAsync<WebhookInfo>(new ApiRequest("getWebhookInfo", parameters), cancellationToken);
@@ -144,7 +144,7 @@ public static partial class BotApiClientExtensions
     /// <param name="cancellationToken">Token used to cancel the request.</param>
     /// <returns>The current webhook status.</returns>
     public static Task<WebhookInfo> GetWebhookInfoAsync(
-        this IBotApiClient client, 
+        this IBotApiClient client,
         CancellationToken cancellationToken = default)
         => client.GetWebhookInfoAsync(new GetWebhookInfoParameters
         {

@@ -201,6 +201,44 @@ Run details: same host and BenchmarkDotNet setup as the canonical snapshot,
 [`benchmark-data.json`](benchmark-data.json) yet; the next full run will add
 them as canonical rows.
 
+## Lazy request URI cache
+
+Every request used to build its own `Uri`:
+
+```csharp
+new Uri(_baseAddress, $"./bot{_token}/{request.MethodName}")
+```
+
+A lambda probe on the same host measured that shape at 144 B for the relative
+string plus about 496 B for the `Uri`, and another 280 B once the path is
+materialized, which `HttpClient` does. In other words, URI construction was
+roughly 900 B of the local pipeline, not the 100-200 B that the first estimate
+assumed.
+
+`BotApiClient` now keeps one `ConcurrentDictionary<string, Uri>` per instance
+and resolves the URI lazily on first use of each method name. The absolute URI
+embeds the token, so the table cannot be shared between clients; it is also
+lazy, because eagerly prebuilding all 193 method URIs costs 133,496 B and
+147.5 µs per client and would only pay back after about 145 requests.
+
+Focused run on November 12, 2026, same host as the other focused runs,
+`--filter '*TransportBenchmarks*'`:
+
+| Scenario | Before | After | Change |
+| --- | ---: | ---: | ---: |
+| `RequestAndDeserialize` | 4.363 µs / 4,157 B / Gen0 0.2441 | 3.596 µs / 3,758 B / Gen0 0.2365 | −17.6% time, −399 B, −3.1% Gen0 |
+| `RequestWithoutParametersAndDeserialize` | 3.260 µs / 3,707 B / Gen0 0.2289 | 2.642 µs / 3,348 B / Gen0 0.2098 | −19.0% time, −359 B, −8.3% Gen0 |
+
+The saving is smaller than the probe cost because the benchmark token and
+method names are short, so the discarded strings were shorter than in the
+probe. The cached entry stays at zero allocation on every subsequent call, and
+the memory cost is one dictionary entry plus one `Uri` (about 600 B) per
+distinct method name that a client actually uses.
+
+The `RequestAndDeserialize` and `RequestWithoutParametersAndDeserialize` rows
+in [`benchmark-data.json`](benchmark-data.json) still hold the pre-cache values;
+the next full run will refresh them.
+
 ## Absolute snapshot versus `cfaa5ce`
 
 These numbers are recorded for the canonical snapshot. Read the deltas with

@@ -53,6 +53,11 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
 
     private readonly Uri _baseAddress;
 
+    private readonly ConcurrentDictionary<string, Uri> _requestUris =
+        new(StringComparer.Ordinal);
+
+    private readonly Func<string, Uri> _createRequestUri;
+
     private readonly int _maxRetryAttempts;
 
     private readonly ILogger<IBotApiClient> _logger;
@@ -92,6 +97,11 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
 
         _baseAddress = EnsureTrailingSlash(
             explicitBaseAddress ?? _httpClient.BaseAddress ?? _defaultBaseAddress);
+
+        // Built lazily per method name and kept for the lifetime of the client:
+        // an absolute Uri embeds the token, so it cannot be shared between clients.
+        _createRequestUri = methodName =>
+            new Uri(_baseAddress, $"./bot{_token}/{methodName}");
 
         _maxRetryAttempts = maxRetryAttempts;
 
@@ -347,7 +357,7 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
         ApiRequest request,
         CancellationToken cancellationToken)
     {
-        var requestUri = new Uri(_baseAddress, $"./bot{_token}/{request.MethodName}");
+        var requestUri = _requestUris.GetOrAdd(request.MethodName, _createRequestUri);
         var parameters = request.Parameters;
 
         if (parameters is null)

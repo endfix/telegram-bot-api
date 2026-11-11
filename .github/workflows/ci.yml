@@ -13,6 +13,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
+      - name: Validate README rendering
+        # README.md ships inside the package; nuget.org escapes raw HTML and
+        # cannot resolve repository-relative links.
+        shell: pwsh
+        run: ./scripts/check-readme.ps1
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:

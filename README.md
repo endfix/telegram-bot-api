@@ -35,7 +35,7 @@ The project follows the Telegram Bot API release it targets. Version `2.0`
 freezes the public contract: incompatible changes require a major version.
 New Bot API methods and additive models are minor versions.
 
-See [CHANGELOG.md](CHANGELOG.md) for release notes and unreleased changes.
+See [CHANGELOG.md](https://github.com/endfix/telegram-bot-api/blob/main/CHANGELOG.md) for release notes and unreleased changes.
 
 ## Migrating from 1.x to 2.0
 
@@ -472,6 +472,10 @@ applications. One executes the native `net8.0` asset on .NET 8; the other
 executes the `netstandard2.0` fallback in a .NET 6 Docker container. These smoke
 tests use an in-memory HTTP handler and require neither a bot token nor network
 access to Telegram. See the [package smoke guide](https://github.com/endfix/telegram-bot-api/blob/main/eng/PackageSmoke/README.md) for the exact checks and local commands.
+
+This README is packed into the package, so CI also runs
+`scripts/check-readme.ps1`. It rejects raw HTML and repository-relative links,
+because nuget.org escapes the former and cannot resolve the latter.
 
 ## Benchmarks
 

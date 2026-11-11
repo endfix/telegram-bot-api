@@ -1,6 +1,4 @@
-<p align="center">
-  <img src="https://raw.githubusercontent.com/endfix/telegram-bot-api/main/icon.png" width="128" alt="Telegram Bot API (C#)"/>
-</p>
+![Telegram Bot API (C#)](https://raw.githubusercontent.com/endfix/telegram-bot-api/main/icon.png)
 
 # Telegram Bot API (C#)
 [![Bot%20API](https://img.shields.io/badge/Bot%20API-10.4-26A5E4.svg?logo=telegram&logoColor=white)](https://core.telegram.org/bots/api#november-9-2026)

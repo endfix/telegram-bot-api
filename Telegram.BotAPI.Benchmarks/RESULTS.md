@@ -1,64 +1,61 @@
 # Current performance results
 
-Captured on November 10, 2026 for `v2.0.0` (Bot API 10.4), commit
-`bb633f586ae4d5bda59502a0e6b32ab95bef5291` (`v2.0.0-0-gbb633f5`). The
-previous canonical snapshot is commit
+Captured on November 12, 2026 for commit
+`c61abe273607c401d24796bebd1228f698c9b7f3` (`v2.0.0-7-gc61abe2`), the first
+snapshot after the `2.0.0` release. The previous canonical snapshot is
+`bb633f586ae4d5bda59502a0e6b32ab95bef5291` (`v2.0.0-0-gbb633f5`) from
+November 10; the 1.x baseline is
 `cfaa5ce15fde576063faf98ff4f3a7747eb6cf72` (`v1.0.0-5-gcfaa5ce`) from
 September 24.
 
 ## Summary
 
-`2.0.0` is a breaking release that adds the Bot API 10.4 types and changes
-`chat_id` to an optional `ChatIdSource?` on request parameters. It does not
-change the local request algorithm: no-file parameterized requests are still
-sent as `application/json`, and multipart is still used only when a request
-carries a file source.
+The only library change since `2.0.0` is a lazy per-client cache of request
+`Uri` instances in `BotApiClient`. The request algorithm, the JSON pipeline, and
+the entity model are untouched: no-file parameterized requests are still sent as
+`application/json`, and multipart is still used only when a request carries a
+file source.
 
-Two allocation changes follow directly from the new API surface:
-
-- `Message` grew by exactly three reference properties (`Widget`,
-  `PaidMessagesWaived`, `TonWalletTransfer`), so one instance is `968 B`
-  instead of `944 B` (+24 B).
-- `SendMessageParameters.ChatId` is now `ChatIdSource?`. `ChatIdSource` is a
-  `readonly struct` with a single reference field (8 B) and
-  `Nullable<ChatIdSource>` is 16 B, so every parameter object carrying a
-  `chat_id` grew by 8 B.
-
-Timings are not directly comparable with September: the same machine drifted
-by a median of +5.3% across all 82 rows, and pure `File.OpenRead` rows moved
-by +19.6…21.7%. The report therefore uses an alternating old/new A/B control
-on the same machine to decide whether `2.0.0` regressed anything. Across
-three independent protocols the transport delta changes sign and never
-exceeds the run-to-run scatter, so there is no reproducible timing
-regression.
-
-Six independent million-call stress processes allocated exactly
-`4088.0 B/op` (the September figure was `4064.0 B/op`; the +24 B is the
-`Message` growth) and still retained less managed memory after a full GC.
+- 51 of the 84 scenarios allocate `328–424 B` less per operation. That is the
+  interpolated relative path and the parsed `Uri` that used to be rebuilt on
+  every request; the exact size follows the token and method-name lengths.
+- 26 scenarios are byte-identical to `2.0.0`: serialization, rich-message
+  complexity, `OpenLocalFile`, and the preloaded-memory stream writes. Five
+  file-stream rows moved by `−2…+15 B` because they embed a generated temporary
+  path whose length varies between runs.
+- `Transport.RequestAndDeserialize` falls from `5,147.4 ns / 4,160 B` to
+  `3,378.1 ns / 3,760 B` (`−34.4%`, `−400 B`), and
+  `RequestWithoutParametersAndDeserialize` from `3,292.1 ns / 3,704 B` to
+  `2,520.4 ns / 3,344 B` (`−23.4%`, `−360 B`).
+- Six independent million-call stress processes allocate `3688.0 B/op` instead
+  of `4088.0 B/op` (`−9.8%`) and complete in `4.61–4.66 s` sequential and
+  `1.84–1.88 s` at ten workers, versus `5.42–5.55 s` and `2.10–2.13 s`.
+- The 26 allocation-identical rows provide the drift control for this run: their
+  timings moved by a median of `−3.0%` (`−9.0…+5.6%`), far below the
+  `−23…−34%` seen on the transport rows.
 
 ## Reproducibility
 
 | Property | Value |
 | --- | --- |
-| Commit | `bb633f586ae4d5bda59502a0e6b32ab95bef5291` |
-| Version description | `v2.0.0-0-gbb633f5` |
+| Commit | `c61abe273607c401d24796bebd1228f698c9b7f3` |
+| Version description | `v2.0.0-7-gc61abe2` |
 | Working tree | Clean before the run |
-| Full-run window | `09:44–10:09`, `Europe/Moscow` |
+| Full-run window | `01:59–02:25`, `Europe/Moscow` |
 | OS | Windows 10 `10.0.19045.6466` |
 | CPU | Intel Xeon E5-2690 v3, 12 physical / 24 logical cores |
-| SDK / runtime | .NET SDK `9.0.320`, runtime `9.0.22` |
+| SDK / runtime | .NET SDK `9.0.321`, runtime `9.0.23` |
 | JIT / GC | X64 RyuJIT x86-64-v3, concurrent Workstation GC |
 | Library asset | Native `net8.0` |
 | JSON runtime | Platform-provided `System.Text.Json` 9 |
 | BenchmarkDotNet | `0.15.8`, DefaultJob, separate process |
 | Power plan | High performance |
-| Result | 82/82 scenarios, 25 minutes 25 seconds |
+| Result | 84/84 scenarios, 25 minutes 3 seconds |
 
-The previous snapshot used SDK `9.0.318` and runtime `9.0.20`. A control run
-of the September sources on runtime `9.0.22` produced the same allocations as
-the September snapshot (`1712 B` for `DeserializeMessage`, `320 B` for
-`DeserializeParameters`), so the runtime patch is not responsible for any
-allocation difference in this report.
+The `2.0.0` snapshot used SDK `9.0.320` and runtime `9.0.22`; this run used
+runtime `9.0.23`. The 26 allocation-identical rows are the control for that
+patch change: their timings moved by a median of `−3.0%`, so no serialization
+change is claimed from this run.
 
 All numeric data behind this report is available in
 [`benchmark-data.json`](benchmark-data.json). JSON numbers use invariant
@@ -68,30 +65,49 @@ Full-run command:
 
 ```powershell
 dotnet run --project Telegram.BotAPI.Benchmarks\Telegram.BotAPI.Benchmarks.csproj `
-  -c Release --no-launch-profile -- --filter * --join
+  -c Release -- --filter * --join
 ```
 
 Every comparison below matches rows by benchmark type, method, and parameters.
 
-## Machine drift
+## Changes since `2.0.0`
 
-Comparing the full `2.0.0` run with the September canonical snapshot gives a
-median delta of `+5.3%` and a mean of `+7.0%` across 82 matching rows. The
-slowest rows are the ones that do not touch library code at all:
+`bb633f5` and `c61abe2` were measured on the same host two days apart, so the
+allocation comparison is exact and the timing comparison is directionally
+useful. The 26 rows that do not build a request are unchanged and act as the
+drift control for time: their median delta is `−3.0%` with a `−9.0…+5.6%`
+range.
 
-| Diagnostic row | September | November | Change |
-| --- | ---: | ---: | ---: |
-| `OpenLocalFile` 256 B | 189.2 μs | 226.3 μs | +19.6% |
-| `OpenLocalFile` 1 MiB | 185.9 μs | 226.2 μs | +21.7% |
-| `PrepareSingleFile` 256 B | 211.9 μs | 258.2 μs | +21.8% |
-| `WriteScalar` 64 KiB | 2.45 μs | 2.98 μs | +21.4% |
+| Scenario | `2.0.0` | Now | Time | Allocated |
+| --- | ---: | ---: | ---: | ---: |
+| `Transport.RequestAndDeserialize` | 5,147.4 ns / 4,160 B | 3,378.1 ns / 3,760 B | −34.4% | −400 B |
+| `Transport.RequestWithoutParametersAndDeserialize` | 3,292.1 ns / 3,704 B | 2,520.4 ns / 3,344 B | −23.4% | −360 B |
+| `Multipart.SendMessage` | 2,648.1 ns / 2,104 B | 1,807.4 ns / 1,704 B | −31.7% | −400 B |
+| `SendPhotoByFileId` | 3,624.0 ns / 2,144 B | 2,740.4 ns / 1,760 B | −24.4% | −384 B |
+| `SendMediaGroupByFileId10` | 10,225.4 ns / 3,704 B | 9,181.9 ns / 3,288 B | −10.2% | −416 B |
+| `SendMediaGroupByLocalFile10` | 2,324.8 μs / 28,353 B | 2,309.0 μs / 27,937 B | −0.7% | −416 B |
+| `SerializeMessage` | 3,229.0 ns / 600 B | 2,939.8 ns / 600 B | −9.0% | unchanged |
+| `DeserializeMessage` | 1,179.4 ns / 1,736 B | 1,141.4 ns / 1,736 B | −3.2% | unchanged |
 
-`File.OpenRead` alone moved by about a fifth without a single line of library
-code changing, so absolute September-versus-November timings cannot separate
-a regression from machine state. Only the A/B control below is used for the
-timing verdict.
+The allocation saving is one relative string plus one `Uri` per request, so it
+sits in a narrow band: `−424 B` for the longest method name in the set,
+`−328…−400 B` for the rest. Rows that only serialize or deserialize do not
+build a request and do not move. The five `WriteFileStreams` rows differ by
+`−2…+15 B` because their multipart body embeds a generated temporary path whose
+length changes between runs; that is unrelated to the client.
 
-## A/B control: `cfaa5ce` versus `bb633f5`
+Timing tells the same story. Rows whose time is dominated by request
+construction improved by 10–34%, including `PrepareScalar` (`−27.8…−30.5%`) and
+`WriteScalar` (`−28.2…−38.3%`), which are multipart diagnostics that still build
+a request URI. Path-backed uploads moved only `−0.7…−6.7%` because
+`File.OpenRead` dominates them: `2,309.0 μs` for the 10-part local-file media
+group against `219.2 μs` for opening one file. Serialization rows stayed inside
+the drift range (`−9.0…+5.6%`).
+
+## Historical: A/B control `cfaa5ce` versus `bb633f5` (the `2.0.0` release)
+
+The protocols below established the `2.0.0` allocation story and are kept as
+the release record. They are not measurements of the current snapshot.
 
 Protocol: both trees were built with the same SDK and runtime, each round ran
 17 benchmarks (serialization, transport, multipart) from its own repository
@@ -152,7 +168,10 @@ in-memory `HttpMessageHandler`:
 Allocation deltas are exact and reproduce in every protocol; timing deltas do
 not reproduce and are within the scatter of this in-memory benchmark.
 
-## Allocation changes in 2.0.0
+## Historical: allocation changes in `2.0.0`
+
+These types and allocations belong to the `2.0.0` release and have not changed
+since.
 
 Measured directly against the two built DLLs with
 `GC.GetAllocatedBytesForCurrentThread` (100,000 object-creation iterations,
@@ -175,19 +194,19 @@ The other 77 canonical rows have byte-identical allocations. The three new
 ## Realistic message shape
 
 The canonical serialization rows use a 131-character message with one chat and
-no media, so they measure the type floor rather than a real update. A focused
-run on November 12, 2026 added a photo post as Telegram actually delivers it:
-media group, author, chat, four photo sizes, caption text and three caption
-entities (bold, URL, mention with a nested user).
+no media, so they measure the type floor rather than a real update. The set also
+contains a photo post as Telegram actually delivers it: media group, author,
+chat, four photo sizes, caption text and three caption entities (bold, URL,
+mention with a nested user).
 
 | Scenario | Mean | Allocated | Gen0 / 1000 ops |
 | --- | ---: | ---: | ---: |
-| `SerializeMessage` (synthetic) | 3.22 µs | 600 B | 0.038 |
-| `DeserializeMessage` (synthetic) | 1.15 µs | 1,736 B | 0.111 |
-| `SerializePhotoMessage` | 9.58 µs | 2,720 B | 0.168 |
-| `DeserializePhotoMessage` | 8.45 µs | 4,080 B | 0.259 |
+| `SerializeMessage` (synthetic) | 2.94 µs | 600 B | 0.038 |
+| `DeserializeMessage` (synthetic) | 1.14 µs | 1,736 B | 0.111 |
+| `SerializePhotoMessage` | 8.68 µs | 2,720 B | 0.168 |
+| `DeserializePhotoMessage` | 8.34 µs | 4,080 B | 0.259 |
 
-A realistic photo post costs `2.35×` the allocation and `7.4×` the time of the
+A realistic photo post costs `2.35×` the allocation and `7.3×` the time of the
 synthetic message. The extra `2,344 B` are the objects the JSON describes, not
 serializer overhead: four `PhotoSize` instances, three `MessageEntity`
 instances, two `User` instances, the caption and file-id strings, and the
@@ -195,11 +214,8 @@ instances, two `User` instances, the caption and file-id strings, and the
 stays in generation 0: `0.2594` collections per 1,000 operations is one Gen0
 collection per roughly 3,850 messages, with no Gen1 or Gen2 activity.
 
-Run details: same host and BenchmarkDotNet setup as the canonical snapshot,
-`--filter '*SerializationBenchmarks*'`, 10 benchmarks, 3 minutes 27 seconds,
-.NET 9.0.23 (the canonical run used 9.0.22). These two benchmarks are not in
-[`benchmark-data.json`](benchmark-data.json) yet; the next full run will add
-them as canonical rows.
+Both scenarios were added to the benchmark set after the `2.0.0` snapshot and
+these rows are now part of the canonical run.
 
 ## Lazy request URI cache
 
@@ -221,28 +237,29 @@ embeds the token, so the table cannot be shared between clients; it is also
 lazy, because eagerly prebuilding all 193 method URIs costs 133,496 B and
 147.5 µs per client and would only pay back after about 145 requests.
 
-Focused run on November 12, 2026, same host as the other focused runs,
-`--filter '*TransportBenchmarks*'`:
+Canonical run on November 12, 2026, same host:
 
-| Scenario | Before | After | Change |
+| Scenario | `2.0.0` | Now | Change |
 | --- | ---: | ---: | ---: |
-| `RequestAndDeserialize` | 4.363 µs / 4,157 B / Gen0 0.2441 | 3.596 µs / 3,758 B / Gen0 0.2365 | −17.6% time, −399 B, −3.1% Gen0 |
-| `RequestWithoutParametersAndDeserialize` | 3.260 µs / 3,707 B / Gen0 0.2289 | 2.642 µs / 3,348 B / Gen0 0.2098 | −19.0% time, −359 B, −8.3% Gen0 |
+| `RequestAndDeserialize` | 5,147.4 ns / 4,160 B / Gen0 0.2441 | 3,378.1 ns / 3,760 B / Gen0 0.2365 | −34.4% time, −400 B |
+| `RequestWithoutParametersAndDeserialize` | 3,292.1 ns / 3,704 B / Gen0 0.2289 | 2,520.4 ns / 3,344 B / Gen0 0.2098 | −23.4% time, −360 B |
+
+An earlier focused run on the same day measured `−17.6%` and `−19.0%` for the
+same pair; the canonical run is faster because the machine was quieter and the
+run used the joined configuration. The allocation delta is the reliable part.
 
 The saving is smaller than the probe cost because the benchmark token and
 method names are short, so the discarded strings were shorter than in the
 probe. The cached entry stays at zero allocation on every subsequent call, and
 the memory cost is one dictionary entry plus one `Uri` (about 600 B) per
-distinct method name that a client actually uses.
+distinct method name that a client actually uses. The stress runs below show
+the same `400 B` drop per million-call operation (`4088.0 → 3688.0 B/op`).
 
-The `RequestAndDeserialize` and `RequestWithoutParametersAndDeserialize` rows
-in [`benchmark-data.json`](benchmark-data.json) still hold the pre-cache values;
-the next full run will refresh them.
+## Historical: absolute snapshot versus `cfaa5ce` (the `2.0.0` release)
 
-## Absolute snapshot versus `cfaa5ce`
-
-These numbers are recorded for the canonical snapshot. Read the deltas with
-the machine-drift caveat above; they are not evidence of a code change.
+These numbers record the `2.0.0` comparison with the September `1.x` baseline.
+The deltas mix the release changes with machine drift and are not evidence about
+the current snapshot.
 
 ### Serialization
 
@@ -292,29 +309,34 @@ the path-backed prepare is `520.7 μs / 11632 B`. The extra time is
 `File.OpenRead`, which is exactly the diagnostic row that drifted by about a
 fifth on this machine.
 
-`WriteSingleFile` at 64 KiB is `2.98 μs` versus `OpenLocalFile` `226.3 μs`.
+`WriteScalar` at 64 KiB is `2.98 μs` versus `OpenLocalFile` `225.3 μs`.
 Path-backed uploads remain filesystem-dominated.
 
 ## Stress: 1,000,000 local `sendMessage` calls
 
-Three sequential and three parallel (`maxParallel = 10`) processes. Every run
-used concurrent Workstation GC.
+Three sequential and three parallel (`maxParallel = 10`) processes, run directly
+after the full BenchmarkDotNet set. Every run used concurrent Workstation GC.
 
-| Profile | Elapsed | Allocated/op | Retained delta | Gen1 / Gen2 |
-| --- | ---: | ---: | ---: | --- |
-| Sequential 1 | 5.42 s | 4088.0 B | −16.4 KB | 0 / 0 |
-| Sequential 2 | 5.55 s | 4088.0 B | −8.3 KB | 0 / 0 |
-| Sequential 3 | 5.47 s | 4088.0 B | −8.3 KB | 0 / 0 |
-| Parallel 1 | 2.10 s | 4088.0 B | −15.5 KB | 0 / 0 |
-| Parallel 2 | 2.12 s | 4088.0 B | −15.5 KB | 0 / 0 |
-| Parallel 3 | 2.13 s | 4088.0 B | −15.5 KB | 0 / 0 |
+| Profile | Elapsed | Allocated/op | Retained delta | Gen0 | Gen1 / Gen2 |
+| --- | ---: | ---: | ---: | ---: | --- |
+| Sequential 1 | 4.61 s | 3688.0 B | −8.3 KB | 235 | 0 / 0 |
+| Sequential 2 | 4.66 s | 3688.0 B | −8.3 KB | 235 | 0 / 0 |
+| Sequential 3 | 4.62 s | 3688.0 B | −8.3 KB | 235 | 0 / 0 |
+| Parallel 1 | 1.84 s | 3688.0 B | −15.5 KB | 261 | 0 / 0 |
+| Parallel 2 | 1.86 s | 3688.0 B | −15.5 KB | 261 | 0 / 0 |
+| Parallel 3 | 1.88 s | 3688.0 B | −15.5 KB | 261 | 0 / 0 |
 
-The `+24 B/op` versus September is the `Message` growth, not a runtime or GC
-change: the old sources running on runtime `9.0.22` also allocate
-`4064.0 B/op`. Retained managed memory after a full GC still decreases in
-every run, and there are no Gen1 or Gen2 collections in a million calls.
+The `−400 B/op` against the `2.0.0` snapshot is the cached request URI: a
+million calls now allocate `3,517.2 MB` instead of `3,898.6 MB`. Wall time
+dropped from `5.42–5.55 s` to `4.61–4.66 s` sequential and from `2.10–2.13 s` to
+`1.84–1.88 s` at ten workers. Sequential Gen0 collections fall from `260` to
+`235`; the parallel profile stays at `261`, so the remaining allocation volume
+still drives the same number of collections.
 
-Working Set still grows (sequential `44 → 60 MB`, parallel `58 → 65 MB`)
+Retained managed memory after a full GC still decreases in every run, and there
+are no Gen1 or Gen2 collections in a million calls.
+
+Working Set still grows (sequential `44 → 60 MB`, parallel `57 → 63 MB`)
 because the process starts from a small footprint and then pays for JIT,
 ThreadPool, and runtime caches. That is the same pattern as the previous
 snapshots.
@@ -325,23 +347,28 @@ snapshots.
 - `Stream.Null` does not model real data transmission.
 - They do not compare different machines, GC modes, or runtime patches.
 - A small timing delta without a focused repeat is not a proven regression.
-- The A/B transport rows are smaller than the run-to-run scatter of this
-  in-memory benchmark, so no timing direction should be quoted from them.
+- The historical `2.0.0` A/B transport rows are smaller than the run-to-run
+  scatter of this in-memory benchmark, so no timing direction should be quoted
+  from them.
 
 ## Review conclusion
 
-Commit `bb633f5` (`v2.0.0`) is the performance snapshot for the 2.0 line:
+Commit `c61abe2` is the current performance snapshot for the 2.0 line:
 
-1. The local request algorithm did not change; no-file requests stay JSON.
-2. Allocations moved only where the API surface moved: `+24 B` for `Message`
-   and `+8 B` for `SendMessageParameters.ChatId`.
-3. Transport timing differences did not reproduce across three protocols and
-   changed sign; they are machine state, not a regression.
-4. Path-backed multipart is stable and still dominated by opening files.
-5. Stress shows no retained-memory growth, no Gen1/Gen2 collections, and a
-   per-operation allocation that matches the measured type size.
+1. The only change since `2.0.0` is the lazy request `Uri` cache; the request
+   algorithm and the JSON pipeline are untouched.
+2. Allocations drop by exactly one relative string plus one `Uri` on every row
+   that constructs a request (`−328…−424 B`), and 26 rows are byte-identical;
+   the five `WriteFileStreams` rows vary by `−2…+15 B` from run-to-run temporary
+   path length.
+3. Transport time fell `23–34%`, and rows that never touch the client stayed
+   inside the `−9…+6%` drift range of the allocation-identical control set.
+4. Six million-call stress processes allocate `3688.0 B/op` instead of
+   `4088.0 B/op`, with no Gen1/Gen2 collections and no retained-memory growth.
+5. Path-backed multipart remains filesystem-dominated and unchanged within
+   drift.
 
-The canonical run, row-by-row comparison with `cfaa5ce`, and six stress runs
+The canonical run, row-by-row comparison with `bb633f5`, and six stress runs
 are available in [`benchmark-data.json`](benchmark-data.json). Raw
 BenchmarkDotNet exports and complete console logs are temporary run artifacts
 and are not stored in the repository.

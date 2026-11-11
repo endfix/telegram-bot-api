@@ -489,29 +489,31 @@ dotnet run --project Telegram.BotAPI.Benchmarks/Telegram.BotAPI.Benchmarks.cspro
 
 ### Latest benchmark snapshot
 
-The current reference snapshot was recorded on November 10, 2026 at commit
-`bb633f5` (`v2.0.0`) on .NET 9.0.22, Windows 10 x64, and an Intel Xeon
-E5-2690 v3. The benchmarks use local transports and exclude Telegram and
+The current reference snapshot was recorded on November 12, 2026 at commit
+`c61abe2` (`v2.0.0-7-gc61abe2`) on .NET 9.0.23, Windows 10 x64, and an Intel
+Xeon E5-2690 v3. The benchmarks use local transports and exclude Telegram and
 network latency. No-file parameterized requests use a JSON body, which keeps
-scalar `sendMessage` far below the multipart path. Timings are not directly
-comparable with the September snapshot: the same machine drifted by a median
-of +5.3% across all 82 rows, and an old/new A/B control found no reproducible
-timing regression. Allocations moved only where the API surface changed:
-`+24 B` for `Message` (three new reference properties) and `+8 B` for
-parameters that carry `chat_id`.
+scalar `sendMessage` far below the multipart path.
+
+The only library change since `2.0.0` is a lazy per-client cache of request
+`Uri` instances. Every row that builds a request now allocates `328–424 B` less,
+while the 26 rows that only serialize, deserialize, or open files are
+byte-identical. `Request and deserialize` falls from `5.147 us / 4,160 B` to
+`3.378 us / 3,760 B`, and a million-call stress process allocates
+`3688.0 B/op` instead of `4088.0 B/op`, with no Gen1 or Gen2 collections.
 
 | Scenario | Mean | Allocated |
 | --- | ---: | ---: |
-| Serialize parameters | 582.6 ns | 264 B |
-| Deserialize message | 1.179 us | 1,736 B |
-| Request and deserialize | 5.147 us | 4,160 B |
-| Request without parameters and deserialize | 3.292 us | 3,704 B |
-| Send scalar message | 2.648 us | 2,104 B |
-| Prepare one local-file photo | 257.4 us | 3,816 B |
-| Prepare 10-part path-backed media group | 2.325 ms | 28,353 B |
+| Serialize parameters | 535.7 ns | 264 B |
+| Deserialize message | 1.141 us | 1,736 B |
+| Request and deserialize | 3.378 us | 3,760 B |
+| Request without parameters and deserialize | 2.520 us | 3,344 B |
+| Send scalar message | 1.807 us | 1,704 B |
+| Prepare one local-file photo | 240.1 us | 3,432 B |
+| Prepare 10-part path-backed media group | 2.309 ms | 27,937 B |
 
-The complete environment, interpretation, all 82 measurements, focused repeats,
-and million-call stress profiles are in the [latest benchmark report](https://github.com/endfix/telegram-bot-api/blob/main/Telegram.BotAPI.Benchmarks/RESULTS.md), with normalized measurements in [`benchmark-data.json`](https://github.com/endfix/telegram-bot-api/blob/main/Telegram.BotAPI.Benchmarks/benchmark-data.json).
+The complete environment, interpretation, all 84 measurements, the historical
+`2.0.0` comparisons, and million-call stress profiles are in the [latest benchmark report](https://github.com/endfix/telegram-bot-api/blob/main/Telegram.BotAPI.Benchmarks/RESULTS.md), with normalized measurements in [`benchmark-data.json`](https://github.com/endfix/telegram-bot-api/blob/main/Telegram.BotAPI.Benchmarks/benchmark-data.json).
 
 ## API documentation source
 

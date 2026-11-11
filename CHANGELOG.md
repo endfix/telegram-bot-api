@@ -7,6 +7,18 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
+### Changed
+
+- `BotApiClient` caches each method's request `Uri` per client instance and
+  resolves it lazily on first use, instead of rebuilding the relative string and
+  parsing a new `Uri` on every call. On the focused transport benchmark
+  `RequestAndDeserialize` drops from 4,157 B to 3,758 B and from 4.36 µs to
+  3.60 µs, and `RequestWithoutParametersAndDeserialize` from 3,707 B to 3,348 B
+  and from 3.26 µs to 2.64 µs. The per-request saving no longer appears in
+  Gen0; the trade-off is one dictionary entry and one `Uri` for each method name
+  a client actually uses. Benchmarks are in
+  `Telegram.BotAPI.Benchmarks/RESULTS.md`.
+
 ## [2.0.0] - 2026-11-10
 
 Targets Bot API 10.4 (November 9, 2026). This is a major release with the

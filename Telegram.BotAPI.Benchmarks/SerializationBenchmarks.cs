@@ -18,6 +18,8 @@ public class SerializationBenchmarks
     private RichMessage _richMessage = null!;
     private string _richTextJson = null!;
     private string _richMessageJson = null!;
+    private Message _photoMessage = null!;
+    private string _photoMessageJson = null!;
 
     [GlobalSetup]
     public void Setup()
@@ -95,6 +97,99 @@ public class SerializationBenchmarks
 
         _richTextJson = _richText.Serialize();
         _richMessageJson = _richMessage.Serialize();
+
+        // A photo post as it actually arrives from Telegram: media group, author,
+        // several photo sizes, caption and caption entities. The minimal message
+        // above measures the type floor; this one measures a realistic update.
+        _photoMessage = new Message
+        {
+            MessageId = 1001,
+            Date = 1786471241,
+            MediaGroupId = "13456789012345678",
+            From = new User
+            {
+                Id = 989722390,
+                IsBot = false,
+                FirstName = "Benchmark",
+                LastName = "User",
+                Username = "benchmark_user",
+                LanguageCode = "en",
+                IsPremium = true
+            },
+            Chat = new Chat
+            {
+                Id = -1001234567890,
+                Type = ChatTypes.Supergroup,
+                Title = "Benchmark chat",
+                Username = "benchmark_chat"
+            },
+            Photo = [
+                new PhotoSize
+                {
+                    FileId = "AgACAgIAAxkBAAIBY2ZkZmQAAc1",
+                    FileUniqueId = "AQADY2ZkZmQAAc1",
+                    Width = 90,
+                    Height = 67,
+                    FileSize = 1234
+                },
+                new PhotoSize
+                {
+                    FileId = "AgACAgIAAxkBAAIBY2ZkZmQAAc2",
+                    FileUniqueId = "AQADY2ZkZmQAAc2",
+                    Width = 320,
+                    Height = 240,
+                    FileSize = 12345
+                },
+                new PhotoSize
+                {
+                    FileId = "AgACAgIAAxkBAAIBY2ZkZmQAAc3",
+                    FileUniqueId = "AQADY2ZkZmQAAc3",
+                    Width = 800,
+                    Height = 600,
+                    FileSize = 98765
+                },
+                new PhotoSize
+                {
+                    FileId = "AgACAgIAAxkBAAIBY2ZkZmQAAc4",
+                    FileUniqueId = "AQADY2ZkZmQAAc4",
+                    Width = 1280,
+                    Height = 960,
+                    FileSize = 246810
+                }
+            ],
+            Caption = "Benchmark caption with a link and a mention",
+            CaptionEntities = [
+                new MessageEntity
+                {
+                    Type = MessageEntityType.Bold,
+                    Offset = 0,
+                    Length = 9
+                },
+                new MessageEntity
+                {
+                    Type = MessageEntityType.Url,
+                    Offset = 27,
+                    Length = 4,
+                    Url = "https://example.com"
+                },
+                new MessageEntity
+                {
+                    Type = MessageEntityType.Mention,
+                    Offset = 36,
+                    Length = 15,
+                    User = new User
+                    {
+                        Id = 123456789,
+                        IsBot = false,
+                        FirstName = "Mentioned"
+                    }
+                }
+            ],
+            ShowCaptionAboveMedia = true,
+            HasMediaSpoiler = false
+        };
+
+        _photoMessageJson = _photoMessage.Serialize();
     }
 
     [Benchmark]
@@ -108,6 +203,12 @@ public class SerializationBenchmarks
 
     [Benchmark]
     public Message? DeserializeMessage() => _messageJson.Deserialize<Message>();
+
+    [Benchmark]
+    public string SerializePhotoMessage() => _photoMessage.Serialize();
+
+    [Benchmark]
+    public Message? DeserializePhotoMessage() => _photoMessageJson.Deserialize<Message>();
 
     [Benchmark]
     public string SerializeRichText() => _richText.Serialize();

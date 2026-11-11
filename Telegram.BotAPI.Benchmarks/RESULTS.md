@@ -172,6 +172,35 @@ The other 77 canonical rows have byte-identical allocations. The three new
 `ChatIdSource` contains one `object` field, so `ChatIdSource?` is a 16-byte
 `Nullable<ChatIdSource>` instead of the previous 8-byte struct.
 
+## Realistic message shape
+
+The canonical serialization rows use a 131-character message with one chat and
+no media, so they measure the type floor rather than a real update. A focused
+run on November 12, 2026 added a photo post as Telegram actually delivers it:
+media group, author, chat, four photo sizes, caption text and three caption
+entities (bold, URL, mention with a nested user).
+
+| Scenario | Mean | Allocated | Gen0 / 1000 ops |
+| --- | ---: | ---: | ---: |
+| `SerializeMessage` (synthetic) | 3.22 µs | 600 B | 0.038 |
+| `DeserializeMessage` (synthetic) | 1.15 µs | 1,736 B | 0.111 |
+| `SerializePhotoMessage` | 9.58 µs | 2,720 B | 0.168 |
+| `DeserializePhotoMessage` | 8.45 µs | 4,080 B | 0.259 |
+
+A realistic photo post costs `2.35×` the allocation and `7.4×` the time of the
+synthetic message. The extra `2,344 B` are the objects the JSON describes, not
+serializer overhead: four `PhotoSize` instances, three `MessageEntity`
+instances, two `User` instances, the caption and file-id strings, and the
+`List<T>` backing arrays. All of them are small and short-lived, so the cost
+stays in generation 0: `0.2594` collections per 1,000 operations is one Gen0
+collection per roughly 3,850 messages, with no Gen1 or Gen2 activity.
+
+Run details: same host and BenchmarkDotNet setup as the canonical snapshot,
+`--filter '*SerializationBenchmarks*'`, 10 benchmarks, 3 minutes 27 seconds,
+.NET 9.0.23 (the canonical run used 9.0.22). These two benchmarks are not in
+[`benchmark-data.json`](benchmark-data.json) yet; the next full run will add
+them as canonical rows.
+
 ## Absolute snapshot versus `cfaa5ce`
 
 These numbers are recorded for the canonical snapshot. Read the deltas with

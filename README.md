@@ -489,21 +489,26 @@ dotnet run --project Telegram.BotAPI.Benchmarks/Telegram.BotAPI.Benchmarks.cspro
 
 ### Latest benchmark snapshot
 
-The current reference snapshot was recorded on September 24, 2026 at commit
-`cfaa5ce` (`v1.0.0-5-gcfaa5ce`) on .NET 9.0.20, Windows 10 x64, and an Intel
-Xeon E5-2690 v3. The benchmarks use local transports and exclude Telegram and
-network latency. No-file parameterized requests use a JSON body; that is why
-scalar `sendMessage` is cheaper than the September 15 multipart snapshot.
+The current reference snapshot was recorded on November 10, 2026 at commit
+`bb633f5` (`v2.0.0`) on .NET 9.0.22, Windows 10 x64, and an Intel Xeon
+E5-2690 v3. The benchmarks use local transports and exclude Telegram and
+network latency. No-file parameterized requests use a JSON body, which keeps
+scalar `sendMessage` far below the multipart path. Timings are not directly
+comparable with the September snapshot: the same machine drifted by a median
+of +5.3% across all 82 rows, and an old/new A/B control found no reproducible
+timing regression. Allocations moved only where the API surface changed:
+`+24 B` for `Message` (three new reference properties) and `+8 B` for
+parameters that carry `chat_id`.
 
 | Scenario | Mean | Allocated |
 | --- | ---: | ---: |
-| Serialize parameters | 523.8 ns | 264 B |
-| Deserialize message | 1.199 us | 1,712 B |
-| Request and deserialize | 4.413 us | 4,136 B |
-| Request without parameters and deserialize | 3.173 us | 3,680 B |
-| Send scalar message | 2.424 us | 2,104 B |
-| Prepare one local-file photo | 213.4 us | 3,816 B |
-| Prepare 10-part path-backed media group | 1.986 ms | 28,353 B |
+| Serialize parameters | 582.6 ns | 264 B |
+| Deserialize message | 1.179 us | 1,736 B |
+| Request and deserialize | 5.147 us | 4,160 B |
+| Request without parameters and deserialize | 3.292 us | 3,704 B |
+| Send scalar message | 2.648 us | 2,104 B |
+| Prepare one local-file photo | 257.4 us | 3,816 B |
+| Prepare 10-part path-backed media group | 2.325 ms | 28,353 B |
 
 The complete environment, interpretation, all 82 measurements, focused repeats,
 and million-call stress profiles are in the [latest benchmark report](https://github.com/endfix/telegram-bot-api/blob/main/Telegram.BotAPI.Benchmarks/RESULTS.md), with normalized measurements in [`benchmark-data.json`](https://github.com/endfix/telegram-bot-api/blob/main/Telegram.BotAPI.Benchmarks/benchmark-data.json).

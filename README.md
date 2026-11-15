@@ -9,57 +9,51 @@ Typed .NET client for the Telegram Bot API. The package provides native
 `net8.0` and compatible `netstandard2.0` assets and uses `System.Text.Json` for
 request and response contracts.
 
-## Features
+## Table of contents
 
-- strongly typed Bot API methods, parameters and response models;
-- polymorphic JSON serialization for Telegram union types;
-- JSON and multipart/form-data requests;
-- local, in-memory and stream-backed uploads, Telegram file IDs and `attach://` references;
-- sequential or parallel long polling and an ASP.NET Core webhook example;
-- contract, transport and live Telegram integration tests;
-- BenchmarkDotNet suites and million-request stress profiles.
+- [Status](#status)
+- [Key capabilities and limitations](#key-capabilities-and-limitations)
+- [Installation](#installation)
+- [Quick start](#quick-start)
+- [Complete minimal bot](#complete-minimal-bot)
+- [Receiving updates](#receiving-updates)
+- [Files](#files)
+- [Custom requests](#custom-requests)
+- [Production usage](#production-usage)
+- [Behavior and guarantees](#behavior-and-guarantees)
+- [Runtime compatibility](#runtime-compatibility)
+- [Documentation](#documentation)
+- [Development](#development)
+- [License](#license)
 
 ## Status
 
 This package is a strongly typed, low-level client for the
-[Telegram Bot API](https://core.telegram.org/bots/api). It maps methods, types,
-transport, and errors. It is not a bot framework: it does not own conversation
-state, handler middleware, or a hosting stack. Applications keep control of
-polling and webhook lifetime, as shown in the examples.
+[Telegram Bot API](https://core.telegram.org/bots/api): methods, parameters,
+types, transport, and errors. Applications keep control of polling and webhook
+lifetime, as shown in the examples.
 
-Use this package when you need explicit control over requests and serialization.
-If you want an application framework with routing or dialogs, see Telegram's
-list of community [.NET Bot API libraries](https://core.telegram.org/bots/samples#net).
+Version `2.0` follows Bot API `10.4` and freezes the public contract:
+incompatible changes require a major version, while new Bot API methods and
+additive models are minor versions. If you want an application framework with
+routing or dialogs, see Telegram's list of community
+[.NET Bot API libraries](https://core.telegram.org/bots/samples#net).
 
-The project follows the Telegram Bot API release it targets. Version `2.0`
-freezes the public contract: incompatible changes require a major version.
-New Bot API methods and additive models are minor versions.
+See [CHANGELOG.md](https://github.com/endfix/telegram-bot-api/blob/main/CHANGELOG.md) for release notes and unreleased changes. Upgrading from `1.x`? See the [migration guide](https://github.com/endfix/telegram-bot-api/blob/main/docs/migrating-to-2.0.md).
 
-See [CHANGELOG.md](https://github.com/endfix/telegram-bot-api/blob/main/CHANGELOG.md) for release notes and unreleased changes.
+## Key capabilities and limitations
 
-## Migrating from 1.x to 2.0
-
-Version `2.0` targets Bot API `10.4` and contains intentional source and binary
-breaking changes that were deferred from the `1.x` line:
-
-- `ParseMode` is now an enum in `Endfix.Telegram.BotAPI.Enums` instead of a class
-  of string constants. Every `parse_mode` property and parameter uses
-  `ParseMode?`. Add `using Endfix.Telegram.BotAPI.Enums;` and replace
-  `ParseMode = "HTML"` with `ParseMode = ParseMode.HTML`. The wire values stay
-  `MarkdownV2`, `HTML`, and `Markdown`.
-- `StoryAreaPosition` was renamed to `AreaPosition`; update type references.
-- The send-message convenience overloads accept `ChatIdSource? chatId`, and the
-  matching send parameters no longer require `ChatId`. Pass a chat for a regular
-  send; omit it only for an ephemeral reply to a callback query.
-- `EphemeralMessageParameters.ReceiverUserId` is optional when the message is an
-  ephemeral reply to a callback query.
-- `GetMyNameParameters`, `SetWebhookParameters`, and
-  `GetBusinessAccountGiftsParameters` are sealed.
-- `RequestAsync` and `GetFileBytesAsync` renamed the `cancellation` parameter to
-  `cancellationToken` on `BotApiClient` and `IBotApiClient`. Update named
-  arguments that use `cancellation:`.
-- Package validation has no baseline for `2.0.0`; the compatibility check
-  against `2.0.0` resumes with the next release.
+| Capability | What you get | Limitations |
+| --- | --- | --- |
+| Typed API surface | Methods, parameters and response models for Bot API `10.4`, with XML documentation and snake-case JSON. | New Telegram methods and fields arrive in subsequent releases; helpers cover the methods exposed by the package. |
+| Union types | Polymorphic `System.Text.Json` converters for chat members, media, rich text, gifts and other Telegram unions. | Reflection-based serialization; no source generation, trimming, or Native AOT guarantee. |
+| Requests | JSON bodies for no-file methods; automatic `multipart/form-data` when a file source appears anywhere in the parameter graph. | Upload content must be replayable for each attempt; Telegram method and file-size limits apply. |
+| Files | Lazy path sources, byte snapshots, stream factories, buffered `byte[]` downloads and streaming downloads. | Uploads are not resumed after a transport failure; the application supplies storage and network infrastructure. |
+| Long polling | Sequential FIFO or bounded-parallel processing, with automatic `429` and transient polling retries. | Best-effort delivery: no persisted offset or durable at-least-once guarantee. |
+| Webhooks | Plain `Update` deserialization and guidance for validating `X-Telegram-Bot-Api-Secret-Token`. | The application owns the HTTPS endpoint, hosting and web-server lifetime. |
+| Errors and retries | `RequestAsync` returns the Telegram envelope; `ExecuteAsync` throws `ApiRequestException`; only `429` is retried automatically by `RequestAsync`. | Timeouts, cancellation, transport failures and other API errors surface to the caller. |
+| Hosting | Works with any `HttpClient` and DI container without host coupling. | Not a bot framework: no routing, dialogs, state, middleware, or DI integration package. |
+| Local cost | Reference snapshot on a local transport: 536 ns and 264 B to serialize parameters, 3.4 us and 3.8 KB per request with deserialization. | Benchmarks exclude Telegram and network latency, and the figures are machine-specific. |
 
 ## Installation
 
@@ -94,16 +88,27 @@ Custom Bot API base URLs may include a path prefix. For example, passing
 `https://example.com/telegram/` as `url` sends API requests below that path;
 the trailing slash is optional.
 
-## Receiving updates
+## Complete minimal bot
 
-Long polling raises `OnUpdate` for each received update. It processes updates
-sequentially in FIFO order by default:
+A complete console application that echoes text messages. Create a .NET 8
+console project with implicit usings enabled, add the package, set
+`TELEGRAM_BOT_TOKEN`, and run:
 
 ```cs
+using Endfix.Telegram.BotAPI;
+using Endfix.Telegram.BotAPI.Extensions;
+
+var token = Environment.GetEnvironmentVariable("TELEGRAM_BOT_TOKEN")
+    ?? throw new InvalidOperationException("Set TELEGRAM_BOT_TOKEN.");
+
+using var api = new BotApiClient(token);
+
 api.OnUpdate += async (client, update, cancellationToken) =>
 {
     if (update.Message?.Text is not { } text)
+    {
         return;
+    }
 
     await client.SendMessageAsync(
         update.Message.Chat.Id,
@@ -121,76 +126,37 @@ Console.CancelKeyPress += (_, eventArgs) =>
 await api.StartPollingAsync(cancellationToken: stopping.Token);
 ```
 
-Set `maxParallel` above `1` to enable concurrent processing. Use sequential
+The [Long Polling example](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/LongPolling) adds logging, hosted lifetime and scope-per-update processing. The [Webhook example](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/Webhook) shows the ASP.NET Core equivalent.
+
+## Receiving updates
+
+Long polling delivers updates through `OnUpdate`. With `maxParallel = 1`,
+updates are processed sequentially in FIFO order; higher values process updates
+concurrently and do not guarantee start or completion order. Use sequential
 processing for stateful workflows that depend on update ordering.
 
 For webhooks, deserialize an `Update` at an HTTPS endpoint and validate
-Telegram's `X-Telegram-Bot-Api-Secret-Token` header before processing it. See
-the complete examples for both receiving models below.
+Telegram's `X-Telegram-Bot-Api-Secret-Token` header before processing it. Both
+receiving models are shown in the [complete examples](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples).
 
-## Uploading files
+## Files
 
-Typed input files accept a local path or a repeatable `InputFileSource`. Choose
-the source according to where the content already lives and how often it will
-be sent.
-
-Use a path for a large or one-off local file. The source is lazy and does not
-buffer the complete file in memory:
+Typed input files accept a local path or a repeatable `InputFileSource`. Path
+sources are lazy and do not buffer the file, `FromMemory` takes a snapshot of
+the supplied bytes, and `FromStream` returns a fresh stream for every request
+attempt. The library owns and disposes streams consumed by a request.
 
 ```cs
-var document = new InputDocumentFile(
-    InputFileSource.FromPath("report.pdf"));
+var document = new InputDocumentFile("report.pdf");
+await api.SendDocumentAsync(chatId: 1234567890, document: document);
 ```
 
-Passing the path directly as `new InputDocumentFile("report.pdf")` remains a
-short equivalent. Constructing a path source does not access the filesystem.
-The file is opened again for every request attempt, and normal `FileStream`
-exceptions surface when the request consumes it or when `InputFile.GetStream()`
-is called directly.
+Prefer `InputFileSource.FromMemory(reportBytes, "report.pdf")` when the bytes
+are already loaded, or `InputFileSource.FromStream(() => storage.OpenRead(path), "name.pdf")`
+for databases, object storage and generated content. Each factory call must
+return an independent readable stream with equivalent content.
 
-Use an in-memory source when the content is already available as bytes, or when
-a small or medium payload is sent repeatedly and the application deliberately
-wants to avoid opening its file for every attempt:
-
-```cs
-var document = new InputDocumentFile(
-    InputFileSource.FromMemory(reportBytes, "report.pdf"));
-
-await api.SendDocumentAsync(chatId, document);
-```
-
-`FromMemory` takes its own snapshot of the supplied bytes. Reading a large file
-into a byte array solely for one upload usually adds memory use and a copy
-without avoiding the original disk read. Local benchmarks show that an already
-loaded memory source has much lower request-preparation overhead than opening a
-path, but they intentionally exclude the cost of loading that byte array and
-network transfer normally dominates a Telegram upload.
-
-For databases, object storage, generated content and other stream-backed data,
-provide a factory that returns a new readable stream for each request attempt.
-In this example, `objectStorage` represents an application-owned storage client,
-such as an Amazon S3, Azure Blob Storage or MinIO client:
-
-```cs
-var photo = new InputPhotoFile(
-    InputFileSource.FromStream(
-        () => objectStorage.OpenRead("photos/current.jpg"),
-        "current.jpg"));
-```
-
-During an API request, the library owns and disposes every stream returned by the
-factory. The factory may be called repeatedly for retries or repeated requests, and
-concurrently when the same source is used by parallel requests. Every call must
-return an independent readable stream. The library reads from its current position
-without seeking or rewinding, then disposes it. Do not return the same stream instance
-from multiple calls. Streams opened while retrying the same request must expose
-equivalent upload content. An exception thrown by the factory propagates to the
-caller and stops that request, including an automatic retry. Code that calls
-`InputFile.GetStream()` directly owns and must dispose the returned stream itself.
-
-## Downloading files
-
-Use this method to get basic information about a file and prepare it for downloading. For the moment, bots can download files of up to 20MB in size.
+To download a file, request its path and stream the response:
 
 ```cs
 var message = await api.SendDocumentAsync(
@@ -198,28 +164,21 @@ var message = await api.SendDocumentAsync(
     document: new InputDocumentFile("report.pdf"));
 
 var file = await api.GetFileAsync(message.Document!.FileId);
-var fileBytes = await api.GetFileBytesAsync(file.FilePath!);
-
-await File.WriteAllBytesAsync("downloaded-report.pdf", fileBytes);
-```
-
-For larger files, stream the response directly to a destination instead of
-buffering it in a `byte[]`:
-
-```cs
 await using var destination = File.Create("downloaded-report.pdf");
 await api.DownloadFileAsync(file.FilePath!, destination);
 ```
 
-`DownloadFileAsync` leaves the destination stream open and positioned after
-the downloaded content. Both download methods reject absolute paths,
+Use `GetFileBytesAsync` when a buffered `byte[]` is more convenient. Bots can
+download files of up to 20 MB. Both download methods reject absolute paths,
 parent-directory segments, query strings, fragments, and backslashes.
+
+See the [Files guide](https://github.com/endfix/telegram-bot-api/blob/main/docs/files.md) for the complete source and ownership rules.
 
 ## Custom requests
 
-The typed helpers cover the Bot API methods exposed by the package. For a method
-or parameter shape that is not wrapped yet, derive from `ApiRequestParameters`
-and send it through `RequestAsync` or `ExecuteAsync`:
+The typed helpers cover the Bot API methods exposed by the package. For a
+method or parameter shape that is not wrapped yet, derive from
+`ApiRequestParameters` and send it through `RequestAsync` or `ExecuteAsync`:
 
 ```cs
 using Endfix.Telegram.BotAPI.Enums;
@@ -241,294 +200,95 @@ var response = await api.RequestAsync<Message>(new ApiRequest(
         Text = "Hello from custom parameters",
         ParseMode = ParseMode.HTML
     }));
-
-if (!response.Ok)
-{
-    Console.WriteLine($"{response.ErrorCode}: {response.Description}");
-}
 ```
 
 Properties use the same snake-case policy and converters as the built-in
-parameter types: `ChatId` becomes `chat_id`, null values are omitted, and
-`[JsonPropertyName]` is not required. Use `ExecuteAsync` instead of
-`RequestAsync` when an unsuccessful response should throw
-`ApiRequestException`.
+parameter types. Null values are omitted and `[JsonPropertyName]` is not
+required. Use `ExecuteAsync` when an unsuccessful response should throw
+`ApiRequestException`. An `InputFile` or `IFileSource` anywhere in the parameter
+graph switches the request to `multipart/form-data` and replaces nested files
+with `attach://` references automatically.
 
-An `InputFile` or `IFileSource` anywhere in the parameter object graph switches
-the request to `multipart/form-data`. A top-level file property is attached
-under its field name; nested files inside objects or arrays are replaced with
-`attach://` references automatically:
-
-```cs
-public sealed class CustomSendPhotoParameters : ApiRequestParameters
-{
-    public required ChatIdSource ChatId { get; init; }
-    public required PhotoSource Photo { get; init; }
-    public string? Caption { get; init; }
-}
-
-await api.ExecuteAsync<Message>(new ApiRequest(
-    "sendPhoto",
-    new CustomSendPhotoParameters
-    {
-        ChatId = 123456789L,
-        Photo = new InputPhotoFile("photo.jpg"),
-        Caption = "Custom upload"
-    }));
-```
-
-The method name passed to `ApiRequest` must start with an ASCII letter and
-contain only ASCII letters, digits, and underscores. `required` members need
-C# 11 or later and `init` accessors need C# 9; use ordinary `get`/`set`
-accessors on older compilers.
+See the [custom requests guide](https://github.com/endfix/telegram-bot-api/blob/main/docs/custom-requests.md) for the multipart example and naming rules.
 
 ## Production usage
 
-Use one singleton `IBotApiClient` per bot. The interface exposes both
-`RequestAsync` (returns the Telegram envelope; API errors have `Ok = false`)
-and `ExecuteAsync` (throws `ApiRequestException` when `ok` is `false`), so
-custom requests use the same injected client as the typed helpers. In hosted
-applications, let a singleton `BackgroundService` own `StartPollingAsync`,
-subscribe when the service starts, unsubscribe in `finally`, and create a DI
-scope inside the event callback before resolving scoped handlers or database
-contexts. Never subscribe a scoped or transient object directly to the
-singleton client's `OnUpdate` event.
+Use one singleton `IBotApiClient` per bot. In hosted applications, let a
+singleton `BackgroundService` own `StartPollingAsync`, subscribe when the service
+starts, unsubscribe in `finally`, and create a DI scope inside the event callback
+before resolving scoped handlers or database contexts. Never subscribe a scoped
+or transient object directly to the singleton client's `OnUpdate` event.
 
 A supplied `HttpClient` remains owned by the caller and should normally be
-reused for the application's lifetime. Configure
-`SocketsHttpHandler.PooledConnectionLifetime` when pooled connections must be
-refreshed without replacing the application-level bot client. `BotApiClient`
-disposes the `HttpClient` only when it created that client internally.
+reused for the application's lifetime. `BotApiClient` disposes the `HttpClient`
+only when it created that client internally.
 
-The Long Polling and Webhook examples demonstrate the same hosted lifetime
-without adding DI dependencies to the core package: one singleton
-`IBotApiClient` per bot, a supplied singleton `HttpClient`, and a new async DI
-scope per update. The webhook hosted service registers the HTTPS endpoint after
-Kestrel starts and removes it on shutdown without dropping pending updates.
-Both examples pass `ILogger<IBotApiClient>` from their application's logging
-pipeline to the client.
-
-## Complete examples
-
-- [**Long polling**: `ILogger` integration, interactive event probes, and sequential (FIFO) or parallel update processing.](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/LongPolling)
-- [**Webhook**: ASP.NET Core hosted webhook registration, secret-token validation, and scope-per-update processing.](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/Webhook)
-- [**Mini App**: browser capability harness for Telegram Web App and Premium scenarios.](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples/MiniApp)
-
-The Long Polling and Webhook examples accept `TELEGRAM_BOT_TOKEN` from an environment variable or .NET User Secrets while retaining their existing `appsettings.json` keys as a fallback:
-
-```bash
-dotnet user-secrets set "TELEGRAM_BOT_TOKEN" "<token>" --project Telegram.BotAPI.Examples/LongPolling/Telegram.BotAPI.Example.LongPolling.csproj
-dotnet user-secrets set "TELEGRAM_BOT_TOKEN" "<token>" --project Telegram.BotAPI.Examples/Webhook/Telegram.BotAPI.Example.Webhook.csproj
-```
-
-The Long Polling and Webhook projects include placeholder configuration files.
-Replace the placeholders locally or use User Secrets before running them.
+The Long Polling and Webhook examples demonstrate this lifetime with one
+singleton `IBotApiClient` per bot, a supplied singleton `HttpClient`, and a new
+async DI scope per update.
 
 ## Behavior and guarantees
 
-The following behavior is part of the library's current runtime contract and
-is covered by deterministic tests. Intentional changes to these guarantees
-should update both the tests and this documentation.
+- `RequestAsync` returns the envelope instead of throwing when Telegram reports
+  an API error; `ExecuteAsync` and the typed helpers throw `ApiRequestException`,
+  which exposes `ErrorCode` and carries Telegram's description in `Message`.
+- Long polling is best effort: a failing `OnUpdate` subscriber is logged, later
+  subscribers still run, and an interrupted session may receive an update again
+  even after its handler ran.
+- Only one polling session can run per client; `Dispose` cancels it and rejects
+  new requests with `ObjectDisposedException`.
+- Upload sources open a fresh stream for each attempt, and the library disposes
+  streams it consumes. A supplied `HttpClient` is never disposed.
 
-| Concern | Guarantee |
-| --- | --- |
-| Telegram API errors | `RequestAsync` returns the response; `ExecuteAsync` throws `ApiRequestException` when `ok` is `false`. |
-| Rate limits | Error `429` is retried after Telegram's `retry_after`, up to six retries by default. |
-| Other request failures | Timeouts, cancellation, transport failures and non-429 API errors are not retried automatically by `RequestAsync`. |
-| Polling session | Only one session can run per client instance; the client can be started again after that session stops unless it was disposed. |
-| Polling retries | Transient request timeouts and retryable Telegram errors are retried; non-retryable `4xx` errors stop polling and are rethrown. |
-| Update ordering | `maxParallel = 1` is sequential and FIFO; parallel mode does not guarantee update start or completion order. |
-| Update handlers | Subscribers run in registration order for each update and each returned task is awaited. A failing subscriber does not prevent later subscribers from running. |
-| Delivery | Long polling is best effort. Handler failures are not retried and interrupted sessions may receive an update again. |
-| Cancellation | Handlers receive the polling session token, which is canceled by the caller or by `Dispose`. |
-| Disposal | `Dispose` stops an active polling session, is idempotent, and rejects new requests with `ObjectDisposedException`. |
-| External `HttpClient` | Remains owned by the caller and is never disposed by `BotApiClient`. |
-| Internal `HttpClient` | Is owned by `BotApiClient` and disposed with it. |
-| Upload source | A fresh stream is opened for each attempt and disposed by the request. |
-| Download destination | Remains open and positioned after the downloaded content. |
-| Download path | `DownloadFileAsync` and `GetFileBytesAsync` reject absolute paths, parent-directory segments, query strings, fragments, and backslashes. |
-
-### Requests and retries
-
-For `RequestAsync`, the client automatically retries Telegram responses with
-error code `429`, waiting for the server-provided `retry_after` interval before
-the next attempt. It makes at most six retries by default; configure
-`maxRetryAttempts` in the constructor or set it to `0` to disable automatic
-retries. For API requests, timeouts, cancellations and other transport failures
-are not retried automatically because the client cannot know whether Telegram
-processed the original request.
-
-`RequestAsync` returns Telegram API responses, while `ExecuteAsync` throws
-`ApiRequestException` when Telegram returns `ok = false`. Argument errors,
-caller cancellation, timeouts, HTTP and network failures, and malformed JSON
-responses retain their standard .NET exception types.
-
-### Polling and update handlers
-
-Only one `StartPollingAsync` session can run on a client instance at a time. A
-concurrent start fails with `InvalidOperationException`; after the active
-session stops, the same client can be started again unless it was disposed.
-`StartPollingAsync` validates `limit` (1-100), `timeout` (non-negative),
-`maxParallel` (at least 1), and rejects `UpdateType.Unknown` in
-`allowedUpdates`.
-
-All `OnUpdate` subscribers are invoked in registration order and each returned
-task is awaited before processing for that update completes. Handlers receive
-the polling session's cancellation token so long-running work can stop
-cooperatively. A failing subscriber is logged without preventing later
-subscribers from running; cancellation caused by the polling token is treated
-as a normal shutdown.
-
-Transient request timeouts and retryable Telegram errors are retried with a
-short backoff; non-retryable `4xx` errors stop the session and are rethrown as
-`ApiRequestException`. `Dispose` cancels an active session, so a hosted service
-can stop polling by disposing its client.
-
-`StartPollingAsync` uses best-effort delivery. Handler failures are logged and
-are not retried; a failed update is confirmed if the polling loop later sends a
-higher offset. Because the offset is neither sent until the next `getUpdates`
-request nor persisted by the client, an interrupted polling session may receive
-an update again even after its handler ran. Applications that require durable
-processing or explicit delivery guarantees should own the `GetUpdatesAsync`
-loop and persist their checkpoint explicitly.
-
-### Resource ownership
-
-Path-based upload sources are lazy. Stream factories may be called repeatedly
-for retries or repeated requests, and concurrently when the same source is used
-by parallel requests. Each call must return an independent readable stream with
-equivalent content. The library disposes streams returned to an API request;
-code that calls `InputFile.GetStream()` directly owns that returned stream.
-
-The client never disposes a supplied `HttpClient`. If no client is supplied,
-`BotApiClient` creates one and disposes it with the bot client; `Dispose` first
-cancels an active polling session. Streaming file downloads never dispose the
-caller's destination stream.
+See the [behavior and guarantees guide](https://github.com/endfix/telegram-bot-api/blob/main/docs/behavior.md) for the complete tested contract, including retry and delivery semantics.
 
 ## Runtime compatibility
 
 The package targets `net8.0` and `netstandard2.0`. NuGet selects the native
-`net8.0` asset for .NET 8 and later applications. Older runtimes use the
-compatible `netstandard2.0` fallback; this is a library target, not a requirement
-to install a particular .NET SDK in the consuming application.
+`net8.0` asset for .NET 8 and later applications; older runtimes use the
+compatible `netstandard2.0` fallback.
 
-| Consumer target | Status | Guidance |
+| Consumer target | Asset | Status |
 | --- | --- | --- |
-| `.NET 10`, `.NET 9`, `.NET 8` | Supported via `net8.0` | Recommended targets for new applications. |
-| `.NET 7`, `.NET 6` | Compatible via `netstandard2.0` | CI executes the packaged fallback on .NET 6. These runtimes are end of support and should be used only where an application is intentionally pinned to them. |
-| `.NET 5`, `.NET Core 3.1` | NuGet asset compatibility only | These runtimes are not exercised or supported. Treat them as migration targets. |
-| `.NET Core 2.0` through `2.2` | Compatible in principle | NuGet compatibility is possible through `netstandard2.0`, but this is not a current CI target. |
-| `.NET Framework 4.7.2` through `4.8.1` | Compatible | Practical choice for maintained classic Windows applications. |
-| `.NET Framework 4.6.2` through `4.7.1` | Package-dependent | May resolve the package graph, but is not a recommended baseline for new builds. |
-| `.NET Framework 4.6.1` | Not a recommended baseline | Although .NET Standard compatibility tables list it, Microsoft documents compatibility issues for consuming higher .NET Standard libraries from this framework version. |
+| `.NET 8`, `.NET 9`, `.NET 10` | `net8.0` | Supported; recommended for new applications. |
+| `.NET 6`, `.NET 7` | `netstandard2.0` | Compatible, but these runtimes are out of support. |
+| `.NET Framework 4.7.2` through `4.8.1` | `netstandard2.0` | Compatible; practical for maintained classic Windows applications. |
+| `.NET 5`, `.NET Core 3.1` | `netstandard2.0` | NuGet asset compatibility only; not exercised or supported. |
+| `.NET Framework 4.6.1` through `4.7.1` | `netstandard2.0` | Package-dependent; may resolve, but is not a recommended baseline. |
 
-The compatibility column describes framework and NuGet asset compatibility;
-it is not a claim that every listed runtime is actively tested by this
-repository. The test and example projects exercise the `net8.0` asset, while
-CI compiles and package-validates both library targets.
+.NET 8 and later consumers use the runtime-provided `System.Text.Json`; the
+`netstandard2.0` fallback brings its own compatible dependency graph. The
+package does not claim trimming or Native AOT compatibility.
 
-NuGet does not need a dedicated `net6.0` or `net7.0` asset to resolve this
-package: applications targeting those frameworks select `netstandard2.0`.
-CI executes that packaged fallback on .NET 6 as a compatibility canary; this
-does not extend the support lifetime of the consuming runtime.
+See the [compatibility guide](https://github.com/endfix/telegram-bot-api/blob/main/docs/compatibility.md) for the full table, dependency footprint, and runtime notes.
 
-### Dependency footprint
+## Documentation
 
-.NET 8 and later consumers select the `net8.0` asset and use the
-runtime-provided `System.Text.Json`. The `netstandard2.0` fallback references
-`System.Text.Json 8.0.6` and its compatibility dependencies for older .NET
-and .NET Framework consumers. NuGet resolves that graph automatically; an
-application normally should not pin its transitive packages manually.
+| Document | Contents |
+| --- | --- |
+| [Compatibility](https://github.com/endfix/telegram-bot-api/blob/main/docs/compatibility.md) | Complete consumer-target table, dependency footprint, and trimming/AOT expectations. |
+| [Behavior and guarantees](https://github.com/endfix/telegram-bot-api/blob/main/docs/behavior.md) | Tested runtime contract for errors, retries, polling, delivery, and ownership. |
+| [Files](https://github.com/endfix/telegram-bot-api/blob/main/docs/files.md) | Upload sources, stream ownership, retries, and download semantics. |
+| [Custom requests](https://github.com/endfix/telegram-bot-api/blob/main/docs/custom-requests.md) | Custom parameters, JSON naming, multipart switching, and `attach://` references. |
+| [Migrating from 1.x to 2.0](https://github.com/endfix/telegram-bot-api/blob/main/docs/migrating-to-2.0.md) | Intentional breaking changes in the 2.0 release. |
+| [Development](https://github.com/endfix/telegram-bot-api/blob/main/docs/development.md) | Build requirements, test commands, package smoke tests, benchmarks, and the release process. |
+| [Examples](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples) | Long polling, webhook, and Mini App projects. |
 
-The package does not claim trimming or Native AOT compatibility and has no
-platform-specific runtime identifier or operating-system requirement. The
-consuming runtime must still support the selected .NET target and dependency
-graph.
+Release notes and unreleased changes are in [CHANGELOG.md](https://github.com/endfix/telegram-bot-api/blob/main/CHANGELOG.md).
 
 ## Development
 
-Repository builds are pinned to .NET SDK `9.0.317` through `global.json`. The complete solution also runs `net8.0` tests and examples, so install the .NET 8 SDK or runtime alongside SDK 9 when working locally. CI installs both SDK versions explicitly.
-
-## Tests
-
-Run the solution test suite (live integration tests are skipped when their secrets are not configured):
+Repository builds are pinned to .NET SDK `9.0.317` through `global.json`. The
+solution also runs `net8.0` tests and examples, so install the .NET 8 SDK
+alongside SDK 9 when working locally.
 
 ```bash
 dotnet test Telegram.BotAPI.sln
-```
-
-Telegram integration tests are disabled unless their credentials are configured. They can send real messages and are intended for a dedicated test bot and chat.
-
-Run local tests without contacting Telegram:
-
-```bash
 dotnet test Telegram.BotAPI.Tests/Telegram.BotAPI.Tests.csproj --filter "Category!=Integration"
 ```
 
-See the [test project guide](https://github.com/endfix/telegram-bot-api/blob/main/Telegram.BotAPI.Tests/README.md) for the live test topology, BotFather settings, administrator rights, secrets, rollback behavior and focused run commands.
-
-CI also installs the locally packed NuGet package into two small consumer
-applications. One executes the native `net8.0` asset on .NET 8; the other
-executes the `netstandard2.0` fallback in a .NET 6 Docker container. These smoke
-tests use an in-memory HTTP handler and require neither a bot token nor network
-access to Telegram. See the [package smoke guide](https://github.com/endfix/telegram-bot-api/blob/main/eng/PackageSmoke/README.md) for the exact checks and local commands.
-
-This README is packed into the package, so CI also runs
-`scripts/check-readme.ps1`. It rejects raw HTML and repository-relative links,
-because nuget.org escapes the former and cannot resolve the latter.
-
-## Benchmarks
-
-The [benchmark project](https://github.com/endfix/telegram-bot-api/blob/main/Telegram.BotAPI.Benchmarks/README.md) contains serialization, rich-message and local transport benchmarks, plus sequential and bounded-parallel stress profiles:
-
-```bash
-dotnet run --project Telegram.BotAPI.Benchmarks/Telegram.BotAPI.Benchmarks.csproj -c Release -- --filter * --join
-dotnet run --project Telegram.BotAPI.Benchmarks/Telegram.BotAPI.Benchmarks.csproj -c Release -- --stress
-dotnet run --project Telegram.BotAPI.Benchmarks/Telegram.BotAPI.Benchmarks.csproj -c Release -- --stress-parallel 10
-```
-
-### Latest benchmark snapshot
-
-The current reference snapshot was recorded on November 12, 2026 at commit
-`c61abe2` (`v2.0.0-7-gc61abe2`) on .NET 9.0.23, Windows 10 x64, and an Intel
-Xeon E5-2690 v3. The benchmarks use local transports and exclude Telegram and
-network latency. No-file parameterized requests use a JSON body, which keeps
-scalar `sendMessage` far below the multipart path.
-
-The only library change since `2.0.0` is a lazy per-client cache of request
-`Uri` instances. Every row that builds a request now allocates `328–424 B` less,
-while the 26 rows that only serialize, deserialize, or open files are
-byte-identical. `Request and deserialize` falls from `5.147 us / 4,160 B` to
-`3.378 us / 3,760 B`, and a million-call stress process allocates
-`3688.0 B/op` instead of `4088.0 B/op`, with no Gen1 or Gen2 collections.
-
-| Scenario | Mean | Allocated |
-| --- | ---: | ---: |
-| Serialize parameters | 535.7 ns | 264 B |
-| Deserialize message | 1.141 us | 1,736 B |
-| Request and deserialize | 3.378 us | 3,760 B |
-| Request without parameters and deserialize | 2.520 us | 3,344 B |
-| Send scalar message | 1.807 us | 1,704 B |
-| Prepare one local-file photo | 240.1 us | 3,432 B |
-| Prepare 10-part path-backed media group | 2.309 ms | 27,937 B |
-
-The complete environment, interpretation, all 84 measurements, the historical
-`2.0.0` comparisons, and million-call stress profiles are in the [latest benchmark report](https://github.com/endfix/telegram-bot-api/blob/main/Telegram.BotAPI.Benchmarks/RESULTS.md), with normalized measurements in [`benchmark-data.json`](https://github.com/endfix/telegram-bot-api/blob/main/Telegram.BotAPI.Benchmarks/benchmark-data.json).
-
-## API documentation source
-
-Descriptions of Telegram objects, fields and method parameters are aligned with
-the [official Bot API documentation](https://core.telegram.org/bots/api). The
-current repository snapshot targets Bot API `10.4` (published November 9, 2026).
-Telegram may clarify or extend descriptions without changing a .NET type, so
-the source version and date should be reviewed when updating XML documentation.
-Library-specific behavior, such as stream ownership, retryability and polling
-semantics, is documented locally and is not copied from Telegram's object
-descriptions.
-
-## Releases
-
-Push the intended release commit to `main` and wait for CI to pass before creating a `vX.Y.Z` tag. Pushing the tag starts the publish workflow, which independently restores, builds, tests, packs with the version derived from the tag, publishes the package to NuGet, and creates the corresponding GitHub Release from that version's `CHANGELOG.md` section.
+Live integration tests are skipped unless a dedicated test bot is configured.
+See the [development guide](https://github.com/endfix/telegram-bot-api/blob/main/docs/development.md) for the live test topology, package smoke tests, benchmarks, API documentation sources, and the release process.
 
 ## License
 

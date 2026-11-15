@@ -35,6 +35,10 @@ dotnet user-secrets set "TelegramBotApi:SecretToken" "<random-secret>" --project
 `TELEGRAM_WEBHOOK_URL` and `TELEGRAM_WEBHOOK_SECRET`. The secret may contain
 only `A-Za-z0-9_-` and must be 1-256 characters, as required by Telegram.
 
+The tracked `appsettings.json` contains only placeholder values; the example
+rejects the `<bot-token>` placeholder rather than starting with a
+non-functional client.
+
 ```powershell
 cloudflared tunnel --url http://localhost:8080
 dotnet run --project Telegram.BotAPI.Examples/Webhook/Telegram.BotAPI.Example.Webhook.csproj

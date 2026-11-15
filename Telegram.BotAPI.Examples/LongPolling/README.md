@@ -19,7 +19,15 @@ container. Its `SocketsHttpHandler.PooledConnectionLifetime` refreshes pooled
 connections without replacing the application-level bot client.
 
 Configure `TELEGRAM_BOT_TOKEN` through an environment variable or .NET User
-Secrets, then run:
+Secrets:
+
+```powershell
+dotnet user-secrets set "TELEGRAM_BOT_TOKEN" "<token>" --project Telegram.BotAPI.Examples/LongPolling/Telegram.BotAPI.Example.LongPolling.csproj
+```
+
+The tracked `appsettings.json` contains only a `<bot-token>` placeholder. The
+example rejects that value and asks for a real token instead of starting with a
+non-functional client. Then run:
 
 ```powershell
 dotnet run --project Telegram.BotAPI.Examples/LongPolling/Telegram.BotAPI.Example.LongPolling.csproj

@@ -9,6 +9,11 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ### Changed
 
+- The README now opens with a table of contents, a capabilities-and-limitations
+  table, and a complete polling bot example. Detailed compatibility, behavior,
+  file-handling, custom-request, migration, and development notes moved to the
+  `docs/` directory and are linked from the README. The behavior guide now shows
+  both error paths: the `RequestAsync` envelope and the `ExecuteAsync` exception.
 - `BotApiClient` caches each method's request `Uri` per client instance and
   resolves it lazily on first use, instead of rebuilding the relative string and
   parsing a new `Uri` on every call. On the focused transport benchmark

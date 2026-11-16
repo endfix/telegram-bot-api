@@ -9,12 +9,12 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ### Changed
 
-- Multipart requests that reference nested local files compute the file-first
-  property order once per type instead of re-sorting it for every nested object.
-  On the focused prepare benchmarks `PrepareMemoryMediaGroup10` drops from
-  24.16 KB to 20.25 KB and `PrepareMemoryNestedPoll2` from 10.38 KB to 8.93 KB,
-  with unchanged timing; the request body and `attach://` numbering are
-  byte-identical.
+- Multipart requests that reference nested local files no longer re-sort the
+  parameter properties for every nested object and no longer visit properties
+  whose type cannot carry a local file. On the focused prepare benchmarks
+  `PrepareMemoryMediaGroup10` drops from 24.16 KB to 19.55 KB and
+  `PrepareMemoryNestedPoll2` from 10.38 KB to 8.52 KB, with unchanged timing;
+  the request body and `attach://` numbering are byte-identical.
 - The README now opens with a table of contents, a capabilities-and-limitations
   table, and a complete polling bot example. Detailed compatibility, behavior,
   file-handling, custom-request, migration, and development notes moved to the

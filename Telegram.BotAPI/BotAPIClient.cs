@@ -732,6 +732,13 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
                     continue;
                 }
 
+                // This walk only rewrites local input files, so a value whose type
+                // cannot contain one needs no name lookup and no recursion.
+                if (!TypeMayContainFiles(propertyValue.GetType()))
+                {
+                    continue;
+                }
+
                 var propertyName = JsonSerializerExtensions.Options.PropertyNamingPolicy?.ConvertName(property.Name)
                     ?? property.Name;
                 if (jsonObject.TryGetPropertyValue(propertyName, out var propertyNode))

@@ -58,8 +58,11 @@ See [CHANGELOG.md](https://github.com/endfix/telegram-bot-api/blob/main/CHANGELO
 ## Installation
 
 ```bash
-dotnet add package Endfix.Telegram.BotAPI --version 2.0.0
+dotnet add package Endfix.Telegram.BotAPI
 ```
+
+The command installs the latest stable release. Pin `--version <x.y.z>` in your
+project when you need a reproducible build.
 
 ## Quick start
 

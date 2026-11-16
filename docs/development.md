@@ -58,8 +58,8 @@ dotnet run --project Telegram.BotAPI.Benchmarks/Telegram.BotAPI.Benchmarks.cspro
 dotnet run --project Telegram.BotAPI.Benchmarks/Telegram.BotAPI.Benchmarks.csproj -c Release -- --stress-parallel 10
 ```
 
-The current reference snapshot was recorded on November 12, 2026 at commit
-`c61abe2` on .NET 9.0.23, Windows 10 x64, and an Intel Xeon E5-2690 v3. The
+The current reference snapshot was recorded on November 16, 2026 at commit
+`65ad939` on .NET 9.0.23, Windows 10 x64, and an Intel Xeon E5-2690 v3. The
 benchmarks use local transports and exclude Telegram and network latency.
 
 | Scenario | Mean | Allocated |

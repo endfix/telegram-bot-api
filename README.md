@@ -53,7 +53,7 @@ See [CHANGELOG.md](https://github.com/endfix/telegram-bot-api/blob/main/CHANGELO
 | Webhooks | Plain `Update` deserialization and guidance for validating `X-Telegram-Bot-Api-Secret-Token`. | The application owns the HTTPS endpoint, hosting and web-server lifetime. |
 | Errors and retries | `RequestAsync` returns the Telegram envelope; `ExecuteAsync` throws `ApiRequestException`; only `429` is retried automatically by `RequestAsync`. | Timeouts, cancellation, transport failures and other API errors surface to the caller. |
 | Hosting | Works with any `HttpClient` and DI container without host coupling. | Not a bot framework: no routing, dialogs, state, middleware, or DI integration package. |
-| Local cost | Reference snapshot on a local transport: 536 ns and 264 B to serialize parameters, 3.4 us and 3.8 KB per request with deserialization. | Benchmarks exclude Telegram and network latency, and the figures are machine-specific. |
+| Local cost | Reference snapshot on a local transport: 531 ns and 264 B to serialize parameters, 3.7 us and 3.8 KB per request with deserialization. | Benchmarks exclude Telegram and network latency, and the figures are machine-specific. |
 
 ## Installation
 

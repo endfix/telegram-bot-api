@@ -41,6 +41,30 @@ jobs:
           fi
           echo "VERSION=$VERSION" >> "$GITHUB_ENV"
 
+      - name: Stamp the package README with this release
+        # README.md is packed into the package, so the install command on the
+        # gallery page must name the tag being published. The repository copy
+        # stays unpinned and installs the latest stable release.
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $version = $env:VERSION
+          if ([string]::IsNullOrWhiteSpace($version)) {
+            throw 'VERSION is not set.'
+          }
+          $path = Join-Path $PWD 'README.md'
+          $pattern = 'dotnet add package Endfix\.Telegram\.BotAPI(?:\s+--version\s+[0-9A-Za-z.\-]+)?'
+          $text = Get-Content -LiteralPath $path -Raw
+          if ($text -notmatch $pattern) {
+            throw 'README.md has no install command to stamp.'
+          }
+          $replacement = "dotnet add package Endfix.Telegram.BotAPI --version $version"
+          $text = [regex]::new($pattern).Replace($text, $replacement, 1)
+          if (-not $text.Contains($replacement)) {
+            throw 'README.md was not stamped.'
+          }
+          [IO.File]::WriteAllText($path, $text, [Text.UTF8Encoding]::new($false))
+
       - name: Restore
         run: dotnet restore Telegram.BotAPI.sln
 

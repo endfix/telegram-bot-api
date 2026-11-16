@@ -61,8 +61,8 @@ See [CHANGELOG.md](https://github.com/endfix/telegram-bot-api/blob/main/CHANGELO
 dotnet add package Endfix.Telegram.BotAPI
 ```
 
-The command installs the latest stable release. Pin `--version <x.y.z>` in your
-project when you need a reproducible build.
+Packages follow semantic versioning. Pin `--version <x.y.z>` when you need a
+reproducible build.
 
 ## Quick start
 

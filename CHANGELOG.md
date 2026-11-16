@@ -7,6 +7,12 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
+### Changed
+
+- The package README now pins its install command to the release that ships
+  it, so the nuget.org page never names an older version. The repository copy
+  stays unpinned and installs the latest stable package.
+
 ## [2.0.1] - 2026-11-16
 
 Performance and documentation only: the public API surface is unchanged, so

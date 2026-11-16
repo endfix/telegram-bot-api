@@ -7,6 +7,11 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
+## [2.0.1] - 2026-11-16
+
+Performance and documentation only: the public API surface is unchanged, so
+upgrading from `2.0.0` requires no code changes.
+
 ### Changed
 
 - Multipart requests that reference nested local files no longer re-sort the
@@ -243,7 +248,9 @@ version. Additive Telegram Bot API coverage remains a minor version.
 - Preserved original input-source open exceptions.
 - Corrected `deleteStory` and user-gift response contracts.
 
-[Unreleased]: https://github.com/endfix/telegram-bot-api/compare/v1.0.2...HEAD
+[Unreleased]: https://github.com/endfix/telegram-bot-api/compare/v2.0.1...HEAD
+[2.0.1]: https://github.com/endfix/telegram-bot-api/compare/v2.0.0...v2.0.1
+[2.0.0]: https://github.com/endfix/telegram-bot-api/compare/v1.0.2...v2.0.0
 [1.0.2]: https://github.com/endfix/telegram-bot-api/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/endfix/telegram-bot-api/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/endfix/telegram-bot-api/compare/v0.6.0...v1.0.0

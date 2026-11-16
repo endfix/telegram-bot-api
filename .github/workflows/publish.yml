@@ -45,9 +45,10 @@ jobs:
         run: dotnet restore Telegram.BotAPI.sln
 
       - name: Build
-        # Keep AssemblyVersion stable at 1.0.0.0; only the informational version
-        # tracks the release tag. Pack runs with --no-build, so this is where the
-        # version has to reach the compiled assembly.
+        # AssemblyVersion is pinned in the project file (2.0.0.0 for the 2.x
+        # line); only the informational version tracks the release tag. Pack
+        # runs with --no-build, so this is where the version has to reach the
+        # compiled assembly.
         run: dotnet build Telegram.BotAPI.sln --configuration Release --no-restore -p:InformationalVersion="$VERSION"
 
       - name: Test

@@ -15,14 +15,13 @@
 
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<EnablePackageValidation>true</EnablePackageValidation>
+		<PackageValidationBaselineVersion>2.0.0</PackageValidationBaselineVersion>
 		<!--
-		  No baseline during the 2.0.0 major release: the ParseMode enum, the
-		  StoryAreaPosition -> AreaPosition rename, and the optional chat_id
-		  fields are intentional breaking changes. Restore
-		  <PackageValidationBaselineVersion>2.0.0</PackageValidationBaselineVersion>
-		  after 2.0.0 is published so that later releases keep the compatibility
-		  check.
+		  The published 2.0.0 package shipped with AssemblyVersion 2.0.0.0. Keep
+		  the whole 2.x line on that identity so baselines never report an
+		  assembly version downgrade and existing consumers keep the same binding.
 		-->
+		<AssemblyVersion>2.0.0.0</AssemblyVersion>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageIcon>icon.png</PackageIcon>
 		<IsPackable>true</IsPackable>

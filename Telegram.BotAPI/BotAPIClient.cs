@@ -37,6 +37,8 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
 
     private static readonly ConcurrentDictionary<Type, PropertyInfo[]> _parametersCache = new();
 
+    private static readonly ConcurrentDictionary<Type, PropertyInfo[]> _fileOrderedPropertiesCache = new();
+
     private static readonly ConcurrentDictionary<Type, bool> _typeMayContainFilesCache = new();
 
     private static readonly ConcurrentDictionary<string, string> _fieldNamesCache = new();
@@ -718,9 +720,9 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
 
         if (node is JsonObject jsonObject)
         {
-            var properties = _parametersCache
-                .GetOrAdd(value.GetType(), type => type.GetProperties())
-                .OrderBy(property => GetFilePropertyPriority(property.Name));
+            var properties = _fileOrderedPropertiesCache.GetOrAdd(
+                value.GetType(),
+                static type => OrderPropertiesForFiles(type.GetProperties()));
 
             foreach (var property in properties)
             {
@@ -789,4 +791,18 @@ public sealed partial class BotApiClient : IBotApiClient, IDisposable
             "Cover" => 6,
             _ => 7
         };
+
+    /// <summary>
+    /// Orders properties so nested local files are numbered predictably: media
+    /// first, then the other file-carrying fields, then the rest. The sort is
+    /// stable, so properties that share a priority keep their declaration order.
+    /// </summary>
+    /// <param name="properties">The properties declared by the type being cached.</param>
+    private static PropertyInfo[] OrderPropertiesForFiles(PropertyInfo[] properties)
+        => properties
+            .Select((property, index) => (Property: property, Index: index))
+            .OrderBy(entry => GetFilePropertyPriority(entry.Property.Name))
+            .ThenBy(entry => entry.Index)
+            .Select(entry => entry.Property)
+            .ToArray();
 }

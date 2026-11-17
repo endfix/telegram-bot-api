@@ -380,6 +380,58 @@ because the process starts from a small footprint and then pays for JIT,
 ThreadPool, and runtime caches. That is the same pattern as the previous
 snapshots.
 
+## Polling stress harness (November 16, 2026)
+
+`--polling-stress` drives `StartPollingAsync` through an in-process fake
+`getUpdates` transport. There is no network, no Telegram rate limiting, and the
+timed handler completes synchronously. The run used 50,000 updates per cell,
+five reported repetitions per throughput cell, and one additional discarded
+priming repetition per cell, on the same host and runtime as the canonical table
+above; it was captured from the working tree based on commit `05181fe`.
+
+```powershell
+dotnet run --project Telegram.BotAPI.Benchmarks\Telegram.BotAPI.Benchmarks.csproj -c Release -- --polling-stress --polling-repetitions 5
+```
+
+| Batch | Max parallel | Requests | us/update | Updates/s | Allocated B/update |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 10 | 1 | 5,000 | 2.11 | 474,423 | 2,051 |
+| 10 | 4 | 5,000 | 2.16 | 463,576 | 2,088 |
+| 10 | 10 | 5,000 | 2.20 | 455,146 | 2,088 |
+| 10 | 32 | 5,000 | 2.17 | 460,527 | 2,088 |
+| 100 | 1 | 500 | 1.96 | 510,677 | 1,824 |
+| 100 | 4 | 500 | 1.95 | 512,410 | 1,847 |
+| 100 | 10 | 500 | 1.95 | 512,775 | 1,847 |
+| 100 | 32 | 500 | 1.97 | 507,990 | 1,847 |
+| 1,000 | 1 | 50 | 2.36 | 423,581 | 1,798 |
+| 1,000 | 4 | 50 | 2.32 | 430,814 | 1,814 |
+| 1,000 | 10 | 50 | 2.35 | 425,044 | 1,814 |
+| 1,000 | 32 | 50 | 2.34 | 426,496 | 1,814 |
+| 10,000 | 1 | 5 | 4.50 | 222,390 | 1,805 |
+| 10,000 | 4 | 5 | 4.34 | 230,543 | 1,831 |
+| 10,000 | 10 | 5 | 4.31 | 232,179 | 1,831 |
+| 10,000 | 32 | 5 | 4.40 | 227,223 | 1,831 |
+
+- Peak handler concurrency equalled `min(batch, maxParallel)` in all 16 cells.
+- With `maxParallel = 1`, all 100 updates of an ordering batch started and
+  completed in delivery order. Above 1 the starts stayed mostly in delivery
+  order while completions interleaved, as expected; no update was duplicated or
+  lost in any configuration.
+- A 1,000-update run where every fifth handler threw and every twenty-fifth
+  threw `OperationCanceledException` processed all 1,000 updates in 10 requests,
+  observed exactly 200 failures, and completed without throwing.
+- Shutdown latency after `Cancel()` had a median of 2.2–2.5 ms while idle,
+  running a fast handler, or with one slow handler in flight, and 3.4–4.1 ms
+  with 4–32 slow handlers in flight; the worst single sample was 7.9 ms in the
+  idle case.
+- Per-update allocation is roughly 1.8 KB across batch sizes and is dominated
+  by parsing each `Update`. Ten updates per request add about 230 B/update for
+  the ten times higher request count.
+- Batches above 100 exceed Telegram's `getUpdates` limit and characterize the
+  client loop only. Because the fake transport and handler complete
+  synchronously, the parallel levels converge here; they differ only when
+  handlers actually yield.
+
 ## What these results do not prove
 
 - They do not measure Telegram, network, TLS, rate limits, or data-center latency.

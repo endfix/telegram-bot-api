@@ -59,6 +59,30 @@ For comparisons, run each stress profile in at least three separate processes. A
 stress timing is directional rather than benchmark-grade, and sequential and parallel
 results must use the same library asset, runtime patch, machine, and GC configuration.
 
+Run the long-polling stress harness:
+
+```powershell
+dotnet run --project Telegram.BotAPI.Benchmarks\Telegram.BotAPI.Benchmarks.csproj -c Release -- --polling-stress
+dotnet run --project Telegram.BotAPI.Benchmarks\Telegram.BotAPI.Benchmarks.csproj -c Release -- --polling-stress --polling-updates 20000 --polling-repetitions 3
+```
+
+The harness drives `StartPollingAsync` through an in-process fake `getUpdates`
+transport and reports throughput, allocations, Working Set, observed handler
+concurrency, delivery order, exception isolation, and shutdown latency for batch
+sizes 10, 100, 1,000 and 10,000 crossed with `maxParallel` values of 1, 4, 10
+and 32. `--polling-updates` sets updates per configuration (default 50,000) and
+`--polling-repetitions` sets the number of reported repetitions for throughput
+and cancellation (default 3). Each throughput cell additionally runs one
+discarded priming repetition: without it the first timed cell absorbs one-time
+runtime work and can read several times slower than the same cell measured later
+in the same process.
+
+Telegram accepts at most 100 updates per `getUpdates` request, so the 1,000 and
+10,000 batches are not valid Bot API configurations. They characterize the
+client loop and parser only. The transport is local, so throughput excludes
+network latency and rate limits, and the no-op handler makes `maxParallel`
+levels converge; they differ only when handlers actually yield.
+
 The same scenarios are available as Visual Studio launch profiles:
 
 - `Benchmarks / all` runs the interactive BenchmarkDotNet selector;
@@ -68,6 +92,7 @@ The same scenarios are available as Visual Studio launch profiles:
 - `Benchmarks / multipart diagnostics` separates filesystem, preparation, and body-write costs;
 - `Benchmarks / stress` runs the 1,000,000-call stress test;
 - `Benchmarks / stress parallel` runs the same test with 10 bounded workers;
+- `Benchmarks / polling stress` runs the long-polling stress harness;
 - `Benchmarks / quick` runs a short serialization smoke test.
 
 The benchmark project targets .NET 9. Temporary results are written to `results`

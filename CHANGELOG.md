@@ -7,6 +7,15 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
+### Added
+
+- A long-polling stress harness (`--polling-stress`) that drives
+  `StartPollingAsync` through an in-process fake `getUpdates` transport and
+  reports throughput, allocations, Working Set, observed handler concurrency,
+  delivery order, exception isolation, and shutdown latency for batches of 10,
+  100, 1,000 and 10,000 updates crossed with `maxParallel` values of 1, 4, 10
+  and 32. It is a development tool and is not shipped in the package.
+
 ### Changed
 
 - The package README now pins its install command to the release that ships

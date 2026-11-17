@@ -50,12 +50,13 @@ resolve the latter.
 
 The [benchmark project](../Telegram.BotAPI.Benchmarks/README.md) contains
 serialization, rich-message and local transport benchmarks, plus sequential and
-bounded-parallel stress profiles:
+bounded-parallel stress profiles and a long-polling stress harness:
 
 ```bash
 dotnet run --project Telegram.BotAPI.Benchmarks/Telegram.BotAPI.Benchmarks.csproj -c Release -- --filter * --join
 dotnet run --project Telegram.BotAPI.Benchmarks/Telegram.BotAPI.Benchmarks.csproj -c Release -- --stress
 dotnet run --project Telegram.BotAPI.Benchmarks/Telegram.BotAPI.Benchmarks.csproj -c Release -- --stress-parallel 10
+dotnet run --project Telegram.BotAPI.Benchmarks/Telegram.BotAPI.Benchmarks.csproj -c Release -- --polling-stress
 ```
 
 The current reference snapshot was recorded on November 16, 2026 at commit

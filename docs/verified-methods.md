@@ -11,9 +11,10 @@ and to write down the request shapes that are known to work.
 - Verified in November 2026 against `https://api.telegram.org`.
 - Harness: a small console app that reads the token from `TELEGRAM_BOT_TOKEN`
   and drives a real, private video-sticker pack end to end — render, upload,
-  create, extend, replace, inspect. No test doubles, no local Bot API server.
-- Content: 512×512 WebM/VP9 stickers with alpha, 40 frames at 24 fps,
-  88–176 KB each.
+  create, extend, replace, retag, inspect. No test doubles, no local Bot API
+  server.
+- Content: 512×512 WebM/VP9 stickers with alpha, 36–40 frames at 24 fps,
+  109–179 KB each.
 
 ## Sticker and sticker-set methods
 
@@ -25,6 +26,7 @@ and to write down the request shapes that are known to work.
 | `createNewStickerSet` | `UserId`, `Name`, `Title`, `StickerType.Regular`, one `InputSticker` | Creates the set with the first sticker. The name must end with `_by_<bot_username>`. |
 | `addStickerToSet` | `UserId`, `Name`, `InputSticker` | Appends a sticker; the pack count grows by one, order is preserved. |
 | `replaceStickerInSet` | `UserId`, `Name`, `OldSticker` (a `file_id` from `getStickerSet`), `InputSticker` | Replaces one sticker **in place**: count and position stay the same, the new file is served immediately. Used repeatedly on indices 0 and 1. |
+| `setStickerEmojiList` | `Sticker` (a `file_id`), `EmojiList` | Retags an existing sticker without re-uploading it. Both the parameters object and the `(sticker, emojiList)` overload work. |
 | `deleteStickerSet` | `Name` | Deletes a set owned by the bot. Works, but see the re-creation pitfall below. |
 
 All of the above were called with a normal bot token and a set owned by that
@@ -83,6 +85,40 @@ with `addStickerToSet` / `replaceStickerInSet` / `deleteStickerFromSet` /
 `setStickerPositionInSet` instead. The per-sticker methods keep the pack
 identity, its link, and its subscribers.
 
+### Replacing a sticker rewrites its emoji tag
+
+`replaceStickerInSet` takes a full `InputSticker`, so the emoji list is part of
+the replacement rather than something Telegram carries over. Our first
+replacements passed a hard-coded 👋 and silently retagged two existing
+stickers; `getStickerSet` still reported the set as healthy, because the tag is
+metadata, not an error. Read `Sticker.Emoji` before replacing and pass it back:
+
+```csharp
+var set = await api.GetStickerSetAsync(setName);
+var old = set.Stickers[index];
+
+await api.ReplaceStickerInSetAsync(new ReplaceStickerInSetParameters
+{
+    UserId = ownerId,
+    Name = setName,
+    OldSticker = old.FileId,
+    Sticker = new InputSticker
+    {
+        Sticker = uploaded.FileId,
+        Format = InputStickerFormat.Video,
+        EmojiList = new[] { old.Emoji }        // keep the tag
+    }
+});
+```
+
+If a tag is already wrong, `setStickerEmojiList` fixes it in place — no
+re-upload, no position change, and the sticker keeps its `file_id`.
+
+`addStickerToSet` appends to the end of the pack, and `getStickerSet` returns
+that order, so the new position is `set.Stickers.Count` at the time of the
+call. The Bot API has no "insert at index" request: append, then reorder with
+`setStickerPositionInSet`.
+
 ### A repeated `createNewStickerSet` is not a failure signal
 
 Creating a set for a name the bot already owns returned `true` in our runs
@@ -125,7 +161,7 @@ These are Telegram's limits, confirmed by uploading real files rather than
 only reading documentation:
 
 - Video stickers are 512×512, WebM/VP9 with alpha, and must stay under 256 KB.
-  Uploads in the 88–176 KB range were accepted without resizing or re-encoding
+  Uploads in the 109–179 KB range were accepted without resizing or re-encoding
   by the server.
 - The video loops, so every clip should end where it starts; a one-frame
   duplicate at the seam is not visible.
@@ -138,7 +174,7 @@ Everything else in `BotApiClientExtensions.Stickers.cs` is untested against the
 live API here and should be treated as compiled-only until someone exercises it:
 
 - `sendSticker`, `getCustomEmojiStickers`
-- `deleteStickerFromSet`, `setStickerPositionInSet`, `setStickerEmojiList`
+- `deleteStickerFromSet`, `setStickerPositionInSet`
 - `setStickerKeywords`, `setStickerMaskPosition`
 - `setStickerSetTitle`, `setStickerSetThumbnail`,
   `setCustomEmojiStickerSetThumbnail`

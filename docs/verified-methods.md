@@ -68,6 +68,56 @@ await api.ReplaceStickerInSetAsync(new ReplaceStickerInSetParameters
 });
 ```
 
+## Poll methods
+
+| Method | Request shape that was used | Result |
+| --- | --- | --- |
+| `sendPoll` | `ChatId` (numeric id), `Question`, `Options` = `InputPollOption { Text = ... }[]`, `Type = PollType.Regular`, `IsAnonymous = false`, `AllowsMultipleAnswers = true`, `AllowAddingOptions = true` | Sends the poll into the chat and returns a `Message` whose `Poll` carries the server-generated `Id`, option list, `TotalVoterCount`, `IsAnonymous`, `AllowsMultipleAnswers`, `AllowsRevoting`. Two polls with 11 and 10 options were accepted. |
+
+### `allow_adding_options` requires a non-anonymous poll
+
+The flag is not mentioned in the `Poll` response, so a successful call is the
+only positive signal. The negative case is explicit: sending the same request
+with `is_anonymous=true` and `allow_adding_options=true` fails with
+
+```
+400 Bad Request: ANONYMOUS_OPEN_INVALID
+```
+
+That error also confirms the server actually reads the field rather than
+ignoring it, which is why `SendPollParameters.AllowsMultipleAnswers` /
+`AllowAddingOptions` can be trusted. In practice: set `IsAnonymous = false`
+whenever voters should be able to add their own options.
+
+### The returned `Poll` does not echo `AllowAddingOptions`
+
+`Poll` echoes `IsAnonymous`, `AllowsMultipleAnswers`, `AllowsRevoting` and
+`MembersOnly`, but it has no `AllowAddingOptions` property at all. Do not try
+to read the flag back from the response; treat the request parameter as
+write-only and verify in a client, or rely on the error above.
+
+### Twelve options is the ceiling
+
+`SendPollParameters.Options` is documented and enforced as 1-12 items, so a
+longer list has to be split. Covering a 21-item list took two regular polls
+(11 + 10) sent in one loop; keeping the original index as a prefix in the
+option text (`"7. ..."`) makes the halves easy to correlate in chat.
+
+```csharp
+var sent = await api.SendPollAsync(new SendPollParameters
+{
+    ChatId = chatId,                 // implicit conversion from long
+    Question = "Which one lands best? 1/2",
+    Options = labels.Select(t => new InputPollOption { Text = t }).ToArray(),
+    Type = PollType.Regular,
+    IsAnonymous = false,             // required for allow_adding_options
+    AllowsMultipleAnswers = true,
+    AllowAddingOptions = true
+});
+
+Console.WriteLine($"{sent.Poll!.Id} {sent.Poll.Options.Count} options");
+```
+
 ## Gotchas confirmed on the live API
 
 ### `deleteStickerSet` followed by an immediate `createNewStickerSet`

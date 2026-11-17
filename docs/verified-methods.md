@@ -9,12 +9,156 @@ and to write down the request shapes that are known to work.
 
 - Library: `Endfix.Telegram.BotAPI` 2.0.1, `net8.0` asset.
 - Verified in November 2026 against `https://api.telegram.org`.
-- Harness: a small console app that reads the token from `TELEGRAM_BOT_TOKEN`
-  and drives a real, private video-sticker pack end to end — render, upload,
-  create, extend, replace, retag, inspect. No test doubles, no local Bot API
-  server.
+- Manual harness: a small console app that reads the token from
+  `TELEGRAM_BOT_TOKEN` and drives a real, private video-sticker pack end to end —
+  render, upload, create, extend, replace, retag, inspect. No test doubles, no
+  local Bot API server.
 - Content: 512×512 WebM/VP9 stickers with alpha, 36–40 frames at 24 fps,
   109–179 KB each.
+- Automated counterpart: the integration suite described below, which covers
+  chat, media, sticker, and inline workflows.
+
+## Automated live suite (November 17, 2026)
+
+The manual passes on this page are probes with one method (or one family) in
+focus. The integration suite in `Telegram.BotAPI.Tests` is the other half: it
+drives complete workflows against `https://api.telegram.org`, asserts on the
+returned objects, and undoes every mutation it makes.
+
+Run metadata:
+
+- Library `Endfix.Telegram.BotAPI` 2.0.1, `net8.0`, Release build, bot
+  `@endfixbot`.
+- Bulk run: 37 tests — 34 passed, 3 skipped, 0 failed in 2 m 43 s.
+- Inline run, started separately because it waits for a human: 1 test, passed
+  in 18 s.
+- Total: 38 tests, 35 passed, 3 skipped, 0 failed.
+- Chats: a private chat, a discussion supergroup, a forum supergroup, an
+  administered channel, and a disposable non-administrator test user, all
+  supplied through user secrets.
+
+```powershell
+dotnet test Telegram.BotAPI.Tests\Telegram.BotAPI.Tests.csproj -c Release `
+  --filter "Category=Integration&FullyQualifiedName!~TelegramInlineIntegrationTests"
+```
+
+### Bot identity, commands, and profile
+
+| Test | Methods exercised | Result |
+| --- | --- | --- |
+| `BotFatherCapabilities_AreEnabled` | `getMe` | Passed after the BotFather flags were enabled; see below. |
+| `BotChatSettings_RollBack` | `getChatMenuButton`, `setChatMenuButton`, `getMyCommands`, `setMyCommands`, `deleteMyCommands`, `getMyDescription`, `setMyDescription`, `getMyShortDescription`, `setMyShortDescription` | Passed; the previous menu button, command list, and descriptions were restored. |
+| `BotName_RollBack` | `getMyName`, `setMyName` | Skipped — access flag not set. |
+| `BotDefaultAdministratorRights_RollBack` | `getMyDefaultAdministratorRights`, `setMyDefaultAdministratorRights` | Passed for `for_channels=false` and `true`; the original rights were restored. |
+| `SetMyProfilePhoto_UploadsNestedPhoto_ThenRestoresPreviousPhoto` | `getUserProfilePhotos`, `setMyProfilePhoto`, `removeMyProfilePhoto` | Passed; the bot's previous photo was uploaded back afterwards. |
+
+### Private-chat messages
+
+| Test | Methods exercised | Result |
+| --- | --- | --- |
+| `PrivateChatStructuredMessages_AreDeliveredAndDeleted` | `sendMessage`, `sendChatAction`, `sendContact`, `sendVenue`, `sendPoll`, `stopPoll`, `sendMessageDraft`, `deleteMessage` | Passed; `stopPoll` returns the closed poll, and the draft is sent under an explicit `draft_id`. |
+| `OrdinaryChatMessageEdits_ReturnEditedMessage` | `sendMessage`, `editMessageText`, `editMessageReplyMarkup`, `deleteMessage` | Passed; the per-message helpers return the edited `Message`, not `true`. |
+| `Messages_CopyAndForwardAcrossConfiguredChats` | `sendMessage`, `getChat`, `getChatMember`, `copyMessage`, `forwardMessage`, `getFile`, `getFileBytes`, `deleteMessage` | Passed; copies a group message into the channel, forwards one into the private chat, then resolves the copied photo with `getFile` and reads its bytes. |
+
+### Media and files
+
+| Test | Methods exercised | Result |
+| --- | --- | --- |
+| `SendPhoto_UploadsLocalFile_ThenResendsByFileId` | `sendPhoto` | Passed twice: multipart `InputPhotoFile`, then the returned `file_id`. |
+| `SendDocument_UploadsLocalFile_ThenResendsByFileId` | `sendDocument` | Same shape as photo: upload, then resend by `file_id`. |
+| `DownloadFile_StreamsTelegramDocumentAndLeavesDestinationOpen` | `sendDocument`, `getFile`, `downloadFile` | Passed; the document streams into a `MemoryStream` that stays writable, and the bytes match the fixture. |
+| `SendMediaGroup_UploadsFilesThroughAttachReferences` | `sendMediaGroup` | Passed; two local photos in one album, uploaded through generated `attach://` references. |
+| `SendMediaGroup_UploadsTypedVideoThumbnailAndCover` | `sendMediaGroup` | Passed; `InputMediaVideo` with separate `thumbnail` and `cover` uploads. |
+| `SendPaidMedia_UploadsLocalPhoto_ThenResendsByFileId` | `sendPaidMedia` | Passed with `StarCount = 1`, as a multipart photo and by `file_id`; the response carries `PaidMedia.StarCount` and `PaidMediaPhoto`. |
+| `SendPoll_UploadsNestedOptionAndDescriptionMedia` | `sendPoll` | Passed; poll-level `Media` and `InputPollOption.Media` upload in the same multipart request and return as `Poll.Media.Photo` / `Poll.Options[0].Media.Photo`; `is_closed: true` is accepted on send. |
+| `SendAdditionalStandaloneMedia_UploadsLocalFiles` | `sendAudio`, `sendAnimation`, `sendVideo`, `sendVoice`, `sendVideoNote`, `sendSticker` | Passed; one local fixture per method. |
+| `SendRichMessage_UploadsPhotoFromNestedBlock` | `sendRichMessage` | Passed; a photo inside `InputRichBlockPhoto` travels through the nested multipart graph and is echoed in `Message.RichMessage`. |
+| `UpdatingMethods_ForwardChatAndReplyMarkupParameters` | `sendMessage`, `editMessageReplyMarkup`, `sendPhoto`, `editMessageCaption`, `editMessageMedia`, `sendLocation`, `editMessageLiveLocation`, `stopMessageLiveLocation` | Passed; the "for message" helpers forward `chat_id` and `message_id` and return the edited message. |
+
+### Sticker sets
+
+| Test | Methods exercised | Result |
+| --- | --- | --- |
+| `StickerSetMethods_UploadNestedFiles` | `getMe`, `uploadStickerFile`, `createNewStickerSet`, `addStickerToSet`, `replaceStickerInSet`, `getStickerSet`, `deleteStickerSet` | Passed; builds a real video-sticker set from local files through `attach://`, verifies its contents, then deletes it. |
+| `ChatStickerSet_RollBack` | `getChat`, `getMe`, `createNewStickerSet`, `setChatStickerSet`, `deleteChatStickerSet`, `deleteStickerSet` | Skipped — no group with `can_set_sticker_set=true`. |
+
+### Groups, channels, and forum topics
+
+| Test | Methods exercised | Result |
+| --- | --- | --- |
+| `GroupConfiguration_IsUsable` | `getChat`, `getChatAdministrators`, `getMe` | Passed; supergroup, bot is an administrator. |
+| `ChannelConfiguration_IsUsable` | `getChat`, `getChatAdministrators`, `getMe` | Passed. |
+| `ForumConfiguration_IsUsable` | `getChat`, `getChatAdministrators`, `getMe` | Passed; `is_forum: true`. |
+| `GroupDefaultPermissions_RollBack` | `getChat`, `setChatPermissions` | Passed; the original permission mask was restored. |
+| `TestUser_IsVisibleInGroup` | `getChatMember` | Passed; the test user is a plain member, not an administrator. |
+| `TestUserRestriction_RollBack` | `getChatMember`, `restrictChatMember` | Passed; the restriction was applied, verified, and lifted. |
+| `TestUserTag_RollBack` | `getMe`, `getChatMember`, `setChatMemberTag` | Passed; the tag was set and cleared. |
+| `TestUserPromotionAndCustomTitle_RollBack` | `getMe`, `getChatMember`, `promoteChatMember`, `setChatAdministratorCustomTitle`, `setChatMemberTag` | Passed; the user was promoted, given a custom title, then demoted. |
+| `PremiumOwner_CustomEmojiButton_RoundTrips` | `getForumTopicIconStickers`, `sendMessage`, `deleteMessage` | Passed; uses a real `custom_emoji_id` in `icon_custom_emoji_id` together with a button `style`. |
+| `PremiumUser_ReadOnlyProfileCollections_Deserialize` | `getUserProfileAudios`, `getUserGifts`, `getAvailableGifts` | Passed; the Premium-only collections deserialize. |
+| `PremiumUser_EmojiStatus_MutationIsAcceptedAndRestored` | `getChat`, `getForumTopicIconStickers`, `setUserEmojiStatus` | Skipped — no emoji-status access. |
+| `ChannelAndGroup_AreLinkedForDiscussion` | `getChat` | Passed; `linked_chat_id` resolves in both directions. |
+| `ForumTopicLifecycle_RollBack` | `createForumTopic`, `editForumTopic`, `sendMessage`, `setMessageReaction`, `closeForumTopic`, `reopenForumTopic`, `deleteForumTopic` | Passed; the topic was created with a custom icon, renamed, closed, reopened, and deleted. |
+| `GroupMetadataMessageAndInviteLink_RollBack` | `getChat`, `setChatTitle`, `setChatDescription`, `sendMessage`, `editMessageText`, `pinChatMessage`, `unpinChatMessage`, `createChatInviteLink`, `editChatInviteLink`, `revokeChatInviteLink`, `deleteMessage` | Passed; title, description, pin, and invite link were all restored. |
+| `ChannelMetadataAndMessage_RollBack` | `getChat`, `setChatTitle`, `setChatDescription`, `getChatMemberCount`, `sendMessage`, `editMessageText`, `setMessageReaction`, `pinChatMessage`, `unpinChatMessage`, `createChatInviteLink`, `editChatInviteLink`, `revokeChatInviteLink`, `createChatSubscriptionInviteLink`, `editChatSubscriptionInviteLink`, `deleteMessage` | Passed; also covers a star subscription invite link. |
+| `ChannelReadOnlyCollections_Deserialize` | `getChatGifts`, `getUserChatBoosts` | Passed; empty read-only collections deserialize. |
+| `ChannelPhoto_RollBack` | `getChat`, `setChatPhoto`, `deleteChatPhoto` | Passed; the channel photo was replaced, removed, and the original restored. |
+
+### Inline
+
+| Test | Methods exercised | Result |
+| --- | --- | --- |
+| `InlineMessageEdits_ReturnTrue` | `getMe`, `deleteWebhook`, `sendMessage`, `getUpdates`, `answerInlineQuery`, `editMessageText`, `editMessageReplyMarkup` | Passed; a human taps the button and picks the result, after which both inline edits return `true`. |
+
+### The failure in the first run was configuration, not a library bug
+
+The first bulk run ended with 33 passed, 3 skipped, and one failure:
+`BotFatherCapabilities_AreEnabled` stopped at
+`Assert.True(bot.CanReadAllGroupMessages)`. The `getMe` request itself
+succeeded and returned a valid `Bot`; the bot was simply configured with
+
+```
+can_read_all_group_messages=false
+supports_inline_queries=false
+has_topics_enabled=false
+```
+
+Turning Group Privacy off and enabling Inline Mode and topics in BotFather made
+`getMe` report all three as `true`. The rerun passed the same test binary, and
+only then could the inline test work at all. A failure here means "this bot is
+configured differently", not "the library broke".
+
+### Skipped tests and what would unblock them
+
+These are explicit opt-in gates read from environment variables or user secrets,
+so a fresh checkout skips them instead of failing:
+
+| Test | Gate | What is needed |
+| --- | --- | --- |
+| `ChatStickerSet_RollBack` | `TELEGRAM_BOT_GROUP_STICKER_SET_ACCESS` | A group whose `getChat` reports `can_set_sticker_set=true` — in practice a supergroup with 100+ members where the bot may install a sticker set. |
+| `BotName_RollBack` | `TELEGRAM_BOT_SET_MY_NAME_ACCESS` | The bot may call `setMyName`; Telegram can keep this method rate-limited for hours after a previous change. |
+| `PremiumUser_EmojiStatus_MutationIsAcceptedAndRestored` | `TELEGRAM_BOT_EMOJI_STATUS_ACCESS` | Emoji-status access granted to the bot through the Mini App. |
+
+### Suite caveats
+
+- The tests share one xUnit collection and run serially against real chats.
+  Mutations are restored in `finally` blocks, but aborting a run can leave a
+  temporary title, photo, invite link, or sticker set behind.
+- Uploads use small bundled fixtures rather than the sticker harness media; the
+  "resends by `file_id`" variants reuse the returned id instead of uploading
+  twice.
+- `sendPaidMedia` was called with `StarCount = 1` in a private chat and the
+  messages were deleted immediately. The test checks the returned
+  `PaidMedia`, not star accounting.
+- The inline test needs a person: it sends a button to the private chat, waits up
+  to three minutes for `chosen_inline_result`, and skips rather than fails when
+  nothing is chosen. Keep it out of unattended CI.
+- Some calls are verified in read form only. `getChatGifts` and
+  `getUserChatBoosts` returned empty collections, and the Premium profile
+  assertions accept empty payloads (count within the reported total), so those
+  rows prove deserialization, not non-empty data.
+- Capability flags in `BotFatherCapabilities_AreEnabled` reflect BotFather
+  settings and live outside the repository.
 
 ## Sticker and sticker-set methods
 
@@ -223,12 +367,18 @@ only reading documentation:
 Everything else in `BotApiClientExtensions.Stickers.cs` is untested against the
 live API here and should be treated as compiled-only until someone exercises it:
 
-- `sendSticker`, `getCustomEmojiStickers`
+- `getCustomEmojiStickers`
 - `deleteStickerFromSet`, `setStickerPositionInSet`
 - `setStickerKeywords`, `setStickerMaskPosition`
 - `setStickerSetTitle`, `setStickerSetThumbnail`,
   `setCustomEmojiStickerSetThumbnail`
 
-When any of them gets a live pass, add a row to the table above and the exact
-call shape that worked. Static stickers (WebP) and animated stickers (TGS) were
-not uploaded either; only the video path was exercised.
+Three live tests did not run for want of access, so their methods are still
+unverified here: `setMyName` (`BotName_RollBack`), `setUserEmojiStatus`
+(`PremiumUser_EmojiStatus_MutationIsAcceptedAndRestored`), and
+`setChatStickerSet` / `deleteChatStickerSet` (`ChatStickerSet_RollBack`).
+
+When any of them gets a live pass, add it to the tables above together with the
+call shape that worked, and remove it from this list. Static stickers (WebP) and
+animated stickers (TGS) were not uploaded either; only the video path was
+exercised.

@@ -5,10 +5,20 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [3.0.0] - 2026-11-22
+
+Targets Bot API 10.5 (November 22, 2026). This is a major release with the
+intentional breaking changes listed under **Changed**.
 
 ### Added
 
+- Bot API 10.5 support: `setMySettings` through `SetMySettingsParameters`
+  and `SetMySettingsAsync`, the `CallbackQueryMode` enum, and the
+  `active_usernames`, `inline_query_placeholder`,
+  `needs_inline_query_location`, and `has_topic_sidebar` fields of
+  `BotFullInfo`.
+- `BotFullInfo`, returned by `getMe`, and `WriteAccessAllowed.Inviter` for
+  service messages about users invited to a private chat by the bot's owner.
 - A long-polling stress harness (`--polling-stress`) that drives
   `StartPollingAsync` through an in-process fake `getUpdates` transport and
   reports throughput, allocations, Working Set, observed handler concurrency,
@@ -18,6 +28,12 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ### Changed
 
+- `getMe` and `GetMeAsync` now return `BotFullInfo` instead of `User`. The
+  legacy bot-only properties on `User` remain for source and binary
+  compatibility but are no longer populated; read them from `BotFullInfo`.
+- `RichBlockExpandableBlockQuotation` and
+  `InputRichBlockExpandableBlockQuotation` carry their content in `Blocks`
+  instead of `Text`, matching Bot API 10.5.
 - The package README now pins its install command to the release that ships
   it, so the nuget.org page never names an older version. The repository copy
   stays unpinned and installs the latest stable package.
@@ -263,7 +279,7 @@ version. Additive Telegram Bot API coverage remains a minor version.
 - Preserved original input-source open exceptions.
 - Corrected `deleteStory` and user-gift response contracts.
 
-[Unreleased]: https://github.com/endfix/telegram-bot-api/compare/v2.0.1...HEAD
+[3.0.0]: https://github.com/endfix/telegram-bot-api/compare/v2.0.1...v3.0.0
 [2.0.1]: https://github.com/endfix/telegram-bot-api/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/endfix/telegram-bot-api/compare/v1.0.2...v2.0.0
 [1.0.2]: https://github.com/endfix/telegram-bot-api/compare/v1.0.1...v1.0.2

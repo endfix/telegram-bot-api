@@ -1,7 +1,7 @@
 ![Telegram Bot API (C#)](https://raw.githubusercontent.com/endfix/telegram-bot-api/main/icon.png)
 
 # Telegram Bot API (C#)
-[![Bot%20API](https://img.shields.io/badge/Bot%20API-10.4-26A5E4.svg?logo=telegram&logoColor=white)](https://core.telegram.org/bots/api#november-9-2026)
+[![Bot%20API](https://img.shields.io/badge/Bot%20API-10.5-26A5E4.svg?logo=telegram&logoColor=white)](https://core.telegram.org/bots/api#november-22-2026)
 [![Targets](https://img.shields.io/badge/targets-net8.0%20%7C%20netstandard2.0-512BD4.svg?logo=dotnet&logoColor=white)](#runtime-compatibility)
 [![NuGet](https://img.shields.io/nuget/v/Endfix.Telegram.BotAPI.svg?logo=nuget&logoColor=white&color=004880)](https://www.nuget.org/packages/Endfix.Telegram.BotAPI/)
 
@@ -33,19 +33,19 @@ This package is a strongly typed, low-level client for the
 types, transport, and errors. Applications keep control of polling and webhook
 lifetime, as shown in the examples.
 
-Version `2.0` follows Bot API `10.4` and freezes the public contract:
+Version `3` follows Bot API `10.5` and freezes the public contract:
 incompatible changes require a major version, while new Bot API methods and
 additive models are minor versions. If you want an application framework with
 routing or dialogs, see Telegram's list of community
 [.NET Bot API libraries](https://core.telegram.org/bots/samples#net).
 
-See [CHANGELOG.md](https://github.com/endfix/telegram-bot-api/blob/main/CHANGELOG.md) for release notes and unreleased changes. Upgrading from `1.x`? See the [migration guide](https://github.com/endfix/telegram-bot-api/blob/main/docs/migrating-to-2.0.md).
+See [CHANGELOG.md](https://github.com/endfix/telegram-bot-api/blob/main/CHANGELOG.md) for release notes and unreleased changes. Upgrading from `2.x`? See the [3.0 migration guide](https://github.com/endfix/telegram-bot-api/blob/main/docs/migrating-to-3.0.md); coming from `1.x`, start with the [2.0 guide](https://github.com/endfix/telegram-bot-api/blob/main/docs/migrating-to-2.0.md).
 
 ## Key capabilities and limitations
 
 | Capability | What you get | Limitations |
 | --- | --- | --- |
-| Typed API surface | Methods, parameters and response models for Bot API `10.4`, with XML documentation and snake-case JSON. | New Telegram methods and fields arrive in subsequent releases; helpers cover the methods exposed by the package. |
+| Typed API surface | Methods, parameters and response models for Bot API `10.5`, with XML documentation and snake-case JSON. | New Telegram methods and fields arrive in subsequent releases; helpers cover the methods exposed by the package. |
 | Union types | Polymorphic `System.Text.Json` converters for chat members, media, rich text, gifts and other Telegram unions. | Reflection-based serialization; no source generation, trimming, or Native AOT guarantee. |
 | Requests | JSON bodies for no-file methods; automatic `multipart/form-data` when a file source appears anywhere in the parameter graph. | Upload content must be replayable for each attempt; Telegram method and file-size limits apply. |
 | Files | Lazy path sources, byte snapshots, stream factories, buffered `byte[]` downloads and streaming downloads. | Uploads are not resumed after a transport failure; the application supplies storage and network infrastructure. |
@@ -274,6 +274,7 @@ See the [compatibility guide](https://github.com/endfix/telegram-bot-api/blob/ma
 | [Files](https://github.com/endfix/telegram-bot-api/blob/main/docs/files.md) | Upload sources, stream ownership, retries, and download semantics. |
 | [Custom requests](https://github.com/endfix/telegram-bot-api/blob/main/docs/custom-requests.md) | Custom parameters, JSON naming, multipart switching, and `attach://` references. |
 | [Migrating from 1.x to 2.0](https://github.com/endfix/telegram-bot-api/blob/main/docs/migrating-to-2.0.md) | Intentional breaking changes in the 2.0 release. |
+| [Migrating from 2.x to 3.0](https://github.com/endfix/telegram-bot-api/blob/main/docs/migrating-to-3.0.md) | Intentional breaking changes in the 3.0 release. |
 | [Development](https://github.com/endfix/telegram-bot-api/blob/main/docs/development.md) | Build requirements, test commands, package smoke tests, benchmarks, and the release process. |
 | [Examples](https://github.com/endfix/telegram-bot-api/tree/main/Telegram.BotAPI.Examples) | Long polling, webhook, and Mini App projects. |
 

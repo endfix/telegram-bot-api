@@ -79,7 +79,7 @@ normalized measurements in
 
 Descriptions of Telegram objects, fields and method parameters are aligned with
 the [official Bot API documentation](https://core.telegram.org/bots/api). The
-current repository snapshot targets Bot API `10.4` (published November 9, 2026).
+current repository snapshot targets Bot API `10.5` (published November 22, 2026).
 Telegram may clarify or extend descriptions without changing a .NET type, so
 the source version and date should be reviewed when updating XML documentation.
 Library-specific behavior, such as stream ownership, retryability and polling

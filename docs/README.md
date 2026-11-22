@@ -13,6 +13,7 @@ The guides below cover the parts of the library that need more detail than the
 | [Custom requests](custom-requests.md) | Deriving from `ApiRequestParameters`, JSON naming, multipart switching, and nested `attach://` references. |
 | [Live-verified methods](verified-methods.md) | Methods exercised against the real Bot API, the request shapes that worked, confirmed gotchas, and what is still compiled-only. |
 | [Migrating from 1.x to 2.0](migrating-to-2.0.md) | The intentional source and binary breaking changes in the 2.0 release. |
+| [Migrating from 2.x to 3.0](migrating-to-3.0.md) | The intentional source and binary breaking changes in the 3.0 release. |
 | [Development](development.md) | SDK requirements, test commands, package smoke tests, README validation, benchmarks, API documentation sources, and the release process. |
 
 ## Examples

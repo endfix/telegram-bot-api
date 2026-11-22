@@ -69,7 +69,7 @@ jobs:
         run: dotnet restore Telegram.BotAPI.sln
 
       - name: Build
-        # AssemblyVersion is pinned in the project file (2.0.0.0 for the 2.x
+        # AssemblyVersion is pinned in the project file (3.0.0.0 for the 3.x
         # line); only the informational version tracks the release tag. Pack
         # runs with --no-build, so this is where the version has to reach the
         # compiled assembly.

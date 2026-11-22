@@ -164,7 +164,7 @@ so a fresh checkout skips them instead of failing:
 
 | Method | Request shape that was used | Result |
 | --- | --- | --- |
-| `getMe` | — | Returns `Bot`; used to confirm the token and `@username`. |
+| `getMe` | — | Returns `BotFullInfo`; used to confirm the token and `@username`. |
 | `getStickerSet` | Set name of an existing set | Returns `StickerSet` with stickers in pack order and their `file_id`s. **Throws `ApiRequestException`** for an unknown name; it does not return `null`. |
 | `uploadStickerFile` | `UserId`, `InputStickerFile(path)`, `StickerFormat.Video` | Uploads 512×512 WebM with alpha; returns `FileStruct` with `FileId` and `FileSize`. Rejected files surface as `ApiRequestException`. |
 | `createNewStickerSet` | `UserId`, `Name`, `Title`, `StickerType.Regular`, one `InputSticker` | Creates the set with the first sticker. The name must end with `_by_<bot_username>`. |
@@ -377,6 +377,12 @@ Three live tests did not run for want of access, so their methods are still
 unverified here: `setMyName` (`BotName_RollBack`), `setUserEmojiStatus`
 (`PremiumUser_EmojiStatus_MutationIsAcceptedAndRestored`), and
 `setChatStickerSet` / `deleteChatStickerSet` (`ChatStickerSet_RollBack`).
+
+These records predate the Bot API 10.5 sync, which changed `getMe` to return
+`BotFullInfo` and added `setMySettings`. The new `getMe` fields have not been
+observed live yet, and `setMySettings` is compiled-only:
+
+- `setMySettings`
 
 When any of them gets a live pass, add it to the tables above together with the
 call shape that worked, and remove it from this list. Static stickers (WebP) and

@@ -17,11 +17,12 @@
 		<EnablePackageValidation>true</EnablePackageValidation>
 		<PackageValidationBaselineVersion>2.0.0</PackageValidationBaselineVersion>
 		<!--
-		  The published 2.0.0 package shipped with AssemblyVersion 2.0.0.0. Keep
-		  the whole 2.x line on that identity so baselines never report an
-		  assembly version downgrade and existing consumers keep the same binding.
+		  The published 2.0.0 package shipped with AssemblyVersion 2.0.0.0. The
+		  3.x line starts a new identity at 3.0.0.0; keep every 3.x release on
+		  that identity so baselines never report an assembly version downgrade
+		  and existing 3.x consumers keep the same binding.
 		-->
-		<AssemblyVersion>2.0.0.0</AssemblyVersion>
+		<AssemblyVersion>3.0.0.0</AssemblyVersion>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageIcon>icon.png</PackageIcon>
 		<IsPackable>true</IsPackable>

@@ -33,6 +33,23 @@ public sealed class ClientBehaviorTests
     }
 
     [Fact]
+    public async Task GetMeAsync_Returns_BotFullInfo()
+    {
+        using var context = new ClientContext(
+            """
+            {"ok":true,"result":{"id":5601506620,"is_bot":true,"first_name":"Test Bot","username":"test_bot","active_usernames":["test_bot","test_bot_two"],"can_join_groups":true,"can_read_all_group_messages":true,"supports_guest_queries":true,"supports_inline_queries":true,"inline_query_placeholder":"search","needs_inline_query_location":true,"can_connect_to_business":true,"has_main_web_app":true,"has_topics_enabled":true,"allows_users_to_create_topics":true,"has_topic_sidebar":true,"can_manage_bots":true,"supports_join_request_queries":true}}
+            """);
+
+        var bot = await context.Client.GetMeAsync();
+
+        bot.ActiveUsernames.Should().Equal("test_bot", "test_bot_two");
+        bot.InlineQueryPlaceholder.Should().Be("search");
+        bot.HasTopicSidebar.Should().BeTrue();
+        bot.SupportsGuestQueries.Should().BeTrue();
+        context.Handler.LastRequestUri.Should().Be("https://api.telegram.org/bottest-token/getMe");
+    }
+
+    [Fact]
     public async Task ExecuteAsync_ThrowsForApiError()
     {
         using var context = new ClientContext(responses:

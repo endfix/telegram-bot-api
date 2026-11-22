@@ -1,6 +1,6 @@
 namespace Endfix.Telegram.BotAPI.Types;
 
-/// <summary>Represents an incoming callback query from an inline keyboard button.</summary>
+/// <summary>Represents an incoming callback query from a callback button in an inline keyboard or a rich message.</summary>
 public sealed class CallbackQuery
 {
     /// <summary>Unique identifier for this query.</summary>
@@ -12,7 +12,11 @@ public sealed class CallbackQuery
     /// <summary>Message with the callback button that originated the query, if available.</summary>
     public MaybeInaccessibleMessage? Message { get; init; }
 
-    /// <summary>Identifier of the message that contains the callback button, if the message was sent using inline mode.</summary>
+    /// <summary>
+    /// Identifier of the message sent via the bot in inline mode that originated
+    /// the query. Also present for messages sent by the bot, depending on the
+    /// <c>callback_query_mode</c> parameter of <c>setMySettings</c>.
+    /// </summary>
     public string? InlineMessageId { get; init; }
 
     /// <summary>Global identifier that uniquely identifies the chat where the query originated.</summary>

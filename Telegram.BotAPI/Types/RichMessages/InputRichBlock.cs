@@ -113,8 +113,8 @@ public sealed class InputRichBlockExpandableBlockQuotation : InputRichBlock
     /// <inheritdoc/>
     public override InputRichBlockType Type => InputRichBlockType.ExpandableBlockquote;
 
-    /// <summary>Content of the quotation.</summary>
-    public required RichText Text { get; init; }
+    /// <summary>Content of the block.</summary>
+    public required IReadOnlyList<InputRichBlock> Blocks { get; init; }
 
     /// <summary>Optional. Credit displayed with the quotation.</summary>
     public RichText? Credit { get; init; }

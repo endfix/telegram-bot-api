@@ -10,22 +10,22 @@ namespace Endfix.Telegram.BotAPI.Extensions;
 
 public static partial class BotApiClientExtensions
 {
-    /// <summary>Returns basic information about the bot.</summary>
+    /// <summary>Returns full information about the bot.</summary>
     /// <param name="client">Bot API client used to send the request.</param>
     /// <param name="parameters">The request has no parameters.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
-    /// <returns>The bot's user information.</returns>
-    public static Task<User> GetMeAsync(
+    /// <returns>The bot's full information.</returns>
+    public static Task<BotFullInfo> GetMeAsync(
         this IBotApiClient client,
         GetMeParameters parameters,
         CancellationToken cancellationToken = default)
-        => client.ExecuteAsync<User>(new ApiRequest("getMe", parameters), cancellationToken);
+        => client.ExecuteAsync<BotFullInfo>(new ApiRequest("getMe", parameters), cancellationToken);
 
-    /// <summary>Returns basic information about the bot.</summary>
+    /// <summary>Returns full information about the bot.</summary>
     /// <param name="client">Bot API client used to send the request.</param>
     /// <param name="cancellationToken">Token used to cancel the request.</param>
-    /// <returns>The bot's user information.</returns>
-    public static Task<User> GetMeAsync(
+    /// <returns>The bot's full information.</returns>
+    public static Task<BotFullInfo> GetMeAsync(
         this IBotApiClient client,
         CancellationToken cancellationToken = default)
         => client.GetMeAsync(new GetMeParameters
@@ -3670,6 +3670,73 @@ public static partial class BotApiClientExtensions
             UserId = userId,
             IsAccessRestricted = isAccessRestricted,
             AddedUserIds = addedUserIds
+        }, cancellationToken);
+
+    /// <summary>Changes settings of the bot. Settings that are not specified remain unchanged.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="parameters">Parameters for the request.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
+    public static Task<bool> SetMySettingsAsync(
+        this IBotApiClient client,
+        SetMySettingsParameters parameters,
+        CancellationToken cancellationToken = default)
+        => client.ExecuteAsync<bool>(new ApiRequest("setMySettings", parameters), cancellationToken);
+
+    /// <summary>Changes settings of the bot. Settings that are not specified remain unchanged.</summary>
+    /// <param name="client">Bot API client used to send the request.</param>
+    /// <param name="supportsInlineQueries">Whether inline mode is enabled for the bot.</param>
+    /// <param name="inlineQueryPlaceholder">Placeholder shown after the bot's username in inline mode. An empty string restores the default placeholder.</param>
+    /// <param name="needsInlineQueryLocation">Whether the bot requests the user's location with every inline query.</param>
+    /// <param name="inlineFeedbackShareDenominator">Denominator of the share of chosen inline results delivered to the bot: it receives 1 of every <c>inline_feedback_share_denominator</c> results. Must be 1, 10, 100, or 1000; 0 stops the delivery.</param>
+    /// <param name="canJoinGroups">Whether the bot can be added to groups.</param>
+    /// <param name="canReadAllGroupMessages">Whether privacy mode is disabled for the bot, so it receives all group messages.</param>
+    /// <param name="canConnectToBusiness">Whether the bot can be connected to a user account to manage it.</param>
+    /// <param name="canManageBots">Whether the bot can create other bots that it controls.</param>
+    /// <param name="supportsGuestQueries">Whether the bot supports guest queries from chats it is not a member of.</param>
+    /// <param name="supportsJoinRequestQueries">Whether the bot can be assigned to process join request queries.</param>
+    /// <param name="hasTopicsEnabled">Whether forum topic mode is enabled in private chats with the bot.</param>
+    /// <param name="allowsUsersToCreateTopics">Whether users can create and delete topics in private chats with the bot.</param>
+    /// <param name="hasTopicSidebar">Whether topics in private chats with the bot are shown in a sidebar.</param>
+    /// <param name="canCommunicateWithBots">Whether the bot can communicate with other bots in groups, private chats, and through business accounts.</param>
+    /// <param name="callbackQueryMode">Mode for callback queries from buttons in messages sent by the bot.</param>
+    /// <param name="cancellationToken">Token used to cancel the request.</param>
+    /// <returns><see langword="true"/> on success.</returns>
+    public static Task<bool> SetMySettingsAsync(
+        this IBotApiClient client,
+        bool? supportsInlineQueries = null,
+        string? inlineQueryPlaceholder = null,
+        bool? needsInlineQueryLocation = null,
+        int? inlineFeedbackShareDenominator = null,
+        bool? canJoinGroups = null,
+        bool? canReadAllGroupMessages = null,
+        bool? canConnectToBusiness = null,
+        bool? canManageBots = null,
+        bool? supportsGuestQueries = null,
+        bool? supportsJoinRequestQueries = null,
+        bool? hasTopicsEnabled = null,
+        bool? allowsUsersToCreateTopics = null,
+        bool? hasTopicSidebar = null,
+        bool? canCommunicateWithBots = null,
+        CallbackQueryMode? callbackQueryMode = null,
+        CancellationToken cancellationToken = default)
+        => client.SetMySettingsAsync(new SetMySettingsParameters
+        {
+            SupportsInlineQueries = supportsInlineQueries,
+            InlineQueryPlaceholder = inlineQueryPlaceholder,
+            NeedsInlineQueryLocation = needsInlineQueryLocation,
+            InlineFeedbackShareDenominator = inlineFeedbackShareDenominator,
+            CanJoinGroups = canJoinGroups,
+            CanReadAllGroupMessages = canReadAllGroupMessages,
+            CanConnectToBusiness = canConnectToBusiness,
+            CanManageBots = canManageBots,
+            SupportsGuestQueries = supportsGuestQueries,
+            SupportsJoinRequestQueries = supportsJoinRequestQueries,
+            HasTopicsEnabled = hasTopicsEnabled,
+            AllowsUsersToCreateTopics = allowsUsersToCreateTopics,
+            HasTopicSidebar = hasTopicSidebar,
+            CanCommunicateWithBots = canCommunicateWithBots,
+            CallbackQueryMode = callbackQueryMode
         }, cancellationToken);
 
     /// <summary>Changes the bot's command list.</summary>

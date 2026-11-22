@@ -15,7 +15,13 @@
 
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<EnablePackageValidation>true</EnablePackageValidation>
-		<PackageValidationBaselineVersion>2.0.0</PackageValidationBaselineVersion>
+		<!--
+		  Validate every package against the last published line. Bump this only
+		  after a release is on nuget.org; a major release then needs no
+		  compatibility suppressions because the breaking members are part of
+		  the new baseline.
+		-->
+		<PackageValidationBaselineVersion>3.0.0</PackageValidationBaselineVersion>
 		<!--
 		  The published 2.0.0 package shipped with AssemblyVersion 2.0.0.0. The
 		  3.x line starts a new identity at 3.0.0.0; keep every 3.x release on

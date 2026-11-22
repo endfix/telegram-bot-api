@@ -93,3 +93,9 @@ creating a `vX.Y.Z` tag. Pushing the tag starts the publish workflow, which
 independently restores, builds, tests, packs with the version derived from the
 tag, publishes the package to NuGet, and creates the corresponding GitHub
 Release from that version's [CHANGELOG](../CHANGELOG.md) section.
+
+Once the new version is available on nuget.org, bump
+`PackageValidationBaselineVersion` in
+[Telegram.BotAPI.csproj](../Telegram.BotAPI/Telegram.BotAPI.csproj) to it. A
+major release then needs no compatibility suppressions, because the breaking
+members belong to the new baseline.
